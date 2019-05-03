@@ -26,7 +26,7 @@ function main() {
     x = e.clientX
     y = e.clientY
     if (!line) {
-      const v1: Two.Vector = makePoint(mouse)
+      const v1: Two.Vector = setPoint(mouse)
       const v2: Two.Vector = makePoint(x, y)
       line = two.makeCurve([v1, v2], true)
       line.noFill().stroke = '#333'
@@ -49,8 +49,6 @@ function main() {
 
   const touchDrag = function(e: TouchEvent) {
     e.preventDefault()
-    // jQuery -> originalEvent
-    // const touch = e.originalEvent.changedTouches[0]
     const touch = e.touches[0]
     drag({
       clientX: touch.pageX,
@@ -95,11 +93,8 @@ function main() {
     })
   })
 
-  function makePoint(x: number | any, y?: number) {
-    if (arguments.length <= 1) {
-      y = x.y
-      x = x.x
-    }
+  const setPoint = (m: Two.Vector) => makePoint(m.x, m.y)
+  const makePoint = (x: number, y: number) => {
     const v: any = new Two.Vector(x, y)
     v.position = new Two.Vector().copy(v)
     return v as Two.Vector
