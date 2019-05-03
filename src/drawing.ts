@@ -1,42 +1,40 @@
-import Two from 'two.js'
+import Two, { ConstructorParams } from 'two.js'
 
-interface DrawingOption {
+// TODO: Fix Two.vector constructor params
+interface DrawingOption extends ConstructorParams {
   penColor: Two.Color
   penWidth: number
 }
 const defaultOption: DrawingOption = {
   penColor: '#333',
-  penWidth: 10
+  penWidth: 10,
+  type: Two.Types.svg
 }
 export function drawing(el: HTMLElement, option?: Partial<DrawingOption>): Two {
-  const { penColor, penWidth } = {
+  const { penColor, penWidth, type } = {
     ...defaultOption,
     ...option
   }
-  //   const type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg'
-  const type = 'svg'
   const two: Two = new Two({
-    type: Two.Types[type],
+    type,
     // fullscreen: false,
     width: el.clientWidth,
     height: el.clientHeight,
     autostart: true
   }).appendTo(el)
-
+  const current: Two.Vector = new Two.Vector(0, 0)
   let line: Two.Path | null
-  let mouse: Two.Vector = new Two.Vector()
 
-  const setPoint = (m: Two.Vector) => makePoint(m.x, m.y)
-  const makePoint = (x: number, y: number) => {
-    const v: any = new Two.Vector(x, y)
-    v.position = new Two.Vector().copy(v)
-    return v as Two.Vector
-  }
   const move = ({ x, y }: { x: number; y: number }) => {
+    const makePoint = (x: number, y: number) => {
+      const v: { position: Two.Vector } & Two.Vector = new Two.Vector(x, y)
+      v.position = new Two.Vector(0, 0).copy(v)
+      return v as Two.Vector
+    }
     if (!line) {
-      const v1: Two.Vector = setPoint(mouse)
-      const v2: Two.Vector = makePoint(x, y)
-      line = two.makeCurve([v1, v2], true)
+      const vprev: Two.Vector = makePoint(current.x, current.y)
+      const vnext: Two.Vector = makePoint(x, y)
+      line = two.makeCurve([vprev, vnext], true)
       line.noFill().stroke = penColor
       line.linewidth = penWidth
       line.vertices.map(v => {
@@ -44,10 +42,10 @@ export function drawing(el: HTMLElement, option?: Partial<DrawingOption>): Two {
       })
       line.translation.clear()
     } else {
-      var v1 = makePoint(x, y)
-      line.vertices.push(v1 as any)
+      const v = makePoint(x, y)
+      line.vertices.push(v as Two.Anchor)
     }
-    mouse.set(x, y)
+    current.set(x, y)
   }
 
   const mouseMove = (e: MouseEvent) => move({ x: e.clientX, y: e.clientY })
@@ -56,7 +54,7 @@ export function drawing(el: HTMLElement, option?: Partial<DrawingOption>): Two {
     window.removeEventListener('mouseup', mouseUp)
   }
   const mouseDown = (e: MouseEvent) => {
-    mouse.set(e.clientX, e.clientY)
+    current.set(e.clientX, e.clientY)
     line = null
     window.addEventListener('mousemove', mouseMove)
     window.addEventListener('mouseup', mouseUp)
@@ -81,7 +79,7 @@ export function drawing(el: HTMLElement, option?: Partial<DrawingOption>): Two {
   const touchStart = (e: TouchEvent) => {
     e.preventDefault()
     const touch = e.touches[0]
-    mouse.set(touch.pageX, touch.pageY)
+    current.set(touch.pageX, touch.pageY)
     line = null
     window.addEventListener('touchmove', touchMove)
     window.addEventListener('touchend', touchEnd)
