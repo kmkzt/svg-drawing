@@ -1,12 +1,13 @@
 {
-  "name": "pixi-games-sample",
+  "name": "drawing-two",
   "version": "0.1.0",
-  "private": true,
   "description": "",
   "main": "lib/index.js",
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
-    "build": "rm -r lib && NODE_ENV=production webpack -p",
+    "build": "npm-run-all build:*",
+    "build:lib": "rm -r lib && NODE_ENV=production webpack -p",
+    "build:demo": "rm -r docs && NODE_ENV=development webpack -p",
     "sample": "webpack-dev-server server.js",
     "test": "jest"
   },

@@ -7,7 +7,7 @@ const config = {
   entry: resolve(__dirname, 'src/example/index.ts'),
   output: {
     filename: '[name].bundle.js',
-    path: resolve('public')
+    path: resolve('docs')
   },
   devtool: 'source-map',
   plugins: [
@@ -20,7 +20,7 @@ const config = {
     })
   ],
   devServer: {
-    contentBase: join(__dirname, 'public'),
+    contentBase: join(__dirname, 'docs'),
     compress: true,
     port: 8888
   }
