@@ -1,5 +1,4 @@
 import Two from 'two.js'
-import * as _ from 'lodash'
 
 export const createGrid = (size: number = 30) => {
   const two = new Two({
@@ -14,14 +13,12 @@ export const createGrid = (size: number = 30) => {
 
   two.update()
 
-  _.defer(function() {
-    document.body.setAttribute(
-      'style',
-      `background: url('${(two.renderer as any).domElement.toDataURL(
-        'image/png'
-      )}') 0 0 repeat;
-        background-size: ${size}px ${size}px;
-      `
-    )
-  })
+  document.body.setAttribute(
+    'style',
+    `background: url('${(two.renderer as any).domElement.toDataURL(
+      'image/png'
+    )}') 0 0 repeat;
+      background-size: ${size}px ${size}px;
+    `
+  )
 }

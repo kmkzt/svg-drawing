@@ -1,8 +1,6 @@
 import Two from 'two.js'
-import * as _ from 'lodash'
 import { createGrid } from './createGrid'
 function main() {
-  createGrid()
   //   const type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg'
   const type = 'svg'
   const two = new Two({
@@ -45,7 +43,7 @@ function main() {
   }
 
   const dragEnd = (e: MouseEvent) => {
-    window.addEventListener('mousemove', drag)
+    window.removeEventListener('mousemove', drag)
     window.removeEventListener('mouseup', dragEnd)
   }
 
@@ -63,7 +61,7 @@ function main() {
 
   const touchEnd = (e: TouchEvent) => {
     e.preventDefault()
-    window.addEventListener('touchmove', touchDrag)
+    window.removeEventListener('touchmove', touchDrag)
     window.removeEventListener('touchend', touchEnd)
     return false
   }
@@ -87,7 +85,6 @@ function main() {
 
   two.bind('update', (frameCount, timeDelta) => {
     two.scene.children.map((child: Two.Object | any) => {
-      if (!child.hasOwnProperty('vertices')) return
       child.vertices.map((v: any) => {
         if (!v.position) {
           return
@@ -110,3 +107,4 @@ function main() {
 }
 
 main()
+createGrid()

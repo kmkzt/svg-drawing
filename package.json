@@ -12,9 +12,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "lodash": "^4.17.11",
-    "pixi.js": "5.0.0-rc.3",
-    "two.js": "^0.7.0-beta.3"
+    "two.js": "0.7.0-beta.3"
   },
   "devDependencies": {
     "@babel/core": "7.4.0",
@@ -30,12 +28,11 @@
     "@types/eslint-plugin-prettier": "2.2.0",
     "@types/html-webpack-plugin": "3.2.0",
     "@types/jest": "24.0.11",
-    "@types/lodash": "^4.14.123",
     "@types/node": "11.12.0",
     "@types/node-sass": "4.11.0",
     "@types/prettier": "1.16.3",
     "@types/rimraf": "2.0.2",
-    "@types/two.js": "^0.7.1",
+    "@types/two.js": "0.7.1",
     "@types/uglifyjs-webpack-plugin": "1.1.0",
     "@types/webpack": "4.4.29",
     "@types/webpack-dev-server": "3.1.5",
