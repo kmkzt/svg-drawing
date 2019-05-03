@@ -1,6 +1,15 @@
 import Two from 'two.js'
-
-export const createGrid = (size: number = 30) => {
+interface GridOption {
+  size: number
+  color: Two.Color
+}
+export const createGrid = (
+  el: HTMLElement,
+  { size, color }: GridOption = {
+    size: 30,
+    color: '#6dcff6'
+  }
+) => {
   const two = new Two({
     type: Two.Types.canvas,
     width: size,
@@ -9,11 +18,11 @@ export const createGrid = (size: number = 30) => {
 
   const a = two.makeLine(two.width / 2, 0, two.width / 2, two.height)
   const b = two.makeLine(0, two.height / 2, two.width, two.height / 2)
-  a.stroke = b.stroke = '#6dcff6'
+  a.stroke = b.stroke = color
 
   two.update()
 
-  document.body.setAttribute(
+  el.setAttribute(
     'style',
     `background: url('${(two.renderer as any).domElement.toDataURL(
       'image/png'
