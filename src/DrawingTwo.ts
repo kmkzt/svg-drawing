@@ -35,7 +35,7 @@ export default class DrawingTwo extends Two {
   /**
    * Shaking Drawing line
    */
-  public shaking(): void {
+  public shaking(): () => void {
     const random: number = this.shakingRange
     const updateShake = (frameCount: any, timeDelta: any) => {
       this.scene.children.map((child: Two.Object | any) => {
@@ -49,6 +49,7 @@ export default class DrawingTwo extends Two {
       })
     }
     this.bind('update', updateShake)
+    return () => this.unbind('update', updateShake)
   }
 
   /**

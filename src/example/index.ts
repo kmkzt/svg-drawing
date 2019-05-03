@@ -1,4 +1,4 @@
-import Two from 'two.js'
+import Two, { Types } from 'two.js'
 import { createGrid } from './createGrid'
 // import { drawing } from './drawing'
 import DrawingTwo from '../DrawingTwo'
@@ -33,15 +33,47 @@ const drawing = new DrawingTwo({
 const shake = document.createElement('button')
 shake.innerHTML = 'Shaking Line'
 document.body.appendChild(shake)
+let stopShake: null | (() => void) = null
 shake.onclick = () => {
-  drawing.shaking()
+  if (stopShake) {
+    stopShake()
+    stopShake = null
+    return
+  }
+  stopShake = drawing.shaking()
 }
 const svgdownload = document.createElement('button')
 svgdownload.innerHTML = 'download'
 document.body.appendChild(svgdownload)
 svgdownload.onclick = () => {
-  console.log(drawing)
+  console.log(drawing.scene)
+  const domElemet = (drawing.renderer as any).domElement
+  switch (drawing.type) {
+    case Two.Types.canvas:
+      console.log(domElemet.toDataURL('image/xml+svg'))
+    case Two.Types.svg:
+      console.log(domElemet)
+    case Two.Types.webgl:
+      console.log(domElemet)
+    default:
+      console.log(domElemet)
+  }
 }
+
+const clearButton = document.createElement('button')
+clearButton.innerHTML = 'clear'
+document.body.appendChild(clearButton)
+clearButton.onclick = () => {
+  drawing.clear()
+}
+
+const changeType = document.createElement('button')
+changeType.innerHTML = 'change type'
+document.body.appendChild(changeType)
+changeType.onclick = () => {
+  drawing.type = Two.Types.canvas
+}
+
 /**
  * Refferrence Example
  */
