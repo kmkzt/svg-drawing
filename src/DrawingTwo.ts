@@ -1,14 +1,15 @@
 import Two, { ConstructorParams } from 'two.js'
 
 // TODO: Fix Two.vector constructor params
-interface DrawingOption extends ConstructorParams {
+export interface DrawingOption extends ConstructorParams {
   penColor?: Two.Color
   penWidth?: number
+  shakingRange?: number
 }
-
 export default class DrawingTwo extends Two {
   public penColor: Two.Color
   public penWidth: number
+  public shakingRange: number
   private line: Two.Path | null
   private current: Two.Vector
   constructor(params: DrawingOption) {
@@ -17,6 +18,7 @@ export default class DrawingTwo extends Two {
     this.current = new Two.Vector(0, 0)
     this.penColor = params.penColor || '#333'
     this.penWidth = params.penWidth || 10
+    this.shakingRange = params.shakingRange || 2
     this.clearListner = this.clearListner.bind(this)
     this.move = this.move.bind(this)
     this.mouseUp = this.mouseUp.bind(this)
@@ -32,10 +34,10 @@ export default class DrawingTwo extends Two {
 
   /**
    * Shaking Drawing line
-   * @param random
    */
-  public shaking(random: number = 2) {
-    this.bind('update', (frameCount, timeDelta) => {
+  public shaking(): void {
+    const random: number = this.shakingRange
+    const updateShake = (frameCount: any, timeDelta: any) => {
       this.scene.children.map((child: Two.Object | any) => {
         child.vertices.map((v: any) => {
           if (!v.position) {
@@ -45,7 +47,8 @@ export default class DrawingTwo extends Two {
           v.y = v.position.y + (Math.random() * random - random / 2)
         })
       })
-    })
+    }
+    this.bind('update', updateShake)
   }
 
   /**

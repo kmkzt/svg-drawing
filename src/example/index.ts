@@ -25,10 +25,23 @@ const drawing = new DrawingTwo({
   width: area.clientWidth,
   height: area.clientHeight,
   autostart: true
-})
-drawing.appendTo(area)
-drawing.shaking()
+}).appendTo(area)
 
+/**
+ * shaking trigger
+ */
+const shake = document.createElement('button')
+shake.innerHTML = 'Shaking Line'
+document.body.appendChild(shake)
+shake.onclick = () => {
+  drawing.shaking()
+}
+const svgdownload = document.createElement('button')
+svgdownload.innerHTML = 'download'
+document.body.appendChild(svgdownload)
+svgdownload.onclick = () => {
+  console.log(drawing)
+}
 /**
  * Refferrence Example
  */
