@@ -4,23 +4,25 @@ interface DrawingOption {
   penColor: Two.Color
   penWidth: number
 }
-export function drawing(
-  el: HTMLElement,
-  { penColor, penWidth }: DrawingOption = {
-    penColor: '#333',
-    penWidth: 10
+const defaultOption: DrawingOption = {
+  penColor: '#333',
+  penWidth: 10
+}
+export function drawing(el: HTMLElement, option?: Partial<DrawingOption>): Two {
+  const { penColor, penWidth } = {
+    ...defaultOption,
+    ...option
   }
-): Two {
   //   const type = /(canvas|webgl)/.test(url.type) ? url.type : 'svg'
   const type = 'svg'
   const two: Two = new Two({
     type: Two.Types[type],
-    fullscreen: true,
+    // fullscreen: false,
+    width: el.clientWidth,
+    height: el.clientHeight,
     autostart: true
   }).appendTo(el)
 
-  let x: number
-  let y: number
   let line: Two.Path | null
   let mouse: Two.Vector = new Two.Vector()
 

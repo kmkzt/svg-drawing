@@ -3,13 +3,15 @@ interface GridOption {
   size: number
   color: Two.Color
 }
-export const createGrid = (
-  el: HTMLElement,
-  { size, color }: GridOption = {
-    size: 30,
-    color: '#6dcff6'
+const defaultOption: GridOption = {
+  size: 30,
+  color: '#6dcff6'
+}
+export const createGrid = (option?: Partial<GridOption>) => {
+  const { size, color } = {
+    ...defaultOption,
+    ...option
   }
-) => {
   const two = new Two({
     type: Two.Types.canvas,
     width: size,
@@ -22,12 +24,5 @@ export const createGrid = (
 
   two.update()
 
-  el.setAttribute(
-    'style',
-    `background: url('${(two.renderer as any).domElement.toDataURL(
-      'image/png'
-    )}') 0 0 repeat;
-      background-size: ${size}px ${size}px;
-    `
-  )
+  return two
 }
