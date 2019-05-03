@@ -28,7 +28,7 @@ function main() {
     x = e.clientX
     y = e.clientY
     if (!line) {
-      const v1: Two.Vector = mouse
+      const v1: Two.Vector = makePoint(mouse)
       const v2: Two.Vector = makePoint(x, y)
       line = two.makeCurve([v1, v2], true)
       line.noFill().stroke = '#333'
@@ -98,7 +98,7 @@ function main() {
     })
   })
 
-  function makePoint(x: number | any, y: number) {
+  function makePoint(x: number | any, y?: number) {
     if (arguments.length <= 1) {
       y = x.y
       x = x.x
