@@ -19,8 +19,8 @@ export const createGrid = (size: number = 30) => {
       'style',
       `background: url('${(two.renderer as any).domElement.toDataURL(
         'image/png'
-      )}') 0 0 repeat,
-        background-size: ${size}px ${size}px
+      )}') 0 0 repeat;
+        background-size: ${size}px ${size}px;
       `
     )
   })
