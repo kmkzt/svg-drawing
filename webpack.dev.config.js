@@ -4,7 +4,7 @@ const Dotenv = require('dotenv-webpack')
 
 const config = {
   mode: 'development',
-  entry: resolve(__dirname, 'src/index.ts'),
+  entry: resolve(__dirname, 'src/example/index.ts'),
   output: {
     filename: '[name].bundle.js',
     path: resolve('public')
