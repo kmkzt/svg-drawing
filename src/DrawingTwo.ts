@@ -4,12 +4,16 @@ export interface DrawingOption extends ConstructorParams {
   penColor?: Two.Color
   penWidth?: number
   shakingRange?: number
+  strokeCap?: string // butt | round | square | inherit
+  strokeLineJoin?: string // miter | round | bevel
 }
 
 export default class DrawingTwo extends Two {
   public penColor: Two.Color
   public penWidth: number
   public shakingRange: number
+  public strokeCap: string
+  public strokeLineJoin: string
   private line: Two.Path | null
   private current: Two.Vector
   private el: HTMLElement
@@ -36,6 +40,8 @@ export default class DrawingTwo extends Two {
     this.penColor = params.penColor || '#333'
     this.penWidth = params.penWidth || 10
     this.shakingRange = params.shakingRange || 2
+    this.strokeCap = params.strokeCap || 'round'
+    this.strokeLineJoin = params.strokeLineJoin || 'round'
     this.el = params.el
     this.width = this.el.clientWidth
     this.height = this.el.clientHeight
@@ -79,35 +85,38 @@ export default class DrawingTwo extends Two {
    * Drawing Line methods
    */
   private move({ x, y }: { x: number; y: number }): void {
+    const rect: ClientRect | DOMRect = this.el.getBoundingClientRect()
     const makePoint = (mx: number, my: number) => {
       // TODO: define position types
-      const v: any = new Two.Vector(mx, my)
+      const v: any = new Two.Vector(mx - rect.left, my - rect.top)
       v.position = new Two.Vector(0, 0).copy(v)
       return v as Two.Vector
     }
-    if (!this.line) {
-      const vprev: Two.Vector = makePoint(this.current.x, this.current.y)
-      const vnext: Two.Vector = makePoint(x, y)
-      this.line = this.makeCurve([vprev, vnext], true)
-      this.line.noFill().stroke = this.penColor
-      this.line.linewidth = this.penWidth
-      this.line.vertices.map(v => {
-        if (!this.line) return
-        v.addSelf(this.line.translation)
-      })
-      this.line.translation.clear()
-    } else {
+    this.current.set(x, y)
+    if (this.line) {
       const v = makePoint(x, y)
       this.line.vertices.push(v as Two.Anchor)
+      return
     }
-    this.current.set(x, y)
+    const vprev: Two.Vector = makePoint(this.current.x, this.current.y)
+    const vnext: Two.Vector = makePoint(x, y)
+    this.line = this.makeCurve([vprev, vnext], true)
+    this.line.noFill().stroke = this.penColor
+    this.line.linewidth = this.penWidth
+    this.line.cap = this.strokeCap
+    this.line.join = this.strokeLineJoin
+    this.line.vertices.map(v => {
+      if (!this.line) return
+      v.addSelf(this.line.translation)
+    })
+    this.line.translation.clear()
   }
 
   /**
    * Drawing MouseEvent
    */
   private mouseMove(e: MouseEvent): void {
-    return this.move({ x: e.clientX, y: e.clientY })
+    this.move({ x: e.clientX, y: e.clientY })
   }
   private mouseUp(e: MouseEvent) {
     this.el.removeEventListener('mousemove', this.mouseMove)
