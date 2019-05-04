@@ -2,23 +2,24 @@ import Two, { ConstructorParams } from 'two.js'
 
 // TODO: Fix Two.vector constructor params
 export interface DrawingOption extends ConstructorParams {
+  el: HTMLElement
   penColor?: Two.Color
   penWidth?: number
   shakingRange?: number
 }
+
 export default class DrawingTwo extends Two {
   public penColor: Two.Color
   public penWidth: number
   public shakingRange: number
   private line: Two.Path | null
   private current: Two.Vector
+  private el: HTMLElement
   constructor(params: DrawingOption) {
     super(params)
-    this.line = null
-    this.current = new Two.Vector(0, 0)
-    this.penColor = params.penColor || '#333'
-    this.penWidth = params.penWidth || 10
-    this.shakingRange = params.shakingRange || 2
+    /**
+     * bind methods
+     */
     this.clearListner = this.clearListner.bind(this)
     this.move = this.move.bind(this)
     this.mouseUp = this.mouseUp.bind(this)
@@ -27,11 +28,22 @@ export default class DrawingTwo extends Two {
     this.touchStart = this.touchStart.bind(this)
     this.touchMove = this.touchMove.bind(this)
     this.touchEnd = this.touchEnd.bind(this)
-    this.shaking
-    window.addEventListener('mousedown', this.mouseDown)
-    window.addEventListener('touchstart', this.touchStart)
+    this.shaking = this.shaking.bind(this)
+    /**
+     * Setup parameter
+     */
+    this.line = null
+    this.current = new Two.Vector(0, 0)
+    this.penColor = params.penColor || '#333'
+    this.penWidth = params.penWidth || 10
+    this.shakingRange = params.shakingRange || 2
+    this.el = params.el
+    this.width = this.el.clientWidth
+    this.height = this.el.clientHeight
+    this.appendTo(this.el)
+    this.el.addEventListener('mousedown', this.mouseDown)
+    this.el.addEventListener('touchstart', this.touchStart)
   }
-
   /**
    * Shaking Drawing line
    */
@@ -56,12 +68,12 @@ export default class DrawingTwo extends Two {
    * listner clear
    */
   public clearListner() {
-    window.removeEventListener('mousedown', this.mouseDown)
-    window.removeEventListener('touchstart', this.touchStart)
+    this.el.removeEventListener('mousedown', this.mouseDown)
+    this.el.removeEventListener('touchstart', this.touchStart)
   }
   private move({ x, y }: { x: number; y: number }): void {
     const makePoint = (mx: number, my: number) => {
-      const v: { position: Two.Vector } & Two.Vector = new Two.Vector(mx, my)
+      const v = new Two.Vector(mx, my)
       v.position = new Two.Vector(0, 0).copy(v)
       return v as Two.Vector
     }
@@ -87,14 +99,14 @@ export default class DrawingTwo extends Two {
     return this.move({ x: e.clientX, y: e.clientY })
   }
   private mouseUp(e: MouseEvent) {
-    window.removeEventListener('mousemove', this.mouseMove)
-    window.removeEventListener('mouseup', this.mouseUp)
+    this.el.removeEventListener('mousemove', this.mouseMove)
+    this.el.removeEventListener('mouseup', this.mouseUp)
   }
   private mouseDown(e: MouseEvent) {
     this.current.set(e.clientX, e.clientY)
     this.line = null
-    window.addEventListener('mousemove', this.mouseMove)
-    window.addEventListener('mouseup', this.mouseUp)
+    this.el.addEventListener('mousemove', this.mouseMove)
+    this.el.addEventListener('mouseup', this.mouseUp)
   }
 
   private touchMove(e: TouchEvent) {
@@ -108,8 +120,8 @@ export default class DrawingTwo extends Two {
   }
   private touchEnd(e: TouchEvent) {
     e.preventDefault()
-    window.removeEventListener('touchmove', this.touchMove)
-    window.removeEventListener('touchend', this.touchEnd)
+    this.el.removeEventListener('touchmove', this.touchMove)
+    this.el.removeEventListener('touchend', this.touchEnd)
     return false
   }
   private touchStart(e: TouchEvent) {
@@ -117,8 +129,8 @@ export default class DrawingTwo extends Two {
     const touch = e.touches[0]
     this.current.set(touch.pageX, touch.pageY)
     this.line = null
-    window.addEventListener('touchmove', this.touchMove)
-    window.addEventListener('touchend', this.touchEnd)
+    this.el.addEventListener('touchmove', this.touchMove)
+    this.el.addEventListener('touchend', this.touchEnd)
     return false
   }
 }

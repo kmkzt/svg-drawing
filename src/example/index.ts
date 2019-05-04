@@ -21,11 +21,10 @@ area.setAttribute(
 )
 
 const drawing = new DrawingTwo({
+  el: area,
   type: Two.Types.svg,
-  width: area.clientWidth,
-  height: area.clientHeight,
   autostart: true
-}).appendTo(area)
+})
 
 /**
  * shaking trigger
