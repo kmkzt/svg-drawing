@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, Fragment, useCallback} from 'react'
+import React, {useEffect, useRef, Fragment, useCallback, useState} from 'react'
 import { render } from 'react-dom'
 import Two from 'two.js'
 import { createGrid } from './createGrid'
@@ -8,6 +8,45 @@ const size = 30
 const gridImage = (createGrid({
   size
 }).renderer as any).domElement.toDataURL('image/png')
+interface DownloadParam {
+  base64: string
+  filename: string
+  extention: string
+}
+
+const mimeTypeMap = {
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  svg: 'image/svg+xml'
+}
+
+const getMimeType = (extention: keyof typeof mimeTypeMap) => mimeTypeMap.hasOwnProperty(extention)
+  ? mimeTypeMap[extention]
+  : mimeTypeMap['png']
+const downloadBlob = (base64: string, extention: keyof typeof mimeTypeMap) => {
+  const bin = atob(base64.replace(/^.*,/, ''))
+  const buffer = new Uint8Array(bin.length)
+  for (let i = 0; i < bin.length; i++) {
+    buffer[i] = bin.charCodeAt(i)
+  }
+  const filename = `${new Date().toISOString()}.${extention}`
+  const blob = new Blob([buffer.buffer], {
+    type: getMimeType(extention)
+  })
+  if (window.navigator.msSaveBlob) { // IE
+    window.navigator.msSaveBlob(blob, filename)
+  } else if (window.URL && window.URL.createObjectURL) { // for Firefox, Chrome, Safari
+    const a = document.createElement('a')
+    a.download = filename
+    a.href = window.URL.createObjectURL(blob)
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  } else {  // for Other
+    window.open(base64, '_blank')
+  }
+}
+
 
 const Example = () => {
   const divRef  = useRef<HTMLDivElement | null>(null)
@@ -22,23 +61,11 @@ const Example = () => {
     if (!drawing || !drawing.current) return
     stopShaking.current = drawing.current.shaking()
   },[drawing.current])
-  const clickDownload = useCallback((e: React.MouseEvent<HTMLElement>) => {
+  const clickDownload = useCallback((extention: keyof typeof mimeTypeMap) => (e: React.MouseEvent<HTMLElement>) => {
     if (!drawing || !drawing.current) return
     const domElemet = (drawing.current.renderer as any).domElement
-    switch (drawing.current.type) {
-      case Two.Types.canvas:
-        console.log(domElemet.toDataURL('image/xml+svg'))
-        return
-      case Two.Types.svg:
-        console.log(domElemet)
-        return
-      case Two.Types.webgl:
-        console.log(domElemet)
-        return
-      default:
-        console.log(domElemet)
-        return
-    }
+    const blob = domElemet.toDataURL(getMimeType(extention))
+    downloadBlob(blob, extention)
   }, [drawing.current])
 
   const clickClear = useCallback(() => {
@@ -65,7 +92,9 @@ const Example = () => {
       }}
     />
     <button onClick={clickShaking} >Shaking Line</button>
-    <button onClick={clickDownload}>Download</button>
+    <button onClick={clickDownload('png')}>Download PNG</button>
+    <button onClick={clickDownload('jpg')}>Download JPG</button>
+    <button onClick={clickDownload('svg')}>Download SVG</button>
     <button onClick={clickClear}>Clear</button>
   </Fragment>
 }
