@@ -1,6 +1,4 @@
 import Two, { ConstructorParams } from 'two.js'
-
-// TODO: Fix Two.vector constructor params
 export interface DrawingOption extends ConstructorParams {
   el: HTMLElement
   penColor?: Two.Color
@@ -33,6 +31,7 @@ export default class DrawingTwo extends Two {
      * Setup parameter
      */
     this.line = null
+    // TODO: Fix Two.vector constructor params
     this.current = new Two.Vector(0, 0)
     this.penColor = params.penColor || '#333'
     this.penWidth = params.penWidth || 10
@@ -49,9 +48,13 @@ export default class DrawingTwo extends Two {
    */
   public shaking(): () => void {
     const random: number = this.shakingRange
+    // TODO: Fix any types
     const updateShake = (frameCount: any, timeDelta: any) => {
-      this.scene.children.map((child: Two.Object | any) => {
-        child.vertices.map((v: any) => {
+      this.scene.children.map((child: Two.Object) => {
+        const vertices = (child as Two.Path).vertices
+        if (!vertices) return
+        vertices.map((v: Two.Anchor | any) => {
+          // TODO: define position types
           if (!v.position) {
             return
           }
@@ -71,9 +74,14 @@ export default class DrawingTwo extends Two {
     this.el.removeEventListener('mousedown', this.mouseDown)
     this.el.removeEventListener('touchstart', this.touchStart)
   }
+
+  /**
+   * Drawing Line methods
+   */
   private move({ x, y }: { x: number; y: number }): void {
     const makePoint = (mx: number, my: number) => {
-      const v = new Two.Vector(mx, my)
+      // TODO: define position types
+      const v: any = new Two.Vector(mx, my)
       v.position = new Two.Vector(0, 0).copy(v)
       return v as Two.Vector
     }
@@ -95,6 +103,9 @@ export default class DrawingTwo extends Two {
     this.current.set(x, y)
   }
 
+  /**
+   * Drawing MouseEvent
+   */
   private mouseMove(e: MouseEvent): void {
     return this.move({ x: e.clientX, y: e.clientY })
   }
@@ -109,6 +120,9 @@ export default class DrawingTwo extends Two {
     this.el.addEventListener('mouseup', this.mouseUp)
   }
 
+  /**
+   * Drawing TouchEvent
+   */
   private touchMove(e: TouchEvent) {
     e.preventDefault()
     const touch = e.touches[0]

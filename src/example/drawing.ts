@@ -1,4 +1,5 @@
 // Refference
+// Don't use!!
 // https://two.js.org/examples/dynamic-vertices.html
 import Two, { ConstructorParams } from 'two.js'
 
@@ -29,7 +30,7 @@ export function drawing(el: HTMLElement, option?: Partial<DrawingOption>): Two {
 
   const move = ({ x, y }: { x: number; y: number }) => {
     const makePoint = (x: number, y: number) => {
-      const v: { position: Two.Vector } & Two.Vector = new Two.Vector(x, y)
+      const v: any = new Two.Vector(x, y)
       v.position = new Two.Vector(0, 0).copy(v)
       return v as Two.Vector
     }

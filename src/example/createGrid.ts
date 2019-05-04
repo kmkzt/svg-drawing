@@ -5,7 +5,7 @@ interface GridOption {
 }
 const defaultOption: GridOption = {
   size: 30,
-  color: '#6dcff6'
+  color: '#eee'
 }
 export const createGrid = (option?: Partial<GridOption>) => {
   const { size, color } = {
