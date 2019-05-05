@@ -1,11 +1,11 @@
 import Two, { ConstructorParams } from 'two.js'
 export interface DrawingOption extends ConstructorParams {
-  el: HTMLElement
-  penColor?: Two.Color
-  penWidth?: number
-  shakingRange?: number
-  strokeCap?: string // butt | round | square | inherit
-  strokeLineJoin?: string // miter | round | bevel
+  el: DrawingTwo['el']
+  penColor?: DrawingTwo['penColor']
+  penWidth?: DrawingTwo['penWidth']
+  shakingRange?: DrawingTwo['shakingRange']
+  strokeCap?: DrawingTwo['strokeCap'] // butt | round | square | inherit
+  strokeLineJoin?: DrawingTwo['strokeLineJoin'] // miter | round | bevel
 }
 
 export default class DrawingTwo extends Two {
@@ -22,6 +22,7 @@ export default class DrawingTwo extends Two {
     /**
      * bind methods
      */
+    this.drawingStart = this.drawingStart.bind(this)
     this.clearListner = this.clearListner.bind(this)
     this.move = this.move.bind(this)
     this.mouseUp = this.mouseUp.bind(this)
@@ -45,9 +46,7 @@ export default class DrawingTwo extends Two {
     this.el = params.el
     this.width = this.el.clientWidth
     this.height = this.el.clientHeight
-    this.appendTo(this.el)
-    this.el.addEventListener('mousedown', this.mouseDown)
-    this.el.addEventListener('touchstart', this.touchStart)
+    this.drawingStart()
   }
   /**
    * Shaking Drawing line
@@ -80,7 +79,15 @@ export default class DrawingTwo extends Two {
     this.el.removeEventListener('mousedown', this.mouseDown)
     this.el.removeEventListener('touchstart', this.touchStart)
   }
-
+  /**
+   * DrawingStart
+   */
+  private drawingStart() {
+    this.appendTo(this.el)
+    this.el.addEventListener('mousedown', this.mouseDown)
+    this.el.addEventListener('touchstart', this.touchStart)
+    return this
+  }
   /**
    * Drawing Line methods
    */
