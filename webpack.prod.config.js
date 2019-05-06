@@ -1,6 +1,5 @@
-const { resolve } = require('path')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
+const { resolve } = require('path')
 
 const config = {
   mode: 'production',
@@ -23,11 +22,7 @@ const config = {
     })
   ],
   optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        parallel: true
-      })
-    ]
+    minimize: true
   }
 }
 
