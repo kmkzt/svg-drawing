@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, Fragment, useCallback } from 'react'
 import { render } from 'react-dom'
 import { createGrid } from './createGrid'
-import DrawingTwo from '../DrawingTwo'
+import SvgDrawing from '../SvgDrawing'
 
 const size = 30
 const gridImage = (createGrid({
@@ -53,7 +53,7 @@ const downloadBlob = (base64: string, extention: keyof typeof mimeTypeMap) => {
 
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
-  const drawing = useRef<DrawingTwo | null>(null)
+  const drawing = useRef<SvgDrawing | null>(null)
   const stopShaking = useRef<(() => void) | null>(null)
   const clickShaking = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
@@ -121,7 +121,7 @@ const Example = () => {
   )
   useEffect(() => {
     if (!divRef || !divRef.current) return
-    drawing.current = new DrawingTwo({
+    drawing.current = new SvgDrawing({
       el: divRef.current,
       autostart: true
     })

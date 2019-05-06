@@ -1,14 +1,14 @@
 import Two, { ConstructorParams } from 'two.js'
 export interface DrawingOption extends ConstructorParams {
-  el: DrawingTwo['el']
-  penColor?: DrawingTwo['penColor']
-  penWidth?: DrawingTwo['penWidth']
-  shakingRange?: DrawingTwo['shakingRange']
-  strokeCap?: DrawingTwo['strokeCap'] // butt | round | square | inherit
-  strokeLineJoin?: DrawingTwo['strokeLineJoin'] // miter | round | bevel
+  el: SvgDrawing['el']
+  penColor?: SvgDrawing['penColor']
+  penWidth?: SvgDrawing['penWidth']
+  shakingRange?: SvgDrawing['shakingRange']
+  strokeCap?: SvgDrawing['strokeCap'] // butt | round | square | inherit
+  strokeLineJoin?: SvgDrawing['strokeLineJoin'] // miter | round | bevel
 }
 
-export default class DrawingTwo extends Two {
+export default class SvgDrawing extends Two {
   public penColor: Two.Color
   public penWidth: number
   public shakingRange: number

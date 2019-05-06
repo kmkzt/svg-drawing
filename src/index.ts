@@ -1,1 +1,1 @@
-export * from './DrawingTwo'
+export * from './SvgDrawing'
