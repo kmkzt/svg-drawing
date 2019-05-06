@@ -56,23 +56,46 @@ export default class SvgDrawing extends Two {
    */
   public shaking(): () => void {
     const random: number = this.shakingRange
-    // TODO: Fix any types
     const updateShake = (frameCount: any, timeDelta: any) => {
+      // shake speed
+      if (frameCount % 5 !== 0) return
       this.scene.children.map((child: Two.Object) => {
         const vertices = (child as Two.Path).vertices
         if (!vertices) return
         vertices.map((v: Two.Anchor | any) => {
           // TODO: define position types
+          // v.position is base position
           if (!v.position) {
-            return
+            v.position = new Two.Vector(0, 0).copy(v)
           }
           v.x = v.position.x + (Math.random() * random - random / 2)
           v.y = v.position.y + (Math.random() * random - random / 2)
         })
       })
     }
+
+    // to fix original position
+    const toBasePosition = () =>
+      this.scene.children.map((child: Two.Object) => {
+        this.scene.children.map((child: Two.Object) => {
+          const vertices = (child as Two.Path).vertices
+          if (!vertices) return
+          vertices.map((v: Two.Anchor | any) => {
+            // TODO: define position types
+            if (!v.position) {
+              return
+            }
+            v.x = v.position.x
+            v.y = v.position.y
+            delete v.position
+          })
+        })
+      })
     this.bind('update', updateShake)
-    return () => this.unbind('update', updateShake)
+    return () => {
+      this.unbind('update', updateShake)
+      toBasePosition()
+    }
   }
   /**
    * toSvgXML
@@ -115,12 +138,8 @@ export default class SvgDrawing extends Two {
    */
   private move({ x, y }: { x: number; y: number }): void {
     const rect: ClientRect | DOMRect = this.el.getBoundingClientRect()
-    const makePoint = (mx: number, my: number) => {
-      // TODO: define position types
-      const v: any = new Two.Vector(mx - rect.left, my - rect.top)
-      v.position = new Two.Vector(0, 0).copy(v)
-      return v as Two.Vector
-    }
+    const makePoint = (mx: number, my: number) =>
+      new Two.Vector(mx - rect.left, my - rect.top)
     this.current.set(x, y)
     if (this.line) {
       const v = makePoint(x, y)

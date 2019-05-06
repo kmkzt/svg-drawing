@@ -38,7 +38,7 @@ const downloadBlob = (base64: string, extention: keyof typeof mimeTypeMap) => {
     // IE
     window.navigator.msSaveBlob(blob, filename)
   } else if (window.URL && window.URL.createObjectURL) {
-    // for Firefox, Chrome, Safari
+    // Firefox, Chrome, Safari
     const a = document.createElement('a')
     a.download = filename
     a.href = window.URL.createObjectURL(blob)
@@ -46,7 +46,7 @@ const downloadBlob = (base64: string, extention: keyof typeof mimeTypeMap) => {
     a.click()
     document.body.removeChild(a)
   } else {
-    // for Other
+    // Other
     window.open(base64, '_blank')
   }
 }
@@ -88,7 +88,12 @@ const Example = () => {
     if (!drawing.current) return
     drawing.current.clear()
   }, [drawing.current])
-
+  const clickUndo = useCallback(() => {
+    if (!drawing.current) return
+    const path = drawing.current.scene.children
+    if (path.length === 0) return
+    drawing.current.remove(path[path.length - 1])
+  }, [drawing.current])
   const clickRandomColor = useCallback(() => {
     if (!drawing.current) return
     drawing.current.penColor = getRandomColor()
@@ -123,7 +128,8 @@ const Example = () => {
     if (!divRef || !divRef.current) return
     drawing.current = new SvgDrawing({
       el: divRef.current,
-      autostart: true
+      autostart: true,
+      shakingRange: 10
     })
   }, [divRef.current])
 
@@ -164,6 +170,7 @@ const Example = () => {
       <button onClick={clickDownload('jpg')}>Download JPG</button> */}
       <button onClick={clickDownloadSVG}>Download SVG</button>
       <button onClick={clickClear}>Clear</button>
+      <button onClick={clickUndo}>Undo</button>
     </Fragment>
   )
 }
