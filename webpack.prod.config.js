@@ -8,7 +8,7 @@ const config = {
   output: {
     filename: 'index.min.js',
     path: resolve('lib'),
-    library: 'samplelibrary-es',
+    library: 'svg-drawing',
     libraryTarget: 'umd'
   },
   devtool: false,

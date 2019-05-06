@@ -67,17 +67,17 @@ const Example = () => {
     },
     [drawing.current]
   )
-  const clickDownload = useCallback(
-    (extention: keyof typeof mimeTypeMap) => (
-      e: React.MouseEvent<HTMLElement>
-    ) => {
-      if (!drawing.current) return
-      const domElemet = (drawing.current.renderer as any).domElement
-      const blob = domElemet.toDataURL(getMimeType(extention))
-      downloadBlob(blob, extention)
-    },
-    [drawing.current]
-  )
+  // const clickDownload = useCallback(
+  //   (extention: keyof typeof mimeTypeMap) => (
+  //     e: React.MouseEvent<HTMLElement>
+  //   ) => {
+  //     if (!drawing.current) return
+  //     const domElemet = (drawing.current.renderer as any).domElement
+  //     const blob = domElemet.toDataURL(getMimeType(extention))
+  //     downloadBlob(blob, extention)
+  //   },
+  //   [drawing.current]
+  // )
   const clickDownloadSVG = useCallback(() => {
     if (!drawing.current) return
     const data = drawing.current.toSvgBase64()
@@ -160,8 +160,8 @@ const Example = () => {
         }}
       />
       <button onClick={clickShaking}>Shaking Line</button>
-      <button onClick={clickDownload('png')}>Download PNG</button>
-      <button onClick={clickDownload('jpg')}>Download JPG</button>
+      {/* <button onClick={clickDownload('png')}>Download PNG</button>
+      <button onClick={clickDownload('jpg')}>Download JPG</button> */}
       <button onClick={clickDownloadSVG}>Download SVG</button>
       <button onClick={clickClear}>Clear</button>
     </Fragment>
