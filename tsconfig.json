@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "./dist",
+    "outDir": "./lib",
     "target": "es5",
     "module": "esnext",
     "lib": ["es2018", "es2017", "dom"],
@@ -13,6 +13,8 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "downlevelIteration": true,
+    "declaration": true,
+    "declarationDir": "./types",
     "noEmit": true,
     "noUnusedLocals": false,
     "forceConsistentCasingInFileNames": true,
@@ -23,8 +25,9 @@
     "paths": {
       "@*": ["src*"]
     },
-    "typeRoots": ["node_modules/@types", "./types"]
+    "typeRoots": ["node_modules/@types", "./src/typings"]
   },
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "build",
