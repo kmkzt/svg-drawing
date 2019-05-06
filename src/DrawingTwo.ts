@@ -24,6 +24,8 @@ export default class DrawingTwo extends Two {
      */
     this.drawingStart = this.drawingStart.bind(this)
     this.clearListner = this.clearListner.bind(this)
+    this.toSvgXml = this.toSvgXml.bind(this)
+    this.toSvgBase64 = this.toSvgBase64.bind(this)
     this.move = this.move.bind(this)
     this.mouseUp = this.mouseUp.bind(this)
     this.mouseMove = this.mouseMove.bind(this)
@@ -43,6 +45,7 @@ export default class DrawingTwo extends Two {
     this.shakingRange = params.shakingRange || 2
     this.strokeCap = params.strokeCap || 'round'
     this.strokeLineJoin = params.strokeLineJoin || 'round'
+    this.type = params.type || Two.Types.svg
     this.el = params.el
     this.width = this.el.clientWidth
     this.height = this.el.clientHeight
@@ -71,7 +74,26 @@ export default class DrawingTwo extends Two {
     this.bind('update', updateShake)
     return () => this.unbind('update', updateShake)
   }
-
+  /**
+   * toSvgXML
+   */
+  public toSvgXml(): string | null {
+    const domElement: HTMLElement = (this.renderer as any).domElement
+    if (!domElement) return null
+    return `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${
+      this.width
+    }" height="${this.height}" viewBox="0 0 ${this.width} ${this.height}">${
+      domElement.innerHTML
+    }</svg>`
+  }
+  /**
+   * toSvgXML
+   */
+  public toSvgBase64(): string | null {
+    const svgXml = this.toSvgXml()
+    if (!svgXml) return null
+    return `data:image/svg+xml;base64,${btoa(svgXml)}`
+  }
   /**
    * listner clear
    */

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, Fragment, useCallback } from 'react'
 import { render } from 'react-dom'
-import Two from 'two.js'
 import { createGrid } from './createGrid'
 import DrawingTwo from '../DrawingTwo'
 
@@ -63,7 +62,7 @@ const Example = () => {
         stopShaking.current = null
         return
       }
-      if (!drawing || !drawing.current) return
+      if (!drawing.current) return
       stopShaking.current = drawing.current.shaking()
     },
     [drawing.current]
@@ -72,26 +71,31 @@ const Example = () => {
     (extention: keyof typeof mimeTypeMap) => (
       e: React.MouseEvent<HTMLElement>
     ) => {
-      if (!drawing || !drawing.current) return
+      if (!drawing.current) return
       const domElemet = (drawing.current.renderer as any).domElement
       const blob = domElemet.toDataURL(getMimeType(extention))
       downloadBlob(blob, extention)
     },
     [drawing.current]
   )
-
+  const clickDownloadSVG = useCallback(() => {
+    if (!drawing.current) return
+    const data = drawing.current.toSvgBase64()
+    if (!data) return
+    downloadBlob(data, 'svg')
+  }, [drawing.current])
   const clickClear = useCallback(() => {
-    if (!drawing || !drawing.current) return
+    if (!drawing.current) return
     drawing.current.clear()
   }, [drawing.current])
 
   const clickRandomColor = useCallback(() => {
-    if (!drawing || !drawing.current) return
+    if (!drawing.current) return
     drawing.current.penColor = getRandomColor()
   }, [drawing.current])
   const changePenWidth = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!drawing || !drawing.current) return
+      if (!drawing.current) return
       const penWidth = Number(e.target.value)
       drawing.current.penWidth = penWidth
     },
@@ -101,7 +105,7 @@ const Example = () => {
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const cap = e.target.value
       if (!['butt', 'round', 'square'].includes(e.target.value)) return
-      if (!drawing || !drawing.current) return
+      if (!drawing.current) return
       drawing.current.strokeCap = cap
     },
     [drawing.current]
@@ -110,7 +114,7 @@ const Example = () => {
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const lineJoin = e.target.value
       if (!['miter', 'round', 'bevel'].includes(e.target.value)) return
-      if (!drawing || !drawing.current) return
+      if (!drawing.current) return
       drawing.current.strokeLineJoin = lineJoin
     },
     [drawing.current]
@@ -119,7 +123,6 @@ const Example = () => {
     if (!divRef || !divRef.current) return
     drawing.current = new DrawingTwo({
       el: divRef.current,
-      type: Two.Types.svg,
       autostart: true
     })
   }, [divRef.current])
@@ -159,7 +162,7 @@ const Example = () => {
       <button onClick={clickShaking}>Shaking Line</button>
       <button onClick={clickDownload('png')}>Download PNG</button>
       <button onClick={clickDownload('jpg')}>Download JPG</button>
-      <button onClick={clickDownload('svg')}>Download SVG</button>
+      <button onClick={clickDownloadSVG}>Download SVG</button>
       <button onClick={clickClear}>Clear</button>
     </Fragment>
   )
