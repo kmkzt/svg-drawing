@@ -2,3 +2,4 @@
 node_modules.vscode
 template.html
 webpack.*.js
+renovate.json
