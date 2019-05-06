@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, Fragment, useCallback } from 'react'
+import Two from 'two.js'
 import { render } from 'react-dom'
 import { createGrid } from './createGrid'
 import { SvgDrawing } from '../SvgDrawing'
+import SvgAnimation from '../SvgAnimation'
 
 const size = 30
 const gridImage = (createGrid({
@@ -54,6 +56,32 @@ const downloadBlob = (base64: string, extention: keyof typeof mimeTypeMap) => {
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const drawing = useRef<SvgDrawing | null>(null)
+  const animationRef = useRef<HTMLDivElement | null>(null)
+  const animation = useRef<SvgAnimation | null>(null)
+  const stopShaking = useRef<(() => void) | null>(null)
+  const clickShaking = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      if (stopShaking && stopShaking.current) {
+        stopShaking.current()
+        stopShaking.current = null
+        return
+      }
+      if (!animation.current) return
+      stopShaking.current = animation.current.shaking()
+    },
+    [animation.current]
+  )
+  // const clickDownload = useCallback(
+  //   (extention: keyof typeof mimeTypeMap) => (
+  //     e: React.MouseEvent<HTMLElement>
+  //   ) => {
+  //     if (!drawing.current) return
+  //     const domElemet = (drawing.current.renderer as any).domElement
+  //     const blob = domElemet.toDataURL(getMimeType(extention))
+  //     downloadBlob(blob, extention)
+  //   },
+  //   [drawing.current]
+  // )
   const clickDownloadSVG = useCallback(() => {
     if (!drawing.current) return
     const data = drawing.current.toSvgBase64()
@@ -73,6 +101,27 @@ const Example = () => {
   const clickRandomColor = useCallback(() => {
     if (!drawing.current) return
     drawing.current.penColor = getRandomColor()
+  }, [])
+  const clickUpdate = useCallback(() => {
+    if (!animation.current || !drawing.current) return
+    const svgEle: SVGElement = (drawing.current.renderer as any).domElement
+    // const [svgEle] = new DOMParser()
+    //   .parseFromString(
+    //     `<svg version="1.1"
+    //      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+    //      x="0px" y="0px" width="202px" height="264px" viewBox="-0.469 -0.136 202 264"
+    //      overflow="visible" enable-background="new -0.469 -0.136 202 264" xml:space="preserve">
+    //   <path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M200.5,204.792
+    //     c0,0-35.703,58.341-99.988,58.341C36.223,263.132,0.5,210.862,0.5,131.531C0.5,52.204,38.584,0.5,100.5,0.5
+    //     c61.924,0,85.354,51.704,85.354,51.704"/>
+    //   </svg>`,
+    //     'image/svg+xml'
+    //   )
+    //   .getElementsByTagName('svg')
+
+    animation.current.interpret(svgEle)
+    animation.current.update()
+    console.log(animation.current)
   }, [])
   const changePenWidth = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +155,13 @@ const Example = () => {
       shakingRange: 10
     })
   })
-
+  useEffect(() => {
+    if (!animationRef.current) return
+    animation.current = new SvgAnimation({
+      el: animationRef.current,
+      type: Two.Types.svg
+    })
+  })
   return (
     <Fragment>
       <div>
@@ -131,17 +186,42 @@ const Example = () => {
       </div>
       <button onClick={clickRandomColor}>Change Color</button>
       <div
-        ref={divRef}
         style={{
-          background: `url('${gridImage}') 0 0 repeat`,
-          backgroundSize: `${size}px ${size}px`,
-          width: 500,
-          height: 500
+          display: 'flex',
+          justifyContent: 'flexWrap'
         }}
-      />
-      <button onClick={clickDownloadSVG}>Download SVG</button>
-      <button onClick={clickClear}>Clear</button>
-      <button onClick={clickUndo}>Undo</button>
+      >
+        <div>
+          <div
+            ref={divRef}
+            style={{
+              background: `url('${gridImage}') 0 0 repeat`,
+              backgroundSize: `${size}px ${size}px`,
+              width: 500,
+              height: 500,
+              margin: 'auto'
+            }}
+          />
+          {/* <button onClick={clickDownload('png')}>Download PNG</button>
+            <button onClick={clickDownload('jpg')}>Download JPG</button> */}
+          <button onClick={clickDownloadSVG}>Download SVG</button>
+          <button onClick={clickClear}>Clear</button>
+          <button onClick={clickUndo}>Undo</button>
+        </div>
+        <div>
+          <div
+            ref={animationRef}
+            style={{
+              border: '1px solid #bbb',
+              width: 500,
+              height: 500,
+              margin: 'auto'
+            }}
+          />
+          <button onClick={clickUpdate}>Update Draw</button>
+          <button onClick={clickShaking}>Shaking Line</button>
+        </div>
+      </div>
     </Fragment>
   )
 }
