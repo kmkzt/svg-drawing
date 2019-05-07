@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, Fragment, useCallback } from 'react'
 import { render } from 'react-dom'
 import { createGrid } from './createGrid'
-import SvgDrawing from '../SvgDrawing'
+import { SvgDrawing } from '../SvgDrawing'
 
 const size = 30
 const gridImage = (createGrid({
@@ -54,67 +54,40 @@ const downloadBlob = (base64: string, extention: keyof typeof mimeTypeMap) => {
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const drawing = useRef<SvgDrawing | null>(null)
-  const stopShaking = useRef<(() => void) | null>(null)
-  const clickShaking = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
-      if (stopShaking && stopShaking.current) {
-        stopShaking.current()
-        stopShaking.current = null
-        return
-      }
-      if (!drawing.current) return
-      stopShaking.current = drawing.current.shaking()
-    },
-    [drawing.current]
-  )
-  // const clickDownload = useCallback(
-  //   (extention: keyof typeof mimeTypeMap) => (
-  //     e: React.MouseEvent<HTMLElement>
-  //   ) => {
-  //     if (!drawing.current) return
-  //     const domElemet = (drawing.current.renderer as any).domElement
-  //     const blob = domElemet.toDataURL(getMimeType(extention))
-  //     downloadBlob(blob, extention)
-  //   },
-  //   [drawing.current]
-  // )
   const clickDownloadSVG = useCallback(() => {
     if (!drawing.current) return
     const data = drawing.current.toSvgBase64()
     if (!data) return
     downloadBlob(data, 'svg')
-  }, [drawing.current])
+  }, [])
   const clickClear = useCallback(() => {
     if (!drawing.current) return
     drawing.current.clear()
-  }, [drawing.current])
+  }, [])
   const clickUndo = useCallback(() => {
     if (!drawing.current) return
     const path = drawing.current.scene.children
     if (path.length === 0) return
     drawing.current.remove(path[path.length - 1])
-  }, [drawing.current])
+  }, [])
   const clickRandomColor = useCallback(() => {
     if (!drawing.current) return
     drawing.current.penColor = getRandomColor()
-  }, [drawing.current])
+  }, [])
   const changePenWidth = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!drawing.current) return
       const penWidth = Number(e.target.value)
       drawing.current.penWidth = penWidth
     },
-    [drawing.current]
+    []
   )
-  const changeCap = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const cap = e.target.value
-      if (!['butt', 'round', 'square'].includes(e.target.value)) return
-      if (!drawing.current) return
-      drawing.current.strokeCap = cap
-    },
-    [drawing.current]
-  )
+  const changeCap = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const cap = e.target.value
+    if (!['butt', 'round', 'square'].includes(e.target.value)) return
+    if (!drawing.current) return
+    drawing.current.strokeCap = cap
+  }, [])
   const changeLineJoin = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const lineJoin = e.target.value
@@ -122,16 +95,16 @@ const Example = () => {
       if (!drawing.current) return
       drawing.current.strokeLineJoin = lineJoin
     },
-    [drawing.current]
+    []
   )
   useEffect(() => {
-    if (!divRef || !divRef.current) return
+    if (!divRef.current && !drawing.current) return
     drawing.current = new SvgDrawing({
       el: divRef.current,
       autostart: true,
       shakingRange: 10
     })
-  }, [divRef.current])
+  })
 
   return (
     <Fragment>
@@ -165,9 +138,6 @@ const Example = () => {
           height: 500
         }}
       />
-      <button onClick={clickShaking}>Shaking Line</button>
-      {/* <button onClick={clickDownload('png')}>Download PNG</button>
-      <button onClick={clickDownload('jpg')}>Download JPG</button> */}
       <button onClick={clickDownloadSVG}>Download SVG</button>
       <button onClick={clickClear}>Clear</button>
       <button onClick={clickUndo}>Undo</button>
