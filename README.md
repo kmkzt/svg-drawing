@@ -2,7 +2,10 @@
 
 ### introduction
 
-`svg-drawing` is drawing svg library. This is use two.js.
+`svg-drawing` is drawing svg library. This is use [two.js](https://github.com/jonobr1/two.js).
+
+**[demo](https://kmkzt.github.io/svg-drawing/)**
+[example code](src/example/)
 
 ## Get started
 
@@ -13,10 +16,19 @@ yarn add two.js svg-drawing
 ## how to use
 
 ```javascript
-import SvgDrawing from 'svg-drawing'
+import { SvgDrawing } from 'svg-drawing'
 
+const el = document.createElement('div')
+el.setAttribute(
+  'style',
+  `
+  border: 1px solid #ddd;
+  width: 500px;
+  height: 500px;
+  `
+)
 new SvgDrawing({
-  el: docuemnt.querySelector('#drawing'),
+  el,
   autostart: true
 })
 ```
