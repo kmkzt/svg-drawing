@@ -52,7 +52,7 @@
     "@typescript-eslint/eslint-plugin": "1.7.0",
     "@typescript-eslint/parser": "1.7.0",
     "@typescript-eslint/typescript-estree": "1.7.0",
-    "autoprefixer": "9.5.0",
+    "autoprefixer": "9.5.1",
     "babel-core": "6.26.3",
     "babel-jest": "24.8.0",
     "babel-loader": "8.0.5",
