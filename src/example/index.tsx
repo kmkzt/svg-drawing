@@ -98,7 +98,8 @@ const Example = () => {
     []
   )
   useEffect(() => {
-    if (!divRef.current && !drawing.current) return
+    if (drawing.current) return
+    if (!divRef.current) return
     drawing.current = new SvgDrawing({
       el: divRef.current,
       autostart: true,
