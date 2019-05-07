@@ -8,8 +8,9 @@
     "drawing",
     "two.js"
   ],
-  "main": "lib/index.js",
+  "main": "lib/index.min.js",
   "files": [
+    "src/index.ts",
     "src/SvgDrawing.ts"
   ],
   "scripts": {
