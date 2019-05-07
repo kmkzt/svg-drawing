@@ -2,6 +2,7 @@
   "name": "svg-drawing",
   "version": "0.1.2",
   "description": "svg drawing library.",
+  "author": "kmkzt",
   "keywords": [
     "svg",
     "drawing",
