@@ -9,6 +9,19 @@ const common = {
   module: {
     rules: [
       {
+        enforce: 'pre',
+        test: /\.(j|t)sx?$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'eslint-loader',
+            options: {
+              failOnWarning: true
+            }
+          }
+        ]
+      },
+      {
         test: /\.js|.jsx$/,
         exclude: /node_modules/,
         use: [
