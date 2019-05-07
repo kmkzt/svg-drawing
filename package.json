@@ -1,6 +1,7 @@
 {
   "name": "svg-drawing",
-  "version": "0.1.2",
+  "version": "0.1.21",
+  "license": "MIT",
   "description": "svg drawing library.",
   "author": "kmkzt",
   "keywords": [
@@ -13,6 +14,7 @@
     "src/index.ts",
     "src/SvgDrawing.ts"
   ],
+  "homepage": "https://github.com/kmkzt/svg-drawing",
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
     "build": "npm-run-all build:*",
@@ -21,7 +23,6 @@
     "sample": "webpack-dev-server server.js",
     "test": "jest"
   },
-  "license": "MIT",
   "dependencies": {
     "two.js": "0.7.0-beta.3"
   },
