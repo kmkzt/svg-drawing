@@ -29,21 +29,21 @@ export default class SvgAnimation extends Two {
    * Shaking Drawing line
    */
   public shaking(): () => void {
-    const random: number = this.shakingRange
+    const randomShaking = (): number =>
+      Math.random() * this.shakingRange - this.shakingRange / 2
     const updateShake = (frameCount: any, timeDelta: any) => {
       // shake speed
       if (frameCount % 5 !== 0) return
       this.scene.children.map((child: Two.Object) => {
-        const vertices = (child as Two.Path).vertices
-        if (!vertices) return
-        vertices.map((v: Two.Anchor | any) => {
+        if (!(child as Two.Path).vertices) return
+        ;(child as Two.Path).vertices.map((v: Two.Anchor | any) => {
           // TODO: define position types
           // v.position is base position
           if (!v.position) {
-            v.position = new Two.Vector(0, 0).copy(v)
+            v.position = v.clone()
           }
-          v.x = v.position.x + (Math.random() * random - random / 2)
-          v.y = v.position.y + (Math.random() * random - random / 2)
+          v.x = v.position.x + randomShaking()
+          v.y = v.position.y + randomShaking()
         })
       })
     }
@@ -65,7 +65,7 @@ export default class SvgAnimation extends Two {
           })
         })
       })
-    this.bind('update', updateShake)
+    this.bind('update', updateShake).play()
     return () => {
       this.unbind('update', updateShake)
       toBasePosition()
