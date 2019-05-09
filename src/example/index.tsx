@@ -95,13 +95,15 @@ const Example = () => {
   const clickClear = useCallback(() => {
     if (!drawing.current) return
     drawing.current.clear()
-  }, [])
+    animationFrameUpdate()
+  }, [animationFrameUpdate])
   const clickUndo = useCallback(() => {
     if (!drawing.current) return
     const path = drawing.current.scene.children
     if (path.length === 0) return
     drawing.current.remove(path[path.length - 1])
-  }, [])
+    animationFrameUpdate()
+  }, [animationFrameUpdate])
   const clickRandomColor = useCallback(() => {
     if (!drawing.current) return
     drawing.current.penColor = getRandomColor()
