@@ -71,8 +71,10 @@ const Example = () => {
   const animationFrameUpdate = useCallback(() => {
     if (!animation.current || !drawing.current) return
     animation.current.clear()
-    const drawingClone = drawing.current.scene.clone()
-    animation.current.scene.add(drawingClone)
+    drawing.current.scene.children.map((twoObj: Two.Object) => {
+      if (!animation.current) return
+      animation.current.scene.add(twoObj.clone())
+    })
     animation.current.update()
   }, [])
   const clickDownload = useCallback(
@@ -112,8 +114,14 @@ const Example = () => {
   const changePenWidth = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!drawing.current) return
-      const penWidth = Number(e.target.value)
-      drawing.current.penWidth = penWidth
+      drawing.current.penWidth = Number(e.target.value)
+    },
+    []
+  )
+  const changeShakingRange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!animation.current) return
+      animation.current.shakingRange = Number(e.target.value)
     },
     []
   )
@@ -137,7 +145,8 @@ const Example = () => {
     if (!divRef.current) return
     drawing.current = new SvgDrawing({
       el: divRef.current,
-      autostart: true
+      autostart: true,
+      penWidth: 5
     })
   })
   useEffect(() => {
@@ -145,14 +154,30 @@ const Example = () => {
     animation.current = new SvgAnimation({
       el: animationRef.current,
       type: Two.Types.canvas,
-      shakingRange: 10
+      shakingRange: 5
     })
   })
   return (
     <Fragment>
       <div>
         pen width
-        <input type="range" min={3} max={50} onChange={changePenWidth} />
+        <input
+          type="range"
+          defaultValue="5"
+          min={1}
+          max={50}
+          onChange={changePenWidth}
+        />
+      </div>
+      <div>
+        Shaking Range
+        <input
+          type="range"
+          defaultValue="5"
+          min={1}
+          max={50}
+          onChange={changeShakingRange}
+        />
       </div>
       <div>
         stroke cap
@@ -171,6 +196,8 @@ const Example = () => {
         </select>
       </div>
       <button onClick={clickRandomColor}>Change Color</button>
+      <button onClick={clickShaking}>Shaking Line</button>
+      <button onClick={clickUndo}>Undo</button>
       <div
         style={{
           display: 'flex',
@@ -190,9 +217,10 @@ const Example = () => {
               margin: 'auto'
             }}
           />
-          <button onClick={clickDownloadSVG}>Download SVG</button>
           <button onClick={clickClear}>Clear</button>
-          <button onClick={clickUndo}>Undo</button>
+          <button onClick={clickDownload('png')}>Download PNG</button>
+          <button onClick={clickDownload('jpg')}>Download JPG</button>
+          <button onClick={clickDownloadSVG}>Download SVG</button>
         </div>
         <div>
           <div
@@ -204,9 +232,6 @@ const Example = () => {
               margin: 'auto'
             }}
           />
-          <button onClick={clickDownload('png')}>Download PNG</button>
-          <button onClick={clickDownload('jpg')}>Download JPG</button>
-          <button onClick={clickShaking}>Shaking Line</button>
         </div>
       </div>
     </Fragment>
