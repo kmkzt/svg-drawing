@@ -71,6 +71,8 @@ const Example = () => {
   const animationFrameUpdate = useCallback(() => {
     if (!animation.current || !drawing.current) return
     animation.current.clear()
+    // This is nesting <g> dom
+    // animation.current.makeGroup(drawing.current.scene.clone())
     drawing.current.scene.children.map((twoObj: Two.Object) => {
       if (!animation.current) return
       animation.current.scene.add(twoObj.clone())
