@@ -3,7 +3,6 @@ export interface DrawingOption extends ConstructorParams {
   el: SvgDrawing['el']
   penColor?: SvgDrawing['penColor']
   penWidth?: SvgDrawing['penWidth']
-  shakingRange?: SvgDrawing['shakingRange']
   strokeCap?: SvgDrawing['strokeCap'] // butt | round | square | inherit
   strokeLineJoin?: SvgDrawing['strokeLineJoin'] // miter | round | bevel
 }
@@ -11,7 +10,6 @@ export interface DrawingOption extends ConstructorParams {
 export class SvgDrawing extends Two {
   public penColor: Two.Color
   public penWidth: number
-  public shakingRange: number
   public strokeCap: string
   public strokeLineJoin: string
   private line: Two.Path | null
@@ -41,7 +39,6 @@ export class SvgDrawing extends Two {
     this.current = new Two.Vector(0, 0)
     this.penColor = params.penColor || '#333'
     this.penWidth = params.penWidth || 10
-    this.shakingRange = params.shakingRange || 2
     this.strokeCap = params.strokeCap || 'round'
     this.strokeLineJoin = params.strokeLineJoin || 'round'
     this.type = params.type || Two.Types.svg
