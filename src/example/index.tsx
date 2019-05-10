@@ -68,6 +68,18 @@ const Example = () => {
     if (!animation.current) return
     stopShaking.current = animation.current.shaking()
   }, [])
+  const clickStroke = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if (!animation.current || !drawing.current) return
+    const svgXMLString: string | null = drawing.current.toSvgXml()
+    if (!svgXMLString) return
+    const domParser = new DOMParser()
+    const svgEle = domParser
+      .parseFromString(svgXMLString, 'image/svg+xml')
+      .querySelector('svg')
+    if (!svgEle) return
+    animation.current.strokeAnimation(svgEle)
+    // animation.current.strokeAnimationScene()
+  }, [])
   const animationFrameUpdate = useCallback(() => {
     if (!animation.current || !drawing.current) return
     animation.current.clear()
@@ -197,9 +209,10 @@ const Example = () => {
           <option>bevel</option>
         </select>
       </div>
+      <button onClick={clickUndo}>Undo</button>
       <button onClick={clickRandomColor}>Change Color</button>
       <button onClick={clickShaking}>Shaking Line</button>
-      <button onClick={clickUndo}>Undo</button>
+      <button onClick={clickStroke}>Srroke Animation</button>
       <div
         style={{
           display: 'flex',
