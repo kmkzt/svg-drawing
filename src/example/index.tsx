@@ -2,8 +2,7 @@ import React, { useEffect, useRef, Fragment, useCallback } from 'react'
 import Two from 'two.js'
 import { render } from 'react-dom'
 import { createGrid } from './createGrid'
-import { SvgDrawing } from '../SvgDrawing'
-import SvgAnimation from '../SvgAnimation'
+import { SvgDrawing, SvgAnimation } from '../'
 
 const size = 30
 const gridImage = (createGrid({

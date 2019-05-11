@@ -1,6 +1,6 @@
 {
   "name": "svg-drawing",
-  "version": "0.1.21",
+  "version": "1.0.0",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": "kmkzt",
@@ -11,7 +11,9 @@
   ],
   "main": "lib/index.min.js",
   "files": [
+    "lib/index.min.js",
     "src/index.ts",
+    "src/SvgDrawing.ts",
     "src/SvgDrawing.ts"
   ],
   "repository": "kmkzt/svg-drawing",
