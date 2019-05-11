@@ -1,6 +1,7 @@
 {
   "name": "svg-drawing",
-  "version": "0.1.2",
+  "version": "0.1.21",
+  "license": "MIT",
   "description": "svg drawing library.",
   "author": "kmkzt",
   "keywords": [
@@ -13,15 +14,17 @@
     "src/index.ts",
     "src/SvgDrawing.ts"
   ],
+  "repository": "kmkzt/svg-drawing",
+  "homepage": "https://github.com/kmkzt/svg-drawing",
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
     "build": "npm-run-all build:*",
     "build:lib": "rm -r lib && NODE_ENV=production webpack -p",
     "build:demo": "rm -r docs && NODE_ENV=development webpack -p",
     "sample": "webpack-dev-server server.js",
-    "test": "jest"
+    "test": "jest --passWithNoTests",
+    "semantic-release": "semantic-release"
   },
-  "license": "MIT",
   "dependencies": {
     "two.js": "0.7.0-beta.3"
   },
@@ -31,6 +34,12 @@
     "@babel/polyfill": "7.4.4",
     "@babel/preset-env": "7.4.4",
     "@babel/preset-typescript": "7.3.3",
+    "@semantic-release/changelog": "3.0.2",
+    "@semantic-release/commit-analyzer": "6.1.0",
+    "@semantic-release/git": "7.0.8",
+    "@semantic-release/github": "5.2.10",
+    "@semantic-release/npm": "5.1.7",
+    "@semantic-release/release-notes-generator": "7.1.4",
     "@types/autoprefixer": "9.5.0",
     "@types/babel-core": "6.25.6",
     "@types/babel__core": "7.1.1",
@@ -79,6 +88,7 @@
     "resolve-url-loader": "3.1.0",
     "rimraf": "2.6.3",
     "sass-loader": "7.1.0",
+    "semantic-release": "15.13.12",
     "style-loader": "0.23.1",
     "ts-jest": "24.0.2",
     "ts-loader": "6.0.0",
@@ -89,5 +99,15 @@
     "webpack-dev-server": "3.3.1",
     "webpack-merge": "4.2.1",
     "workbox-webpack-plugin": "4.3.1"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/github",
+      "@semantic-release/npm",
+      "@semantic-release/git"
+    ]
   }
 }
