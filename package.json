@@ -22,7 +22,7 @@
     "build:lib": "rm -r lib && NODE_ENV=production webpack -p",
     "build:demo": "rm -r docs && NODE_ENV=development webpack -p",
     "sample": "webpack-dev-server server.js",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "semantic-release": "semantic-release"
   },
   "dependencies": {
