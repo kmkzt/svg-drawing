@@ -14,6 +14,7 @@ export default class SvgAnimation extends Two {
      */
     this.animationStart = this.animationStart.bind(this)
     this.shaking = this.shaking.bind(this)
+    this.initSvgXml = this.initSvgXml.bind(this)
     this.strokeAnimation = this.strokeAnimation.bind(this)
     /**
      * Setup parameter
@@ -79,28 +80,25 @@ export default class SvgAnimation extends Two {
     this.appendTo(this.el)
     return this
   }
-  // bug -> absolute center position
-  public strokeAnimation(svgNode: SVGElement) {
+  // TODO: SvgElement XML test
+  public initSvgXml(svgNode: SVGElement) {
     this.clear()
     const fresh: Two.Group = this.interpret(svgNode)
     ;(fresh as any).subdivide()
+    this.scene.add(fresh)
+  }
 
-    // fix position center
-    fresh.center().translation.set(this.width / 2, this.height / 2)
-    const resize = () => fresh.translation.set(this.width / 2, this.height / 2)
-    resize()
-
-    const distances = calculateDistances(fresh.children[0] as any)
+  public strokeAnimation() {
+    const distances = calculateDistances(this.scene)
     const total = distances.reduce((to: number, d: number) => to + d, 0)
     const setEnding = (group: Two.Group, ti: number) => {
-      const traversed = ti * total
+      const traversed: number = ti * total
       let current = 0
       group.children.map((child: Two.Object, i: number) => {
         const distance = distances[i]
         const min = current
         const max = current + distance
-        const pct = cmap(traversed, min, max, 0, 1)
-        ;(child as any).ending = pct
+        ;(child as Two.Path).ending = cmap(traversed, min, max, 0, 1)
         current = max
       })
     }
@@ -111,44 +109,11 @@ export default class SvgAnimation extends Two {
       } else {
         t = 0
       }
-      setEnding(fresh, t)
+      setEnding(this.scene, t)
     }
-
-    this.bind('resize', resize)
-      .bind('update', update)
-      .play()
-    // this.bind('update', (...arg) => console.log(...arg)).play()
+    this.bind('update', update).play()
+    return () => this.unbind('update', update)
   }
-  // public strokeAnimationScene() {
-  //   ;(this.scene as any).subdivide()
-  //   this.scene.noFill()
-  //   // fresh.center().translation.set(this.width / 2, this.height / 2)
-  //   const distances = calculateDistances(this.scene)
-  //   const total = distances.reduce((to: number, d: number) => to + d, 0)
-  //   const setEnding = (group: Two.Group, ti: number) => {
-  //     let current = 0
-  //     const traversed = ti * total
-  //     group.children.map((child: Two.Object, i: number) => {
-  //       const distance = distances[i]
-  //       const min = current
-  //       const max = current + distance
-  //       const pct = cmap(traversed, min, max, 0, 1)
-  //       ;(child as any).ending = pct
-  //       current = max
-  //     })
-  //   }
-  //   let t = 0
-  //   const update = (...arg: any[]) => {
-  //     if (t < 0.9999) {
-  //       t += 0.00625
-  //     } else {
-  //       t = 0
-  //     }
-  //     setEnding(this.scene, t)
-  //   }
-  //   this.bind('update', update).play()
-  //   // this.bind('update', (...arg) => console.log(...arg)).play()
-  // }
 }
 
 function calculateDistances(group: Two.Group): number[] {
