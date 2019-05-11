@@ -4,7 +4,7 @@ export interface AnimationOption extends ConstructorParams {
   shakingRange?: SvgAnimation['shakingRange']
 }
 
-export default class SvgAnimation extends Two {
+export class SvgAnimation extends Two {
   public shakingRange: number
   private el: HTMLElement
   constructor(params: AnimationOption) {
