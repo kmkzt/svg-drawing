@@ -55,109 +55,122 @@ const downloadBlob = (base64: string, extention: keyof typeof mimeTypeMap) => {
 
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
-  const drawing = useRef<SvgDrawing | null>(null)
+  const svgDrawingRef = useRef<SvgDrawing | null>(null)
   const animationRef = useRef<HTMLDivElement | null>(null)
-  const animation = useRef<SvgAnimation | null>(null)
-  const stopShaking = useRef<(() => void) | null>(null)
-  const clickShaking = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    if (stopShaking && stopShaking.current) {
-      stopShaking.current()
-      stopShaking.current = null
-      return
+  const svgAnimationRef = useRef<SvgAnimation | null>(null)
+  const stopShakingRef = useRef<(() => void) | null>(null)
+  const stopStrokeRef = useRef<(() => void) | null>(null)
+  const stopShaking = useCallback(() => {
+    if (stopShakingRef.current) {
+      stopShakingRef.current()
+      stopShakingRef.current = null
+      return true
     }
-    if (!animation.current) return
-    stopShaking.current = animation.current.shaking()
+    return false
   }, [])
-  const clickStroke = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    if (!animation.current || !drawing.current) return
-    const svgXMLString: string | null = drawing.current.toSvgXml()
-    if (!svgXMLString) return
-    const domParser = new DOMParser()
-    const svgEle = domParser
-      .parseFromString(svgXMLString, 'image/svg+xml')
-      .querySelector('svg')
-    if (!svgEle) return
-    animation.current.strokeAnimation(svgEle)
-    // animation.current.strokeAnimationScene()
+  const clickShaking = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      if (stopShaking()) return
+      if (!svgAnimationRef.current) return
+      stopShakingRef.current = svgAnimationRef.current.shaking()
+    },
+    [stopShaking]
+  )
+  const stopStroke = useCallback(() => {
+    if (stopStrokeRef.current) {
+      stopStrokeRef.current()
+      stopStrokeRef.current = null
+      return true
+    }
+    return false
   }, [])
+  const clickStroke = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      if (stopStroke()) return
+      if (!svgAnimationRef.current) return
+      stopStrokeRef.current = svgAnimationRef.current.strokeAnimation()
+    },
+    [stopStroke]
+  )
   const animationFrameUpdate = useCallback(() => {
-    if (!animation.current || !drawing.current) return
-    animation.current.clear()
+    if (!svgAnimationRef.current || !svgDrawingRef.current) return
+    svgAnimationRef.current.clear()
     // This is nesting <g> dom
-    // animation.current.makeGroup(drawing.current.scene.clone())
-    drawing.current.scene.children.map((twoObj: Two.Object) => {
-      if (!animation.current) return
-      animation.current.scene.add(twoObj.clone())
+    // animation.current.makeGroup(svgDrawingRef.current.scene.clone())
+    svgDrawingRef.current.scene.children.map((twoObj: Two.Object) => {
+      if (!svgAnimationRef.current) return
+      svgAnimationRef.current.scene.add(twoObj.clone())
     })
-    animation.current.update()
+    svgAnimationRef.current.update()
   }, [])
   const clickDownload = useCallback(
     (extention: keyof typeof mimeTypeMap) => (
       e: React.MouseEvent<HTMLElement>
     ) => {
-      if (!animation.current) return
-      const domElemet = (animation.current.renderer as any).domElement
+      if (!svgAnimationRef.current) return
+      const domElemet = (svgAnimationRef.current.renderer as any).domElement
       const blob = domElemet.toDataURL(getMimeType(extention))
       downloadBlob(blob, extention)
     },
     []
   )
   const clickDownloadSVG = useCallback(() => {
-    if (!drawing.current) return
-    const data = drawing.current.toSvgBase64()
+    if (!svgDrawingRef.current) return
+    const data = svgDrawingRef.current.toSvgBase64()
     if (!data) return
     downloadBlob(data, 'svg')
   }, [])
   const clickClear = useCallback(() => {
-    if (!drawing.current) return
-    drawing.current.clear()
+    if (svgDrawingRef.current) svgDrawingRef.current.clear()
+    stopShaking()
+    stopStroke()
     animationFrameUpdate()
-  }, [animationFrameUpdate])
+  }, [animationFrameUpdate, stopStroke, stopShaking])
   const clickUndo = useCallback(() => {
-    if (!drawing.current) return
-    const path = drawing.current.scene.children
+    if (!svgDrawingRef.current) return
+    const path = svgDrawingRef.current.scene.children
     if (path.length === 0) return
-    drawing.current.remove(path[path.length - 1])
+    svgDrawingRef.current.remove(path[path.length - 1])
     animationFrameUpdate()
   }, [animationFrameUpdate])
   const clickRandomColor = useCallback(() => {
-    if (!drawing.current) return
-    drawing.current.penColor = getRandomColor()
+    if (!svgDrawingRef.current) return
+    svgDrawingRef.current.penColor = getRandomColor()
   }, [])
 
   const changePenWidth = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!drawing.current) return
-      drawing.current.penWidth = Number(e.target.value)
+      if (!svgDrawingRef.current) return
+      svgDrawingRef.current.penWidth = Number(e.target.value)
     },
     []
   )
   const changeShakingRange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!animation.current) return
-      animation.current.shakingRange = Number(e.target.value)
+      if (!svgAnimationRef.current) return
+      svgAnimationRef.current.shakingRange = Number(e.target.value)
     },
     []
   )
   const changeCap = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     const cap = e.target.value
     if (!['butt', 'round', 'square'].includes(e.target.value)) return
-    if (!drawing.current) return
-    drawing.current.strokeCap = cap
+    if (!svgDrawingRef.current) return
+    svgDrawingRef.current.strokeCap = cap
   }, [])
   const changeLineJoin = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const lineJoin = e.target.value
       if (!['miter', 'round', 'bevel'].includes(e.target.value)) return
-      if (!drawing.current) return
-      drawing.current.strokeLineJoin = lineJoin
+      if (!svgDrawingRef.current) return
+      svgDrawingRef.current.strokeLineJoin = lineJoin
     },
     []
   )
   useEffect(() => {
-    if (drawing.current) return
+    if (svgDrawingRef.current) return
     if (!divRef.current) return
-    drawing.current = new SvgDrawing({
+    svgDrawingRef.current = new SvgDrawing({
       el: divRef.current,
       autostart: true,
       penWidth: 5
@@ -165,7 +178,7 @@ const Example = () => {
   })
   useEffect(() => {
     if (!animationRef.current) return
-    animation.current = new SvgAnimation({
+    svgAnimationRef.current = new SvgAnimation({
       el: animationRef.current,
       type: Two.Types.canvas,
       shakingRange: 5
@@ -181,16 +194,6 @@ const Example = () => {
           min={1}
           max={50}
           onChange={changePenWidth}
-        />
-      </div>
-      <div>
-        Shaking Range
-        <input
-          type="range"
-          defaultValue="5"
-          min={1}
-          max={50}
-          onChange={changeShakingRange}
         />
       </div>
       <div>
@@ -211,8 +214,6 @@ const Example = () => {
       </div>
       <button onClick={clickUndo}>Undo</button>
       <button onClick={clickRandomColor}>Change Color</button>
-      <button onClick={clickShaking}>Shaking Line</button>
-      <button onClick={clickStroke}>Srroke Animation</button>
       <div
         style={{
           display: 'flex',
@@ -247,6 +248,18 @@ const Example = () => {
               margin: 'auto'
             }}
           />
+          <button onClick={clickShaking}>Shaking Animation</button>
+          <button onClick={clickStroke}>Srroke Animation</button>
+          <div>
+            Shaking Range
+            <input
+              type="range"
+              defaultValue="5"
+              min={1}
+              max={50}
+              onChange={changeShakingRange}
+            />
+          </div>
         </div>
       </div>
     </Fragment>
