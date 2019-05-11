@@ -1,4 +1,3 @@
-const Dotenv = require('dotenv-webpack')
 const { resolve } = require('path')
 
 const config = {
@@ -15,12 +14,7 @@ const config = {
   externals: {
     'two.js': 'two.js'
   },
-  plugins: [
-    new Dotenv({
-      path: 'production.env',
-      safe: false
-    })
-  ],
+  plugins: [],
   optimization: {
     minimize: true
   }
