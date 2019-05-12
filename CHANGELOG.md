@@ -1,8 +1,7 @@
 # Change Log
 
-## [Unreleased](https://github.com/kmkzt/svg-drawing/tree/HEAD)
-
-[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.0.0...HEAD)
+## [v1.0.1](https://github.com/kmkzt/svg-drawing/tree/v1.0.1) (2019-05-12)
+[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.0.0...v1.0.1)
 
 **Merged pull requests:**
 
