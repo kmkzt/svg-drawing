@@ -24,8 +24,7 @@
     "build:lib": "rm -r lib && NODE_ENV=production webpack -p",
     "build:demo": "rm -r docs && NODE_ENV=development webpack -p",
     "sample": "webpack-dev-server server.js",
-    "test": "jest --passWithNoTests",
-    "semantic-release": "semantic-release"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "two.js": "0.7.0-beta.3"
@@ -36,12 +35,6 @@
     "@babel/polyfill": "7.4.4",
     "@babel/preset-env": "7.4.4",
     "@babel/preset-typescript": "7.3.3",
-    "@semantic-release/changelog": "3.0.2",
-    "@semantic-release/commit-analyzer": "6.1.0",
-    "@semantic-release/git": "7.0.8",
-    "@semantic-release/github": "5.2.10",
-    "@semantic-release/npm": "5.1.7",
-    "@semantic-release/release-notes-generator": "7.1.4",
     "@types/autoprefixer": "9.5.0",
     "@types/babel-core": "6.25.6",
     "@types/babel__core": "7.1.1",
@@ -100,15 +93,5 @@
     "webpack-dev-server": "3.3.1",
     "webpack-merge": "4.2.1",
     "workbox-webpack-plugin": "4.3.1"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/github",
-      "@semantic-release/npm",
-      "@semantic-release/git"
-    ]
   }
 }
