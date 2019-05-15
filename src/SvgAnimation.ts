@@ -50,27 +50,24 @@ export class SvgAnimation extends Two {
       })
     }
 
-    // to fix original position
-    const toBasePosition = () =>
+    const sceneChildrenRestore = () =>
       this.scene.children.map((child: Two.Object) => {
-        this.scene.children.map((child: Two.Object) => {
-          const vertices = (child as Two.Path).vertices
-          if (!vertices) return
-          vertices.map((v: Two.Anchor | any) => {
-            // TODO: define position types
-            if (!v.position) {
-              return
-            }
-            v.x = v.position.x
-            v.y = v.position.y
-            delete v.position
-          })
+        const vertices = (child as Two.Path).vertices
+        if (!vertices) return
+        vertices.map((v: Two.Anchor | any) => {
+          // TODO: define position types
+          if (!v.position) {
+            return
+          }
+          v.x = v.position.x
+          v.y = v.position.y
+          delete v.position
         })
       })
     this.bind('update', updateShake).play()
     return () => {
       this.unbind('update', updateShake)
-      toBasePosition()
+      sceneChildrenRestore()
     }
   }
   /**
