@@ -47,7 +47,7 @@
     "@types/node": "12.0.2",
     "@types/node-sass": "4.11.0",
     "@types/prettier": "1.16.4",
-    "@types/react": "16.8.17",
+    "@types/react": "16.8.18",
     "@types/react-dom": "16.8.4",
     "@types/rimraf": "2.0.2",
     "@types/two.js": "0.7.1",
