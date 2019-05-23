@@ -5,35 +5,28 @@
     "target": "es5",
     "module": "esnext",
     "lib": ["es2018", "es2017", "dom"],
-    "sourceMap": true,
-    "allowJs": true,
     "jsx": "react",
-    "moduleResolution": "node",
-    "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "downlevelIteration": true,
     "declaration": true,
-    "declarationDir": "./types",
-    "noEmit": true,
-    "noUnusedLocals": false,
+    "declarationDir": "./lib",
     "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noUnusedLocals": false,
+    "removeComments": true,
+    "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
-    "esModuleInterop": true,
+    "suppressImplicitAnyIndexErrors": true,
     "plugins": [],
     "paths": {
       "@*": ["src*"]
     },
     "typeRoots": ["node_modules/@types", "./src/typings"]
   },
-  "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest"
-  ]
+  "include": ["src/index.ts", "src/SvgDrawing.ts", "src/SvgAnimation.ts"],
+  "exclude": ["node_modules"]
 }

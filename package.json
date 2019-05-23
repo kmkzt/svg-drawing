@@ -3,26 +3,42 @@
   "version": "1.1.2",
   "license": "MIT",
   "description": "svg drawing library.",
-  "author": "kmkzt",
+  "author": "kmkzt<info.pscreator@gmail.com>",
   "keywords": [
     "svg",
     "drawing",
     "two.js"
   ],
   "main": "lib/index.min.js",
+  "types": "lib/index.d.ts",
   "files": [
+    "lib/index.js",
+    "lib/index.d.ts",
     "lib/index.min.js",
+    "lib/SvgDrawing.js",
+    "lib/SvgDrawing.d.ts",
+    "lib/SvgAnimation.js",
+    "lib/SvgAnimation.d.ts",
     "src/index.ts",
     "src/SvgDrawing.ts",
     "src/SvgAnimation.ts"
   ],
-  "repository": "kmkzt/svg-drawing",
+  "directories": {
+    "lib": "lib",
+    "doc": "README.md",
+    "example": "src/example"
+  },
+  "repository": "github:kmkzt/svg-drawing",
   "homepage": "https://github.com/kmkzt/svg-drawing",
+  "bugs": {
+    "url": "https://github.com/kmkzt/svg-drawing/issues",
+    "email": "info.pscreator@gmail.com"
+  },
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
     "build": "npm-run-all build:*",
-    "build:lib": "rm -r lib && NODE_ENV=production webpack -p",
-    "build:demo": "rm -r docs && NODE_ENV=development webpack -p",
+    "build:lib": "rimraf lib/* && NODE_ENV=production webpack -p && tsc",
+    "build:demo": "rimraf docs/* && NODE_ENV=development webpack -p",
     "sample": "webpack-dev-server server.js",
     "test": "jest --passWithNoTests",
     "release": "release-it"
@@ -82,7 +98,7 @@
     "react-dom": "16.8.6",
     "release-it": "12.2.0",
     "resolve-url-loader": "3.1.0",
-    "rimraf": "2.6.3",
+    "rimraf": "^2.6.3",
     "sass-loader": "7.1.0",
     "style-loader": "0.23.1",
     "ts-jest": "24.0.2",
