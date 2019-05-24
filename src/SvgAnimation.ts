@@ -23,8 +23,8 @@ export class SvgAnimation extends Two {
     this.shakingRange = params.shakingRange || 2
     this.type = params.type || Two.Types.canvas
     this.el = params.el
-    this.width = this.el.clientWidth
-    this.height = this.el.clientHeight
+    this.width = params.width || this.el.clientWidth
+    this.height = params.height || this.el.clientHeight
     this.animationStart()
   }
   /**

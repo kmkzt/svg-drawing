@@ -43,8 +43,8 @@ export class SvgDrawing extends Two {
     this.strokeLineJoin = params.strokeLineJoin || 'round'
     this.type = params.type || Two.Types.svg
     this.el = params.el
-    this.width = this.el.clientWidth
-    this.height = this.el.clientHeight
+    this.width = params.width || this.el.clientWidth
+    this.height = params.height || this.el.clientHeight
     this.drawingStart()
   }
 
