@@ -12,16 +12,8 @@
   "main": "lib/index.min.js",
   "types": "lib/index.d.ts",
   "files": [
-    "lib/index.js",
-    "lib/index.d.ts",
-    "lib/index.min.js",
-    "lib/SvgDrawing.js",
-    "lib/SvgDrawing.d.ts",
-    "lib/SvgAnimation.js",
-    "lib/SvgAnimation.d.ts",
-    "src/index.ts",
-    "src/SvgDrawing.ts",
-    "src/SvgAnimation.ts"
+    "lib/*.{js,ts}",
+    "src/*.{js,ts}"
   ],
   "directories": {
     "lib": "lib",
