@@ -16,5 +16,4 @@ jobs:
         skip_cleanup: true
         script:
           - npm i
-          - npm build
-          - npx semantic-release
+          - npm run release
