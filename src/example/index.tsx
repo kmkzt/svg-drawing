@@ -189,7 +189,7 @@ const Example = () => {
     (force: any, event: any) => {
       if (penMode !== 'thinner') return
       if (!svgDrawingRef.current) return
-      const penWidth = 10 + Math.floor(force * 5)
+      const penWidth = 30 - Math.floor(force * 40)
       svgDrawingRef.current.penWidth = penWidth
     },
     [penMode]
