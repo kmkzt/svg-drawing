@@ -29,7 +29,6 @@ export class SvgDrawing extends Two {
     this.drawingStart = this.drawingStart.bind(this)
     this.drawingMove = this.drawingMove.bind(this)
     this.drawingEnd = this.drawingEnd.bind(this)
-    this.drawingConfigUpdate = this.drawingConfigUpdate.bind(this)
     this.mouseUp = this.mouseUp.bind(this)
     this.mouseMove = this.mouseMove.bind(this)
     this.mouseDown = this.mouseDown.bind(this)
@@ -102,10 +101,6 @@ export class SvgDrawing extends Two {
   /**
    * Drawing Line methods
    */
-  private drawingConfigUpdate({ x, y }: { x: number; y: number }) {
-    this.drawingEnd()
-    this.drawingStart({ x, y })
-  }
   private drawingStart({ x, y }: { x: number; y: number }) {
     this.current.set(x, y)
   }
@@ -118,7 +113,7 @@ export class SvgDrawing extends Two {
         this.line.linewidth !== this.penWidth ||
         this.line.stroke !== this.penColor
       ) {
-        this.drawingConfigUpdate({ x, y })
+        this.drawingEnd()
         return
       }
       const v: Two.Vector = makePoint(x, y)
@@ -127,6 +122,7 @@ export class SvgDrawing extends Two {
     }
     const vprev: Two.Vector = makePoint(this.current.x, this.current.y)
     const vnext: Two.Vector = makePoint(x, y)
+    this.current.set(x, y)
     this.line = this.makeCurve([vprev, vnext], true)
     this.line.noFill().stroke = this.penColor
     this.line.linewidth = this.penWidth
