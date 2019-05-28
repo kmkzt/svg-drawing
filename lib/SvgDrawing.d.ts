@@ -18,12 +18,14 @@ export declare class SvgDrawing extends Two {
     toSvgXml(): string | null;
     toSvgBase64(): string | null;
     clearListner(): void;
+    private init;
     private drawingStart;
-    private move;
+    private drawingMove;
+    private drawingEnd;
+    private mouseDown;
     private mouseMove;
     private mouseUp;
-    private mouseDown;
+    private touchStart;
     private touchMove;
     private touchEnd;
-    private touchStart;
 }
