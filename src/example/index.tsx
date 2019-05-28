@@ -52,6 +52,7 @@ const downloadBlob = (base64: string, extention: keyof typeof mimeTypeMap) => {
   }
 }
 
+const CANVAS_SIZE: number = 500
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const svgDrawingRef = useRef<SvgDrawing | null>(null)
@@ -172,7 +173,9 @@ const Example = () => {
     svgDrawingRef.current = new SvgDrawing({
       el: divRef.current,
       autostart: true,
-      penWidth: 5
+      penWidth: 5,
+      width: CANVAS_SIZE,
+      height: CANVAS_SIZE
     })
   })
   useEffect(() => {
@@ -180,7 +183,9 @@ const Example = () => {
     svgAnimationRef.current = new SvgAnimation({
       el: animationRef.current,
       type: Two.Types.canvas,
-      shakingRange: 5
+      shakingRange: 5,
+      width: CANVAS_SIZE,
+      height: CANVAS_SIZE
     })
   })
   return (
@@ -242,8 +247,6 @@ const Example = () => {
             ref={animationRef}
             style={{
               border: '1px solid #bbb',
-              width: 500,
-              height: 500,
               margin: 'auto'
             }}
           />
