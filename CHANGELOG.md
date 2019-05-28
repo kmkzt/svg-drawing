@@ -1,8 +1,17 @@
 # Change Log
 
-## [Unreleased](https://github.com/kmkzt/svg-drawing/tree/HEAD)
+## [v1.4.1](https://github.com/kmkzt/svg-drawing/tree/v1.4.1) (2019-05-28)
+[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.4.0...v1.4.1)
 
-[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.2.1...HEAD)
+## [v1.4.0](https://github.com/kmkzt/svg-drawing/tree/v1.4.0) (2019-05-28)
+[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.3.0...v1.4.0)
+
+**Merged pull requests:**
+
+- Feature/change penwidth while drawing [\#31](https://github.com/kmkzt/svg-drawing/pull/31) ([kmkzt](https://github.com/kmkzt))
+
+## [v1.3.0](https://github.com/kmkzt/svg-drawing/tree/v1.3.0) (2019-05-28)
+[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.2.1...v1.3.0)
 
 **Merged pull requests:**
 
