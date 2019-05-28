@@ -1,8 +1,15 @@
-import React, { useEffect, useRef, Fragment, useCallback } from 'react'
+import React, {
+  useEffect,
+  useRef,
+  Fragment,
+  useCallback,
+  useState
+} from 'react'
 import Two from 'two.js'
 import { render } from 'react-dom'
 import { createGrid } from './createGrid'
 import { SvgDrawing, SvgAnimation } from '../'
+import Pressure from 'pressure'
 
 const size = 30
 const gridImage = (createGrid({
@@ -60,6 +67,8 @@ const Example = () => {
   const svgAnimationRef = useRef<SvgAnimation | null>(null)
   const stopShakingRef = useRef<(() => void) | null>(null)
   const stopStrokeRef = useRef<(() => void) | null>(null)
+  const [rainbowPen, switchRainbowpen] = useState<boolean>(false)
+  const [penMode, changePenMode] = useState<string>('normal')
   const stopShaking = useCallback(() => {
     if (stopShakingRef.current) {
       stopShakingRef.current()
@@ -167,6 +176,24 @@ const Example = () => {
     },
     []
   )
+  const updatePenConfig = useCallback(
+    (e: any) => {
+      if (rainbowPen && svgDrawingRef.current)
+        svgDrawingRef.current.penColor = getRandomColor()
+      if (penMode === 'random' && svgDrawingRef.current)
+        svgDrawingRef.current.penWidth = getRandomInt(50) + 5
+    },
+    [rainbowPen, penMode]
+  )
+  const pressureChange = useCallback(
+    (force: any, event: any) => {
+      if (penMode !== 'thinner') return
+      if (!svgDrawingRef.current) return
+      const penWidth = 10 + Math.floor(force * 5)
+      svgDrawingRef.current.penWidth = penWidth
+    },
+    [penMode]
+  )
   useEffect(() => {
     if (svgDrawingRef.current) return
     if (!divRef.current) return
@@ -179,6 +206,7 @@ const Example = () => {
     })
   })
   useEffect(() => {
+    if (svgAnimationRef.current) return
     if (!animationRef.current) return
     svgAnimationRef.current = new SvgAnimation({
       el: animationRef.current,
@@ -188,46 +216,115 @@ const Example = () => {
       height: CANVAS_SIZE
     })
   })
+  useEffect(() => {
+    if (!divRef.current) return
+    Pressure.set(divRef.current, {
+      change: pressureChange
+    })
+  })
   return (
     <Fragment>
-      <div>
-        pen width
-        <input
-          type="range"
-          defaultValue="5"
-          min={1}
-          max={50}
-          onChange={changePenWidth}
-        />
-      </div>
-      <div>
-        stroke cap
-        <select onChange={changeCap}>
-          <option>round</option>
-          <option>butt</option>
-          <option>square</option>
-        </select>
-      </div>
-      <div>
-        stroke line join
-        <select onChange={changeLineJoin}>
-          <option>round</option>
-          <option>mitter</option>
-          <option>bevel</option>
-        </select>
-      </div>
-      <button onClick={clickUndo}>Undo</button>
-      <button onClick={clickRandomColor}>Change Color</button>
+      <fieldset>
+        <label>
+          <input
+            type="checkbox"
+            checked={penMode === 'normal'}
+            value={5}
+            onChange={e => {
+              changePenMode('normal')
+              changePenWidth(e)
+            }}
+          />
+          Normal pen.
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={penMode === 'thinner'}
+            onChange={e => {
+              changePenMode('thinner')
+            }}
+          />
+          Pen becoming thinner.
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={penMode === 'random'}
+            onChange={e => {
+              changePenMode('random')
+            }}
+          />
+          Pen becoming Random Width.
+        </label>
+        {penMode === 'normal' && (
+          <div>
+            pen width
+            <input
+              type="range"
+              defaultValue="5"
+              min={1}
+              max={50}
+              onChange={changePenWidth}
+            />
+          </div>
+        )}
+        <label>
+          <input
+            type="checkbox"
+            checked={rainbowPen}
+            onChange={e => {
+              switchRainbowpen(e.target.checked)
+            }}
+          />
+          Rainbow pen.
+        </label>
+        {!rainbowPen && (
+          <button onClick={clickRandomColor}>Change Color</button>
+        )}
+        <div>
+          stroke cap
+          <select onChange={changeCap}>
+            <option>round</option>
+            <option>butt</option>
+            <option>square</option>
+          </select>
+        </div>
+        <div>
+          stroke line join
+          <select onChange={changeLineJoin}>
+            <option>round</option>
+            <option>mitter</option>
+            <option>bevel</option>
+          </select>
+        </div>
+      </fieldset>
+      <fieldset>
+        <button onClick={clickShaking}>Shaking Animation</button>
+        <button onClick={clickStroke}>Srroke Animation</button>
+        <div>
+          Shaking Range
+          <input
+            type="range"
+            defaultValue="5"
+            min={1}
+            max={50}
+            onChange={changeShakingRange}
+          />
+        </div>
+      </fieldset>
       <div
         style={{
           display: 'flex',
-          justifyContent: 'flexWrap'
+          flexWrap: 'wrap'
         }}
       >
         <div>
           <div
             ref={divRef}
             onTouchEnd={animationFrameUpdate}
+            onMouseMove={updatePenConfig}
+            onTouchMove={updatePenConfig}
             onMouseUp={animationFrameUpdate}
             style={{
               background: `url('${gridImage}') 0 0 repeat`,
@@ -237,10 +334,6 @@ const Example = () => {
               margin: 'auto'
             }}
           />
-          <button onClick={clickClear}>Clear</button>
-          <button onClick={clickDownload('png')}>Download PNG</button>
-          <button onClick={clickDownload('jpg')}>Download JPG</button>
-          <button onClick={clickDownloadSVG}>Download SVG</button>
         </div>
         <div>
           <div
@@ -250,19 +343,14 @@ const Example = () => {
               margin: 'auto'
             }}
           />
-          <button onClick={clickShaking}>Shaking Animation</button>
-          <button onClick={clickStroke}>Srroke Animation</button>
-          <div>
-            Shaking Range
-            <input
-              type="range"
-              defaultValue="5"
-              min={1}
-              max={50}
-              onChange={changeShakingRange}
-            />
-          </div>
         </div>
+      </div>
+      <div>
+        <button onClick={clickClear}>Clear</button>
+        <button onClick={clickUndo}>Undo</button>
+        <button onClick={clickDownload('png')}>Download PNG</button>
+        <button onClick={clickDownload('jpg')}>Download JPG</button>
+        <button onClick={clickDownloadSVG}>Download SVG</button>
       </div>
     </Fragment>
   )
