@@ -1,5 +1,7 @@
 import Two, { ConstructorParams } from 'two.js'
 import { svgFormatting } from './utils/svgFormatting'
+import { getPassiveOptions } from './utils/getPassiveOptions'
+
 export interface DrawingOption extends ConstructorParams {
   el: SvgDrawing['el']
   penColor?: SvgDrawing['penColor']
@@ -21,17 +23,19 @@ export class SvgDrawing extends Two {
     /**
      * bind methods
      */
-    this.drawingStart = this.drawingStart.bind(this)
     this.clearListner = this.clearListner.bind(this)
     this.toSvgXml = this.toSvgXml.bind(this)
     this.toSvgBase64 = this.toSvgBase64.bind(this)
-    this.move = this.move.bind(this)
+    this.drawingStart = this.drawingStart.bind(this)
+    this.drawingMove = this.drawingMove.bind(this)
+    this.drawingEnd = this.drawingEnd.bind(this)
     this.mouseUp = this.mouseUp.bind(this)
     this.mouseMove = this.mouseMove.bind(this)
     this.mouseDown = this.mouseDown.bind(this)
     this.touchStart = this.touchStart.bind(this)
     this.touchMove = this.touchMove.bind(this)
     this.touchEnd = this.touchEnd.bind(this)
+    this.init.bind(this)
     /**
      * Setup parameter
      */
@@ -46,7 +50,7 @@ export class SvgDrawing extends Two {
     this.el = params.el
     this.width = params.width || this.el.clientWidth
     this.height = params.height || this.el.clientHeight
-    this.drawingStart()
+    this.init()
   }
 
   /**
@@ -78,29 +82,47 @@ export class SvgDrawing extends Two {
     this.el.removeEventListener('touchstart', this.touchStart)
   }
   /**
-   * DrawingStart
+   * Init methods
    */
-  private drawingStart() {
+  private init() {
     this.appendTo(this.el)
-    this.el.addEventListener('mousedown', this.mouseDown)
-    this.el.addEventListener('touchstart', this.touchStart)
+    this.el.addEventListener(
+      'mousedown',
+      this.mouseDown,
+      getPassiveOptions(false)
+    )
+    this.el.addEventListener(
+      'touchstart',
+      this.touchStart,
+      getPassiveOptions(false)
+    )
     return this
   }
   /**
    * Drawing Line methods
    */
-  private move({ x, y }: { x: number; y: number }): void {
-    const rect: ClientRect | DOMRect = this.el.getBoundingClientRect()
-    const makePoint = (mx: number, my: number) =>
-      new Two.Vector(mx - rect.left, my - rect.top)
+  private drawingStart({ x, y }: { x: number; y: number }) {
     this.current.set(x, y)
+  }
+  private drawingMove({ x, y }: { x: number; y: number }): void {
+    const rect: ClientRect | DOMRect = this.el.getBoundingClientRect()
+    const makePoint = (mx: number, my: number): Two.Vector =>
+      new Two.Vector(mx - rect.left, my - rect.top)
     if (this.line) {
-      const v = makePoint(x, y)
+      if (
+        this.line.linewidth !== this.penWidth ||
+        this.line.stroke !== this.penColor
+      ) {
+        this.drawingEnd()
+        return
+      }
+      const v: Two.Vector = makePoint(x, y)
       this.line.vertices.push(v as Two.Anchor)
       return
     }
     const vprev: Two.Vector = makePoint(this.current.x, this.current.y)
     const vnext: Two.Vector = makePoint(x, y)
+    this.current.set(x, y)
     this.line = this.makeCurve([vprev, vnext], true)
     this.line.noFill().stroke = this.penColor
     this.line.linewidth = this.penWidth
@@ -113,48 +135,63 @@ export class SvgDrawing extends Two {
     this.line.translation.clear()
   }
 
+  private drawingEnd() {
+    this.line = null
+  }
   /**
    * Drawing MouseEvent
    */
+  private mouseDown(e: MouseEvent) {
+    e.preventDefault()
+    this.drawingStart({ x: e.clientX, y: e.clientY })
+    this.el.addEventListener(
+      'mousemove',
+      this.mouseMove,
+      getPassiveOptions(false)
+    )
+    this.el.addEventListener('mouseup', this.mouseUp, getPassiveOptions(false))
+  }
   private mouseMove(e: MouseEvent): void {
-    this.move({ x: e.clientX, y: e.clientY })
+    e.preventDefault()
+    this.drawingMove({ x: e.clientX, y: e.clientY })
   }
   private mouseUp(e: MouseEvent) {
+    e.preventDefault()
     this.el.removeEventListener('mousemove', this.mouseMove)
     this.el.removeEventListener('mouseup', this.mouseUp)
-  }
-  private mouseDown(e: MouseEvent) {
-    this.current.set(e.clientX, e.clientY)
-    this.line = null
-    this.el.addEventListener('mousemove', this.mouseMove)
-    this.el.addEventListener('mouseup', this.mouseUp)
+    this.drawingEnd()
   }
 
   /**
    * Drawing TouchEvent
    */
+  private touchStart(e: TouchEvent) {
+    e.preventDefault()
+    const touch = e.touches[0]
+    this.drawingStart({ x: touch.pageX, y: touch.pageY })
+    this.el.addEventListener(
+      'touchmove',
+      this.touchMove,
+      getPassiveOptions(false)
+    )
+    this.el.addEventListener(
+      'touchend',
+      this.touchEnd,
+      getPassiveOptions(false)
+    )
+  }
   private touchMove(e: TouchEvent) {
     e.preventDefault()
     const touch = e.touches[0]
-    this.move({
+    this.drawingMove({
       x: touch.pageX,
       y: touch.pageY
     })
-    return false
   }
   private touchEnd(e: TouchEvent) {
     e.preventDefault()
     this.el.removeEventListener('touchmove', this.touchMove)
     this.el.removeEventListener('touchend', this.touchEnd)
-    return false
-  }
-  private touchStart(e: TouchEvent) {
-    e.preventDefault()
-    const touch = e.touches[0]
-    this.current.set(touch.pageX, touch.pageY)
-    this.line = null
-    this.el.addEventListener('touchmove', this.touchMove)
-    this.el.addEventListener('touchend', this.touchEnd)
-    return false
+    this.drawingEnd()
   }
 }
