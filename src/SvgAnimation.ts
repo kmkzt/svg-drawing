@@ -1,4 +1,5 @@
 import Two, { ConstructorParams } from 'two.js'
+import { svgFormatting } from './utils/svgFormatting'
 export interface AnimationOption extends ConstructorParams {
   el: SvgAnimation['el']
   shakingRange?: SvgAnimation['shakingRange']
@@ -16,6 +17,8 @@ export class SvgAnimation extends Two {
     this.shaking = this.shaking.bind(this)
     this.initSvgXml = this.initSvgXml.bind(this)
     this.strokeAnimation = this.strokeAnimation.bind(this)
+    this.loadScene = this.loadScene.bind(this)
+    this.loadSvgXml = this.loadSvgXml.bind(this)
     /**
      * Setup parameter
      */
@@ -69,6 +72,38 @@ export class SvgAnimation extends Two {
       this.unbind('update', updateShake)
       sceneChildrenRestore()
     }
+  }
+  /**
+   * Load SCENE
+   * @param {Two.Group} scene
+   */
+  public loadScene(scene: Two.Group) {
+    this.clear()
+    scene.children.map((twoObj: Two.Object) => {
+      this.scene.add(twoObj.clone())
+    })
+    this.update()
+  }
+  /**
+   * Load SVGXML
+   * @param {string | SVGSVGElement} svgXml
+   */
+  public loadSvgXml(svgXml: string | SVGSVGElement) {
+    const svgElement: SVGSVGElement | null = svgFormatting(svgXml)
+    if (!svgElement) return
+    const svgTwo: Two.Group = this.interpret(svgElement)
+    this.clear()
+    // get element width
+    // TODO: getelement Refactor
+    document.body.appendChild(svgElement)
+    const originWidth = svgElement.clientWidth
+    document.body.removeChild(svgElement)
+    this.scene.scale = this.width / originWidth
+    svgTwo.children.map((twoObj: Two.Object) => {
+      this.scene.add(twoObj.clone())
+    })
+    this.scene.center().translation.set(this.width / 2, this.height / 2)
+    this.update()
   }
   /**
    * DrawingStart

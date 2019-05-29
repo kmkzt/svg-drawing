@@ -4,9 +4,13 @@
  * @param svgString
  * @returns {SVGSVGElement}
  */
-export const svgFormatting = (svgString: string): SVGSVGElement => {
-  const parser: DOMParser = new DOMParser()
-  const doc: Document = parser.parseFromString(svgString, 'image/svg+xml')
+export const svgFormatting = (
+  svgXML: string | SVGSVGElement
+): SVGSVGElement => {
+  const doc: Document | SVGSVGElement =
+    typeof svgXML === 'string'
+      ? new DOMParser().parseFromString(svgXML, 'image/svg+xml')
+      : svgXML
   const svgEle: SVGSVGElement = document.createElementNS(
     'http://www.w3.org/2000/svg',
     'svg'
