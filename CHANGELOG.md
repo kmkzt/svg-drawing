@@ -1,5 +1,13 @@
 # Change Log
 
+## [v1.5.0](https://github.com/kmkzt/svg-drawing/tree/v1.5.0) (2019-05-29)
+[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.4.1...v1.5.0)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependency release-it to v12.2.2 [\#33](https://github.com/kmkzt/svg-drawing/pull/33) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update all patch dependencies \(patch\) [\#32](https://github.com/kmkzt/svg-drawing/pull/32) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [v1.4.1](https://github.com/kmkzt/svg-drawing/tree/v1.4.1) (2019-05-28)
 [Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.4.0...v1.4.1)
 
