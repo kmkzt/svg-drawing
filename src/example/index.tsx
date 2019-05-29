@@ -67,6 +67,7 @@ const Example = () => {
   const svgAnimationRef = useRef<SvgAnimation | null>(null)
   const stopShakingRef = useRef<(() => void) | null>(null)
   const stopStrokeRef = useRef<(() => void) | null>(null)
+  const [thinnerPenWidth, setThinnerPenWidth] = useState<number>(5)
   const [rainbowPen, switchRainbowpen] = useState<boolean>(false)
   const [penMode, changePenMode] = useState<string>('normal')
   const stopShaking = useCallback(() => {
@@ -178,15 +179,17 @@ const Example = () => {
         svgDrawingRef.current.penColor = getRandomColor()
       if (penMode === 'random' && svgDrawingRef.current)
         svgDrawingRef.current.penWidth = getRandomInt(50) + 5
+      if (penMode === 'thinner')
+        svgDrawingRef.current.penWidth = thinnerPenWidth
     },
-    [rainbowPen, penMode]
+    [rainbowPen, penMode, thinnerPenWidth]
   )
   const pressureChange = useCallback(
     (force: any, event: any) => {
       if (penMode !== 'thinner') return
       if (!svgDrawingRef.current) return
-      const penWidth = 30 - Math.floor(force * 40)
-      svgDrawingRef.current.penWidth = penWidth
+      const pw = 30 - Math.floor(force * 40)
+      setThinnerPenWidth(pw)
     },
     [penMode]
   )
@@ -225,7 +228,6 @@ const Example = () => {
           <input
             type="checkbox"
             checked={penMode === 'normal'}
-            value={5}
             onChange={e => {
               changePenMode('normal')
               changePenWidth(e)
@@ -256,13 +258,7 @@ const Example = () => {
         {penMode === 'normal' && (
           <div>
             pen width
-            <input
-              type="range"
-              defaultValue="5"
-              min={1}
-              max={50}
-              onChange={changePenWidth}
-            />
+            <input type="range" min={1} max={50} onChange={changePenWidth} />
           </div>
         )}
         <label>
