@@ -103,14 +103,10 @@ const Example = () => {
   )
   const animationFrameUpdate = useCallback(() => {
     if (!svgAnimationRef.current || !svgDrawingRef.current) return
-    svgAnimationRef.current.clear()
-    // This is nesting <g> dom
-    // animation.current.makeGroup(svgDrawingRef.current.scene.clone())
-    svgDrawingRef.current.scene.children.map((twoObj: Two.Object) => {
-      if (!svgAnimationRef.current) return
-      svgAnimationRef.current.scene.add(twoObj.clone())
-    })
-    svgAnimationRef.current.update()
+    svgAnimationRef.current.loadScene(svgDrawingRef.current.scene)
+    // TODO: load svgXML example
+    // load SVGXML
+    // svgAnimationRef.current.loadSvgXml(svgDrawingRef.current.toSvgXml())
   }, [])
   const clickDownload = useCallback(
     (extention: keyof typeof mimeTypeMap) => (
