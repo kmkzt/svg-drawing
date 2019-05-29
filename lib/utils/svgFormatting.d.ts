@@ -1,1 +1,1 @@
-export declare const svgFormatting: (svgString: string) => SVGSVGElement;
+export declare const svgFormatting: (svgXML: string | SVGSVGElement) => SVGSVGElement;

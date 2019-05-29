@@ -8,6 +8,8 @@ export declare class SvgAnimation extends Two {
     private el;
     constructor(params: AnimationOption);
     shaking(): () => void;
+    loadScene(scene: Two.Group): void;
+    loadSvgXml(svgXml: string | SVGSVGElement): void;
     private animationStart;
     initSvgXml(svgNode: SVGElement): void;
     strokeAnimation(): () => this;
