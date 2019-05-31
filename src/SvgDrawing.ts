@@ -168,7 +168,7 @@ export class SvgDrawing extends Two {
   private touchStart(e: TouchEvent) {
     e.preventDefault()
     const touch = e.touches[0]
-    this.drawingStart({ x: touch.pageX, y: touch.pageY })
+    this.drawingStart({ x: touch.clientX, y: touch.clientY })
     this.el.addEventListener(
       'touchmove',
       this.touchMove,
@@ -184,8 +184,8 @@ export class SvgDrawing extends Two {
     e.preventDefault()
     const touch = e.touches[0]
     this.drawingMove({
-      x: touch.pageX,
-      y: touch.pageY
+      x: touch.clientX,
+      y: touch.clientY
     })
   }
   private touchEnd(e: TouchEvent) {
