@@ -1,5 +1,14 @@
 # Change Log
 
+## [Unreleased](https://github.com/kmkzt/svg-drawing/tree/HEAD)
+
+[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.5.0...HEAD)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependency @types/node to v12.0.4 [\#35](https://github.com/kmkzt/svg-drawing/pull/35) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update dependency typescript to v3.5.1 [\#34](https://github.com/kmkzt/svg-drawing/pull/34) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [v1.5.0](https://github.com/kmkzt/svg-drawing/tree/v1.5.0) (2019-05-29)
 [Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.4.1...v1.5.0)
 
@@ -45,6 +54,7 @@
 - chore\(deps\): update dependency ts-loader to v6.0.1 [\#22](https://github.com/kmkzt/svg-drawing/pull/22) ([renovate[bot]](https://github.com/apps/renovate))
 - chore\(deps\): update all minor dependencies [\#21](https://github.com/kmkzt/svg-drawing/pull/21) ([renovate[bot]](https://github.com/apps/renovate))
 - chore\(deps\): update dependency @types/babel\_\_core to v7.1.2 [\#20](https://github.com/kmkzt/svg-drawing/pull/20) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): pin dependency release-it to 12.0.1 [\#17](https://github.com/kmkzt/svg-drawing/pull/17) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [v1.1.2](https://github.com/kmkzt/svg-drawing/tree/v1.1.2) (2019-05-15)
 [Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.1.0...v1.1.2)
@@ -53,7 +63,6 @@
 
 - chore\(deps\): update all patch dependencies \(patch\) [\#19](https://github.com/kmkzt/svg-drawing/pull/19) ([renovate[bot]](https://github.com/apps/renovate))
 - chore\(deps\): update dependency release-it to v12.1.0 [\#18](https://github.com/kmkzt/svg-drawing/pull/18) ([renovate[bot]](https://github.com/apps/renovate))
-- chore\(deps\): pin dependency release-it to 12.0.1 [\#17](https://github.com/kmkzt/svg-drawing/pull/17) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [v1.1.0](https://github.com/kmkzt/svg-drawing/tree/v1.1.0) (2019-05-14)
 [Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.0.1...v1.1.0)
