@@ -86,7 +86,7 @@
     "npm-run-all": "4.1.5",
     "postcss-loader": "3.0.0",
     "pressure": "2.1.2",
-    "prettier": "1.18.0",
+    "prettier": "1.18.2",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "release-it": "12.3.0",
@@ -99,8 +99,8 @@
     "tsconfig-paths-webpack-plugin": "3.2.0",
     "typescript": "3.5.1",
     "webpack": "4.33.0",
-    "webpack-cli": "3.3.2",
-    "webpack-dev-server": "3.7.0",
+    "webpack-cli": "3.3.3",
+    "webpack-dev-server": "3.7.1",
     "webpack-merge": "4.2.1",
     "workbox-webpack-plugin": "4.3.1"
   }
