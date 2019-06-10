@@ -60,11 +60,7 @@ export class SvgDrawing extends Two {
     const domElement: HTMLElement = (this.renderer as any).domElement
     const svgElement: SVGSVGElement = svgFormatting(domElement.outerHTML)
     if (!domElement) return null
-    return `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${
-      this.width
-    }" height="${this.height}" viewBox="0 0 ${this.width} ${this.height}">${
-      svgElement.innerHTML
-    }</svg>`
+    return `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${this.width}" height="${this.height}" viewBox="0 0 ${this.width} ${this.height}">${svgElement.innerHTML}</svg>`
   }
   /**
    * toSvgXML

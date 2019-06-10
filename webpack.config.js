@@ -64,7 +64,8 @@ const common = {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
       '@': resolve(__dirname, 'src')
-    }
+    },
+    modules: ['node_modules', 'web_modules']
   }
 }
 
