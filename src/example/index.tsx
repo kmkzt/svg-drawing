@@ -7,6 +7,7 @@ import React, {
 } from 'react'
 import Two from 'two.js'
 import { render } from 'react-dom'
+import GIFEncoder from './jsgif'
 import { createGrid } from './createGrid'
 import { SvgDrawing, SvgAnimation } from '../'
 import Pressure from 'pressure'
@@ -120,6 +121,24 @@ const Example = () => {
     },
     []
   )
+  /**
+   * TODO: Download action
+   */
+  const clickDownloadGIF = useCallback(() => {
+    if (!svgAnimationRef.current) return
+    const frame: number = 50
+    const encoder = new (GIFEncoder as any)()
+    encoder.setRepeat(0)
+    encoder.setDelay(500 / frame)
+    encoder.setQuality(5)
+    encoder.start()
+    for (let i = 0; i <= frame; i++) {
+      svgAnimationRef.current.splitEnd(i / frame)
+      encoder.addFrame((svgAnimationRef.current.renderer as any).ctx)
+    }
+    encoder.finish()
+    encoder.download(`${new Date().toISOString()}.gif`)
+  }, [])
   const clickDownloadSVG = useCallback(() => {
     if (!svgDrawingRef.current) return
     const data = svgDrawingRef.current.toSvgBase64()
@@ -342,6 +361,7 @@ const Example = () => {
         <button onClick={clickUndo}>Undo</button>
         <button onClick={clickDownload('png')}>Download PNG</button>
         <button onClick={clickDownload('jpg')}>Download JPG</button>
+        <button onClick={clickDownloadGIF}>Download GIF</button>
         <button onClick={clickDownloadSVG}>Download SVG</button>
       </div>
     </Fragment>

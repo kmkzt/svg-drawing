@@ -19,6 +19,7 @@ export class SvgAnimation extends Two {
     this.strokeAnimation = this.strokeAnimation.bind(this)
     this.loadScene = this.loadScene.bind(this)
     this.loadSvgXml = this.loadSvgXml.bind(this)
+    this.splitEnd = this.splitEnd.bind(this)
     /**
      * Setup parameter
      */
@@ -119,35 +120,45 @@ export class SvgAnimation extends Two {
     ;(fresh as any).subdivide()
     this.scene.add(fresh)
   }
-
+  /**
+   * strokeAnimationGif
+   */
   public strokeAnimation() {
-    const distances = calculateDistances(this.scene)
-    const total = distances.reduce((to: number, d: number) => to + d, 0)
-    const setEnding = (group: Two.Group, ti: number) => {
-      const traversed: number = ti * total
-      let current = 0
-      group.children.map((child: Two.Object, i: number) => {
-        const distance = distances[i]
-        const min = current
-        const max = current + distance
-        ;(child as Two.Path).ending = cmap(traversed, min, max, 0, 1)
-        current = max
-      })
-    }
     let t = 0
-    const update = (...arg: any[]) => {
+    const update = () => {
       if (t < 0.9999) {
         t += 0.00625
       } else {
         t = 0
       }
-      setEnding(this.scene, t)
+      setEndScene(this.scene, t)
     }
     this.bind('update', update).play()
     return () => this.unbind('update', update)
   }
+  /**
+   * SplitEnd
+   * @param {number} p
+   */
+  public splitEnd(p: number) {
+    setEndScene(this.scene, p)
+    this.update()
+  }
 }
 
+const setEndScene = (group: Two.Group, ti: number) => {
+  const distances = calculateDistances(group)
+  const total = distances.reduce((to: number, d: number) => to + d, 0)
+  const traversed: number = ti * total
+  let current = 0
+  for (let i = 0; i < group.children.length; i++) {
+    const distance = distances[i]
+    const min = current
+    const max = current + distance
+    ;(group.children[i] as Two.Path).ending = cmap(traversed, min, max, 0, 1)
+    current = max
+  }
+}
 function calculateDistances(group: Two.Group): number[] {
   return group.children.reduce((distances: number[], child: Two.Object) => {
     let d: number = 0
