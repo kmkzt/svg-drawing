@@ -13,4 +13,5 @@ export declare class SvgAnimation extends Two {
     private animationStart;
     initSvgXml(svgNode: SVGElement): void;
     strokeAnimation(): () => this;
+    splitEnd(p: number): void;
 }
