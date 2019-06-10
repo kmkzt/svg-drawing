@@ -1,8 +1,25 @@
 # Change Log
 
-## [Unreleased](https://github.com/kmkzt/svg-drawing/tree/HEAD)
+## [v1.6.1](https://github.com/kmkzt/svg-drawing/tree/v1.6.1) (2019-06-10)
+[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.6.0...v1.6.1)
 
-[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.5.0...HEAD)
+## [v1.6.0](https://github.com/kmkzt/svg-drawing/tree/v1.6.0) (2019-06-10)
+[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.5.1...v1.6.0)
+
+**Merged pull requests:**
+
+- chore\(deps\): update all patch dependencies \(patch\) [\#44](https://github.com/kmkzt/svg-drawing/pull/44) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update dependency @types/node to v12.0.7 [\#43](https://github.com/kmkzt/svg-drawing/pull/43) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update dependency @types/node to v12.0.6 [\#42](https://github.com/kmkzt/svg-drawing/pull/42) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update dependency @types/node to v12.0.5 [\#41](https://github.com/kmkzt/svg-drawing/pull/41) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update dependency @types/two.js to v0.7.2 [\#40](https://github.com/kmkzt/svg-drawing/pull/40) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update all minor dependencies [\#39](https://github.com/kmkzt/svg-drawing/pull/39) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update dependency webpack-dev-server to v3.5.1 [\#38](https://github.com/kmkzt/svg-drawing/pull/38) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update dependency webpack-dev-server to v3.5.0 [\#37](https://github.com/kmkzt/svg-drawing/pull/37) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): update dependency ts-loader to v6.0.2 [\#36](https://github.com/kmkzt/svg-drawing/pull/36) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [v1.5.1](https://github.com/kmkzt/svg-drawing/tree/v1.5.1) (2019-05-31)
+[Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.5.0...v1.5.1)
 
 **Merged pull requests:**
 
@@ -54,7 +71,6 @@
 - chore\(deps\): update dependency ts-loader to v6.0.1 [\#22](https://github.com/kmkzt/svg-drawing/pull/22) ([renovate[bot]](https://github.com/apps/renovate))
 - chore\(deps\): update all minor dependencies [\#21](https://github.com/kmkzt/svg-drawing/pull/21) ([renovate[bot]](https://github.com/apps/renovate))
 - chore\(deps\): update dependency @types/babel\_\_core to v7.1.2 [\#20](https://github.com/kmkzt/svg-drawing/pull/20) ([renovate[bot]](https://github.com/apps/renovate))
-- chore\(deps\): pin dependency release-it to 12.0.1 [\#17](https://github.com/kmkzt/svg-drawing/pull/17) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [v1.1.2](https://github.com/kmkzt/svg-drawing/tree/v1.1.2) (2019-05-15)
 [Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.1.0...v1.1.2)
@@ -63,6 +79,7 @@
 
 - chore\(deps\): update all patch dependencies \(patch\) [\#19](https://github.com/kmkzt/svg-drawing/pull/19) ([renovate[bot]](https://github.com/apps/renovate))
 - chore\(deps\): update dependency release-it to v12.1.0 [\#18](https://github.com/kmkzt/svg-drawing/pull/18) ([renovate[bot]](https://github.com/apps/renovate))
+- chore\(deps\): pin dependency release-it to 12.0.1 [\#17](https://github.com/kmkzt/svg-drawing/pull/17) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [v1.1.0](https://github.com/kmkzt/svg-drawing/tree/v1.1.0) (2019-05-14)
 [Full Changelog](https://github.com/kmkzt/svg-drawing/compare/v1.0.1...v1.1.0)
