@@ -92,7 +92,7 @@
     "release-it": "12.3.6",
     "resolve-url-loader": "3.1.0",
     "rimraf": "3.0.0",
-    "sass-loader": "7.3.1",
+    "sass-loader": "8.0.0",
     "style-loader": "1.0.0",
     "ts-jest": "24.0.2",
     "ts-loader": "6.0.4",
