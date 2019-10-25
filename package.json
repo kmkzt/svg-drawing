@@ -51,7 +51,7 @@
     "@types/eslint": "6.1.3",
     "@types/eslint-plugin-prettier": "2.2.0",
     "@types/html-webpack-plugin": "3.2.1",
-    "@types/jest": "24.0.19",
+    "@types/jest": "24.0.20",
     "@types/node": "12.7.12",
     "@types/node-sass": "4.11.0",
     "@types/prettier": "1.18.3",
