@@ -35,8 +35,8 @@
     "test": "jest --passWithNoTests",
     "release": "release-it"
   },
-  "dependencies": {
-    "two.js": "0.7.0-beta.3"
+  "peerDependencies": {
+    "two.js": ">=0.7"
   },
   "devDependencies": {
     "@babel/core": "7.8.3",
@@ -97,6 +97,7 @@
     "ts-jest": "24.3.0",
     "ts-loader": "6.2.1",
     "tsconfig-paths-webpack-plugin": "3.2.0",
+    "two.js": "0.7.0-stable.1",
     "typescript": "3.7.5",
     "webpack": "4.41.5",
     "webpack-cli": "3.3.10",
