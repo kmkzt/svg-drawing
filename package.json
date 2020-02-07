@@ -9,8 +9,10 @@
     "drawing",
     "two.js"
   ],
-  "main": "lib/index.min.js",
   "types": "lib/index.d.ts",
+  "main": "lib/index.cjs",
+  "module": "lib/index.mjs",
+  "browser": "lib/index.min.js",
   "files": [
     "lib/**/*.{js,ts}",
     "src/**/*.{js,ts}"
@@ -28,8 +30,9 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
+    "prod": "rollup -c",
     "build": "npm-run-all build:*",
-    "build:lib": "rimraf lib/* && NODE_ENV=production webpack -p && tsc",
+    "build:lib": "rimraf lib/* && yarn prod && tsc",
     "build:demo": "rimraf docs/* && NODE_ENV=development webpack -p",
     "sample": "webpack-dev-server server.js",
     "test": "jest --passWithNoTests",
@@ -92,6 +95,10 @@
     "release-it": "12.4.3",
     "resolve-url-loader": "3.1.0",
     "rimraf": "3.0.0",
+    "rollup": "1.31.0",
+    "rollup-plugin-commonjs": "10.1.0",
+    "rollup-plugin-node-resolve": "5.2.0",
+    "rollup-plugin-typescript": "1.0.1",
     "sass-loader": "8.0.0",
     "style-loader": "1.1.3",
     "ts-jest": "24.3.0",
