@@ -9,11 +9,39 @@
 
 ## Get started
 
+```html
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/two.js/0.6.0/two.min.js"></script>
+    <script src="https://unpkg.com/svg-drawing@1.8.0/lib/index.min.js"></script>
+  </head>
+  <body>
+    <script>
+      var SvgDrawing = window['svg-drawing'].SvgDrawing
+      var el = document.createElement('div')
+      el.setAttribute(
+        'style',
+        `
+      border: 1px solid #ddd;
+      width: 500px;
+      height: 500px;
+      `
+      )
+      document.body.appendChild(el)
+      new SvgDrawing({
+        el,
+        autostart: true
+      })
+    </script>
+  </body>
+</html>
+```
+
+## Install
+
 ```shell
 yarn add two.js svg-drawing
 ```
-
-## how to use
 
 ```javascript
 import { SvgDrawing } from 'svg-drawing'
@@ -27,6 +55,7 @@ el.setAttribute(
   height: 500px;
   `
 )
+document.body.appendChid(el)
 new SvgDrawing({
   el,
   autostart: true
