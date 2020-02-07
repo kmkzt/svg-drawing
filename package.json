@@ -36,7 +36,7 @@
     "release": "release-it"
   },
   "peerDependencies": {
-    "two.js": ">=0.7"
+    "two.js": "0.7.0-stable.1"
   },
   "devDependencies": {
     "@babel/core": "7.8.3",
