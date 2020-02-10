@@ -2,6 +2,7 @@
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import typescript from 'rollup-plugin-typescript'
+import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
 
 const common = {
@@ -17,7 +18,12 @@ export default [
       file: pkg.browser,
       format: 'umd'
     },
-    plugins: [resolve(), commonjs(), typescript()]
+    plugins: [
+      resolve(),
+      commonjs(),
+      typescript(),
+      terser({ output: { comments: /Copyright/i } })
+    ]
   },
 
   {

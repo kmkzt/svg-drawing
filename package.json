@@ -9,8 +9,9 @@
     "drawing",
     "two.js"
   ],
+  "type": "module",
   "types": "lib/index.d.ts",
-  "main": "lib/index.cjs",
+  "main": "lib/index.cjs.js",
   "module": "lib/index.mjs",
   "browser": "lib/index.min.js",
   "files": [
@@ -99,6 +100,7 @@
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-typescript": "1.0.1",
+    "rollup-plugin-terser": "5.2.0",
     "sass-loader": "8.0.0",
     "style-loader": "1.1.3",
     "ts-jest": "24.3.0",
