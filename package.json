@@ -31,10 +31,11 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
-    "prod": "rollup -c",
-    "build": "npm-run-all build:*",
-    "build:lib": "rimraf lib/* && yarn prod && tsc",
-    "build:demo": "rimraf docs/* && NODE_ENV=development webpack -p",
+    "prod": "npm-run-all build:*",
+    "build:clear": "rimraf lib/* && rimraf docs/*",
+    "build:rollup": "NODE_ENV=production rollup -c",
+    "build:tsc": "NODE_ENV=production tsc",
+    "build:demo": "NODE_ENV=production webpack -p",
     "sample": "webpack-dev-server server.js",
     "test": "jest --passWithNoTests",
     "release": "release-it"
