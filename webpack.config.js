@@ -1,11 +1,15 @@
-const { resolve } = require('path')
-const { smart } = require('webpack-merge')
-const devMode = process.env.NODE_ENV === 'development'
-const config = devMode
-  ? require('./webpack.dev.config')
-  : require('./webpack.prod.config')
+const { join, resolve } = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const isDev = process.env.NODE_ENV === 'development'
 
-const common = {
+module.exports = {
+  mode: isDev ? 'development' : 'production',
+  devtool: isDev ? 'source-map' : false,
+  entry: resolve(__dirname, 'src/example/index.tsx'),
+  output: {
+    filename: isDev ? '[name].js' : '[name].[hash].js',
+    path: resolve('docs')
+  },
   module: {
     rules: [
       {
@@ -66,7 +70,18 @@ const common = {
       '@': resolve(__dirname, 'src')
     },
     modules: ['node_modules', 'web_modules']
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: resolve('template.html')
+    })
+  ],
+  optimization: {
+    minimize: !isDev
+  },
+  devServer: {
+    contentBase: join(__dirname, 'docs'),
+    compress: true,
+    port: 8888
   }
 }
-
-module.exports = smart(common, config)
