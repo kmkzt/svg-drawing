@@ -7,7 +7,7 @@ import pkg from './package.json'
 
 const common = {
   input: 'src/index.ts',
-  external: Object.keys(pkg.peerDependencies)
+  external: ['two.js']
 }
 export default [
   // browser-friendly UMD build
@@ -16,7 +16,10 @@ export default [
     output: {
       name: pkg.name,
       file: pkg.browser,
-      format: 'umd'
+      format: 'umd',
+      globals: {
+        'two.js': 'Two'
+      }
     },
     plugins: [
       resolve(),
