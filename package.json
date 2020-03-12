@@ -37,7 +37,7 @@
     "build:tsc": "NODE_ENV=production tsc",
     "build:demo": "NODE_ENV=production webpack -p",
     "sample": "webpack-dev-server server.js",
-    "test": "jest --passWithNoTests",
+    "test": "NODE_ENV=test jest --passWithNoTests",
     "release": "release-it"
   },
   "peerDependencies": {
