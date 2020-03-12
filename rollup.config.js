@@ -57,7 +57,7 @@ export default [
       commonjs(),
       sourceMaps(),
       replace({ 'process.env.NODE_ENV': JSON.stringify('production') }),
-      terser(),
+      terser({ output: { comments: /Copyright/i } }),
       sizeSnapshot()
     ]
   },
