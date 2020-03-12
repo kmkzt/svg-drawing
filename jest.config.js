@@ -1,7 +1,6 @@
 module.exports = {
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
-    '^.+\\.(js|jsx)$': 'babel-jest'
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
   },
   testRegex: '(\\.|/)(test|spec)\\.(t|j)sx?$',
   moduleNameMapper: {
