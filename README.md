@@ -1,5 +1,7 @@
 # svg-drawing
 
+[![npm version](https://badge.fury.io/js/svg-drawing.svg)](https://badge.fury.io/js/svg-drawing.svg) ![npm](https://img.shields.io/npm/dt/svg-drawing.svg)
+
 ### introduction
 
 `svg-drawing` is drawing svg library. This is use [two.js](https://github.com/jonobr1/two.js).
