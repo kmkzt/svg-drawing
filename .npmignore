@@ -7,3 +7,4 @@ renovate.json
 .travis.yml
 src/example
 prettier.config.js
+rollup.config.js
