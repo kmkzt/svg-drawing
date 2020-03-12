@@ -12,6 +12,7 @@
     "downlevelIteration": true,
     "declaration": true,
     "declarationDir": "./lib",
+    "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "noEmitOnError": true,
