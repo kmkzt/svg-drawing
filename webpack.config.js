@@ -1,5 +1,9 @@
 const { join, resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+
 const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
@@ -62,9 +66,14 @@ module.exports = {
     alias: {
       '@': resolve(__dirname, 'src')
     },
-    modules: ['node_modules', 'web_modules']
+    modules: ['node_modules', 'web_modules'],
+    plugins: [new TsconfigPathsPlugin()]
   },
   plugins: [
+    new CaseSensitivePathsPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      reportFiles: ['src/**/*.{ts,tsx}']
+    }),
     new HtmlWebpackPlugin({
       template: resolve('template.html')
     })
