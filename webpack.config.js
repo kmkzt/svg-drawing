@@ -18,24 +18,21 @@ module.exports = {
     rules: [
       {
         enforce: 'pre',
-        test: /\.(j|t)sx?$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: [
           {
             loader: 'eslint-loader',
             options: {
+              fix: true,
               failOnWarning: true
             }
           }
         ]
       },
       {
-        test: /\.js|.jsx$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      },
-      {
-        test: /\.ts|.tsx$/,
+        enforce: 'pre',
+        test: /\.tsx?$/,
         exclude: /node_modules/,
         use: [
           {
@@ -43,8 +40,20 @@ module.exports = {
             options: {
               transpileOnly: true
             }
+          },
+          {
+            loader: 'eslint-loader',
+            options: {
+              fix: true,
+              failOnWarning: true
+            }
           }
         ]
+      },
+      {
+        test: /\.[tj]sx$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
