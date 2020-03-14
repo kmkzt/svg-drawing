@@ -8,16 +8,30 @@ import { terser } from 'rollup-plugin-terser'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 import pkg from './package.json'
 
-const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json']
-const external = id => !id.startsWith('.') && !id.startsWith('/')
+const globals = {
+  'two.js': 'Two'
+}
 
+const external = Object.keys(globals)
+// Fix:
+// const external = id => !id.startsWith('.') && !id.startsWith('/')
+
+const esm_targets = '>1%, not dead, not ie 11, not op_mini all'
+const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json']
 const getBabelOptions = ({ useESModules }) => ({
   extensions,
   babelrc: false,
   exclude: '**/node_modules/**',
   runtimeHelpers: true,
   presets: [
-    ['@babel/preset-env', { loose: true }],
+    [
+      '@babel/preset-env',
+      {
+        loose: true,
+        modules: false,
+        targets: useESModules ? esm_targets : undefined
+      }
+    ],
     // react
     // ['@babel/preset-react', { useBuiltIns: true }],
     '@babel/preset-typescript'
@@ -25,16 +39,13 @@ const getBabelOptions = ({ useESModules }) => ({
   plugins: [
     // react
     // ['transform-react-remove-prop-types', { removeImport: true }],
-    '@babel/plugin-proposal-class-properties',
     // TODO: optimize bundle size
     // 'babel-plugin-annotate-pure-calls',
-    ['@babel/plugin-transform-runtime', { useESModules }]
+    ['@babel/plugin-transform-runtime', { regenerator: false, useESModules }]
   ]
 })
 const input = './src/index.ts'
-const globals = {
-  'two.js': 'Two'
-}
+
 export default [
   /**
    * umd
@@ -49,11 +60,11 @@ export default [
       exports: 'named',
       sourcemap: false
     },
-    external: Object.keys(globals),
+    external,
     plugins: [
-      nodeResolve({ extensions }),
-      babel(getBabelOptions({ useESModules: true })),
       commonjs(),
+      babel(getBabelOptions({ useESModules: true })),
+      nodeResolve({ extensions }),
       sourceMaps(),
       replace({ 'process.env.NODE_ENV': JSON.stringify('production') }),
       terser({ output: { comments: /Copyright/i } }),
@@ -96,6 +107,7 @@ export default [
     external,
     plugins: [
       sourceMaps(),
+      commonjs(),
       babel(getBabelOptions({ useESModules: false })),
       nodeResolve({ extensions }),
       sizeSnapshot()
@@ -110,7 +122,11 @@ export default [
     external,
     plugins: [
       sourceMaps(),
-      babel(getBabelOptions({ useESModules: true })),
+      babel(
+        getBabelOptions({
+          useESModules: true
+        })
+      ),
       nodeResolve({ extensions }),
       sizeSnapshot()
     ]
