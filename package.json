@@ -39,7 +39,8 @@
     "sample": "webpack-dev-server server.js",
     "test": "NODE_ENV=test jest --passWithNoTests",
     "test:types": "tsc --noEmit",
-    "release": "release-it"
+    "release": "release-it",
+    "prepare": "yarn build:rollup; yarn build:tsc"
   },
   "peerDependencies": {
     "two.js": ">=0.7"
