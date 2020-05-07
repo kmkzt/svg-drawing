@@ -121,10 +121,5 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
-  },
-  "release-it": {
-    "github": {
-      "release": false
-    }
   }
 }
