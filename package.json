@@ -15,8 +15,7 @@
   "module": "lib/index.esm.js",
   "browser": "lib/index.min.js",
   "files": [
-    "lib/**/*.{js,ts}",
-    "src/**/*.{js,ts}"
+    "lib/**/*.{js,ts}"
   ],
   "directories": {
     "lib": "lib",
