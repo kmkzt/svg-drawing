@@ -100,7 +100,7 @@
     "prettier": "1.19.1",
     "react": "16.12.0",
     "react-dom": "16.12.0",
-    "release-it": "12.4.3",
+    "release-it": "13.5.8",
     "resolve-url-loader": "3.1.0",
     "rimraf": "3.0.0",
     "rollup": "1.31.0",
@@ -122,5 +122,10 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
+  },
+  "release-it": {
+    "github": {
+      "release": false
+    }
   }
 }
