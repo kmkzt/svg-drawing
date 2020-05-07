@@ -1,6 +1,6 @@
 # svg-drawing
 
-[![npm version](https://www.npmjs.com/package/svg-drawing](https://badge.fury.io/js/svg-drawing.svg) ![npm(https://www.npmjs.com/package/svg-drawing)](https://img.shields.io/npm/dt/svg-drawing.svg)
+[![npm version](https://badge.fury.io/js/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing) [![npm download](https://img.shields.io/npm/dt/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing)
 
 ### introduction
 
