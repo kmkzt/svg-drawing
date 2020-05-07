@@ -9,10 +9,10 @@ const isDev = process.env.NODE_ENV === 'development'
 module.exports = {
   mode: isDev ? 'development' : 'production',
   devtool: isDev ? 'source-map' : false,
-  entry: resolve(__dirname, 'src/example/index.tsx'),
+  entry: resolve(__dirname, 'src/example/app.tsx'),
   output: {
     filename: isDev ? '[name].js' : '[name].[hash].js',
-    path: resolve('docs')
+    path: resolve(__dirname, 'dist')
   },
   module: {
     rules: [
@@ -72,9 +72,6 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
-    alias: {
-      '@': resolve(__dirname, 'src')
-    },
     modules: ['node_modules', 'web_modules'],
     plugins: [new TsconfigPathsPlugin()]
   },
@@ -84,7 +81,7 @@ module.exports = {
       reportFiles: ['src/**/*.{ts,tsx}']
     }),
     new HtmlWebpackPlugin({
-      template: resolve('template.html')
+      template: resolve(__dirname, 'src/example/index.html')
     })
   ],
   optimization: {
