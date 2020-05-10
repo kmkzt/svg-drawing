@@ -1,4 +1,4 @@
-import { Point, Vector, SvgPath } from './renderer'
+import { Point, Vector, SvgPath, Renderer } from './renderer'
 
 describe('renderer', () => {
   describe('Point', () => {
@@ -95,6 +95,20 @@ describe('renderer', () => {
       path.addPoint(new Point(2, 1))
       path.addPoint(new Point(3, 0))
       expect(path.toElement()).toMatchSnapshot()
+    })
+  })
+  describe('Renderer', () => {
+    it('toElement', () => {
+      const el = document.createElement('div')
+      document.body.appendChild(el)
+      const renderer = new Renderer(el)
+      const path = new SvgPath({ circuler: true, close: false })
+      path.addPoint(new Point(0, 0))
+      path.addPoint(new Point(1, 1))
+      path.addPoint(new Point(2, 1))
+      path.addPoint(new Point(3, 0))
+      renderer.addPath(path)
+      expect(renderer.toElement()).toMatchSnapshot()
     })
   })
 })

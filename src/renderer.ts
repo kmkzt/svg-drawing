@@ -78,6 +78,7 @@ export class SvgPath {
   public fill: string
   public background: string
   public smoothRatio: number
+  // TODO: replace private parameter
   public data: Point[]
 
   constructor({
@@ -167,5 +168,70 @@ export class SvgPath {
     path.setAttribute('stroke-linecap', this.circuler ? 'round' : 'square')
     path.setAttribute('d', this.createCommand())
     return path
+  }
+}
+
+interface RendererOption {
+  width: number
+  height: number
+}
+export class Renderer {
+  private width: number
+  private height: number
+  private el: Element
+  private paths: SvgPath[]
+  constructor(el: Element, opt?: RendererOption) {
+    this.el = el
+    this.paths = []
+    const { width, height } = el.getBoundingClientRect()
+    this.width = width
+    this.height = height
+
+    this.resizeElement = this.resizeElement.bind(this)
+    this.scalePath = this.scalePath.bind(this)
+    this.setupAutoResizeElement()
+  }
+
+  private setupAutoResizeElement() {
+    // TODO: fallback resize
+    if ((window as any).ResizeObserver) {
+      const resizeObserver: any = new (window as any).ResizeObserver(
+        (entries: any[]) => {
+          const { width, height }: any = entries[0].contentRect
+          this.resizeElement(width, height)
+        }
+      )
+      resizeObserver.observe(this.el)
+    }
+  }
+
+  public resizeElement(width: number, height: number) {
+    this.width = width
+    this.width = height
+    this.scalePath(width / this.width)
+  }
+
+  public scalePath(r: number) {
+    for (let i = 0; i < this.paths.length; i += 1) {
+      this.paths[i].scale(r)
+    }
+  }
+
+  public addPath(pa: SvgPath) {
+    this.paths.push(pa)
+  }
+
+  public clear() {
+    this.paths = []
+  }
+
+  public toElement() {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svg.setAttribute('width', String(this.width))
+    svg.setAttribute('height', String(this.height))
+    for (let i = 0; i < this.paths.length; i += 1) {
+      svg.appendChild(this.paths[i].toElement())
+    }
+    return svg
   }
 }
