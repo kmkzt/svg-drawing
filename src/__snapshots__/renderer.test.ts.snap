@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renderer SvgPath toElement 1`] = `
+<path
+  d="M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"
+  fill="none"
+  stroke="#000"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  stroke-width="1"
+/>
+`;
