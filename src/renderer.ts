@@ -223,6 +223,10 @@ export class Renderer {
     this.paths.push(pa)
   }
 
+  public undoPath(): SvgPath | undefined {
+    return this.paths.pop()
+  }
+
   public updatePath(pa: SvgPath, i?: number) {
     const updateIndex = i || this.paths.length - 1
     if (updateIndex < 0) this.paths.push(pa)
