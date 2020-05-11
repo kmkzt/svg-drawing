@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "./lib",
-    "target": "esnext",
+    "target": "es6", // TODO: change esnext
     "module": "esnext",
     "lib": ["es2018", "es2017", "dom"],
     "jsx": "react",
