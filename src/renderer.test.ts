@@ -109,6 +109,7 @@ describe('renderer', () => {
       path.addPoint(new Point(2, 1))
       path.addPoint(new Point(3, 0))
       renderer = new Renderer(el)
+      renderer.resizeElement(500, 500) // TODO: remove line
       renderer.addPath(path)
     })
     // TODO: Fix width, height
@@ -126,16 +127,16 @@ describe('renderer', () => {
       }
       renderer.download('svg', testDownload)
     })
-    // TODO: fix test
+    // TODO: Fix download test
     // it('download jpg', done => {
-    //   const testDownload = (param: Parameters<typeof download>[0]): void => {
+    //   const testDownload = (param: any): void => {
     //     expect(param).toMatchSnapshot()
     //     done()
     //   }
     //   renderer.download('jpg', testDownload)
     // }, 30000)
     // it('download png', done => {
-    //   const testDownload = (param: Parameters<typeof download>[0]): void => {
+    //   const testDownload = (param: any): void => {
     //     expect(param).toMatchSnapshot()
     //     done()
     //   }

@@ -2,17 +2,17 @@
 
 exports[`renderer Renderer download svg 1`] = `
 Object {
-  "data": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48cGF0aCBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDAgMCBDIDAuMiAwLjIgMC42IDAuOCAxIDEgQyAxLjQgMS4yIDEuNiAxLjIgMiAxIEMgMi40IDAuOCAyLjggMC4yIDMgMCI+PC9wYXRoPjwvc3ZnPg==",
+  "data": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSIjMDAwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PC9zdmc+",
   "extension": "svg",
 }
 `;
 
-exports[`renderer Renderer toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48cGF0aCBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDAgMCBDIDAuMiAwLjIgMC42IDAuOCAxIDEgQyAxLjQgMS4yIDEuNiAxLjIgMiAxIEMgMi40IDAuOCAyLjggMC4yIDMgMCI+PC9wYXRoPjwvc3ZnPg=="`;
+exports[`renderer Renderer toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSIjMDAwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PC9zdmc+"`;
 
 exports[`renderer Renderer toElement 1`] = `
 <svg
-  height="0"
-  width="0"
+  height="500"
+  width="500"
 >
   <path
     d="M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"

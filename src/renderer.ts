@@ -189,6 +189,7 @@ export class Renderer {
     this.scalePath = this.scalePath.bind(this)
     this.toElement = this.toElement.bind(this)
     this.toBase64 = this.toBase64.bind(this)
+    this.resizeElement = this.resizeElement.bind(this)
     this.setupAutoResizeElement()
   }
 
@@ -205,9 +206,9 @@ export class Renderer {
     }
   }
 
-  private resizeElement(width: number, height: number) {
+  public resizeElement(width: number, height: number) {
     this.width = width
-    this.width = height
+    this.height = height
     // TODO: Resizing improve
     this.scalePath(width / this.width)
   }
@@ -243,7 +244,12 @@ export class Renderer {
   }
 
   public toBase64(): string {
-    return `data:image/svg+xml;base64,${btoa(this.toElement().outerHTML)}`
+    const data = `<svg width="${this.width}" height="${
+      this.width
+    }" version="1.1" xmlns="http://www.w3.org/2000/svg">${
+      this.toElement().innerHTML
+    }</svg>`
+    return `data:image/svg+xml;base64,${btoa(data)}`
   }
 
   // TODO: Add filename config
