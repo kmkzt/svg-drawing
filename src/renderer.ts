@@ -69,7 +69,6 @@ interface SvgPathOption {
   strokeWidth?: number
   stroke?: string
   fill?: string
-  background?: string
 }
 export class SvgPath {
   public close: boolean
@@ -77,7 +76,6 @@ export class SvgPath {
   public strokeWidth: number
   public stroke: string
   public fill: string
-  public background: string
   public smoothRatio: number
   // TODO: replace private parameter
   public data: Point[]
@@ -94,7 +92,6 @@ export class SvgPath {
     this.strokeWidth = strokeWidth ?? 1
     this.stroke = stroke ?? '#000'
     this.fill = fill ?? 'none'
-    this.background = this.background ?? '#fff'
     this.smoothRatio = 0.2
     this.data = []
   }
@@ -173,20 +170,21 @@ export class SvgPath {
 }
 
 interface RendererOption {
-  width: number
-  height: number
+  background?: string
 }
 export class Renderer {
+  public background: string
   private width: number
   private height: number
   private el: Element
   private paths: SvgPath[]
-  constructor(el: Element, opt?: RendererOption) {
+  constructor(el: Element, { background }: RendererOption = {}) {
     this.el = el
     this.paths = []
     const { width, height } = el.getBoundingClientRect()
     this.width = width
     this.height = height
+    this.background = background ?? '#fff'
 
     this.scalePath = this.scalePath.bind(this)
     this.toElement = this.toElement.bind(this)
@@ -222,6 +220,12 @@ export class Renderer {
 
   public addPath(pa: SvgPath) {
     this.paths.push(pa)
+  }
+
+  public updatePath(pa: SvgPath, i?: number) {
+    const updateIndex = i || this.paths.length - 1
+    if (updateIndex < 0) this.paths.push(pa)
+    this.paths[updateIndex] = pa
   }
 
   public clear() {
@@ -262,7 +266,7 @@ export class Renderer {
       canvas.setAttribute('height', String(height))
       const ctx = canvas.getContext('2d')
       if (!ctx) return
-      ctx.fillStyle = '#fff'
+      ctx.fillStyle = this.background
       ctx.fillRect(0, 0, width, height)
       ctx.drawImage(img, 0, 0)
       if (ext === 'png') {
