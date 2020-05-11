@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`renderer Renderer toBase64 1`] = `"data:image/svg+xml;base64,W29iamVjdCBTVkdTVkdFbGVtZW50XQ=="`;
+
+exports[`renderer Renderer toBase64 2`] = `"data:image/svg+xml;base64,W29iamVjdCBTVkdTVkdFbGVtZW50XQ=="`;
+
 exports[`renderer Renderer toElement 1`] = `
 <svg
   height="0"

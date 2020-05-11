@@ -187,8 +187,8 @@ export class Renderer {
     this.width = width
     this.height = height
 
-    this.resizeElement = this.resizeElement.bind(this)
     this.scalePath = this.scalePath.bind(this)
+    this.toElement = this.toElement.bind(this)
     this.setupAutoResizeElement()
   }
 
@@ -205,7 +205,7 @@ export class Renderer {
     }
   }
 
-  public resizeElement(width: number, height: number) {
+  private resizeElement(width: number, height: number) {
     this.width = width
     this.width = height
     this.scalePath(width / this.width)
@@ -225,7 +225,7 @@ export class Renderer {
     this.paths = []
   }
 
-  public toElement() {
+  public toElement(): SVGSVGElement {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     svg.setAttribute('width', String(this.width))
     svg.setAttribute('height', String(this.height))
@@ -233,5 +233,12 @@ export class Renderer {
       svg.appendChild(this.paths[i].toElement())
     }
     return svg
+  }
+
+  public toBase64(ext: 'svg' | 'jpg' | 'png' = 'svg'): string {
+    const svgResource = `data:image/svg+xml;base64,${btoa(
+      String(this.toElement())
+    )}`
+    return svgResource
   }
 }

@@ -98,17 +98,25 @@ describe('renderer', () => {
     })
   })
   describe('Renderer', () => {
-    it('toElement', () => {
+    let renderer: Renderer
+    beforeEach(() => {
       const el = document.createElement('div')
       document.body.appendChild(el)
-      const renderer = new Renderer(el)
       const path = new SvgPath({ circuler: true, close: false })
       path.addPoint(new Point(0, 0))
       path.addPoint(new Point(1, 1))
       path.addPoint(new Point(2, 1))
       path.addPoint(new Point(3, 0))
+      renderer = new Renderer(el)
       renderer.addPath(path)
+    })
+    it('toElement', () => {
       expect(renderer.toElement()).toMatchSnapshot()
+    })
+    // TODO: replace image snapshot
+    it('toBase64', () => {
+      expect(renderer.toBase64()).toMatchSnapshot()
+      expect(renderer.toBase64('svg')).toMatchSnapshot()
     })
   })
 })
