@@ -1,3 +1,4 @@
+import { download } from './utils/download'
 const roundUp = (num: number) => Math.round(num * 100) / 100
 
 export class Point {
@@ -189,6 +190,7 @@ export class Renderer {
 
     this.scalePath = this.scalePath.bind(this)
     this.toElement = this.toElement.bind(this)
+    this.toBase64 = this.toBase64.bind(this)
     this.setupAutoResizeElement()
   }
 
@@ -236,10 +238,40 @@ export class Renderer {
     return svg
   }
 
-  public toBase64(ext: 'svg' | 'jpg' | 'png' = 'svg'): string {
-    const svgResource = `data:image/svg+xml;base64,${btoa(
-      this.toElement().outerHTML
-    )}`
-    return svgResource
+  public toBase64(): string {
+    return `data:image/svg+xml;base64,${btoa(this.toElement().outerHTML)}`
+  }
+
+  // TODO: Add filename config
+  public download(
+    ext: 'svg' | 'png' | 'jpg' = 'svg',
+    cb: typeof download = download
+  ) {
+    if (ext === 'svg') {
+      cb({
+        data: this.toBase64(),
+        extension: 'svg'
+      })
+    }
+
+    const img: any = new Image()
+    const renderCanvas = () => {
+      const canvas = document.createElement('canvas')
+      const { width, height } = this.el.getBoundingClientRect()
+      canvas.setAttribute('width', String(width))
+      canvas.setAttribute('height', String(height))
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(0, 0, width, height)
+      ctx.drawImage(img, 0, 0)
+      if (ext === 'png') {
+        cb({ data: canvas.toDataURL('image/png'), extension: 'png' })
+      } else {
+        cb({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
+      }
+    }
+    img.addEventListener('load', renderCanvas, false)
+    img.src = this.toBase64()
   }
 }

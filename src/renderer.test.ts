@@ -118,7 +118,28 @@ describe('renderer', () => {
     // TODO: replace image snapshot
     it('toBase64', () => {
       expect(renderer.toBase64()).toMatchSnapshot()
-      expect(renderer.toBase64('svg')).toMatchSnapshot()
     })
+    it('download svg', done => {
+      const testDownload = (param: any): void => {
+        expect(param).toMatchSnapshot()
+        done()
+      }
+      renderer.download('svg', testDownload)
+    })
+    // TODO: fix test
+    // it('download jpg', done => {
+    //   const testDownload = (param: Parameters<typeof download>[0]): void => {
+    //     expect(param).toMatchSnapshot()
+    //     done()
+    //   }
+    //   renderer.download('jpg', testDownload)
+    // }, 30000)
+    // it('download png', done => {
+    //   const testDownload = (param: Parameters<typeof download>[0]): void => {
+    //     expect(param).toMatchSnapshot()
+    //     done()
+    //   }
+    //   renderer.download('png', testDownload)
+    // }, 30000)
   })
 })
