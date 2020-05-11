@@ -101,6 +101,7 @@ describe('renderer', () => {
     let renderer: Renderer
     beforeEach(() => {
       const el = document.createElement('div')
+      el.setAttribute('style', 'width: 500px; height: 500px;')
       document.body.appendChild(el)
       const path = new SvgPath({ circuler: true, close: false })
       path.addPoint(new Point(0, 0))
@@ -110,6 +111,7 @@ describe('renderer', () => {
       renderer = new Renderer(el)
       renderer.addPath(path)
     })
+    // TODO: Fix width, height
     it('toElement', () => {
       expect(renderer.toElement()).toMatchSnapshot()
     })

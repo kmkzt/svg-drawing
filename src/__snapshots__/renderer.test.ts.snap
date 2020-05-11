@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renderer Renderer toBase64 1`] = `"data:image/svg+xml;base64,W29iamVjdCBTVkdTVkdFbGVtZW50XQ=="`;
+exports[`renderer Renderer toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48cGF0aCBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDAgMCBDIDAuMiAwLjIgMC42IDAuOCAxIDEgQyAxLjQgMS4yIDEuNiAxLjIgMiAxIEMgMi40IDAuOCAyLjggMC4yIDMgMCI+PC9wYXRoPjwvc3ZnPg=="`;
 
-exports[`renderer Renderer toBase64 2`] = `"data:image/svg+xml;base64,W29iamVjdCBTVkdTVkdFbGVtZW50XQ=="`;
+exports[`renderer Renderer toBase64 2`] = `"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48cGF0aCBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZT0iIzAwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDAgMCBDIDAuMiAwLjIgMC42IDAuOCAxIDEgQyAxLjQgMS4yIDEuNiAxLjIgMiAxIEMgMi40IDAuOCAyLjggMC4yIDMgMCI+PC9wYXRoPjwvc3ZnPg=="`;
 
 exports[`renderer Renderer toElement 1`] = `
 <svg

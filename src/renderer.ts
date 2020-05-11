@@ -208,6 +208,7 @@ export class Renderer {
   private resizeElement(width: number, height: number) {
     this.width = width
     this.width = height
+    // TODO: Resizing improve
     this.scalePath(width / this.width)
   }
 
@@ -237,7 +238,7 @@ export class Renderer {
 
   public toBase64(ext: 'svg' | 'jpg' | 'png' = 'svg'): string {
     const svgResource = `data:image/svg+xml;base64,${btoa(
-      String(this.toElement())
+      this.toElement().outerHTML
     )}`
     return svgResource
   }
