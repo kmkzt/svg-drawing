@@ -5,17 +5,28 @@ import React, {
   useCallback,
   useState
 } from 'react'
-import Two from 'two.js'
 import { render } from 'react-dom'
-import GIFEncoder from './jsgif'
-import { createGrid } from './createGrid'
+// import GIFEncoder from './jsgif'
 import { SvgDrawing, SvgAnimation } from '../'
-import Pressure from 'pressure'
+// import Pressure from 'pressure'
 
+const lattice = (size: number) => `
+  repeating-linear-gradient(
+    90deg,
+    #ddd ,
+    #ddd 1px,
+    transparent 1px,
+    transparent ${String(size)}px
+  ),
+  repeating-linear-gradient(
+    0deg,
+    #ddd ,
+    #ddd 1px,
+    transparent 1px,
+    transparent ${String(size)}px
+  )
+`
 const size = 30
-const gridImage = (createGrid({
-  size
-}).renderer as any).domElement.toDataURL('image/png')
 
 const getRandomInt = (max: number): number =>
   Math.floor(Math.random() * Math.floor(max))
@@ -284,6 +295,8 @@ const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const svgDrawingRef = useRef<SvgDrawing | null>(null)
   const [rainbowPen, switchRainbowpen] = useState<boolean>(false)
+  const [circuler, switchCirculer] = useState<boolean>(true)
+  const [close, switchClose] = useState<boolean>(false)
   const clickDownload = useCallback(
     (extention: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
@@ -293,6 +306,18 @@ const Example = () => {
     },
     []
   )
+
+  const handleChangeCiruler = useCallback(() => {
+    if (!svgDrawingRef.current) return
+    svgDrawingRef.current.circuler = !circuler
+    switchCirculer(!circuler)
+  }, [circuler])
+
+  const handleChangeClose = useCallback(() => {
+    if (!svgDrawingRef.current) return
+    svgDrawingRef.current.close = !close
+    switchClose(!close)
+  }, [close])
 
   // /**
   //  * TODO: Download action
@@ -324,6 +349,8 @@ const Example = () => {
     if (svgDrawingRef.current) return
     if (!divRef.current) return
     svgDrawingRef.current = new SvgDrawing(divRef.current, {
+      circuler,
+      close,
       penWidth: 5
     })
   })
@@ -348,10 +375,22 @@ const Example = () => {
         />
         Rainbow pen
       </label>
+      <label>
+        <input
+          type="checkbox"
+          checked={circuler}
+          onChange={handleChangeCiruler}
+        />
+        Circuler
+      </label>
+      <label>
+        <input type="checkbox" checked={close} onChange={handleChangeClose} />
+        Close
+      </label>
       <div
         ref={divRef}
         style={{
-          background: `url('${gridImage}') 0 0 repeat`,
+          backgroundImage: lattice(size),
           backgroundSize: `${size}px ${size}px`,
           width: 500,
           height: 500,
