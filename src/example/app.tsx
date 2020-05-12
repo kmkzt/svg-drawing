@@ -33,7 +33,7 @@ const CANVAS_SIZE: number = 500
 //   const stopShakingRef = useRef<(() => void) | null>(null)
 //   const stopStrokeRef = useRef<(() => void) | null>(null)
 //   const [thinnerPenWidth, setThinnerPenWidth] = useState<number>(5)
-//   const [rainbowPen, switchRainbowpen] = useState<boolean>(false)
+
 //   const [penMode, changePenMode] = useState<string>('normal')
 //   const stopShaking = useCallback(() => {
 //     if (stopShakingRef.current) {
@@ -283,6 +283,7 @@ const CANVAS_SIZE: number = 500
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const svgDrawingRef = useRef<SvgDrawing | null>(null)
+  const [rainbowPen, switchRainbowpen] = useState<boolean>(false)
   const clickDownload = useCallback(
     (extention: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
@@ -292,6 +293,7 @@ const Example = () => {
     },
     []
   )
+
   // /**
   //  * TODO: Download action
   //  */
@@ -325,8 +327,27 @@ const Example = () => {
       penWidth: 5
     })
   })
+  useEffect(() => {
+    const stop = setInterval(() => {
+      if (svgDrawingRef.current && rainbowPen) {
+        svgDrawingRef.current.penColor = getRandomColor()
+      }
+    }, 100)
+    return () => clearInterval(stop)
+  }, [rainbowPen])
+
   return (
     <Fragment>
+      <label>
+        <input
+          type="checkbox"
+          checked={rainbowPen}
+          onChange={e => {
+            switchRainbowpen(e.target.checked)
+          }}
+        />
+        Rainbow pen
+      </label>
       <div
         ref={divRef}
         style={{
