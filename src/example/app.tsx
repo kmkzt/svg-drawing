@@ -352,6 +352,7 @@ const Example = () => {
   const handleChangeRainbowPen = useCallback(e => {
     if (!drawingRef.current) return
     drawingRef.current.fill = 'none'
+    drawingRef.current.close = false
     switchRainbowpen(e.target.checked)
   }, [])
 
@@ -549,12 +550,16 @@ const Example = () => {
           />
           Circuler
         </label>
-        <label>
-          <input type="checkbox" checked={close} onChange={handleChangeClose} />
-          Close
-        </label>
         {!rainbowPen && (
           <>
+            <label>
+              <input
+                type="checkbox"
+                checked={close}
+                onChange={handleChangeClose}
+              />
+              Close
+            </label>
             <div>
               FILL:
               <input
