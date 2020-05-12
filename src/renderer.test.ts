@@ -100,16 +100,12 @@ describe('renderer', () => {
   describe('Renderer', () => {
     let renderer: Renderer
     beforeEach(() => {
-      const el = document.createElement('div')
-      el.setAttribute('style', 'width: 500px; height: 500px;')
-      document.body.appendChild(el)
       const path = new SvgPath({ circuler: true, close: false })
       path.addPoint(new Point(0, 0))
       path.addPoint(new Point(1, 1))
       path.addPoint(new Point(2, 1))
       path.addPoint(new Point(3, 0))
-      renderer = new Renderer(el)
-      renderer.resizeElement(500, 500) // TODO: remove line
+      renderer = new Renderer({ width: 500, height: 500 })
       renderer.addPath(path)
     })
     // TODO: Fix width, height

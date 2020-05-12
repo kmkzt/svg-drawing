@@ -1,5 +1,5 @@
 import { download } from './utils/download'
-const roundUp = (num: number) => Math.round(num * 100) / 100
+const roundUp = (num: number) => Number(num.toFixed(2))
 
 export class Point {
   public x: number
@@ -170,40 +170,24 @@ export class SvgPath {
 }
 
 interface RendererOption {
+  width: number
+  height: number
   background?: string
 }
 export class Renderer {
   public background: string
   private width: number
   private height: number
-  private el: Element
   private paths: SvgPath[]
-  constructor(el: Element, { background }: RendererOption = {}) {
-    this.el = el
+  constructor({ width, height, background }: RendererOption) {
     this.paths = []
-    const { width, height } = el.getBoundingClientRect()
     this.width = width
     this.height = height
     this.background = background ?? '#fff'
-
     this.scalePath = this.scalePath.bind(this)
     this.toElement = this.toElement.bind(this)
     this.toBase64 = this.toBase64.bind(this)
     this.resizeElement = this.resizeElement.bind(this)
-    this.setupAutoResizeElement()
-  }
-
-  private setupAutoResizeElement() {
-    // TODO: fallback resize
-    if ((window as any).ResizeObserver) {
-      const resizeObserver: any = new (window as any).ResizeObserver(
-        (entries: any[]) => {
-          const { width, height }: any = entries[0].contentRect
-          this.resizeElement(width, height)
-        }
-      )
-      resizeObserver.observe(this.el)
-    }
   }
 
   public resizeElement(width: number, height: number) {
@@ -225,6 +209,12 @@ export class Renderer {
 
   public undoPath(): SvgPath | undefined {
     return this.paths.pop()
+  }
+
+  public addPoint(po: Point) {
+    if (this.paths.length === 0) return
+    const updateIndex = this.paths.length - 1
+    this.paths[updateIndex].addPoint(po)
   }
 
   public updatePath(pa: SvgPath, i?: number) {
@@ -271,13 +261,12 @@ export class Renderer {
     const img: any = new Image()
     const renderCanvas = () => {
       const canvas = document.createElement('canvas')
-      const { width, height } = this.el.getBoundingClientRect()
-      canvas.setAttribute('width', String(width))
-      canvas.setAttribute('height', String(height))
+      canvas.setAttribute('width', String(this.width))
+      canvas.setAttribute('height', String(this.height))
       const ctx = canvas.getContext('2d')
       if (!ctx) return
       ctx.fillStyle = this.background
-      ctx.fillRect(0, 0, width, height)
+      ctx.fillRect(0, 0, this.width, this.height)
       ctx.drawImage(img, 0, 0)
       if (ext === 'png') {
         cb({ data: canvas.toDataURL('image/png'), extension: 'png' })
