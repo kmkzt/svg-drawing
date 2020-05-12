@@ -8,11 +8,13 @@ export interface DrawingOption {
   close?: boolean
   circuler?: boolean
   delay?: number
+  fill?: string
 }
 
 export class SvgDrawing {
   public penColor: string
   public penWidth: number
+  public fill: string
   public circuler: boolean
   public close: boolean
   public delay: number
@@ -25,7 +27,7 @@ export class SvgDrawing {
 
   constructor(
     el: HTMLElement,
-    { penColor, penWidth, circuler, close, delay }: DrawingOption = {}
+    { penColor, penWidth, circuler, close, delay, fill }: DrawingOption = {}
   ) {
     /**
      * Setup parameter
@@ -36,6 +38,7 @@ export class SvgDrawing {
     this.circuler = circuler ?? true
     this.close = close ?? false
     this.delay = delay ?? 20
+    this.fill = fill ?? 'none'
     this.el = el
     const { width, height, left, top } = el.getBoundingClientRect()
     this.left = left
@@ -61,20 +64,31 @@ export class SvgDrawing {
     this.updateRender()
   }
 
+  public changeDelay(delay: number) {
+    this.delay = delay
+    this.setupDrawListener()
+  }
   /**
    * Init methods
    */
   private init() {
     this.el.appendChild(this.renderer.toElement())
     this.setupAdjustResize()
+    this.setupDrawListener()
+  }
 
-    // TODO: add PointerEvents
+  // TODO: add PointerEvents
+  private setupDrawListener() {
+    if (this.clearListener) {
+      this.clearListener()
+    }
     if (navigator.userAgent.includes('Mobile')) {
       this.setupTouchEventListener()
     } else {
       this.setupMouseEventListener()
     }
   }
+
   private setupAdjustResize() {
     // TODO: fallback resize
     if ((window as any).ResizeObserver) {
@@ -141,7 +155,8 @@ export class SvgDrawing {
       close: this.close,
       circuler: this.circuler,
       stroke: this.penColor,
-      strokeWidth: this.penWidth
+      strokeWidth: this.penWidth,
+      fill: this.fill
     })
   }
   private createPoint({ x, y }: { x: number; y: number }): Point {
@@ -151,9 +166,6 @@ export class SvgDrawing {
    * Drawing MouseEvent
    */
   private setupMouseEventListener() {
-    if (this.clearListener) {
-      this.clearListener()
-    }
     const handleMouse = (cb: (param: { x: number; y: number }) => void) => (
       ev: MouseEvent
     ): void => {
@@ -186,9 +198,6 @@ export class SvgDrawing {
    * Drawing TouchEvent
    */
   private setupTouchEventListener() {
-    if (this.clearListener) {
-      this.clearListener()
-    }
     const handleTouch = (cb: (param: { x: number; y: number }) => void) => (
       ev: TouchEvent
     ): void => {
