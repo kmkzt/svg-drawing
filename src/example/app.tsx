@@ -3,12 +3,14 @@ import React, {
   useRef,
   Fragment,
   useCallback,
-  useState
+  useState,
+  ChangeEvent
 } from 'react'
 import { render } from 'react-dom'
 // import GIFEncoder from './jsgif'
 import { SvgDrawing, SvgAnimation } from '../'
-// import Pressure from 'pressure'
+import Pressure from 'pressure'
+import { throttle } from '../throttle'
 
 const lattice = (size: number) => `
   repeating-linear-gradient(
@@ -27,6 +29,29 @@ const lattice = (size: number) => `
   )
 `
 const size = 30
+const colorList = [
+  'none',
+  '#F44336',
+  '#E91E63',
+  '#9C27B0',
+  '#673AB7',
+  '#3F51B5',
+  '#2196F3',
+  '#00BCD4',
+  '#009688',
+  '#4CAF50',
+  '#8BC34A',
+  '#CDDC39',
+  '#FFEB3B',
+  '#FFC107',
+  '#FF9800',
+  '#FF5722',
+  '#795548',
+  '#ddd',
+  '#9E9E9E',
+  '#444',
+  'black'
+]
 
 const getRandomInt = (max: number): number =>
   Math.floor(Math.random() * Math.floor(max))
@@ -38,7 +63,7 @@ const getRandomColor = (): string =>
 const CANVAS_SIZE: number = 500
 // const Example = () => {
 //   const divRef = useRef<HTMLDivElement | null>(null)
-//   const svgDrawingRef = useRef<SvgDrawing | null>(null)
+//   const drawingRef = useRef<SvgDrawing | null>(null)
 //   const animationRef = useRef<HTMLDivElement | null>(null)
 //   const svgAnimationRef = useRef<SvgAnimation | null>(null)
 //   const stopShakingRef = useRef<(() => void) | null>(null)
@@ -79,21 +104,21 @@ const CANVAS_SIZE: number = 500
 //     [stopStroke]
 //   )
 //   const animationFrameUpdate = useCallback(() => {
-//     if (!svgAnimationRef.current || !svgDrawingRef.current) return
-//     svgAnimationRef.current.loadScene(svgDrawingRef.current.scene)
+//     if (!svgAnimationRef.current || !drawingRef.current) return
+//     svgAnimationRef.current.loadScene(drawingRef.current.scene)
 //     // TODO: load svgXML example
 //     // load SVGXML
-//     // svgAnimationRef.current.loadSvgXml(svgDrawingRef.current.toSvgXml())
+//     // svgAnimationRef.current.loadSvgXml(drawingRef.current.toSvgXml())
 //   }, [])
 //   const clickRandomColor = useCallback(() => {
-//     if (!svgDrawingRef.current) return
-//     svgDrawingRef.current.penColor = getRandomColor()
+//     if (!drawingRef.current) return
+//     drawingRef.current.penColor = getRandomColor()
 //   }, [])
 
 //   const changePenWidth = useCallback(
 //     (e: React.ChangeEvent<HTMLInputElement>) => {
-//       if (!svgDrawingRef.current) return
-//       svgDrawingRef.current.penWidth = Number(e.target.value)
+//       if (!drawingRef.current) return
+//       drawingRef.current.penWidth = Number(e.target.value)
 //     },
 //     []
 //   )
@@ -107,42 +132,42 @@ const CANVAS_SIZE: number = 500
 //   const changeCap = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
 //     const cap = e.target.value
 //     if (!['butt', 'round', 'square'].includes(e.target.value)) return
-//     if (!svgDrawingRef.current) return
-//     svgDrawingRef.current.strokeCap = cap
+//     if (!drawingRef.current) return
+//     drawingRef.current.strokeCap = cap
 //   }, [])
 //   const changeLineJoin = useCallback(
 //     (e: React.ChangeEvent<HTMLSelectElement>) => {
 //       const lineJoin = e.target.value
 //       if (!['miter', 'round', 'bevel'].includes(e.target.value)) return
-//       if (!svgDrawingRef.current) return
-//       svgDrawingRef.current.strokeLineJoin = lineJoin
+//       if (!drawingRef.current) return
+//       drawingRef.current.strokeLineJoin = lineJoin
 //     },
 //     []
 //   )
 //   const updatePenConfig = useCallback(
 //     (e: any) => {
-//       if (rainbowPen && svgDrawingRef.current)
-//         svgDrawingRef.current.penColor = getRandomColor()
-//       if (penMode === 'random' && svgDrawingRef.current)
-//         svgDrawingRef.current.penWidth = getRandomInt(50) + 5
+//       if (rainbowPen && drawingRef.current)
+//         drawingRef.current.penColor = getRandomColor()
+//       if (penMode === 'random' && drawingRef.current)
+//         drawingRef.current.penWidth = getRandomInt(50) + 5
 //       if (penMode === 'thinner')
-//         svgDrawingRef.current.penWidth = thinnerPenWidth
+//         drawingRef.current.penWidth = thinnerPenWidth
 //     },
 //     [rainbowPen, penMode, thinnerPenWidth]
 //   )
 //   const pressureChange = useCallback(
 //     (force: any, event: any) => {
 //       if (penMode !== 'thinner') return
-//       if (!svgDrawingRef.current) return
+//       if (!drawingRef.current) return
 //       const pw = 30 - Math.floor(force * 40)
 //       setThinnerPenWidth(pw)
 //     },
 //     [penMode]
 //   )
 //   useEffect(() => {
-//     if (svgDrawingRef.current) return
+//     if (drawingRef.current) return
 //     if (!divRef.current) return
-//     svgDrawingRef.current = new SvgDrawing(divRef.current, {
+//     drawingRef.current = new SvgDrawing(divRef.current, {
 //       penWidth: 5
 //     })
 //   })
@@ -293,31 +318,113 @@ const CANVAS_SIZE: number = 500
 
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
-  const svgDrawingRef = useRef<SvgDrawing | null>(null)
-  const [rainbowPen, switchRainbowpen] = useState<boolean>(false)
-  const [circuler, switchCirculer] = useState<boolean>(true)
-  const [close, switchClose] = useState<boolean>(false)
+  const drawingRef = useRef<SvgDrawing | null>(null)
+  const [rainbowPen, switchRainbowpen] = useState(false)
+  const [thinner, switchThinner] = useState(true)
+  const [circuler, switchCirculer] = useState(true)
+  const [close, switchClose] = useState(false)
+  const [fill, setFill] = useState('none')
+  const [penColor, setPenColor] = useState('black')
+  const [delay, setDelay] = useState(20)
+  const [penWidth, setPenWidth] = useState(1)
+
   const clickDownload = useCallback(
     (extention: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
     ) => {
-      if (!svgDrawingRef.current) return
-      svgDrawingRef.current.download(extention)
+      if (!drawingRef.current) return
+      drawingRef.current.download(extention)
     },
     []
   )
 
+  const pressureChange = useCallback(
+    (force: any, event: any) => {
+      if (!thinner) return
+      if (!drawingRef.current) return
+      const pw = 30 - Math.floor(force * 40)
+      drawingRef.current.penWidth = pw
+    },
+    [thinner]
+  )
+
+  const handleChangeRainbowPen = useCallback(e => {
+    if (!drawingRef.current) return
+    drawingRef.current.fill = 'none'
+    switchRainbowpen(e.target.checked)
+  }, [])
+
+  const handleChangeThinner = useCallback(e => {
+    if (!drawingRef.current) return
+    switchThinner(e.target.checked)
+  }, [])
   const handleChangeCiruler = useCallback(() => {
-    if (!svgDrawingRef.current) return
-    svgDrawingRef.current.circuler = !circuler
+    if (!drawingRef.current) return
+    drawingRef.current.circuler = !circuler
     switchCirculer(!circuler)
   }, [circuler])
 
   const handleChangeClose = useCallback(() => {
-    if (!svgDrawingRef.current) return
-    svgDrawingRef.current.close = !close
+    if (!drawingRef.current) return
+    drawingRef.current.close = !close
     switchClose(!close)
   }, [close])
+
+  const handlePenWidth = useCallback((e: ChangeEvent<any>) => {
+    if (!drawingRef.current) return
+    const num = Number(e.target.value)
+    if (Number.isNaN(num)) return
+    drawingRef.current.penWidth = num
+    setPenWidth(num)
+  }, [])
+
+  const handleChangeDelay = useCallback((e: ChangeEvent<any>) => {
+    if (!drawingRef.current) return
+    const num = Number(e.target.value)
+    if (Number.isNaN(num)) return
+    drawingRef.current.changeDelay(num)
+    setDelay(num)
+  }, [])
+
+  const updatePenColor = useCallback((color: string) => {
+    if (!drawingRef.current) return
+    drawingRef.current.penColor = color
+    setPenColor(color)
+  }, [])
+
+  const handleChangePenColor = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      updatePenColor(e.target.value)
+    },
+    [updatePenColor]
+  )
+
+  const handleClickPenColor = useCallback(
+    (col: string) => () => {
+      updatePenColor(col)
+    },
+    [updatePenColor]
+  )
+
+  const updateFill = useCallback((color: string) => {
+    if (!drawingRef.current) return
+    drawingRef.current.fill = color
+    setFill(color)
+  }, [])
+
+  const handleChangeFill = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      updateFill(e.target.value)
+    },
+    [updateFill]
+  )
+
+  const handleClickFill = useCallback(
+    (col: string) => () => {
+      updateFill(col)
+    },
+    [updateFill]
+  )
 
   // /**
   //  * TODO: Download action
@@ -339,54 +446,163 @@ const Example = () => {
   // }, [])
 
   const clickClear = useCallback(() => {
-    if (svgDrawingRef.current) svgDrawingRef.current.clear()
+    if (drawingRef.current) drawingRef.current.clear()
   }, [])
   const clickUndo = useCallback(() => {
-    if (!svgDrawingRef.current) return
-    svgDrawingRef.current.undo()
-  }, [svgDrawingRef])
+    if (!drawingRef.current) return
+    drawingRef.current.undo()
+  }, [drawingRef])
   useEffect(() => {
-    if (svgDrawingRef.current) return
+    if (drawingRef.current) return
     if (!divRef.current) return
-    svgDrawingRef.current = new SvgDrawing(divRef.current, {
+    drawingRef.current = new SvgDrawing(divRef.current, {
       circuler,
       close,
-      penWidth: 5
+      delay,
+      penWidth,
+      fill
     })
   })
   useEffect(() => {
     const stop = setInterval(() => {
-      if (svgDrawingRef.current && rainbowPen) {
-        svgDrawingRef.current.penColor = getRandomColor()
+      if (drawingRef.current && rainbowPen) {
+        const color = getRandomColor()
+        drawingRef.current.penColor = color
+        setPenColor(color)
       }
     }, 100)
     return () => clearInterval(stop)
   }, [rainbowPen])
 
+  useEffect(() => {
+    if (!divRef.current) return
+    Pressure.set(divRef.current, {
+      change: throttle(pressureChange, delay)
+    })
+  })
   return (
     <Fragment>
-      <label>
-        <input
-          type="checkbox"
-          checked={rainbowPen}
-          onChange={e => {
-            switchRainbowpen(e.target.checked)
-          }}
-        />
-        Rainbow pen
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          checked={circuler}
-          onChange={handleChangeCiruler}
-        />
-        Circuler
-      </label>
-      <label>
-        <input type="checkbox" checked={close} onChange={handleChangeClose} />
-        Close
-      </label>
+      <div>
+        <div>
+          STROKE WIDTH:
+          <input
+            type="number"
+            min="1"
+            max="20"
+            step="1"
+            value={penWidth}
+            onChange={handlePenWidth}
+          />
+          <input
+            type="range"
+            min="1"
+            max="20"
+            step="1"
+            value={penWidth}
+            onChange={handlePenWidth}
+          />
+        </div>
+        <div>
+          THROTTLE DELAY:
+          <input
+            type="number"
+            min="0"
+            max="300"
+            step="5"
+            value={delay}
+            onChange={handleChangeDelay}
+          />
+          <input
+            type="range"
+            min="0"
+            max="300"
+            step="5"
+            value={delay}
+            onChange={handleChangeDelay}
+          />
+        </div>
+        <label>
+          <input
+            type="checkbox"
+            checked={rainbowPen}
+            onChange={handleChangeRainbowPen}
+          />
+          Rainbow pen
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={thinner}
+            onChange={handleChangeThinner}
+          />
+          Thinner
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={circuler}
+            onChange={handleChangeCiruler}
+          />
+          Circuler
+        </label>
+        <label>
+          <input type="checkbox" checked={close} onChange={handleChangeClose} />
+          Close
+        </label>
+        {!rainbowPen && (
+          <>
+            <div>
+              FILL:
+              <input
+                type="text"
+                placeholder="#000 or black or rgba(0,0,0,1)"
+                value={fill}
+                onChange={handleChangeFill}
+              />
+            </div>
+            <div>
+              {colorList.map((col: string) => (
+                <div
+                  key={col}
+                  style={{
+                    display: 'inline-block',
+                    width: '15px',
+                    height: '15px',
+                    backgroundColor: col,
+                    border: col === fill ? '2px solid #000' : '2px solid #999'
+                  }}
+                  onClick={handleClickFill(col)}
+                />
+              ))}
+            </div>
+            <div>
+              PEN COLOR:
+              <input
+                type="text"
+                placeholder="#000 or black or rgba(0,0,0,1)"
+                value={penColor}
+                onChange={handleChangePenColor}
+              />
+            </div>
+            <div>
+              {colorList.map((col: string) => (
+                <div
+                  key={col}
+                  style={{
+                    display: 'inline-block',
+                    width: '15px',
+                    height: '15px',
+                    backgroundColor: col,
+                    border:
+                      col === penColor ? '2px solid #000' : '2px solid #999'
+                  }}
+                  onClick={handleClickPenColor(col)}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
       <div
         ref={divRef}
         style={{
