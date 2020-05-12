@@ -42,17 +42,17 @@ describe('renderer', () => {
     it('addPoint', () => {
       const path = new SvgPath()
       path.addPoint(new Point(1, 1))
-      expect(path.data.length).toBe(1)
-      expect(path.data[0].x).toBe(1)
-      expect(path.data[0].y).toBe(1)
+      expect(path.points.length).toBe(1)
+      expect(path.points[0].x).toBe(1)
+      expect(path.points[0].y).toBe(1)
     })
     it('scale', () => {
       const path = new SvgPath({ strokeWidth: 1 })
       path.addPoint(new Point(1, 1))
       path.scale(2)
       expect(path.strokeWidth).toBe(2)
-      expect(path.data[0].x).toBe(2)
-      expect(path.data[0].y).toBe(2)
+      expect(path.points[0].x).toBe(2)
+      expect(path.points[0].y).toBe(2)
     })
     it('createCommand Line', () => {
       const path = new SvgPath({ circuler: false, close: false })

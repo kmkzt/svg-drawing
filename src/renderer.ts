@@ -30,20 +30,47 @@ export class Point {
   public sub(p: Point): Point {
     return new Point(this.x - p.x, this.y - p.y)
   }
-
-  public command_move() {
+  public commandMove() {
     return `M ${this.x} ${this.y}`
   }
 
-  public command_line() {
-    return ` L ${this.x} ${this.y}`
+  public commandLine() {
+    return `L ${this.x} ${this.y}`
   }
 
-  public command_circuler(l: Point, r: Point) {
-    return ` C ${l.x} ${l.y} ${r.x} ${r.y} ${this.x} ${this.y}`
+  public commandCirculer(cl: Point, cr: Point): string {
+    return `C ${cl.x} ${cl.y} ${cr.x} ${cr.y} ${this.x} ${this.y}`
   }
 }
 
+export enum CommandType {
+  MOVE,
+  LINE,
+  CURVE
+}
+
+export class Command {
+  public point: Point
+  public type: CommandType
+  public cl?: Point
+  public cr?: Point
+  constructor(type: CommandType, point: Point) {
+    this.point = point
+    this.type = type
+  }
+
+  public toString(): string {
+    switch (this.type) {
+      case CommandType.MOVE:
+        return this.point.commandMove()
+      case CommandType.LINE:
+        return this.point.commandLine()
+      case CommandType.CURVE:
+        if (!this.cl || !this.cr) return this.point.commandLine()
+        return this.point.commandCirculer(this.cl, this.cr)
+    }
+  }
+}
 export class Vector {
   public angle: number
   public value: number
@@ -77,8 +104,8 @@ export class SvgPath {
   public stroke: string
   public fill: string
   public smoothRatio: number
-  // TODO: replace private parameter
-  public data: Point[]
+  public points: Point[]
+  public commands: Command[]
 
   constructor({
     close,
@@ -93,68 +120,89 @@ export class SvgPath {
     this.stroke = stroke ?? '#000'
     this.fill = fill ?? 'none'
     this.smoothRatio = 0.2
-    this.data = []
+    this.points = []
+    this.commands = []
   }
 
   public scale(r: number) {
-    const update = this.data.map((p: Point) => p.scale(r))
-    this.data = update
+    const update = this.points.map((p: Point) => p.scale(r))
+    this.points = update
     this.strokeWidth *= r
   }
 
   public addPoint(p: Point) {
-    this.data.push(p)
+    this.points.push(p)
+    this.formatCommand()
   }
 
   public createCommand(): string {
-    if (this.data.length === 0) return ''
-    const createControlPoint = (
-      prev: Point,
-      start: Point,
-      next: Point
-    ): Point => {
-      const contolVectorPoint = next
-        .sub(prev)
-        .toVector()
-        .scale(this.smoothRatio)
-        .toPoint()
-      return start.add(contolVectorPoint)
+    if (this.commands.length === 0) return ''
+
+    let d = this.commands
+      .map((com: Command, _i: number) => com.toString())
+      .join(' ')
+    if (this.close) {
+      d += ` Z`
     }
-    let command = this.data[0].command_move()
-    const isCirculer = this.circuler && this.data.length > 2
-    const endIndex = this.data.length - 1
-    if (isCirculer) {
-      for (let i = 1; i < this.data.length; i += 1) {
-        const p1 = i === 1 ? this.data[0] : this.data[i - 2]
-        const p2 = this.data[i - 1]
-        const p3 = this.data[i]
-        const p4 = i === endIndex ? this.data[i] : this.data[i + 1]
-        command += this.data[i].command_circuler(
-          createControlPoint(p1, p2, p3),
-          createControlPoint(p4, p3, p2)
-        )
-      }
-    } else {
-      for (let i = 1; i < this.data.length; i += 1) {
-        command += this.data[i].command_line()
-      }
+    return d
+  }
+
+  public formatCommand() {
+    const isCirculer = this.circuler && this.points.length > 2
+    this.commands = isCirculer
+      ? this._createCurveCommand()
+      : this._createLineCommand()
+  }
+
+  private _createControlPoint(prev: Point, start: Point, next: Point): Point {
+    const contolVectorPoint = next
+      .sub(prev)
+      .toVector()
+      .scale(this.smoothRatio)
+      .toPoint()
+    return start.add(contolVectorPoint)
+  }
+  private _createCurveCommand(): Command[] {
+    let update = []
+    const endIndex = this.points.length - 1
+    update.push(new Command(CommandType.MOVE, this.points[0]))
+    for (let i = 1; i < this.points.length; i += 1) {
+      const p1 = i === 1 ? this.points[0] : this.points[i - 2]
+      const p2 = this.points[i - 1]
+      const p3 = this.points[i]
+      const p4 = i === endIndex ? this.points[i] : this.points[i + 1]
+      const curveCommand = new Command(CommandType.CURVE, this.points[i])
+      curveCommand.cl = this._createControlPoint(p1, p2, p3)
+      curveCommand.cr = this._createControlPoint(p4, p3, p2)
+      update.push(curveCommand)
     }
     if (this.close) {
-      if (isCirculer) {
-        command += this.data[0].command_circuler(
-          createControlPoint(
-            this.data[endIndex - 1],
-            this.data[endIndex],
-            this.data[0]
-          ),
-          createControlPoint(this.data[1], this.data[0], this.data[endIndex])
-        )
-      } else {
-        command += this.data[0].command_line()
-      }
-      command += ` Z`
+      const curveCommand = new Command(CommandType.CURVE, this.points[0])
+      curveCommand.cl = this._createControlPoint(
+        this.points[endIndex - 1],
+        this.points[endIndex],
+        this.points[0]
+      )
+      curveCommand.cr = this._createControlPoint(
+        this.points[1],
+        this.points[0],
+        this.points[endIndex]
+      )
+      update.push(curveCommand)
     }
-    return command
+    return update
+  }
+
+  private _createLineCommand(): Command[] {
+    let update = []
+    update.push(new Command(CommandType.MOVE, this.points[0]))
+    for (let i = 1; i < this.points.length; i += 1) {
+      update.push(new Command(CommandType.LINE, this.points[i]))
+    }
+    if (this.close) {
+      update.push(new Command(CommandType.LINE, this.points[0]))
+    }
+    return update
   }
 
   public toElement(): HTMLElement {
