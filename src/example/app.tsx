@@ -9,8 +9,7 @@ import React, {
 import { render } from 'react-dom'
 // import GIFEncoder from './jsgif'
 import { SvgDrawing, SvgAnimation } from '../'
-import Pressure from 'pressure'
-import { throttle } from '../throttle'
+// import Pressure from 'pressure'
 
 const lattice = (size: number) => `
   repeating-linear-gradient(
@@ -320,7 +319,8 @@ const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const drawingRef = useRef<SvgDrawing | null>(null)
   const [rainbowPen, switchRainbowpen] = useState(false)
-  const [thinner, switchThinner] = useState(true)
+  // TODO: fix
+  // const [thinner, switchThinner] = useState(true)
   const [circuler, switchCirculer] = useState(true)
   const [close, switchClose] = useState(false)
   const [fill, setFill] = useState('none')
@@ -338,15 +338,16 @@ const Example = () => {
     []
   )
 
-  const pressureChange = useCallback(
-    (force: any, event: any) => {
-      if (!thinner) return
-      if (!drawingRef.current) return
-      const pw = 30 - Math.floor(force * 40)
-      drawingRef.current.penWidth = pw
-    },
-    [thinner]
-  )
+  // TODO: fix
+  // const pressureChange = useCallback(
+  //   (force: any, event: any) => {
+  //     if (!thinner) return
+  //     if (!drawingRef.current) return
+  //     const pw = 30 - Math.floor(force * 40)
+  //     drawingRef.current.penWidth = pw
+  //   },
+  //   [thinner]
+  // )
 
   const handleChangeRainbowPen = useCallback(e => {
     if (!drawingRef.current) return
@@ -354,10 +355,11 @@ const Example = () => {
     switchRainbowpen(e.target.checked)
   }, [])
 
-  const handleChangeThinner = useCallback(e => {
-    if (!drawingRef.current) return
-    switchThinner(e.target.checked)
-  }, [])
+  // TODO: fix
+  // const handleChangeThinner = useCallback(e => {
+  //   if (!drawingRef.current) return
+  //   switchThinner(e.target.checked)
+  // }, [])
   const handleChangeCiruler = useCallback(() => {
     if (!drawingRef.current) return
     drawingRef.current.circuler = !circuler
@@ -474,12 +476,13 @@ const Example = () => {
     return () => clearInterval(stop)
   }, [rainbowPen])
 
-  useEffect(() => {
-    if (!divRef.current) return
-    Pressure.set(divRef.current, {
-      change: throttle(pressureChange, delay)
-    })
-  })
+  // TODO: fix
+  // useEffect(() => {
+  //   if (!divRef.current) return
+  //   Pressure.set(divRef.current, {
+  //     change: throttle(pressureChange, delay)
+  //   })
+  // })
   return (
     <Fragment>
       <div>
@@ -529,6 +532,7 @@ const Example = () => {
           />
           Rainbow pen
         </label>
+        {/* TODO: fix
         <label>
           <input
             type="checkbox"
@@ -536,7 +540,7 @@ const Example = () => {
             onChange={handleChangeThinner}
           />
           Thinner
-        </label>
+        </label> */}
         <label>
           <input
             type="checkbox"
