@@ -47,7 +47,7 @@ export class SvgDrawing extends Renderer {
   }
 
   public clear() {
-    this.clear()
+    this.clearPath()
     this.updateRender()
   }
 

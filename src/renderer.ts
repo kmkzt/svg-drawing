@@ -292,12 +292,12 @@ export class Renderer {
     this._paths[updateIndex] = pa
   }
 
-  public get paths(): SvgPath[] {
-    return this._paths
+  public clearPath() {
+    this._paths = []
   }
 
-  public clear() {
-    this._paths = []
+  public get paths(): SvgPath[] {
+    return this._paths
   }
 
   public toElement(): SVGSVGElement {
