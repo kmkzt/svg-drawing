@@ -7,10 +7,6 @@ export class Point {
   constructor(x: number, y: number) {
     this.x = x
     this.y = y
-
-    this.toVector = this.toVector.bind(this)
-    this.scale = this.scale.bind(this)
-    this.sub = this.sub.bind(this)
   }
 
   public toVector(): Vector {
@@ -132,10 +128,13 @@ export class SvgPath {
 
   public addPoint(p: Point) {
     this.points.push(p)
-    this.formatCommand()
   }
 
+  public addCommand(c: Command) {
+    this.commands.push(c)
+  }
   public createCommand(): string {
+    this.formatCommand()
     if (this.commands.length === 0) return ''
 
     let d = this.commands
@@ -215,6 +214,24 @@ export class SvgPath {
     path.setAttribute('d', this.createCommand())
     return path
   }
+
+  public clone(): SvgPath {
+    const path = new SvgPath({
+      close: this.close,
+      circuler: this.circuler,
+      strokeWidth: this.strokeWidth,
+      stroke: this.stroke,
+      fill: this.fill
+    })
+    console.log(path)
+    this.points.map(p => {
+      path.addPoint(p)
+    })
+    this.commands.map(c => {
+      path.addCommand(c)
+    })
+    return path
+  }
 }
 
 interface RendererOption {
@@ -224,70 +241,78 @@ interface RendererOption {
 }
 export class Renderer {
   public background: string
-  private width: number
-  private height: number
-  private paths: SvgPath[]
+  private _width: number
+  private _height: number
+  private _paths: SvgPath[]
   constructor({ width, height, background }: RendererOption) {
-    this.paths = []
-    this.width = width
-    this.height = height
+    this._paths = []
+    this._width = width
+    this._height = height
     this.background = background ?? '#fff'
-    this.scalePath = this.scalePath.bind(this)
-    this.toElement = this.toElement.bind(this)
-    this.toBase64 = this.toBase64.bind(this)
-    this.resizeElement = this.resizeElement.bind(this)
+    // this.scalePath = this.scalePath.bind(this)
+    // this.toElement = this.toElement.bind(this)
+    // this.toBase64 = this.toBase64.bind(this)
+    // this.resizeElement = this.resizeElement.bind(this)
   }
 
   public resizeElement(width: number, height: number) {
-    this.width = width
-    this.height = height
+    this._width = width
+    this._height = height
     // TODO: Resizing improve
-    this.scalePath(width / this.width)
+    this.scalePath(width / this._width)
   }
 
   public scalePath(r: number) {
-    for (let i = 0; i < this.paths.length; i += 1) {
-      this.paths[i].scale(r)
+    for (let i = 0; i < this._paths.length; i += 1) {
+      this._paths[i].scale(r)
     }
   }
 
   public addPath(pa: SvgPath) {
-    this.paths.push(pa)
+    this._paths.push(pa)
   }
 
   public undoPath(): SvgPath | undefined {
-    return this.paths.pop()
+    return this._paths.pop()
+  }
+
+  public replacePath(paths: SvgPath[]) {
+    this._paths = paths
   }
 
   public addPoint(po: Point) {
-    if (this.paths.length === 0) return
-    const updateIndex = this.paths.length - 1
-    this.paths[updateIndex].addPoint(po)
+    if (this._paths.length === 0) return
+    const updateIndex = this._paths.length - 1
+    this._paths[updateIndex].addPoint(po)
   }
 
   public updatePath(pa: SvgPath, i?: number) {
-    const updateIndex = i || this.paths.length - 1
-    if (updateIndex < 0) this.paths.push(pa)
-    this.paths[updateIndex] = pa
+    const updateIndex = i || this._paths.length - 1
+    if (updateIndex < 0) this._paths.push(pa)
+    this._paths[updateIndex] = pa
+  }
+
+  public get paths(): SvgPath[] {
+    return this._paths
   }
 
   public clear() {
-    this.paths = []
+    this._paths = []
   }
 
   public toElement(): SVGSVGElement {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttribute('width', String(this.width))
-    svg.setAttribute('height', String(this.height))
-    for (let i = 0; i < this.paths.length; i += 1) {
-      svg.appendChild(this.paths[i].toElement())
+    svg.setAttribute('width', String(this._width))
+    svg.setAttribute('height', String(this._height))
+    for (let i = 0; i < this._paths.length; i += 1) {
+      svg.appendChild(this._paths[i].toElement())
     }
     return svg
   }
 
   public toBase64(): string {
-    const data = `<svg width="${this.width}" height="${
-      this.width
+    const data = `<svg width="${this._width}" height="${
+      this._height
     }" version="1.1" xmlns="http://www.w3.org/2000/svg">${
       this.toElement().innerHTML
     }</svg>`
@@ -309,12 +334,12 @@ export class Renderer {
     const img: any = new Image()
     const renderCanvas = () => {
       const canvas = document.createElement('canvas')
-      canvas.setAttribute('width', String(this.width))
-      canvas.setAttribute('height', String(this.height))
+      canvas.setAttribute('width', String(this._width))
+      canvas.setAttribute('height', String(this._height))
       const ctx = canvas.getContext('2d')
       if (!ctx) return
       ctx.fillStyle = this.background
-      ctx.fillRect(0, 0, this.width, this.height)
+      ctx.fillRect(0, 0, this._width, this._height)
       ctx.drawImage(img, 0, 0)
       if (ext === 'png') {
         cb({ data: canvas.toDataURL('image/png'), extension: 'png' })

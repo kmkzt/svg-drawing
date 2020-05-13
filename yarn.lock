@@ -1562,11 +1562,6 @@
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.5.tgz#9adbc12950582aa65ead76bffdf39fe0c27a3c02"
   integrity sha512-/gG2M/Imw7cQFp8PGvz/SwocNrmKFjFsm5Pb8HdbHkZ1K8pmuPzOX4VeVoiEecFCVf4CsN1r3/BRvx+6sNqwtQ==
 
-"@types/two.js@0.7.2":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@types/two.js/-/two.js-0.7.2.tgz#46b1750681850ab9f910c48c4c605bec1d5d5147"
-  integrity sha512-2IR3lqfFPmfAcPtoQCbu5nob/5PjMKWsNxJcViM54QrU3Tdno3eS3u1zCDwyavHpMbY4Limh/wdAa6KHImhElg==
-
 "@types/uglify-js@*":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-3.0.4.tgz#96beae23df6f561862a830b4288a49e86baac082"
@@ -9800,11 +9795,6 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
-
-two.js@0.7.0-stable.1:
-  version "0.7.0-stable.1"
-  resolved "https://registry.yarnpkg.com/two.js/-/two.js-0.7.0-stable.1.tgz#4999070a566c3ab1b2ba980134d0d786b46ce2db"
-  integrity sha512-4QULPtstGEyGbhMvVvCGxgm85Un6CMYqFYafw7hNan9LdqoYZqMnxsaj8pkfBT4zpRfqB98aZjGrWYoCBqKtXA==
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"

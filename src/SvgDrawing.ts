@@ -18,9 +18,9 @@ export class SvgDrawing {
   public circuler: boolean
   public close: boolean
   public delay: number
+  public renderer: Renderer
   private line: SvgPath | null
   private el: HTMLElement
-  private renderer: Renderer
   private clearListener?: () => void
   private top: number
   private left: number

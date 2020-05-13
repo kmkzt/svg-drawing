@@ -170,17 +170,7 @@ const CANVAS_SIZE: number = 500
 //       penWidth: 5
 //     })
 //   })
-//   useEffect(() => {
-//     if (svgAnimationRef.current) return
-//     if (!animationRef.current) return
-//     svgAnimationRef.current = new SvgAnimation({
-//       el: animationRef.current,
-//       type: Two.Types.canvas,
-//       shakingRange: 5,
-//       width: CANVAS_SIZE,
-//       height: CANVAS_SIZE
-//     })
-//   })
+
 //   useEffect(() => {
 //     if (!divRef.current) return
 //     Pressure.set(divRef.current, {
@@ -318,6 +308,8 @@ const CANVAS_SIZE: number = 500
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const drawingRef = useRef<SvgDrawing | null>(null)
+  const aniDivRef = useRef<HTMLDivElement | null>(null)
+  const animationRef = useRef<SvgAnimation | null>(null)
   const [rainbowPen, switchRainbowpen] = useState(false)
   // TODO: fix
   // const [thinner, switchThinner] = useState(true)
@@ -326,7 +318,7 @@ const Example = () => {
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
   const [delay, setDelay] = useState(20)
-  const [penWidth, setPenWidth] = useState(1)
+  const [penWidth, setPenWidth] = useState(5)
 
   const clickDownload = useCallback(
     (extention: 'png' | 'jpg' | 'svg') => (
@@ -429,25 +421,6 @@ const Example = () => {
     [updateFill]
   )
 
-  // /**
-  //  * TODO: Download action
-  //  */
-  // const clickDownloadGIF = useCallback(() => {
-  //   if (!svgAnimationRef.current) return
-  //   const frame: number = 50
-  //   const encoder = new (GIFEncoder as any)()
-  //   encoder.setRepeat(0)
-  //   encoder.setDelay(500 / frame)
-  //   encoder.setQuality(5)
-  //   encoder.start()
-  //   for (let i = 0; i <= frame; i++) {
-  //     svgAnimationRef.current.splitEnd(i / frame)
-  //     encoder.addFrame((svgAnimationRef.current.renderer as any).ctx)
-  //   }
-  //   encoder.finish()
-  //   encoder.download(`${new Date().toISOString()}.gif`)
-  // }, [])
-
   const clickClear = useCallback(() => {
     if (drawingRef.current) drawingRef.current.clear()
   }, [])
@@ -466,6 +439,14 @@ const Example = () => {
       fill
     })
   })
+
+  useEffect(() => {
+    if (animationRef.current) return
+    if (!aniDivRef.current) return
+    animationRef.current = new SvgAnimation(aniDivRef.current, {
+      shakingRange: 5
+    })
+  })
   useEffect(() => {
     const stop = setInterval(() => {
       if (drawingRef.current && rainbowPen) {
@@ -473,10 +454,18 @@ const Example = () => {
         drawingRef.current.penColor = color
         setPenColor(color)
       }
-    }, 100)
+    }, delay * 4)
     return () => clearInterval(stop)
-  }, [rainbowPen])
+  }, [delay, rainbowPen])
 
+  const updateAnimation = useCallback(() => {
+    if (!animationRef.current) return
+    if (!drawingRef.current) return
+    animationRef.current.renderer.replacePath(
+      drawingRef.current.renderer.paths.map(p => p.clone())
+    )
+    animationRef.current.shaking()
+  }, [])
   // TODO: fix
   // useEffect(() => {
   //   if (!divRef.current) return
@@ -612,16 +601,38 @@ const Example = () => {
           </>
         )}
       </div>
+      <button onClick={updateAnimation}>SHAKING</button>
       <div
-        ref={divRef}
         style={{
-          backgroundImage: lattice(size),
-          backgroundSize: `${size}px ${size}px`,
-          width: 500,
-          height: 500,
-          margin: 'auto'
+          display: 'flex',
+          flexWrap: 'wrap'
         }}
-      />
+      >
+        <div>
+          <div
+            ref={divRef}
+            style={{
+              backgroundImage: lattice(size),
+              backgroundSize: `${size}px ${size}px`,
+              width: 500,
+              height: 500,
+              margin: 'auto'
+            }}
+          />
+        </div>
+        <div>
+          <div
+            ref={aniDivRef}
+            style={{
+              backgroundImage: lattice(size),
+              backgroundSize: `${size}px ${size}px`,
+              width: 500,
+              height: 500,
+              margin: 'auto'
+            }}
+          />
+        </div>
+      </div>
       <div>
         <button onClick={clickClear}>Clear</button>
         <button onClick={clickUndo}>Undo</button>
