@@ -148,9 +148,12 @@ export class SvgPath {
 
   public formatCommand() {
     const isCirculer = this.circuler && this.points.length > 2
+    const points = this.close
+      ? [...this.points, this.points[0]]
+      : [...this.points]
     this.commands = isCirculer
-      ? this._createCurveCommand()
-      : this._createLineCommand()
+      ? this._createCurveCommand(points)
+      : this._createLineCommand(points)
   }
 
   private _createControlPoint(prev: Point, start: Point, next: Point): Point {
@@ -161,45 +164,37 @@ export class SvgPath {
       .toPoint()
     return start.add(contolVectorPoint)
   }
-  private _createCurveCommand(): Command[] {
+  private _createCurveCommand(pts: Point[]): Command[] {
     let update = []
-    const endIndex = this.points.length - 1
+    const endIndex = pts.length - 1
     update.push(new Command(CommandType.MOVE, this.points[0]))
-    for (let i = 1; i < this.points.length; i += 1) {
-      const p1 = i === 1 ? this.points[0] : this.points[i - 2]
-      const p2 = this.points[i - 1]
-      const p3 = this.points[i]
-      const p4 = i === endIndex ? this.points[i] : this.points[i + 1]
-      const curveCommand = new Command(CommandType.CURVE, this.points[i])
+    for (let i = 1; i < pts.length; i += 1) {
+      const p1 = i === 1 ? pts[0] : pts[i - 2]
+      const p2 = pts[i - 1]
+      const p3 = pts[i]
+      // TODO: Refactor
+      const p4 = this.close
+        ? i === endIndex
+          ? pts[1]
+          : i === endIndex - 1
+          ? pts[i]
+          : pts[i + 1]
+        : i === endIndex
+        ? pts[i]
+        : pts[i + 1]
+      const curveCommand = new Command(CommandType.CURVE, pts[i])
       curveCommand.cl = this._createControlPoint(p1, p2, p3)
       curveCommand.cr = this._createControlPoint(p4, p3, p2)
-      update.push(curveCommand)
-    }
-    if (this.close) {
-      const curveCommand = new Command(CommandType.CURVE, this.points[0])
-      curveCommand.cl = this._createControlPoint(
-        this.points[endIndex - 1],
-        this.points[endIndex],
-        this.points[0]
-      )
-      curveCommand.cr = this._createControlPoint(
-        this.points[1],
-        this.points[0],
-        this.points[endIndex]
-      )
       update.push(curveCommand)
     }
     return update
   }
 
-  private _createLineCommand(): Command[] {
+  private _createLineCommand(pts: Point[]): Command[] {
     let update = []
-    update.push(new Command(CommandType.MOVE, this.points[0]))
-    for (let i = 1; i < this.points.length; i += 1) {
-      update.push(new Command(CommandType.LINE, this.points[i]))
-    }
-    if (this.close) {
-      update.push(new Command(CommandType.LINE, this.points[0]))
+    update.push(new Command(CommandType.MOVE, pts[0]))
+    for (let i = 1; i < pts.length; i += 1) {
+      update.push(new Command(CommandType.LINE, pts[i]))
     }
     return update
   }
