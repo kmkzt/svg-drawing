@@ -255,6 +255,10 @@ const Example = () => {
     if (!animationRef.current) return
     animationRef.current.stop()
   }, [])
+  const handleClickRestore = useCallback(() => {
+    if (!animationRef.current) return
+    animationRef.current.restore()
+  }, [])
   // TODO: fix
   // useEffect(() => {
   //   if (!divRef.current) return
@@ -394,6 +398,7 @@ const Example = () => {
         <button onClick={handleClickShake}>SHAKING ANIMATION</button>
         <button onClick={handleClickStrokeAnimation}>STROKE ANIMATION</button>
         <button onClick={handleClickStop}>STOP</button>
+        <button onClick={handleClickRestore}>RESTORE</button>
         <div>
           ANIMATION MS
           <input

@@ -8,13 +8,13 @@ export class SvgAnimation extends Renderer {
   public ms: number
   private _stop: (() => void) | null
   private _anim: FrameAnimation | null
-  private _restore: Path[]
+  private _restorePath: Path[]
   constructor(el: HTMLElement, { background, ms }: AnimationOption) {
     super(el, { background })
     this.ms = ms ?? 60
     this._stop = null
     this._anim = null
-    this._restore = []
+    this._restorePath = []
   }
 
   public setAnimation(fn: FrameAnimation): void {
@@ -27,9 +27,14 @@ export class SvgAnimation extends Renderer {
     }
   }
 
+  public restore() {
+    this.replacePaths(this._restorePath)
+    this.update()
+  }
+
   public frame() {
     if (!this._anim) return
-    const updPaths = this._anim(this._restore.map(p => p.clone()))
+    const updPaths = this._anim(this._restorePath.map(p => p.clone()))
     this.replacePaths(updPaths)
     this.update()
   }
@@ -37,7 +42,7 @@ export class SvgAnimation extends Renderer {
   public play(): void {
     this.stop()
     const ms = this.ms
-    this._restore = this.clonePaths()
+    this._restorePath = this.clonePaths()
     const frame = () => {
       if (ms !== this.ms) {
         this.play()
@@ -45,15 +50,9 @@ export class SvgAnimation extends Renderer {
       }
       this.frame()
     }
-
-    const sceneChildrenRestore = () => {
-      this.replacePaths(this._restore)
-      this.update()
-    }
     const stopId = setInterval(frame, ms)
     this._stop = () => {
       clearInterval(stopId)
-      sceneChildrenRestore()
       this._stop = null
     }
   }
