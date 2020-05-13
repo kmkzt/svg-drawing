@@ -29,16 +29,18 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
-    "prod": "npm-run-all build:*",
-    "build:clear": "rimraf lib/* && rimraf docs/*",
-    "build:rollup": "NODE_ENV=production rollup -c",
-    "build:tsc": "NODE_ENV=production tsc --emitDeclarationOnly",
-    "build:demo": "NODE_ENV=production webpack -p",
-    "sample": "webpack-dev-server server.js",
-    "test": "NODE_ENV=test jest --passWithNoTests",
+    "prod": "npm-run-all lib:*",
+    "lib:clear": "rimraf lib/*",
+    "lib:rollup": "NODE_ENV=production rollup -c",
+    "lib:tsc": "NODE_ENV=production tsc --emitDeclarationOnly",
+    "demo": "npm-run-all demo:*",
+    "demo:clear": "rimraf docs/*",
+    "demo:build": "NODE_ENV=production webpack -p",
+    "test": "npm-run-all test:*",
+    "test:unit": "NODE_ENV=test jest --passWithNoTests",
     "test:types": "tsc --noEmit",
     "release": "release-it",
-    "prepare": "yarn build:rollup; yarn build:tsc"
+    "prepare": "yarn prod"
   },
   "devDependencies": {
     "@babel/core": "7.8.3",
