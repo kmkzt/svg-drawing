@@ -17,7 +17,7 @@ export class Renderer extends Svg {
     this.top = top
 
     el.appendChild(this.toElement())
-    this.setupAdjustResize()
+    this._setupAdjustResize()
   }
   /**
    * render
@@ -34,7 +34,7 @@ export class Renderer extends Svg {
     this.left = left
     this.top = top
   }
-  private setupAdjustResize() {
+  private _setupAdjustResize() {
     // TODO: fallback resize
     if ((window as any).ResizeObserver) {
       const resizeObserver: any = new (window as any).ResizeObserver(

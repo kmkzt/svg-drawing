@@ -6,21 +6,21 @@ export interface AnimationOption extends RendererOption {
 
 export class SvgAnimation extends Renderer {
   public shakingRange: number
-  private stopShaking: (() => void) | null
+  private _stop: (() => void) | null
   constructor(el: HTMLElement, { background, shakingRange }: AnimationOption) {
     super(el, { background })
     this.shakingRange = shakingRange ?? 2
-    this.stopShaking = null
+    this._stop = null
   }
 
-  /**
-   * Shaking Drawing line
-   */
-  public shaking(): void {
-    if (this.stopShaking) {
-      this.stopShaking()
+  public stop() {
+    if (this._stop) {
+      this._stop()
       return
     }
+  }
+  public play(): void {
+    this.stop()
     const randomShaking = (): number =>
       Math.random() * this.shakingRange - this.shakingRange / 2
     const restorePath = this.paths.map(p => p.clone())
@@ -44,10 +44,10 @@ export class SvgAnimation extends Renderer {
       this.update()
     }
     const stopId = setInterval(updateShake, 500)
-    this.stopShaking = () => {
+    this._stop = () => {
       clearInterval(stopId)
       sceneChildrenRestore()
-      this.stopShaking = null
+      this._stop = null
     }
   }
 }

@@ -7,7 +7,6 @@ import React, {
   ChangeEvent
 } from 'react'
 import { render } from 'react-dom'
-// import GIFEncoder from './jsgif'
 import { SvgDrawing, SvgAnimation } from '../'
 // import Pressure from 'pressure'
 
@@ -58,252 +57,6 @@ const getRandomColor = (): string =>
   `#${Array.from({ length: 3 }, () =>
     String(getRandomInt(255).toString(16)).padStart(2, '0')
   ).join('')}`
-
-const CANVAS_SIZE: number = 500
-// const Example = () => {
-//   const divRef = useRef<HTMLDivElement | null>(null)
-//   const drawingRef = useRef<SvgDrawing | null>(null)
-//   const animationRef = useRef<HTMLDivElement | null>(null)
-//   const svgAnimationRef = useRef<SvgAnimation | null>(null)
-//   const stopShakingRef = useRef<(() => void) | null>(null)
-//   const stopStrokeRef = useRef<(() => void) | null>(null)
-//   const [thinnerPenWidth, setThinnerPenWidth] = useState<number>(5)
-
-//   const [penMode, changePenMode] = useState<string>('normal')
-//   const stopShaking = useCallback(() => {
-//     if (stopShakingRef.current) {
-//       stopShakingRef.current()
-//       stopShakingRef.current = null
-//       return true
-//     }
-//     return false
-//   }, [])
-//   const clickShaking = useCallback(
-//     (e: React.MouseEvent<HTMLElement>) => {
-//       if (stopShaking()) return
-//       if (!svgAnimationRef.current) return
-//       stopShakingRef.current = svgAnimationRef.current.shaking()
-//     },
-//     [stopShaking]
-//   )
-//   const stopStroke = useCallback(() => {
-//     if (stopStrokeRef.current) {
-//       stopStrokeRef.current()
-//       stopStrokeRef.current = null
-//       return true
-//     }
-//     return false
-//   }, [])
-//   const clickStroke = useCallback(
-//     (e: React.MouseEvent<HTMLElement>) => {
-//       if (stopStroke()) return
-//       if (!svgAnimationRef.current) return
-//       stopStrokeRef.current = svgAnimationRef.current.strokeAnimation()
-//     },
-//     [stopStroke]
-//   )
-//   const animationFrameUpdate = useCallback(() => {
-//     if (!svgAnimationRef.current || !drawingRef.current) return
-//     svgAnimationRef.current.loadScene(drawingRef.current.scene)
-//     // TODO: load svgXML example
-//     // load SVGXML
-//     // svgAnimationRef.current.loadSvgXml(drawingRef.current.toSvgXml())
-//   }, [])
-//   const clickRandomColor = useCallback(() => {
-//     if (!drawingRef.current) return
-//     drawingRef.current.penColor = getRandomColor()
-//   }, [])
-
-//   const changePenWidth = useCallback(
-//     (e: React.ChangeEvent<HTMLInputElement>) => {
-//       if (!drawingRef.current) return
-//       drawingRef.current.penWidth = Number(e.target.value)
-//     },
-//     []
-//   )
-//   const changeShakingRange = useCallback(
-//     (e: React.ChangeEvent<HTMLInputElement>) => {
-//       if (!svgAnimationRef.current) return
-//       svgAnimationRef.current.shakingRange = Number(e.target.value)
-//     },
-//     []
-//   )
-//   const changeCap = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-//     const cap = e.target.value
-//     if (!['butt', 'round', 'square'].includes(e.target.value)) return
-//     if (!drawingRef.current) return
-//     drawingRef.current.strokeCap = cap
-//   }, [])
-//   const changeLineJoin = useCallback(
-//     (e: React.ChangeEvent<HTMLSelectElement>) => {
-//       const lineJoin = e.target.value
-//       if (!['miter', 'round', 'bevel'].includes(e.target.value)) return
-//       if (!drawingRef.current) return
-//       drawingRef.current.strokeLineJoin = lineJoin
-//     },
-//     []
-//   )
-//   const updatePenConfig = useCallback(
-//     (e: any) => {
-//       if (rainbowPen && drawingRef.current)
-//         drawingRef.current.penColor = getRandomColor()
-//       if (penMode === 'random' && drawingRef.current)
-//         drawingRef.current.penWidth = getRandomInt(50) + 5
-//       if (penMode === 'thinner')
-//         drawingRef.current.penWidth = thinnerPenWidth
-//     },
-//     [rainbowPen, penMode, thinnerPenWidth]
-//   )
-//   const pressureChange = useCallback(
-//     (force: any, event: any) => {
-//       if (penMode !== 'thinner') return
-//       if (!drawingRef.current) return
-//       const pw = 30 - Math.floor(force * 40)
-//       setThinnerPenWidth(pw)
-//     },
-//     [penMode]
-//   )
-//   useEffect(() => {
-//     if (drawingRef.current) return
-//     if (!divRef.current) return
-//     drawingRef.current = new SvgDrawing(divRef.current, {
-//       penWidth: 5
-//     })
-//   })
-
-//   useEffect(() => {
-//     if (!divRef.current) return
-//     Pressure.set(divRef.current, {
-//       change: pressureChange
-//     })
-//   })
-//   return (
-//     <Fragment>
-//       <fieldset>
-//         <label>
-//           <input
-//             type="checkbox"
-//             checked={penMode === 'normal'}
-//             onChange={e => {
-//               changePenMode('normal')
-//               changePenWidth(e)
-//             }}
-//           />
-//           Normal pen.
-//         </label>
-//         <label>
-//           <input
-//             type="checkbox"
-//             checked={penMode === 'thinner'}
-//             onChange={e => {
-//               changePenMode('thinner')
-//             }}
-//           />
-//           Pen becoming thinner.
-//         </label>
-//         <label>
-//           <input
-//             type="checkbox"
-//             checked={penMode === 'random'}
-//             onChange={e => {
-//               changePenMode('random')
-//             }}
-//           />
-//           Pen becoming Random Width.
-//         </label>
-//         {penMode === 'normal' && (
-//           <div>
-//             pen width
-//             <input type="range" min={1} max={50} onChange={changePenWidth} />
-//           </div>
-//         )}
-//         <label>
-//           <input
-//             type="checkbox"
-//             checked={rainbowPen}
-//             onChange={e => {
-//               switchRainbowpen(e.target.checked)
-//             }}
-//           />
-//           Rainbow pen.
-//         </label>
-//         {!rainbowPen && (
-//           <button onClick={clickRandomColor}>Change Color</button>
-//         )}
-//         <div>
-//           stroke cap
-//           <select onChange={changeCap}>
-//             <option>round</option>
-//             <option>butt</option>
-//             <option>square</option>
-//           </select>
-//         </div>
-//         <div>
-//           Mode
-//           <select onChange={changeLineJoin}>
-//             <option>circuler</option>
-//             <option>mitter</option>
-//             <option>bevel</option>
-//           </select>
-//         </div>
-//       </fieldset>
-//       <fieldset>
-//         <button onClick={clickShaking}>Shaking Animation</button>
-//         <button onClick={clickStroke}>Srroke Animation</button>
-//         <div>
-//           Shaking Range
-//           <input
-//             type="range"
-//             defaultValue="5"
-//             min={1}
-//             max={50}
-//             onChange={changeShakingRange}
-//           />
-//         </div>
-//       </fieldset>
-//       <div
-//         style={{
-//           display: 'flex',
-//           flexWrap: 'wrap'
-//         }}
-//       >
-//         <div>
-//           <div
-//             ref={divRef}
-//             onTouchEnd={animationFrameUpdate}
-//             onMouseMove={updatePenConfig}
-//             onTouchMove={updatePenConfig}
-//             onMouseUp={animationFrameUpdate}
-//             style={{
-//               background: `url('${gridImage}') 0 0 repeat`,
-//               backgroundSize: `${size}px ${size}px`,
-//               width: 500,
-//               height: 500,
-//               margin: 'auto'
-//             }}
-//           />
-//         </div>
-//         <div>
-//           <div
-//             ref={animationRef}
-//             style={{
-//               border: '1px solid #bbb',
-//               margin: 'auto'
-//             }}
-//           />
-//         </div>
-//       </div>
-//       <div>
-//         <button onClick={clickClear}>Clear</button>
-//         <button onClick={clickUndo}>Undo</button>
-//         <button onClick={clickDownload('png')}>Download PNG</button>
-//         <button onClick={clickDownload('jpg')}>Download JPG</button>
-//         <button onClick={clickDownloadGIF}>Download GIF</button>
-//         <button onClick={clickDownloadSVG}>Download SVG</button>
-//       </div>
-//     </Fragment>
-//   )
-// }
 
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
@@ -458,13 +211,15 @@ const Example = () => {
     return () => clearInterval(stop)
   }, [delay, rainbowPen])
 
-  const updateAnimation = useCallback(() => {
+  const handleClickShake = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
-    animationRef.current.replacePath(
-      drawingRef.current.paths.map(p => p.clone())
-    )
-    animationRef.current.shaking()
+    animationRef.current.replacePath(drawingRef.current.clonePaths())
+    animationRef.current.play()
+  }, [])
+  const handleClickStop = useCallback(() => {
+    if (!animationRef.current) return
+    animationRef.current.stop()
   }, [])
   // TODO: fix
   // useEffect(() => {
@@ -601,7 +356,8 @@ const Example = () => {
           </>
         )}
       </div>
-      <button onClick={updateAnimation}>SHAKING</button>
+      <button onClick={handleClickShake}>SHAKING</button>
+      <button onClick={handleClickStop}>STOP</button>
       <div
         style={{
           display: 'flex',
@@ -614,6 +370,7 @@ const Example = () => {
             style={{
               backgroundImage: lattice(size),
               backgroundSize: `${size}px ${size}px`,
+              border: '1px solid #333',
               width: 500,
               height: 500,
               margin: 'auto'
@@ -624,8 +381,8 @@ const Example = () => {
           <div
             ref={aniDivRef}
             style={{
-              backgroundImage: lattice(size),
               backgroundSize: `${size}px ${size}px`,
+              border: '1px solid #333',
               width: 500,
               height: 500,
               margin: 'auto'

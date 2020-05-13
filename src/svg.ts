@@ -127,7 +127,9 @@ export class Path {
   public addCommand(c: Command) {
     this.commands.push(c)
   }
+
   public createCommand(): string {
+    // TODO: move this line to drawing.
     this.formatCommand()
     if (this.commands.length === 0) return ''
 
@@ -148,6 +150,34 @@ export class Path {
     this.commands = isCirculer
       ? this._createCurveCommand(points)
       : this._createLineCommand(points)
+  }
+
+  public toElement(): HTMLElement {
+    const path = document.createElement('path')
+    path.setAttribute('stroke-width', String(this.strokeWidth))
+    path.setAttribute('stroke', this.stroke)
+    path.setAttribute('fill', this.fill)
+    path.setAttribute('stroke-linejoin', this.circuler ? 'round' : 'mitter')
+    path.setAttribute('stroke-linecap', this.circuler ? 'round' : 'square')
+    path.setAttribute('d', this.createCommand())
+    return path
+  }
+
+  public clone(): Path {
+    const path = new Path({
+      close: this.close,
+      circuler: this.circuler,
+      strokeWidth: this.strokeWidth,
+      stroke: this.stroke,
+      fill: this.fill
+    })
+    this.points.map(p => {
+      path.addPoint(p)
+    })
+    this.commands.map(c => {
+      path.addCommand(c)
+    })
+    return path
   }
 
   private _createControlPoint(prev: Point, start: Point, next: Point): Point {
@@ -191,35 +221,6 @@ export class Path {
       update.push(new Command(CommandType.LINE, pts[i]))
     }
     return update
-  }
-
-  public toElement(): HTMLElement {
-    const path = document.createElement('path')
-    path.setAttribute('stroke-width', String(this.strokeWidth))
-    path.setAttribute('stroke', this.stroke)
-    path.setAttribute('fill', this.fill)
-    path.setAttribute('stroke-linejoin', this.circuler ? 'round' : 'mitter')
-    path.setAttribute('stroke-linecap', this.circuler ? 'round' : 'square')
-    path.setAttribute('d', this.createCommand())
-    return path
-  }
-
-  public clone(): Path {
-    const path = new Path({
-      close: this.close,
-      circuler: this.circuler,
-      strokeWidth: this.strokeWidth,
-      stroke: this.stroke,
-      fill: this.fill
-    })
-    console.log(path)
-    this.points.map(p => {
-      path.addPoint(p)
-    })
-    this.commands.map(c => {
-      path.addCommand(c)
-    })
-    return path
   }
 }
 
@@ -268,6 +269,10 @@ export class Svg {
 
   public replacePath(paths: Path[]) {
     this._paths = paths
+  }
+
+  public clonePaths(): Path[] {
+    return this._paths.map(p => p.clone())
   }
 
   public addPoint(po: Point) {
