@@ -1,4 +1,5 @@
-import { Renderer, RendererOption, Path, Point } from './renderer'
+import { Renderer, RendererOption } from './renderer'
+import { Point } from './svg'
 export interface AnimationOption extends RendererOption {
   shakingRange?: number
 }

@@ -1,4 +1,5 @@
-import { Renderer, RendererOption, Path, Point } from './renderer'
+import { Renderer, RendererOption } from './renderer'
+import { Path, Point } from './svg'
 import { throttle } from './throttle'
 import { getPassiveOptions } from './utils/getPassiveOptions'
 
