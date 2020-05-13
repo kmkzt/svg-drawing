@@ -461,8 +461,8 @@ const Example = () => {
   const updateAnimation = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
-    animationRef.current.renderer.replacePath(
-      drawingRef.current.renderer.paths.map(p => p.clone())
+    animationRef.current.replacePath(
+      drawingRef.current.paths.map(p => p.clone())
     )
     animationRef.current.shaking()
   }, [])

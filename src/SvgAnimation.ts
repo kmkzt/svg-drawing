@@ -3,15 +3,16 @@ export interface AnimationOption {
   shakingRange?: number
 }
 
-export class SvgAnimation {
+export class SvgAnimation extends Renderer {
   public shakingRange: number
   private el: HTMLElement
-  public renderer: Renderer
+  private stopShaking: (() => void) | null
   constructor(el: HTMLElement, { shakingRange }: AnimationOption) {
+    const { width, height } = el.getBoundingClientRect()
+    super({ width, height })
     this.el = el
     this.shakingRange = shakingRange ?? 2
-    const { width, height } = el.getBoundingClientRect()
-    this.renderer = new Renderer({ width, height })
+    this.stopShaking = null
     this.updateRender()
   }
 
@@ -20,23 +21,27 @@ export class SvgAnimation {
    * TODO: improve render
    */
   public updateRender() {
-    this.el.innerHTML = this.renderer.toElement().outerHTML
+    this.el.innerHTML = this.toElement().outerHTML
   }
   /**
    * Shaking Drawing line
    */
-  public shaking(): () => void {
+  public shaking(): void {
+    if (this.stopShaking) {
+      this.stopShaking()
+      return
+    }
     const randomShaking = (): number =>
       Math.random() * this.shakingRange - this.shakingRange / 2
-    const restorePath = this.renderer.paths.concat()
+    const restorePath = this.paths.map(p => p.clone())
     const updateShake = () => {
       for (let i = 0; i < restorePath.length; i += 1) {
         const updatePoints = restorePath[i].points.map((v: Point) => {
           const rp = new Point(randomShaking(), randomShaking())
           return v.add(rp)
         })
-        this.renderer.paths[i].points = updatePoints
-        this.renderer.paths[i].formatCommand()
+        this.paths[i].points = updatePoints
+        this.paths[i].formatCommand()
       }
       this.updateRender()
     }
@@ -45,13 +50,14 @@ export class SvgAnimation {
     // return () => void 0
 
     const sceneChildrenRestore = () => {
-      this.renderer.replacePath(restorePath)
+      this.replacePath(restorePath)
       this.updateRender()
     }
     const stopId = setInterval(updateShake, 500)
-    return () => {
+    this.stopShaking = () => {
       clearInterval(stopId)
       sceneChildrenRestore()
+      this.stopShaking = null
     }
   }
 }
