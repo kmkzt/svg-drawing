@@ -267,7 +267,7 @@ export class Svg {
     return this._paths.pop()
   }
 
-  public replacePath(paths: Path[]) {
+  public replacePaths(paths: Path[]) {
     this._paths = paths
   }
 

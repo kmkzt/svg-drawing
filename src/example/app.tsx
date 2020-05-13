@@ -7,9 +7,27 @@ import React, {
   ChangeEvent
 } from 'react'
 import { render } from 'react-dom'
-import { SvgDrawing, SvgAnimation } from '../'
+import { SvgDrawing, SvgAnimation, FrameAnimation, Point } from '../'
 // import Pressure from 'pressure'
 
+const shake: FrameAnimation = paths => {
+  const shaking = 5
+  const randomShaking = (): number => Math.random() * shaking - shaking / 2
+  for (let i = 0; i < paths.length; i += 1) {
+    paths[i].points = paths[i].points.map((v: Point) =>
+      v.add(new Point(randomShaking(), randomShaking()))
+    )
+  }
+  return paths
+}
+
+// TODO: draw line
+let plen = 0
+const strokeAnimation: FrameAnimation = paths => {
+  if (plen > paths.length) plen = 0
+  else plen += 1
+  return paths.slice(0, plen)
+}
 const lattice = (size: number) => `
   repeating-linear-gradient(
     90deg,
@@ -71,6 +89,7 @@ const Example = () => {
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
   const [delay, setDelay] = useState(20)
+  const [animMs, setAnimMs] = useState(20)
   const [penWidth, setPenWidth] = useState(5)
 
   const clickDownload = useCallback(
@@ -134,6 +153,13 @@ const Example = () => {
     setDelay(num)
   }, [])
 
+  const handleChangeAnimMs = useCallback((e: ChangeEvent<any>) => {
+    if (!animationRef.current) return
+    const num = Number(e.target.value)
+    if (Number.isNaN(num)) return
+    animationRef.current.ms = num
+    setAnimMs(num)
+  }, [])
   const updatePenColor = useCallback((color: string) => {
     if (!drawingRef.current) return
     drawingRef.current.penColor = color
@@ -197,7 +223,7 @@ const Example = () => {
     if (animationRef.current) return
     if (!aniDivRef.current) return
     animationRef.current = new SvgAnimation(aniDivRef.current, {
-      shakingRange: 5
+      ms: animMs
     })
   })
   useEffect(() => {
@@ -214,7 +240,15 @@ const Example = () => {
   const handleClickShake = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
-    animationRef.current.replacePath(drawingRef.current.clonePaths())
+    animationRef.current.setAnimation(shake)
+    animationRef.current.replacePaths(drawingRef.current.clonePaths())
+    animationRef.current.play()
+  }, [])
+  const handleClickStrokeAnimation = useCallback(() => {
+    if (!animationRef.current) return
+    if (!drawingRef.current) return
+    animationRef.current.setAnimation(strokeAnimation)
+    animationRef.current.replacePaths(drawingRef.current.clonePaths())
     animationRef.current.play()
   }, [])
   const handleClickStop = useCallback(() => {
@@ -356,8 +390,30 @@ const Example = () => {
           </>
         )}
       </div>
-      <button onClick={handleClickShake}>SHAKING</button>
-      <button onClick={handleClickStop}>STOP</button>
+      <div>
+        <button onClick={handleClickShake}>SHAKING ANIMATION</button>
+        <button onClick={handleClickStrokeAnimation}>STROKE ANIMATION</button>
+        <button onClick={handleClickStop}>STOP</button>
+        <div>
+          ANIMATION MS
+          <input
+            type="number"
+            min="0"
+            max="500"
+            step="5"
+            value={animMs}
+            onChange={handleChangeAnimMs}
+          />
+          <input
+            type="range"
+            min="0"
+            max="500"
+            step="5"
+            value={animMs}
+            onChange={handleChangeAnimMs}
+          />
+        </div>
+      </div>
       <div
         style={{
           display: 'flex',

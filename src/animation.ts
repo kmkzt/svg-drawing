@@ -1,49 +1,56 @@
 import { Renderer, RendererOption } from './renderer'
-import { Point } from './svg'
+import { Path } from './svg'
 export interface AnimationOption extends RendererOption {
-  shakingRange?: number
+  ms: number
 }
-
+export type FrameAnimation = (origin: Path[]) => Path[]
 export class SvgAnimation extends Renderer {
-  public shakingRange: number
+  public ms: number
   private _stop: (() => void) | null
-  constructor(el: HTMLElement, { background, shakingRange }: AnimationOption) {
+  private _anim: FrameAnimation | null
+  private _restore: Path[]
+  constructor(el: HTMLElement, { background, ms }: AnimationOption) {
     super(el, { background })
-    this.shakingRange = shakingRange ?? 2
+    this.ms = ms ?? 60
     this._stop = null
+    this._anim = null
+    this._restore = []
+  }
+
+  public setAnimation(fn: FrameAnimation): void {
+    this._anim = fn
   }
 
   public stop() {
     if (this._stop) {
       this._stop()
-      return
     }
   }
+
+  public frame() {
+    if (!this._anim) return
+    const updPaths = this._anim(this._restore.map(p => p.clone()))
+    this.replacePaths(updPaths)
+    this.update()
+  }
+
   public play(): void {
     this.stop()
-    const randomShaking = (): number =>
-      Math.random() * this.shakingRange - this.shakingRange / 2
-    const restorePath = this.paths.map(p => p.clone())
-    const updateShake = () => {
-      for (let i = 0; i < restorePath.length; i += 1) {
-        const updatePoints = restorePath[i].points.map((v: Point) => {
-          const rp = new Point(randomShaking(), randomShaking())
-          return v.add(rp)
-        })
-        this.paths[i].points = updatePoints
-        this.paths[i].formatCommand()
+    const ms = this.ms
+    this._restore = this.clonePaths()
+    const frame = () => {
+      if (ms !== this.ms) {
+        this.play()
+        return
       }
-      this.update()
+      this.frame()
     }
-    // DEBUG
-    // updateShake()
-    // return () => void 0
 
     const sceneChildrenRestore = () => {
-      this.replacePath(restorePath)
+      this.replacePaths(this._restore)
       this.update()
     }
-    const stopId = setInterval(updateShake, 500)
+    const stopId = setInterval(frame, ms)
     this._stop = () => {
       clearInterval(stopId)
       sceneChildrenRestore()
