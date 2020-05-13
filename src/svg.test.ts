@@ -1,4 +1,4 @@
-import { Point, Vector, Path, Svg } from './renderer'
+import { Point, Vector, Path, Svg } from './svg'
 
 describe('renderer', () => {
   describe('Point', () => {
