@@ -134,11 +134,6 @@ export class SvgDrawing extends Renderer {
     this.updateRender()
   }
 
-  private drawingEnd({ x, y }: { x: number; y: number }) {
-    this.addPoint(this.createPoint({ x, y }))
-    this.updateRender()
-  }
-
   private createPath(): SvgPath {
     const { left, top } = this.el.getBoundingClientRect()
     this.left = left
@@ -179,7 +174,6 @@ export class SvgDrawing extends Renderer {
     const mouseUp = handleMouse((param: { x: number; y: number }) => {
       this.el.removeEventListener('mousemove', mouseMove)
       this.el.removeEventListener('mouseup', mouseUp)
-      this.drawingEnd(param)
     })
     this.el.addEventListener('mousedown', mouseDown, getPassiveOptions(false))
     this.clearListener = () =>
@@ -212,7 +206,6 @@ export class SvgDrawing extends Renderer {
     const touchEnd = handleTouch(param => {
       this.el.removeEventListener('touchmove', touchMove)
       this.el.removeEventListener('touchend', touchEnd)
-      this.drawingEnd(param)
     })
     this.el.addEventListener('touchstart', touchStart, getPassiveOptions(false))
     this.clearListener = () =>
