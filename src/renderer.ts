@@ -86,14 +86,14 @@ export class Vector {
   }
 }
 
-interface SvgPathOption {
+interface PathOption {
   close?: boolean
   circuler?: boolean
   strokeWidth?: number
   stroke?: string
   fill?: string
 }
-export class SvgPath {
+export class Path {
   public close: boolean
   public circuler: boolean
   public strokeWidth: number
@@ -103,13 +103,7 @@ export class SvgPath {
   public points: Point[]
   public commands: Command[]
 
-  constructor({
-    close,
-    circuler,
-    strokeWidth,
-    stroke,
-    fill
-  }: SvgPathOption = {}) {
+  constructor({ close, circuler, strokeWidth, stroke, fill }: PathOption = {}) {
     this.close = close ?? false
     this.circuler = circuler ?? true
     this.strokeWidth = strokeWidth ?? 1
@@ -210,8 +204,8 @@ export class SvgPath {
     return path
   }
 
-  public clone(): SvgPath {
-    const path = new SvgPath({
+  public clone(): Path {
+    const path = new Path({
       close: this.close,
       circuler: this.circuler,
       strokeWidth: this.strokeWidth,
@@ -229,17 +223,17 @@ export class SvgPath {
   }
 }
 
-interface RendererOption {
+interface SvgOption {
   width: number
   height: number
   background?: string
 }
-export class Renderer {
+export class Svg {
   public background: string
   private _width: number
   private _height: number
-  private _paths: SvgPath[]
-  constructor({ width, height, background }: RendererOption) {
+  private _paths: Path[]
+  constructor({ width, height, background }: SvgOption) {
     this._paths = []
     this._width = width
     this._height = height
@@ -254,6 +248,7 @@ export class Renderer {
     this._width = width
     this._height = height
     // TODO: Resizing improve
+    if (this._width === width) return
     this.scalePath(width / this._width)
   }
 
@@ -263,15 +258,15 @@ export class Renderer {
     }
   }
 
-  public addPath(pa: SvgPath) {
+  public addPath(pa: Path) {
     this._paths.push(pa)
   }
 
-  public undoPath(): SvgPath | undefined {
+  public undoPath(): Path | undefined {
     return this._paths.pop()
   }
 
-  public replacePath(paths: SvgPath[]) {
+  public replacePath(paths: Path[]) {
     this._paths = paths
   }
 
@@ -281,7 +276,7 @@ export class Renderer {
     this._paths[updateIndex].addPoint(po)
   }
 
-  public updatePath(pa: SvgPath, i?: number) {
+  public updatePath(pa: Path, i?: number) {
     const updateIndex = i || this._paths.length - 1
     if (updateIndex < 0) this._paths.push(pa)
     this._paths[updateIndex] = pa
@@ -291,7 +286,7 @@ export class Renderer {
     this._paths = []
   }
 
-  public get paths(): SvgPath[] {
+  public get paths(): Path[] {
     return this._paths
   }
 
@@ -344,5 +339,56 @@ export class Renderer {
     }
     img.addEventListener('load', renderCanvas, false)
     img.src = this.toBase64()
+  }
+}
+
+export type RendererOption = Pick<SvgOption, 'background'>
+export class Renderer extends Svg {
+  public el: HTMLElement
+  public top: number
+  public left: number
+
+  constructor(el: HTMLElement, { background }: RendererOption) {
+    const { width, height, left, top } = el.getBoundingClientRect()
+    super({ width, height, background })
+    /**
+     * Setup parameter
+     */
+    this.el = el
+    this.left = left
+    this.top = top
+
+    el.appendChild(this.toElement())
+    this.setupAdjustResize()
+  }
+  /**
+   * render
+   * TODO: improve render
+   */
+  public update() {
+    this.el.innerHTML = this.toElement().outerHTML
+  }
+
+  public resize(param?: DOMRect) {
+    const { width, height, left, top } =
+      param || this.el.getBoundingClientRect()
+    this.resizeElement(width, height)
+    this.left = left
+    this.top = top
+  }
+  private setupAdjustResize() {
+    // TODO: fallback resize
+    if ((window as any).ResizeObserver) {
+      const resizeObserver: any = new (window as any).ResizeObserver(
+        (entries: any[]) => {
+          this.resize(entries[0].contentRect)
+        }
+      )
+      resizeObserver.observe(this.el)
+    }
+
+    window.addEventListener('resize', () => {
+      this.resize(this.el.getBoundingClientRect())
+    })
   }
 }

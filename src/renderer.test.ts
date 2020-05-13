@@ -1,4 +1,4 @@
-import { Point, Vector, SvgPath, Renderer } from './renderer'
+import { Point, Vector, Path, Svg } from './renderer'
 
 describe('renderer', () => {
   describe('Point', () => {
@@ -38,16 +38,16 @@ describe('renderer', () => {
       expect(vec.angle).toBe(0.5)
     })
   })
-  describe('SvgPath', () => {
+  describe('Path', () => {
     it('addPoint', () => {
-      const path = new SvgPath()
+      const path = new Path()
       path.addPoint(new Point(1, 1))
       expect(path.points.length).toBe(1)
       expect(path.points[0].x).toBe(1)
       expect(path.points[0].y).toBe(1)
     })
     it('scale', () => {
-      const path = new SvgPath({ strokeWidth: 1 })
+      const path = new Path({ strokeWidth: 1 })
       path.addPoint(new Point(1, 1))
       path.scale(2)
       expect(path.strokeWidth).toBe(2)
@@ -55,21 +55,21 @@ describe('renderer', () => {
       expect(path.points[0].y).toBe(2)
     })
     it('createCommand Line', () => {
-      const path = new SvgPath({ circuler: false, close: false })
+      const path = new Path({ circuler: false, close: false })
       path.addPoint(new Point(0, 0))
       path.addPoint(new Point(1, 1))
       path.addPoint(new Point(-1, -1))
       expect(path.createCommand()).toBe('M 0 0 L 1 1 L -1 -1')
     })
     it('createCommand Line Close', () => {
-      const path = new SvgPath({ circuler: false, close: true })
+      const path = new Path({ circuler: false, close: true })
       path.addPoint(new Point(0, 0))
       path.addPoint(new Point(1, 1))
       path.addPoint(new Point(-1, -1))
       expect(path.createCommand()).toBe('M 0 0 L 1 1 L -1 -1 L 0 0 Z')
     })
     it('createCommand Circuler', () => {
-      const path = new SvgPath({ circuler: true, close: false })
+      const path = new Path({ circuler: true, close: false })
       path.addPoint(new Point(0, 0))
       path.addPoint(new Point(1, 1))
       path.addPoint(new Point(2, 1))
@@ -79,7 +79,7 @@ describe('renderer', () => {
       )
     })
     it('createCommand Circuler Close', () => {
-      const path = new SvgPath({ circuler: true, close: true })
+      const path = new Path({ circuler: true, close: true })
       path.addPoint(new Point(0, 0))
       path.addPoint(new Point(1, 1))
       path.addPoint(new Point(2, 1))
@@ -89,7 +89,7 @@ describe('renderer', () => {
       )
     })
     it('toElement', () => {
-      const path = new SvgPath({ circuler: true, close: false })
+      const path = new Path({ circuler: true, close: false })
       path.addPoint(new Point(0, 0))
       path.addPoint(new Point(1, 1))
       path.addPoint(new Point(2, 1))
@@ -98,30 +98,30 @@ describe('renderer', () => {
     })
   })
   describe('Renderer', () => {
-    let renderer: Renderer
+    let svg: Svg
     beforeEach(() => {
-      const path = new SvgPath({ circuler: true, close: false })
+      const path = new Path({ circuler: true, close: false })
       path.addPoint(new Point(0, 0))
       path.addPoint(new Point(1, 1))
       path.addPoint(new Point(2, 1))
       path.addPoint(new Point(3, 0))
-      renderer = new Renderer({ width: 500, height: 500 })
-      renderer.addPath(path)
+      svg = new Svg({ width: 500, height: 500 })
+      svg.addPath(path)
     })
     // TODO: Fix width, height
     it('toElement', () => {
-      expect(renderer.toElement()).toMatchSnapshot()
+      expect(svg.toElement()).toMatchSnapshot()
     })
     // TODO: replace image snapshot
     it('toBase64', () => {
-      expect(renderer.toBase64()).toMatchSnapshot()
+      expect(svg.toBase64()).toMatchSnapshot()
     })
     it('download svg', done => {
       const testDownload = (param: any): void => {
         expect(param).toMatchSnapshot()
         done()
       }
-      renderer.download('svg', testDownload)
+      svg.download('svg', testDownload)
     })
     // TODO: Fix download test
     // it('download jpg', done => {

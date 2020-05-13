@@ -1,28 +1,17 @@
-import { Renderer, SvgPath, Point } from './renderer'
-export interface AnimationOption {
+import { Renderer, RendererOption, Path, Point } from './renderer'
+export interface AnimationOption extends RendererOption {
   shakingRange?: number
 }
 
 export class SvgAnimation extends Renderer {
   public shakingRange: number
-  private el: HTMLElement
   private stopShaking: (() => void) | null
-  constructor(el: HTMLElement, { shakingRange }: AnimationOption) {
-    const { width, height } = el.getBoundingClientRect()
-    super({ width, height })
-    this.el = el
+  constructor(el: HTMLElement, { background, shakingRange }: AnimationOption) {
+    super(el, { background })
     this.shakingRange = shakingRange ?? 2
     this.stopShaking = null
-    this.updateRender()
   }
 
-  /**
-   * render
-   * TODO: improve render
-   */
-  public updateRender() {
-    this.el.innerHTML = this.toElement().outerHTML
-  }
   /**
    * Shaking Drawing line
    */
@@ -43,7 +32,7 @@ export class SvgAnimation extends Renderer {
         this.paths[i].points = updatePoints
         this.paths[i].formatCommand()
       }
-      this.updateRender()
+      this.update()
     }
     // DEBUG
     // updateShake()
@@ -51,7 +40,7 @@ export class SvgAnimation extends Renderer {
 
     const sceneChildrenRestore = () => {
       this.replacePath(restorePath)
-      this.updateRender()
+      this.update()
     }
     const stopId = setInterval(updateShake, 500)
     this.stopShaking = () => {

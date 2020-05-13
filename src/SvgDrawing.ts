@@ -1,8 +1,8 @@
-import { Renderer, SvgPath, Point } from './renderer'
+import { Renderer, RendererOption, Path, Point } from './renderer'
 import { throttle } from './throttle'
 import { getPassiveOptions } from './utils/getPassiveOptions'
 
-export interface DrawingOption {
+export interface DrawingOption extends RendererOption {
   penColor?: string
   penWidth?: number
   close?: boolean
@@ -18,17 +18,21 @@ export class SvgDrawing extends Renderer {
   public circuler: boolean
   public close: boolean
   public delay: number
-  private line: SvgPath | null
-  private el: HTMLElement
+  private line: Path | null
   private clearListener?: () => void
-  private top: number
-  private left: number
   constructor(
     el: HTMLElement,
-    { penColor, penWidth, circuler, close, delay, fill }: DrawingOption = {}
+    {
+      penColor,
+      penWidth,
+      circuler,
+      close,
+      delay,
+      fill,
+      ...rendOpt
+    }: DrawingOption = {}
   ) {
-    const { width, height, left, top } = el.getBoundingClientRect()
-    super({ width, height })
+    super(el, { ...rendOpt })
     /**
      * Setup parameter
      */
@@ -39,21 +43,18 @@ export class SvgDrawing extends Renderer {
     this.close = close ?? false
     this.delay = delay ?? 20
     this.fill = fill ?? 'none'
-    this.el = el
-    this.left = left
-    this.top = top
     this.drawingMove = this.drawingMove.bind(this) // for throttle
     this.init()
   }
 
   public clear() {
     this.clearPath()
-    this.updateRender()
+    this.update()
   }
 
   public undo() {
     this.undoPath()
-    this.updateRender()
+    this.update()
   }
 
   public changeDelay(delay: number) {
@@ -64,8 +65,6 @@ export class SvgDrawing extends Renderer {
    * Init methods
    */
   private init() {
-    this.el.appendChild(this.toElement())
-    this.setupAdjustResize()
     this.setupDrawListener()
   }
 
@@ -81,35 +80,6 @@ export class SvgDrawing extends Renderer {
     }
   }
 
-  private setupAdjustResize() {
-    // TODO: fallback resize
-    if ((window as any).ResizeObserver) {
-      const resizeObserver: any = new (window as any).ResizeObserver(
-        (entries: any[]) => {
-          const { width, height, left, top }: any = entries[0].contentRect
-          this.resizeElement(width, height)
-          this.left = left
-          this.top = top
-        }
-      )
-      resizeObserver.observe(this.el)
-    }
-
-    window.addEventListener('resize', () => {
-      const { width, height, left, top }: any = this.el.getBoundingClientRect()
-      this.resizeElement(width, height)
-      this.left = left
-      this.top = top
-    })
-  }
-  /**
-   * render
-   * TODO: improve render
-   */
-  private updateRender() {
-    this.el.innerHTML = this.toElement().outerHTML
-  }
-
   /**
    * Drawing Line methods
    */
@@ -117,7 +87,7 @@ export class SvgDrawing extends Renderer {
     this.line = this.createPath()
     this.addPath(this.line)
     this.addPoint(this.createPoint({ x, y }))
-    this.updateRender()
+    this.update()
   }
   private drawingMove({ x, y }: { x: number; y: number }): void {
     const po = this.createPoint({ x, y })
@@ -131,14 +101,12 @@ export class SvgDrawing extends Renderer {
       this.addPath(this.line)
       this.addPoint(po)
     }
-    this.updateRender()
+    this.update()
   }
 
-  private createPath(): SvgPath {
-    const { left, top } = this.el.getBoundingClientRect()
-    this.left = left
-    this.top = top
-    return new SvgPath({
+  private createPath(): Path {
+    this.resize()
+    return new Path({
       close: this.close,
       circuler: this.circuler,
       stroke: this.penColor,
