@@ -66,7 +66,15 @@ export class Command {
         return this.point.commandCirculer(this.cl, this.cr)
     }
   }
+
+  public scale(r: number): Command {
+    const upd = new Command(this.type, this.point.scale(r))
+    upd.cr = this.cr?.scale(r)
+    upd.cl = this.cl?.scale(r)
+    return upd
+  }
 }
+
 export class Vector {
   public angle: number
   public value: number
@@ -115,8 +123,8 @@ export class Path {
   }
 
   public scale(r: number) {
-    const update = this.points.map((p: Point) => p.scale(r))
-    this.points = update
+    this.points = this.points.map((p: Point) => p.scale(r))
+    this.commands = this.commands.map((c: Command) => c.scale(r))
     this.strokeWidth *= r
   }
 
@@ -129,8 +137,6 @@ export class Path {
   }
 
   public createCommand(): string {
-    // TODO: move this line to drawing.
-    this.formatCommand()
     if (this.commands.length === 0) return ''
 
     let d = this.commands
@@ -172,10 +178,13 @@ export class Path {
       fill: this.fill
     })
     this.points.map(p => {
-      path.addPoint(p)
+      path.addPoint(new Point(p.x, p.y))
     })
     this.commands.map(c => {
-      path.addCommand(c)
+      const add = new Command(c.type, c.point)
+      add.cl = c.cl ? new Point(c.cl.x, c.cl.y) : undefined
+      add.cr = c.cr ? new Point(c.cr.x, c.cr.y) : undefined
+      path.addCommand(add)
     })
     return path
   }

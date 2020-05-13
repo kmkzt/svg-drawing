@@ -50,12 +50,12 @@ export class SvgDrawing extends Renderer {
 
   public clear() {
     this.clearPath()
-    this.update()
+    this._updateRender()
   }
 
   public undo() {
     this.undoPath()
-    this.update()
+    this._updateRender()
   }
 
   public changeDelay(delay: number) {
@@ -67,6 +67,15 @@ export class SvgDrawing extends Renderer {
    */
   private _init() {
     this._setupDrawListener()
+  }
+
+  private _updateRender() {
+    this.current?.formatCommand()
+    this.update()
+  }
+  private get current(): Path | null {
+    if (this.paths.length === 0) return null
+    return this.paths[this.paths.length - 1]
   }
 
   // TODO: add PointerEvents
@@ -88,8 +97,9 @@ export class SvgDrawing extends Renderer {
     this._line = this._createPath()
     this.addPath(this._line)
     this.addPoint(this._createPoint({ x, y }))
-    this.update()
+    this._updateRender()
   }
+
   private _drawingMove({ x, y }: { x: number; y: number }): void {
     const po = this._createPoint({ x, y })
     this.addPoint(po)
@@ -102,7 +112,7 @@ export class SvgDrawing extends Renderer {
       this.addPath(this._line)
       this.addPoint(po)
     }
-    this.update()
+    this._updateRender()
   }
 
   private _createPath(): Path {

@@ -7,27 +7,48 @@ import React, {
   ChangeEvent
 } from 'react'
 import { render } from 'react-dom'
-import { SvgDrawing, SvgAnimation, FrameAnimation, Point } from '../'
+import { SvgDrawing, SvgAnimation, FrameAnimation, Command, Point } from '../'
 // import Pressure from 'pressure'
 
 const shake: FrameAnimation = paths => {
   const shaking = 5
   const randomShaking = (): number => Math.random() * shaking - shaking / 2
   for (let i = 0; i < paths.length; i += 1) {
-    paths[i].points = paths[i].points.map((v: Point) =>
-      v.add(new Point(randomShaking(), randomShaking()))
-    )
+    paths[i].commands = paths[i].commands.map((c: Command) => {
+      c.point = c.point.add(new Point(randomShaking(), randomShaking()))
+      c.cl = c.cl?.add(new Point(randomShaking(), randomShaking()))
+      c.cr = c.cr?.add(new Point(randomShaking(), randomShaking()))
+      return c
+    })
   }
   return paths
 }
 
-// TODO: draw line
+// TODO: Fix
 let plen = 0
 const strokeAnimation: FrameAnimation = paths => {
-  if (plen > paths.length) plen = 0
-  else plen += 1
-  return paths.slice(0, plen)
+  const total: number = paths.reduce((l, p) => p.commands.length, 0)
+  if (plen > total) {
+    plen = 0
+  } else {
+    plen += 1
+  }
+  const update = []
+  let count = plen
+  for (let i = 0; i < paths.length; i += 1) {
+    if (count > paths[i].commands.length) {
+      count -= paths[i].commands.length
+      update.push(paths[i])
+    } else {
+      paths[i].commands = paths[i].commands.slice(0, count)
+      update.push(paths[i])
+      break
+    }
+  }
+  console.log(update)
+  return update
 }
+
 const lattice = (size: number) => `
   repeating-linear-gradient(
     90deg,
