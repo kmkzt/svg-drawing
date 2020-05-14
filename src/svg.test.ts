@@ -1,6 +1,6 @@
 import { Point, Vector, Path, Svg } from './svg'
 
-describe('renderer', () => {
+describe('svg', () => {
   describe('Point', () => {
     it('add', () => {
       const po = new Point(1.0, 1.0).add(new Point(2.0, 2.0))
@@ -40,60 +40,66 @@ describe('renderer', () => {
   })
   describe('Path', () => {
     it('addPoint', () => {
-      const path = new Path()
-      path.addPoint(new Point(1, 1))
+      const path = new Path().addPoint(new Point(1, 1))
       expect(path.points.length).toBe(1)
       expect(path.points[0].x).toBe(1)
       expect(path.points[0].y).toBe(1)
     })
     it('scale', () => {
       const path = new Path({ strokeWidth: 1 })
-      path.addPoint(new Point(1, 1))
-      path.scale(2)
+        .addPoint(new Point(1, 1))
+        .scale(2)
       expect(path.strokeWidth).toBe(2)
       expect(path.points[0].x).toBe(2)
       expect(path.points[0].y).toBe(2)
     })
-    it('createCommand Line', () => {
+    it('getCommandString Line', () => {
       const path = new Path({ circuler: false, close: false })
-      path.addPoint(new Point(0, 0))
-      path.addPoint(new Point(1, 1))
-      path.addPoint(new Point(-1, -1))
-      expect(path.createCommand()).toBe('M 0 0 L 1 1 L -1 -1')
+      path
+        .addPoint(new Point(0, 0))
+        .addPoint(new Point(1, 1))
+        .addPoint(new Point(-1, -1))
+        .formatCommand()
+      expect(path.getCommandString()).toBe('M 0 0 L 1 1 L -1 -1')
     })
-    it('createCommand Line Close', () => {
+    it('getCommandString Line Close', () => {
       const path = new Path({ circuler: false, close: true })
-      path.addPoint(new Point(0, 0))
-      path.addPoint(new Point(1, 1))
-      path.addPoint(new Point(-1, -1))
-      expect(path.createCommand()).toBe('M 0 0 L 1 1 L -1 -1 L 0 0 Z')
+      path
+        .addPoint(new Point(0, 0))
+        .addPoint(new Point(1, 1))
+        .addPoint(new Point(-1, -1))
+        .formatCommand()
+      expect(path.getCommandString()).toBe('M 0 0 L 1 1 L -1 -1 L 0 0 Z')
     })
-    it('createCommand Circuler', () => {
+    it('getCommandString Circuler', () => {
       const path = new Path({ circuler: true, close: false })
-      path.addPoint(new Point(0, 0))
-      path.addPoint(new Point(1, 1))
-      path.addPoint(new Point(2, 1))
-      path.addPoint(new Point(3, 0))
-      expect(path.createCommand()).toBe(
+        .addPoint(new Point(0, 0))
+        .addPoint(new Point(1, 1))
+        .addPoint(new Point(2, 1))
+        .addPoint(new Point(3, 0))
+        .formatCommand()
+      expect(path.getCommandString()).toBe(
         'M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0'
       )
     })
-    it('createCommand Circuler Close', () => {
+    it('getCommandString Circuler Close', () => {
       const path = new Path({ circuler: true, close: true })
-      path.addPoint(new Point(0, 0))
-      path.addPoint(new Point(1, 1))
-      path.addPoint(new Point(2, 1))
-      path.addPoint(new Point(3, 0))
-      expect(path.createCommand()).toBe(
+        .addPoint(new Point(0, 0))
+        .addPoint(new Point(1, 1))
+        .addPoint(new Point(2, 1))
+        .addPoint(new Point(3, 0))
+        .formatCommand()
+      expect(path.getCommandString()).toBe(
         'M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0 C 2.6 -0.2 0.4 -0.2 0 0 Z'
       )
     })
     it('toElement', () => {
       const path = new Path({ circuler: true, close: false })
-      path.addPoint(new Point(0, 0))
-      path.addPoint(new Point(1, 1))
-      path.addPoint(new Point(2, 1))
-      path.addPoint(new Point(3, 0))
+        .addPoint(new Point(0, 0))
+        .addPoint(new Point(1, 1))
+        .addPoint(new Point(2, 1))
+        .addPoint(new Point(3, 0))
+        .formatCommand()
       expect(path.toElement()).toMatchSnapshot()
     })
   })
@@ -101,12 +107,12 @@ describe('renderer', () => {
     let svg: Svg
     beforeEach(() => {
       const path = new Path({ circuler: true, close: false })
-      path.addPoint(new Point(0, 0))
-      path.addPoint(new Point(1, 1))
-      path.addPoint(new Point(2, 1))
-      path.addPoint(new Point(3, 0))
-      svg = new Svg({ width: 500, height: 500 })
-      svg.addPath(path)
+        .addPoint(new Point(0, 0))
+        .addPoint(new Point(1, 1))
+        .addPoint(new Point(2, 1))
+        .addPoint(new Point(3, 0))
+        .formatCommand()
+      svg = new Svg({ width: 500, height: 500 }).addPath(path)
     })
     // TODO: Fix width, height
     it('toElement', () => {

@@ -26,11 +26,11 @@ export class Point {
   public sub(p: Point): Point {
     return new Point(this.x - p.x, this.y - p.y)
   }
-  public commandMove() {
+  public commandMove(): string {
     return `M ${this.x} ${this.y}`
   }
 
-  public commandLine() {
+  public commandLine(): string {
     return `L ${this.x} ${this.y}`
   }
 
@@ -122,21 +122,35 @@ export class Path {
     this.commands = []
   }
 
-  public scale(r: number) {
+  public scale(r: number): this {
     this.points = this.points.map((p: Point) => p.scale(r))
     this.commands = this.commands.map((c: Command) => c.scale(r))
     this.strokeWidth *= r
+    return this
   }
 
-  public addPoint(p: Point) {
+  public addPoint(p: Point): this {
     this.points.push(p)
+    return this
   }
 
-  public addCommand(c: Command) {
+  public addCommand(c: Command): this {
     this.commands.push(c)
+    return this
   }
 
-  public createCommand(): string {
+  public formatCommand(): this {
+    const isCirculer = this.circuler && this.points.length > 2
+    const points = this.close
+      ? [...this.points, this.points[0]]
+      : [...this.points]
+    this.commands = isCirculer
+      ? this._formatCurveCommand(points)
+      : this._formatLineCommand(points)
+    return this
+  }
+
+  public getCommandString(): string {
     if (this.commands.length === 0) return ''
 
     let d = this.commands
@@ -148,16 +162,6 @@ export class Path {
     return d
   }
 
-  public formatCommand() {
-    const isCirculer = this.circuler && this.points.length > 2
-    const points = this.close
-      ? [...this.points, this.points[0]]
-      : [...this.points]
-    this.commands = isCirculer
-      ? this._createCurveCommand(points)
-      : this._createLineCommand(points)
-  }
-
   public toElement(): HTMLElement {
     const path = document.createElement('path')
     path.setAttribute('stroke-width', String(this.strokeWidth))
@@ -165,7 +169,7 @@ export class Path {
     path.setAttribute('fill', this.fill)
     path.setAttribute('stroke-linejoin', this.circuler ? 'round' : 'mitter')
     path.setAttribute('stroke-linecap', this.circuler ? 'round' : 'square')
-    path.setAttribute('d', this.createCommand())
+    path.setAttribute('d', this.getCommandString())
     return path
   }
 
@@ -197,7 +201,7 @@ export class Path {
       .toPoint()
     return start.add(contolVectorPoint)
   }
-  private _createCurveCommand(pts: Point[]): Command[] {
+  private _formatCurveCommand(pts: Point[]): Command[] {
     let update = []
     const endIndex = pts.length - 1
     update.push(new Command(CommandType.MOVE, this.points[0]))
@@ -223,7 +227,7 @@ export class Path {
     return update
   }
 
-  private _createLineCommand(pts: Point[]): Command[] {
+  private _formatLineCommand(pts: Point[]): Command[] {
     let update = []
     update.push(new Command(CommandType.MOVE, pts[0]))
     for (let i = 1; i < pts.length; i += 1) {
@@ -258,46 +262,54 @@ export class Svg {
     this._width = width
     this._height = height
     // TODO: Resizing improve
-    if (this._width === width) return
-    this.scalePath(width / this._width)
+    if (this._width === width) {
+      this.scalePath(width / this._width)
+    }
+    return this
   }
 
-  public scalePath(r: number) {
+  public scalePath(r: number): this {
     for (let i = 0; i < this._paths.length; i += 1) {
       this._paths[i].scale(r)
     }
+    return this
   }
 
-  public addPath(pa: Path) {
+  public addPath(pa: Path): this {
     this._paths.push(pa)
+    return this
   }
 
   public undoPath(): Path | undefined {
     return this._paths.pop()
   }
 
-  public replacePaths(paths: Path[]) {
+  public replacePaths(paths: Path[]): this {
     this._paths = paths
+    return this
   }
 
   public clonePaths(): Path[] {
     return this._paths.map(p => p.clone())
   }
 
-  public addPoint(po: Point) {
-    if (this._paths.length === 0) return
+  public addPoint(po: Point): this {
+    if (this._paths.length === 0) return this
     const updateIndex = this._paths.length - 1
     this._paths[updateIndex].addPoint(po)
+    return this
   }
 
-  public updatePath(pa: Path, i?: number) {
+  public updatePath(pa: Path, i?: number): this {
     const updateIndex = i || this._paths.length - 1
     if (updateIndex < 0) this._paths.push(pa)
     this._paths[updateIndex] = pa
+    return this
   }
 
   public clearPath() {
     this._paths = []
+    return this
   }
 
   public get paths(): Path[] {
