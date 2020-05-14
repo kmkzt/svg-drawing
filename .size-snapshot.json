@@ -1,26 +1,26 @@
 {
   "lib/index.esm.js": {
-    "bundled": 10395,
-    "minified": 6137,
-    "gzipped": 1996,
+    "bundled": 17945,
+    "minified": 10911,
+    "gzipped": 3590,
     "treeshaked": {
       "rollup": {
-        "code": 15,
-        "import_statements": 15
+        "code": 90,
+        "import_statements": 0
       },
       "webpack": {
-        "code": 1022
+        "code": 1041
       }
     }
   },
   "lib/index.cjs.js": {
-    "bundled": 13330,
-    "minified": 7500,
-    "gzipped": 2305
+    "bundled": 24146,
+    "minified": 13486,
+    "gzipped": 4231
   },
   "lib/index.min.js": {
-    "bundled": 6174,
-    "minified": 6162,
-    "gzipped": 2089
+    "bundled": 10744,
+    "minified": 10741,
+    "gzipped": 3650
   }
 }
