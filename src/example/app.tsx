@@ -110,7 +110,6 @@ const Example = () => {
   const [delay, setDelay] = useState(20)
   const [animMs, setAnimMs] = useState(20)
   const [penWidth, setPenWidth] = useState(5)
-  const [canvasSize, setCanvasSize] = useState()
   const clickDownload = useCallback(
     (extention: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
