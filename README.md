@@ -15,10 +15,18 @@
 yarn add svg-drawing
 ```
 
+## How to use
+
+### Drawing Example
+
+This example renders the drawing area.
+
 ```javascript
 import { SvgDrawing } from 'svg-drawing'
 
-const el = document.createElement('div')
+const drawel = document.createElement('div')
+
+// Drawing area will be resized to fit the rendering area
 el.setAttribute(
   'style',
   `
@@ -34,23 +42,103 @@ new SvgDrawing(el)
 Drawing methods.
 
 ```javascript
-const app = new SvgDrawing(el)
+const draw = new SvgDrawing(el)
+
+// drawing deactivate
+draw.off()
+// drawing reactivate
+draw.on()
 
 // drawing all clear
-app.clear()
+draw.clear()
 // undo drawing
-action.undo()
+draw.undo()
 
-// Download image
+// change parameter.　There are other changeable parameters like fill, close, circuler, etc.
+draw.penColor = '#00b'
+draw.penWidth = 10
+
+// Download image. Also available in SvgAnimation, Renderer
+draw.download('svg')
+draw.download('jpg')
+draw.download('png')
+```
+
+### Animation Example
+
+This example is to animate what you drew with Svg Drawing
+
+```js
+import { SvgDrawing, SvgAnimation } from 'svg-drawing'
+
+// Render drawing area. omitted the description
+const draw = new SvgDrawing(el)
+
+// Render animation
+// It is resized to fit the rendering area as well as the SvgDrawing area.
+const anim = new SvgAnimation(animEl, {
+  ms: 20
+})
+
+// Example stroke animation.
+// Callback function to set SvgAnimation
+// Since the Path Object before animation is passed as an argument, it is converted and returned.
+let cur = 0
+const strokeAnimation = paths => {
+  const total = paths.reduce((l, p) => l + p.commands.length, 0)
+  if (cur > total) cur = 0
+  else cur += 1
+  const update = []
+  let count = cur
+  for (let i = 0; i < paths.length; i += 1) {
+    if (count < paths[i].commands.length) {
+      paths[i].commands = paths[i].commands.slice(0, count)
+      update.push(paths[i])
+      break
+    }
+    count -= paths[i].commands.length
+    update.push(paths[i])
+  }
+  return update
+}
+
+const start = document.getElementById('start')
+start.onclick = () => {
+  // Sets the animation callback function
+  anim.setAnimation(strokeAnimation)
+  // Copy drawwing data
+  anim.replacePaths(draw.clonePaths())
+  // Start Animation
+  anim.start()
+}
+
+const stop = document.getElementById('stop')
+stop.onclick = () => {
+  // Stop Animation
+  anim.stop()
+  // Put it back before animating
+  anim.resotre()
+}
+```
+
+Drawing methods.
+
+```javascript
+const anim = new SvgAnimation(el)
+
+// Animation Start
+anim.start()
+// Animation Stop
+anim.stop()
+// Return to Svg before animation
+anim.restore()
+
+// Parameter `ms` can be changed to set Animation frame. `ms` is mili seconds.
+// Can be changed during animation
+anim.ms = 50
+
+// Download image. Also available in SvgAnimation, Renderer
 app.download('svg')
 app.download('jpg')
 app.download('png')
-
-// change parameter.　There are other changeable parameters like fill, close, circuler, etc.
-app.penColor = '#00b'
-app.penWidth = 10
 ```
-
-## Get started
-
-WIP
