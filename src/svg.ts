@@ -258,19 +258,25 @@ export class Svg {
     // this.resizeElement = this.resizeElement.bind(this)
   }
 
-  public resizeElement(width: number, height: number) {
-    this._width = width
-    this._height = height
+  /**
+   * @returns {boolean} resize?
+   */
+  public resizeElement(width: number, height: number): boolean {
     // TODO: Resizing improve
-    if (this._width === width) {
+    if (this._width !== width || this._height !== height) {
       this.scalePath(width / this._width)
+      this._width = width
+      this._height = height
+      return true
     }
-    return this
+    return false
   }
 
   public scalePath(r: number): this {
-    for (let i = 0; i < this._paths.length; i += 1) {
-      this._paths[i].scale(r)
+    if (r !== 1) {
+      for (let i = 0; i < this._paths.length; i += 1) {
+        this._paths[i].scale(r)
+      }
     }
     return this
   }

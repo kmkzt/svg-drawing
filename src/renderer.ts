@@ -5,7 +5,6 @@ export class Renderer extends Svg {
   public el: HTMLElement
   public top: number
   public left: number
-
   constructor(el: HTMLElement, { background }: RendererOption) {
     const { width, height, left, top } = el.getBoundingClientRect()
     super({ width, height, background })
@@ -15,7 +14,6 @@ export class Renderer extends Svg {
     this.el = el
     this.left = left
     this.top = top
-
     el.appendChild(this.toElement())
     this._setupAdjustResize()
   }
@@ -30,12 +28,14 @@ export class Renderer extends Svg {
   public resize(param?: DOMRect) {
     const { width, height, left, top } =
       param || this.el.getBoundingClientRect()
-    this.resizeElement(width, height)
+    if (this.resizeElement(width, height)) {
+      this.update()
+    }
     this.left = left
     this.top = top
   }
+
   private _setupAdjustResize() {
-    // TODO: fallback resize
     if ((window as any).ResizeObserver) {
       const resizeObserver: any = new (window as any).ResizeObserver(
         (entries: any[]) => {
@@ -43,10 +43,11 @@ export class Renderer extends Svg {
         }
       )
       resizeObserver.observe(this.el)
+    } else {
+      // TODO: improve
+      window.addEventListener('resize', _ev => {
+        this.resize(this.el.getBoundingClientRect())
+      })
     }
-
-    window.addEventListener('resize', () => {
-      this.resize(this.el.getBoundingClientRect())
-    })
   }
 }

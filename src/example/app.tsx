@@ -94,6 +94,7 @@ const getRandomColor = (): string =>
     String(getRandomInt(255).toString(16)).padStart(2, '0')
   ).join('')}`
 
+const CANVAS_SIZE = innerHeight > innerWidth ? '98vw' : '49vw'
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const drawingRef = useRef<SvgDrawing | null>(null)
@@ -109,7 +110,7 @@ const Example = () => {
   const [delay, setDelay] = useState(20)
   const [animMs, setAnimMs] = useState(20)
   const [penWidth, setPenWidth] = useState(5)
-
+  const [canvasSize, setCanvasSize] = useState()
   const clickDownload = useCallback(
     (extention: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
@@ -450,8 +451,8 @@ const Example = () => {
               backgroundImage: lattice(size),
               backgroundSize: `${size}px ${size}px`,
               border: '1px solid #333',
-              width: 500,
-              height: 500,
+              width: CANVAS_SIZE,
+              height: CANVAS_SIZE,
               margin: 'auto'
             }}
           />
@@ -462,8 +463,8 @@ const Example = () => {
             style={{
               backgroundSize: `${size}px ${size}px`,
               border: '1px solid #333',
-              width: 500,
-              height: 500,
+              width: CANVAS_SIZE,
+              height: CANVAS_SIZE,
               margin: 'auto'
             }}
           />
@@ -482,5 +483,12 @@ const Example = () => {
 }
 
 const app = document.createElement('div')
+const style = document.createElement('style')
+style.innerHTML = `
+  * {
+    margin: 0;
+  }
+`
 document.body.appendChild(app)
+document.body.appendChild(style)
 render(<Example />, app)
