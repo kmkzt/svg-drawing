@@ -136,9 +136,4 @@ anim.restore()
 // Parameter `ms` can be changed to set Animation frame. `ms` is mili seconds.
 // Can be changed during animation
 anim.ms = 50
-
-// Download image. Also available in SvgAnimation, Renderer
-app.download('svg')
-app.download('jpg')
-app.download('png')
 ```
