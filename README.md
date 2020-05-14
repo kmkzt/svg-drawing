@@ -39,7 +39,7 @@ document.body.appendChid(el)
 new SvgDrawing(el)
 ```
 
-Drawing methods.
+SvgDrawing methods.
 
 ```javascript
 const draw = new SvgDrawing(el)
@@ -121,7 +121,7 @@ stop.onclick = () => {
 }
 ```
 
-Drawing methods.
+SvgAnimation methods.
 
 ```javascript
 const anim = new SvgAnimation(el)
