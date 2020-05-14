@@ -6,6 +6,7 @@ export interface AnimationOption extends RendererOption {
 export type FrameAnimation = (origin: Path[]) => Path[]
 export class SvgAnimation extends Renderer {
   public ms: number
+  private _stopId: number
   private _stop: (() => void) | null
   private _anim: FrameAnimation | null
   private _restorePath: Path[]
@@ -15,6 +16,7 @@ export class SvgAnimation extends Renderer {
     this._stop = null
     this._anim = null
     this._restorePath = []
+    this._stopId = 0
   }
 
   public setAnimation(fn: FrameAnimation): void {
@@ -43,16 +45,21 @@ export class SvgAnimation extends Renderer {
     this.stop()
     const ms = this.ms
     this._restorePath = this.clonePaths()
-    const frame = () => {
+    let start: number | undefined
+    const frame: FrameRequestCallback = timestamp => {
       if (ms !== this.ms) {
         this.play()
         return
       }
-      this.frame()
+      if (!start || timestamp - start > ms) {
+        start = timestamp
+        this.frame()
+      }
+      this._stopId = requestAnimationFrame(frame)
     }
-    const stopId = setInterval(frame, ms)
+    this._stopId = requestAnimationFrame(frame)
     this._stop = () => {
-      clearInterval(stopId)
+      cancelAnimationFrame(this._stopId)
       this._stop = null
     }
   }
