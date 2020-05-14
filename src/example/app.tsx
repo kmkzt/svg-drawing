@@ -24,28 +24,25 @@ const shake: FrameAnimation = paths => {
   return paths
 }
 
-// TODO: Fix
-let plen = 0
+let cur = 0
 const strokeAnimation: FrameAnimation = paths => {
-  const total: number = paths.reduce((l, p) => p.commands.length, 0)
-  if (plen > total) {
-    plen = 0
+  const total: number = paths.reduce((l, p) => l + p.commands.length, 0)
+  if (cur > total) {
+    cur = 0
   } else {
-    plen += 1
+    cur += 1
   }
   const update = []
-  let count = plen
+  let count = cur
   for (let i = 0; i < paths.length; i += 1) {
-    if (count > paths[i].commands.length) {
-      count -= paths[i].commands.length
-      update.push(paths[i])
-    } else {
+    if (count < paths[i].commands.length) {
       paths[i].commands = paths[i].commands.slice(0, count)
       update.push(paths[i])
       break
     }
+    count -= paths[i].commands.length
+    update.push(paths[i])
   }
-  console.log(update)
   return update
 }
 
