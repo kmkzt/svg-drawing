@@ -37,8 +37,9 @@
     "demo:clear": "rimraf docs/*",
     "demo:build": "NODE_ENV=production webpack -p",
     "test": "npm-run-all test:*",
-    "test:unit": "NODE_ENV=test jest --passWithNoTests",
+    "test:unit": "NODE_ENV=test jest --ci --passWithNoTests",
     "test:types": "tsc --noEmit",
+    "lint": "eslint ./src --ext .js,.ts,.tsx",
     "release": "release-it",
     "prepare": "yarn prod"
   },
