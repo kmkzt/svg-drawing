@@ -149,19 +149,21 @@ export class SvgDrawing extends Renderer {
     }
     const start = handleMouse(param => {
       this._drawingStart()
-      this.el.addEventListener('pointermove', draw)
-      this.el.addEventListener('pointerup', end)
-      this.el.addEventListener('pointerleave', end)
+      this.el.addEventListener('pointermove', draw, getPassiveOptions(false))
+      this.el.addEventListener('pointerup', end, getPassiveOptions(false))
+      this.el.addEventListener('pointerleave', end, getPassiveOptions(false))
+      this.el.addEventListener('pointercancel', end, getPassiveOptions(false))
     })
     const draw = throttle(handleMouse(this._drawingMove), this.delay)
     const end = handleMouse((param: { x: number; y: number }) => {
       this.el.removeEventListener('pointermove', draw)
       this.el.removeEventListener('pointerup', end)
       this.el.removeEventListener('pointerleave', end)
+      this.el.addEventListener('pointercancel', end)
     })
-    document.addEventListener('pointerdown', start)
+    this.el.addEventListener('pointerdown', start, getPassiveOptions(false))
     this._clearPointListener = () =>
-      document.removeEventListener('pointerdown', start)
+      this.el.removeEventListener('pointerdown', start)
   }
 
   /**
