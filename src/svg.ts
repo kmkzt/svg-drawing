@@ -1,4 +1,3 @@
-import { download } from './utils/download'
 const roundUp = (num: number) => Number(num.toFixed(2))
 
 export class Point {
@@ -26,6 +25,7 @@ export class Point {
   public sub(p: Point): Point {
     return new Point(this.x - p.x, this.y - p.y)
   }
+
   public commandMove(): string {
     return `M ${this.x} ${this.y}`
   }
@@ -259,7 +259,6 @@ export class Path {
 export interface SvgOption {
   width: number
   height: number
-  background?: string
 }
 
 export interface SvgObject {
@@ -268,15 +267,13 @@ export interface SvgObject {
   paths: PathObject[]
 }
 export class Svg {
-  public background: string
-  private _width: number
-  private _height: number
   private _paths: Path[]
-  constructor({ width, height, background }: SvgOption) {
+  protected _width: number
+  protected _height: number
+  constructor({ width, height }: SvgOption) {
     this._paths = []
     this._width = width
     this._height = height
-    this.background = background ?? '#fff'
     // this.scalePath = this.scalePath.bind(this)
     // this.toElement = this.toElement.bind(this)
     // this.toBase64 = this.toBase64.bind(this)
@@ -372,37 +369,5 @@ export class Svg {
       this.toElement().innerHTML
     }</svg>`
     return `data:image/svg+xml;base64,${btoa(data)}`
-  }
-
-  // TODO: Add filename config
-  public download(
-    ext: 'svg' | 'png' | 'jpg' = 'svg',
-    cb: typeof download = download
-  ) {
-    if (ext === 'svg') {
-      cb({
-        data: this.toBase64(),
-        extension: 'svg'
-      })
-    }
-
-    const img: any = new Image()
-    const renderCanvas = () => {
-      const canvas = document.createElement('canvas')
-      canvas.setAttribute('width', String(this._width))
-      canvas.setAttribute('height', String(this._height))
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-      ctx.fillStyle = this.background
-      ctx.fillRect(0, 0, this._width, this._height)
-      ctx.drawImage(img, 0, 0)
-      if (ext === 'png') {
-        cb({ data: canvas.toDataURL('image/png'), extension: 'png' })
-      } else {
-        cb({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
-      }
-    }
-    img.addEventListener('load', renderCanvas, false)
-    img.src = this.toBase64()
   }
 }
