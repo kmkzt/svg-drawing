@@ -1,6 +1,202 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`svg Path toElement 1`] = `
+exports[`svg Path formatCommand and getCommandString Circuler Close 1`] = `
+Array [
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": 0,
+  },
+  Command {
+    "cl": Point {
+      "x": 0.2,
+      "y": 0.2,
+    },
+    "cr": Point {
+      "x": 0.6,
+      "y": 0.8,
+    },
+    "point": Point {
+      "x": 1,
+      "y": 1,
+    },
+    "type": 2,
+  },
+  Command {
+    "cl": Point {
+      "x": 1.4,
+      "y": 1.2,
+    },
+    "cr": Point {
+      "x": 1.6,
+      "y": 1.2,
+    },
+    "point": Point {
+      "x": 2,
+      "y": 1,
+    },
+    "type": 2,
+  },
+  Command {
+    "cl": Point {
+      "x": 2.4,
+      "y": 0.8,
+    },
+    "cr": Point {
+      "x": 2.8,
+      "y": 0.2,
+    },
+    "point": Point {
+      "x": 3,
+      "y": 0,
+    },
+    "type": 2,
+  },
+  Command {
+    "cl": Point {
+      "x": 2.6,
+      "y": -0.2,
+    },
+    "cr": Point {
+      "x": 0.4,
+      "y": -0.2,
+    },
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": 2,
+  },
+]
+`;
+
+exports[`svg Path formatCommand and getCommandString Circuler Close 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0 C 2.6 -0.2 0.4 -0.2 0 0 Z"`;
+
+exports[`svg Path formatCommand and getCommandString Circuler Normal 1`] = `
+Array [
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": 0,
+  },
+  Command {
+    "cl": Point {
+      "x": 0.2,
+      "y": 0.2,
+    },
+    "cr": Point {
+      "x": 0.6,
+      "y": 0.8,
+    },
+    "point": Point {
+      "x": 1,
+      "y": 1,
+    },
+    "type": 2,
+  },
+  Command {
+    "cl": Point {
+      "x": 1.4,
+      "y": 1.2,
+    },
+    "cr": Point {
+      "x": 1.6,
+      "y": 1.2,
+    },
+    "point": Point {
+      "x": 2,
+      "y": 1,
+    },
+    "type": 2,
+  },
+  Command {
+    "cl": Point {
+      "x": 2.4,
+      "y": 0.8,
+    },
+    "cr": Point {
+      "x": 2.8,
+      "y": 0.2,
+    },
+    "point": Point {
+      "x": 3,
+      "y": 0,
+    },
+    "type": 2,
+  },
+]
+`;
+
+exports[`svg Path formatCommand and getCommandString Circuler Normal 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"`;
+
+exports[`svg Path formatCommand and getCommandString Line Close 1`] = `
+Array [
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": 0,
+  },
+  Command {
+    "point": Point {
+      "x": 1,
+      "y": 1,
+    },
+    "type": 1,
+  },
+  Command {
+    "point": Point {
+      "x": -1,
+      "y": -1,
+    },
+    "type": 1,
+  },
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": 1,
+  },
+]
+`;
+
+exports[`svg Path formatCommand and getCommandString Line Close 2`] = `"M 0 0 L 1 1 L -1 -1 L 0 0 Z"`;
+
+exports[`svg Path formatCommand and getCommandString Line Normal 1`] = `
+Array [
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": 0,
+  },
+  Command {
+    "point": Point {
+      "x": 1,
+      "y": 1,
+    },
+    "type": 1,
+  },
+  Command {
+    "point": Point {
+      "x": -1,
+      "y": -1,
+    },
+    "type": 1,
+  },
+]
+`;
+
+exports[`svg Path formatCommand and getCommandString Line Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
+
+exports[`svg Path toJson and toElement toElement 1`] = `
 <path
   d="M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"
   fill="none"
@@ -11,14 +207,25 @@ exports[`svg Path toElement 1`] = `
 />
 `;
 
+exports[`svg Path toJson and toElement toJson 1`] = `
+Object {
+  "d": "M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0",
+  "fill": "none",
+  "stroke": "#000",
+  "strokeLinecap": "round",
+  "strokeLinejoin": "round",
+  "strokeWidth": 1,
+}
+`;
+
 exports[`svg Renderer download svg 1`] = `
 Object {
-  "data": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSIjMDAwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PC9zdmc+",
+  "data": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSIjMDAwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2U9IiMwMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lam9pbj0ibWl0dGVyIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBkPSJNIDQgNCBMIDkgNCBMIDkgOCBMIDMgMCBMIDQgNCBaIj48L3BhdGg+PC9zdmc+",
   "extension": "svg",
 }
 `;
 
-exports[`svg Renderer toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSIjMDAwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PC9zdmc+"`;
+exports[`svg Renderer toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSIjMDAwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2U9IiMwMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lam9pbj0ibWl0dGVyIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBkPSJNIDQgNCBMIDkgNCBMIDkgOCBMIDMgMCBMIDQgNCBaIj48L3BhdGg+PC9zdmc+"`;
 
 exports[`svg Renderer toElement 1`] = `
 <svg
@@ -33,5 +240,38 @@ exports[`svg Renderer toElement 1`] = `
     stroke-linejoin="round"
     stroke-width="1"
   />
+  <path
+    d="M 4 4 L 9 4 L 9 8 L 3 0 L 4 4 Z"
+    fill="none"
+    stroke="#000"
+    stroke-linecap="square"
+    stroke-linejoin="mitter"
+    stroke-width="1"
+  />
 </svg>
+`;
+
+exports[`svg Renderer toJson 1`] = `
+Object {
+  "height": 500,
+  "paths": Array [
+    Object {
+      "d": "M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0",
+      "fill": "none",
+      "stroke": "#000",
+      "strokeLinecap": "round",
+      "strokeLinejoin": "round",
+      "strokeWidth": 1,
+    },
+    Object {
+      "d": "M 4 4 L 9 4 L 9 8 L 3 0 L 4 4 Z",
+      "fill": "none",
+      "stroke": "#000",
+      "strokeLinecap": "square",
+      "strokeLinejoin": "mitter",
+      "strokeWidth": 1,
+    },
+  ],
+  "width": 500,
+}
 `;

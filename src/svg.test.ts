@@ -1,4 +1,4 @@
-import { Point, Vector, Path, Svg } from './svg'
+import { Point, Vector, Path, Svg, Command, CommandType } from './svg'
 
 describe('svg', () => {
   describe('Point', () => {
@@ -14,7 +14,7 @@ describe('svg', () => {
       expect(po.y).toBe(2.0)
     })
 
-    it('sub', () => {
+    it('scale', () => {
       const po = new Point(1.0, 1.0).scale(3)
       expect(po.x).toBe(3.0)
       expect(po.y).toBe(3.0)
@@ -38,12 +38,38 @@ describe('svg', () => {
       expect(vec.angle).toBe(0.5)
     })
   })
+  describe('Command', () => {
+    it('MOVE', () => {
+      const commands = new Command(CommandType.MOVE, new Point(0, 0))
+      expect(commands.toString()).toBe('M 0 0')
+    })
+    it('LINE', () => {
+      const commands = new Command(CommandType.LINE, new Point(1, 1))
+      expect(commands.toString()).toBe('L 1 1')
+    })
+    it('CURVE', () => {
+      const commands = new Command(CommandType.CURVE, new Point(1, 1))
+      expect(commands.toString()).toBe('L 1 1')
+      commands.cl = new Point(0.25, 0.25)
+      commands.cr = new Point(0.75, 0.25)
+      expect(commands.toString()).toBe('C 0.25 0.25 0.75 0.25 1 1')
+    })
+  })
   describe('Path', () => {
     it('addPoint', () => {
       const path = new Path().addPoint(new Point(1, 1))
       expect(path.points.length).toBe(1)
       expect(path.points[0].x).toBe(1)
       expect(path.points[0].y).toBe(1)
+    })
+    it('addCommand', () => {
+      const path = new Path().addCommand(
+        new Command(CommandType.LINE, new Point(1, 1))
+      )
+      expect(path.commands.length).toBe(1)
+      expect(path.commands[0].type).toBe(CommandType.LINE)
+      expect(path.commands[0].point.x).toBe(1)
+      expect(path.commands[0].point.y).toBe(1)
     })
     it('scale', () => {
       const path = new Path({ strokeWidth: 1 })
@@ -53,70 +79,95 @@ describe('svg', () => {
       expect(path.points[0].x).toBe(2)
       expect(path.points[0].y).toBe(2)
     })
-    it('getCommandString Line', () => {
-      const path = new Path({ circuler: false, close: false })
-      path
-        .addPoint(new Point(0, 0))
-        .addPoint(new Point(1, 1))
-        .addPoint(new Point(-1, -1))
-        .formatCommand()
-      expect(path.getCommandString()).toBe('M 0 0 L 1 1 L -1 -1')
+    it('clone', () => {
+      const path = new Path({ strokeWidth: 1 }).addPoint(new Point(1, 1))
+      const clone = path.clone().addPoint(new Point(2, 2))
+      clone.points[0].x = 3
+      clone.formatCommand()
+      expect(path.points.length).toBe(1)
+      expect(path.commands.length).toBe(0)
+      expect(path.points[0].x).toBe(1)
+      expect(clone.points.length).toBe(2)
+      expect(clone.commands.length).toBe(2)
+      expect(clone.points[0].x).toBe(3)
     })
-    it('getCommandString Line Close', () => {
-      const path = new Path({ circuler: false, close: true })
-      path
-        .addPoint(new Point(0, 0))
-        .addPoint(new Point(1, 1))
-        .addPoint(new Point(-1, -1))
-        .formatCommand()
-      expect(path.getCommandString()).toBe('M 0 0 L 1 1 L -1 -1 L 0 0 Z')
-    })
-    it('getCommandString Circuler', () => {
+    describe('toJson and toElement', () => {
       const path = new Path({ circuler: true, close: false })
         .addPoint(new Point(0, 0))
         .addPoint(new Point(1, 1))
         .addPoint(new Point(2, 1))
         .addPoint(new Point(3, 0))
         .formatCommand()
-      expect(path.getCommandString()).toBe(
-        'M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0'
-      )
+      it('toJson', () => {
+        expect(path.toJson()).toMatchSnapshot()
+      })
+      it('toElement', () => {
+        expect(path.toElement()).toMatchSnapshot()
+      })
     })
-    it('getCommandString Circuler Close', () => {
-      const path = new Path({ circuler: true, close: true })
-        .addPoint(new Point(0, 0))
-        .addPoint(new Point(1, 1))
-        .addPoint(new Point(2, 1))
-        .addPoint(new Point(3, 0))
-        .formatCommand()
-      expect(path.getCommandString()).toBe(
-        'M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0 C 2.6 -0.2 0.4 -0.2 0 0 Z'
-      )
-    })
-    it('toElement', () => {
-      const path = new Path({ circuler: true, close: false })
-        .addPoint(new Point(0, 0))
-        .addPoint(new Point(1, 1))
-        .addPoint(new Point(2, 1))
-        .addPoint(new Point(3, 0))
-        .formatCommand()
-      expect(path.toElement()).toMatchSnapshot()
+    describe('formatCommand and getCommandString', () => {
+      describe('Line', () => {
+        const path = new Path({ circuler: false })
+          .addPoint(new Point(0, 0))
+          .addPoint(new Point(1, 1))
+          .addPoint(new Point(-1, -1))
+        it('Normal', () => {
+          path.close = false
+          expect(path.formatCommand().commands).toMatchSnapshot()
+          expect(path.getCommandString()).toMatchSnapshot()
+        })
+        it('Close', () => {
+          path.close = true
+          expect(path.formatCommand().commands).toMatchSnapshot()
+          expect(path.getCommandString()).toMatchSnapshot()
+        })
+      })
+      describe('Circuler', () => {
+        const path = new Path({ circuler: true })
+          .addPoint(new Point(0, 0))
+          .addPoint(new Point(1, 1))
+          .addPoint(new Point(2, 1))
+          .addPoint(new Point(3, 0))
+        it('Normal', () => {
+          path.close = false
+          expect(path.formatCommand().commands).toMatchSnapshot()
+          expect(path.getCommandString()).toMatchSnapshot()
+        })
+        it('Close', () => {
+          path.close = true
+          expect(path.formatCommand().commands).toMatchSnapshot()
+          expect(path.getCommandString()).toMatchSnapshot()
+        })
+      })
     })
   })
   describe('Renderer', () => {
     let svg: Svg
     beforeEach(() => {
-      const path = new Path({ circuler: true, close: false })
-        .addPoint(new Point(0, 0))
-        .addPoint(new Point(1, 1))
-        .addPoint(new Point(2, 1))
-        .addPoint(new Point(3, 0))
-        .formatCommand()
-      svg = new Svg({ width: 500, height: 500 }).addPath(path)
+      svg = new Svg({ width: 500, height: 500 })
+        .addPath(
+          new Path({ circuler: true, close: false })
+            .addPoint(new Point(0, 0))
+            .addPoint(new Point(1, 1))
+            .addPoint(new Point(2, 1))
+            .addPoint(new Point(3, 0))
+            .formatCommand()
+        )
+        .addPath(
+          new Path({ circuler: false, close: true })
+            .addPoint(new Point(4, 4))
+            .addPoint(new Point(9, 4))
+            .addPoint(new Point(9, 8))
+            .addPoint(new Point(3, 0))
+            .formatCommand()
+        )
     })
     // TODO: Fix width, height
     it('toElement', () => {
       expect(svg.toElement()).toMatchSnapshot()
+    })
+    it('toJson', () => {
+      expect(svg.toJson()).toMatchSnapshot()
     })
     // TODO: replace image snapshot
     it('toBase64', () => {
