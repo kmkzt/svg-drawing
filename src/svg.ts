@@ -101,6 +101,15 @@ export interface PathOption {
   stroke?: string
   fill?: string
 }
+
+export interface PathObject {
+  stroke: string
+  strokeWidth: number
+  strokeLinecap: 'round' | 'square'
+  strokeLinejoin: 'round' | 'mitter'
+  fill: string
+  d: string
+}
 export class Path {
   public close: boolean
   public circuler: boolean
@@ -162,6 +171,16 @@ export class Path {
     return d
   }
 
+  public toJson(): PathObject {
+    return {
+      fill: this.fill,
+      d: this.getCommandString(),
+      stroke: this.stroke,
+      strokeWidth: this.strokeWidth,
+      strokeLinecap: this.circuler ? 'round' : 'square',
+      strokeLinejoin: this.circuler ? 'round' : 'mitter'
+    }
+  }
   public toElement(): HTMLElement {
     const path = document.createElement('path')
     path.setAttribute('stroke-width', String(this.strokeWidth))
@@ -242,6 +261,12 @@ export interface SvgOption {
   height: number
   background?: string
 }
+
+export interface SvgObject {
+  width: number
+  height: number
+  paths: PathObject[]
+}
 export class Svg {
   public background: string
   private _width: number
@@ -320,6 +345,14 @@ export class Svg {
 
   public get paths(): Path[] {
     return this._paths
+  }
+
+  public toJson(): SvgObject {
+    return {
+      width: this._width,
+      height: this._height,
+      paths: this.paths.map(p => p.toJson())
+    }
   }
 
   public toElement(): SVGSVGElement {
