@@ -150,17 +150,15 @@ export class Path {
     return this
   }
 
-  public addPoint(po: Point): this {
-    this.commands.push(
-      new Command(
-        this.commands.length === 0 ? CommandType.MOVE : CommandType.LINE,
-        po
-      )
-    )
-    return this
-  }
-  public addCommand(c: Command): this {
-    this.commands.push(c)
+  public addCommand(param: Command | Point): this {
+    const cmd =
+      param instanceof Point
+        ? new Command(
+            this.commands.length === 0 ? CommandType.MOVE : CommandType.LINE,
+            param
+          )
+        : param
+    this.commands.push(cmd)
     return this
   }
 
@@ -322,10 +320,10 @@ export class Svg {
     return this._paths.map(p => p.clone())
   }
 
-  public addPoint(po: Point): this {
+  public addCommand(po: Point): this {
     if (this._paths.length === 0) return this
     const updateIndex = this._paths.length - 1
-    this._paths[updateIndex].addPoint(po)
+    this._paths[updateIndex].addCommand(po)
     return this
   }
 

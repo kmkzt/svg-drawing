@@ -93,21 +93,14 @@ describe('svg', () => {
     let path: Path
     beforeEach(() => {
       path = new Path({ strokeWidth: 1 })
-        .addPoint(new Point(1, 1))
-        .addPoint(new Point(2, 2))
+        .addCommand(new Point(1, 1))
+        .addCommand(new Point(2, 2))
     })
-    it('addPoint', () => {
+    it('addCommand', () => {
       expect(path.commands.length).toBe(2)
       expect(path.commands[0].type).toBe(CommandType.MOVE)
       expect(path.commands[0].point.x).toBe(1)
       expect(path.commands[0].point.y).toBe(1)
-    })
-    it('addCommand', () => {
-      path.addCommand(new Command(CommandType.LINE, new Point(1, 1)))
-      expect(path.commands.length).toBe(3)
-      expect(path.commands[2].type).toBe(CommandType.LINE)
-      expect(path.commands[2].point.x).toBe(1)
-      expect(path.commands[2].point.y).toBe(1)
     })
     it('scale', () => {
       path.scale(2)
@@ -117,8 +110,8 @@ describe('svg', () => {
       expect(path.commands[0].point.y).toBe(2)
     })
     it('clone', () => {
-      const origin = new Path({ strokeWidth: 1 }).addPoint(new Point(1, 1))
-      const clone = origin.clone().addPoint(new Point(2, 2))
+      const origin = new Path({ strokeWidth: 1 }).addCommand(new Point(1, 1))
+      const clone = origin.clone().addCommand(new Point(2, 2))
       clone.commands[0].point.x = 3
       expect(origin.commands.length).toBe(1)
       expect(clone.commands.length).toBe(2)
@@ -127,10 +120,10 @@ describe('svg', () => {
     })
     describe('toJson and toElement', () => {
       const path = new Path({ circuler: true, close: false })
-        .addPoint(new Point(0, 0))
-        .addPoint(new Point(1, 1))
-        .addPoint(new Point(2, 1))
-        .addPoint(new Point(3, 0))
+        .addCommand(new Point(0, 0))
+        .addCommand(new Point(1, 1))
+        .addCommand(new Point(2, 1))
+        .addCommand(new Point(3, 0))
         .formatCommand()
       it('toJson', () => {
         expect(path.toJson()).toMatchSnapshot()
@@ -142,9 +135,9 @@ describe('svg', () => {
     describe('formatCommand and getCommandString', () => {
       describe('Line', () => {
         const path = new Path({ circuler: false })
-          .addPoint(new Point(0, 0))
-          .addPoint(new Point(1, 1))
-          .addPoint(new Point(-1, -1))
+          .addCommand(new Point(0, 0))
+          .addCommand(new Point(1, 1))
+          .addCommand(new Point(-1, -1))
         it('Normal', () => {
           path.close = false
           expect(path.formatCommand().commands).toMatchSnapshot()
@@ -158,10 +151,10 @@ describe('svg', () => {
       })
       describe('Circuler', () => {
         const path = new Path({ circuler: true })
-          .addPoint(new Point(0, 0))
-          .addPoint(new Point(1, 1))
-          .addPoint(new Point(2, 1))
-          .addPoint(new Point(3, 0))
+          .addCommand(new Point(0, 0))
+          .addCommand(new Point(1, 1))
+          .addCommand(new Point(2, 1))
+          .addCommand(new Point(3, 0))
         it('Normal', () => {
           path.close = false
           expect(path.formatCommand().commands).toMatchSnapshot()
@@ -181,18 +174,18 @@ describe('svg', () => {
       svg = new Svg({ width: 500, height: 500 })
         .addPath(
           new Path({ circuler: true, close: false })
-            .addPoint(new Point(0, 0))
-            .addPoint(new Point(1, 1))
-            .addPoint(new Point(2, 1))
-            .addPoint(new Point(3, 0))
+            .addCommand(new Point(0, 0))
+            .addCommand(new Point(1, 1))
+            .addCommand(new Point(2, 1))
+            .addCommand(new Point(3, 0))
             .formatCommand()
         )
         .addPath(
           new Path({ circuler: false, close: true })
-            .addPoint(new Point(4, 4))
-            .addPoint(new Point(9, 4))
-            .addPoint(new Point(9, 8))
-            .addPoint(new Point(3, 0))
+            .addCommand(new Point(4, 4))
+            .addCommand(new Point(9, 4))
+            .addCommand(new Point(9, 8))
+            .addCommand(new Point(3, 0))
             .formatCommand()
         )
     })

@@ -113,13 +113,13 @@ export class SvgDrawing extends Renderer {
 
   private _drawingMove({ x, y }: { x: number; y: number }): void {
     const po = this._createDrawPoint({ x, y })
-    this.addPoint(po)
+    this.addCommand(po)
     if (
       !this._drawPath ||
       this._drawPath.strokeWidth !== this.penWidth ||
       this._drawPath.stroke !== this.penColor
     ) {
-      this._drawPath = this._createDrawPath().addPoint(po)
+      this._drawPath = this._createDrawPath().addCommand(po)
       this.addPath(this._drawPath)
     }
     this._updateRender()
