@@ -19,7 +19,7 @@ export class SvgDrawing extends Renderer {
   public circuler: boolean
   public close: boolean
   public delay: number
-  private _line: Path | null
+  private _drawPath: Path | null
   private _clearPointListener: (() => void) | null
   private _clearMouseListener: (() => void) | null
   private _clearTouchListener: (() => void) | null
@@ -45,7 +45,7 @@ export class SvgDrawing extends Renderer {
     this.close = close ?? false
     this.delay = delay ?? 20
     this.fill = fill ?? 'none'
-    this._line = null
+    this._drawPath = null
     this._clearPointListener = null
     this._clearMouseListener = null
     this._clearTouchListener = null
@@ -55,12 +55,12 @@ export class SvgDrawing extends Renderer {
 
   public clear() {
     this.clearPath()
-    this._updateRender()
+    this.update()
   }
 
   public undo() {
     this.undoPath()
-    this._updateRender()
+    this.update()
   }
 
   public changeDelay(delay: number) {
@@ -69,10 +69,11 @@ export class SvgDrawing extends Renderer {
   }
 
   private _updateRender() {
-    this.current?.formatCommand()
+    this._current?.formatCommand()
     this.update()
   }
-  private get current(): Path | null {
+
+  private get _current(): Path | null {
     if (this.paths.length === 0) return null
     return this.paths[this.paths.length - 1]
   }
@@ -104,27 +105,27 @@ export class SvgDrawing extends Renderer {
       this._clearTouchListener = null
     }
   }
+
   private _drawingStart() {
-    this._line = this._createPath()
-    this.addPath(this._line)
+    this._drawPath = this._createDrawPath()
+    this.addPath(this._drawPath)
   }
 
   private _drawingMove({ x, y }: { x: number; y: number }): void {
-    const po = this._createPoint({ x, y })
+    const po = this._createDrawPoint({ x, y })
     this.addPoint(po)
     if (
-      !this._line ||
-      this._line.strokeWidth !== this.penWidth ||
-      this._line.stroke !== this.penColor
+      !this._drawPath ||
+      this._drawPath.strokeWidth !== this.penWidth ||
+      this._drawPath.stroke !== this.penColor
     ) {
-      this._updateRender()
-      this._line = this._createPath().addPoint(po)
-      this.addPath(this._line)
+      this._drawPath = this._createDrawPath().addPoint(po)
+      this.addPath(this._drawPath)
     }
     this._updateRender()
   }
 
-  private _createPath(): Path {
+  private _createDrawPath(): Path {
     this.resize()
     return new Path({
       close: this.close,
@@ -134,7 +135,7 @@ export class SvgDrawing extends Renderer {
       fill: this.fill
     })
   }
-  private _createPoint({ x, y }: { x: number; y: number }): Point {
+  private _createDrawPoint({ x, y }: { x: number; y: number }): Point {
     return new Point(x - this.left, y - this.top)
   }
   /**
