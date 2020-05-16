@@ -117,9 +117,9 @@ export class SvgDrawing extends Renderer {
       this._line.strokeWidth !== this.penWidth ||
       this._line.stroke !== this.penColor
     ) {
-      this._line = this._createPath()
+      this._updateRender()
+      this._line = this._createPath().addPoint(po)
       this.addPath(this._line)
-      this.addPoint(po)
     }
     this._updateRender()
   }
