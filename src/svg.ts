@@ -151,22 +151,30 @@ export class Path {
   }
 
   public addCommand(param: Command | Point): this {
-    const cmd =
-      param instanceof Point
-        ? new Command(
+    if (param instanceof Point) {
+      if (!this.circuler || this.commands.length < 2) {
+        this.commands.push(
+          new Command(
             this.commands.length === 0 ? CommandType.MOVE : CommandType.LINE,
             param
           )
-        : param
-    this.commands.push(cmd)
-    return this
-  }
-
-  public formatCommand(): this {
-    this.commands =
-      this.circuler && this.commands.length > 2
-        ? this._formatCurveCommand(this.commands)
-        : this._formatLineCommand(this.commands)
+        )
+      } else {
+        const p1 =
+          this.commands.length === 2
+            ? this.commands[this.commands.length - 2].point
+            : this.commands[this.commands.length - 3].point
+        const p2 = this.commands[this.commands.length - 2].point
+        const p3 = this.commands[this.commands.length - 1].point
+        const p4 = param
+        this.commands[
+          this.commands.length - 1
+        ] = this._createBezierCurveCommand(p1, p2, p3, p4)
+        this.commands.push(this._createBezierCurveCommand(p2, p3, p4, p4))
+      }
+    } else {
+      this.commands.push(param)
+    }
     return this
   }
 
@@ -217,6 +225,18 @@ export class Path {
     return path
   }
 
+  private _createBezierCurveCommand(
+    p1: Point,
+    p2: Point,
+    p3: Point,
+    p4: Point
+  ): Command {
+    const cmd = new Command(CommandType.CURVE, p3)
+    cmd.cl = this._createControlPoint(p1, p2, p3)
+    cmd.cr = this._createControlPoint(p4, p3, p2)
+    return cmd
+  }
+
   private _createControlPoint(prev: Point, start: Point, next: Point): Point {
     const contolVectorPoint = next
       .sub(prev)
@@ -224,34 +244,6 @@ export class Path {
       .scale(this.smoothRatio)
       .toPoint()
     return start.add(contolVectorPoint)
-  }
-  private _formatCurveCommand(cmds: Command[]): Command[] {
-    let update = []
-    const endIndex = cmds.length - 1
-    update.push(new Command(CommandType.MOVE, cmds[0].point))
-    for (let i = 1; i < cmds.length; i += 1) {
-      const p1 = i === 1 ? cmds[0].point : cmds[i - 2].point
-      const p2 = cmds[i - 1].point
-      const p3 = cmds[i].point
-      const p4 = i === endIndex ? cmds[i].point : cmds[i + 1].point
-      const curveCommand = new Command(CommandType.CURVE, cmds[i].point)
-      curveCommand.cl = this._createControlPoint(p1, p2, p3)
-      curveCommand.cr = this._createControlPoint(p4, p3, p2)
-      update.push(curveCommand)
-    }
-    return update
-  }
-
-  private _formatLineCommand(cmds: Command[]): Command[] {
-    let update = []
-    update.push(new Command(CommandType.MOVE, cmds[0].point))
-    for (let i = 1; i < cmds.length; i += 1) {
-      const ucmd = new Command(CommandType.LINE, cmds[i].point)
-      ucmd.cl = cmds[i].cl?.clone()
-      ucmd.cr = cmds[i].cl?.clone()
-      update.push(ucmd)
-    }
-    return update
   }
 }
 

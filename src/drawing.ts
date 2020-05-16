@@ -68,11 +68,6 @@ export class SvgDrawing extends Renderer {
     this.on()
   }
 
-  private _updateRender() {
-    this._current?.formatCommand()
-    this.update()
-  }
-
   private get _current(): Path | null {
     if (this.paths.length === 0) return null
     return this.paths[this.paths.length - 1]
@@ -122,7 +117,7 @@ export class SvgDrawing extends Renderer {
       this._drawPath = this._createDrawPath().addCommand(po)
       this.addPath(this._drawPath)
     }
-    this._updateRender()
+    this.update()
   }
 
   private _createDrawPath(): Path {

@@ -140,12 +140,12 @@ describe('svg', () => {
           .addCommand(new Point(-1, -1))
         it('Normal', () => {
           path.close = false
-          expect(path.formatCommand().commands).toMatchSnapshot()
+          expect(path.commands).toMatchSnapshot()
           expect(path.getCommandString()).toMatchSnapshot()
         })
         it('Close', () => {
           path.close = true
-          expect(path.formatCommand().commands).toMatchSnapshot()
+          expect(path.commands).toMatchSnapshot()
           expect(path.getCommandString()).toMatchSnapshot()
         })
       })
@@ -157,12 +157,12 @@ describe('svg', () => {
           .addCommand(new Point(3, 0))
         it('Normal', () => {
           path.close = false
-          expect(path.formatCommand().commands).toMatchSnapshot()
+          expect(path.commands).toMatchSnapshot()
           expect(path.getCommandString()).toMatchSnapshot()
         })
         it('Close', () => {
           path.close = true
-          expect(path.formatCommand().commands).toMatchSnapshot()
+          expect(path.commands).toMatchSnapshot()
           expect(path.getCommandString()).toMatchSnapshot()
         })
       })
@@ -178,7 +178,6 @@ describe('svg', () => {
             .addCommand(new Point(1, 1))
             .addCommand(new Point(2, 1))
             .addCommand(new Point(3, 0))
-            .formatCommand()
         )
         .addPath(
           new Path({ circuler: false, close: true })
@@ -186,7 +185,6 @@ describe('svg', () => {
             .addCommand(new Point(9, 4))
             .addCommand(new Point(9, 8))
             .addCommand(new Point(3, 0))
-            .formatCommand()
         )
     })
     // TODO: Fix width, height
