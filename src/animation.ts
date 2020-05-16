@@ -41,14 +41,14 @@ export class SvgAnimation extends Renderer {
     this.update()
   }
 
-  public play(): void {
+  public start(): void {
     this.stop()
     const ms = this.ms
     this._restorePath = this.clonePaths()
     let start: number | undefined
     const frame: FrameRequestCallback = timestamp => {
       if (ms !== this.ms) {
-        this.play()
+        this.start()
         return
       }
       if (!start || timestamp - start > ms) {
