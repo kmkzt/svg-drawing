@@ -25,6 +25,14 @@ describe('svg', () => {
       expect(vec.value).toBe(1.4142135623730951)
       expect(vec.angle).toBe(0.7853981633974483)
     })
+
+    it('clone', () => {
+      const po = new Point(0, 0)
+      const clone = po.clone()
+      clone.x = 2
+      expect(po.x).toBe(0)
+      expect(clone.x).toBe(2)
+    })
   })
   describe('Vector', () => {
     it('toPoint', () => {
@@ -40,56 +48,82 @@ describe('svg', () => {
   })
   describe('Command', () => {
     it('MOVE', () => {
-      const commands = new Command(CommandType.MOVE, new Point(0, 0))
-      expect(commands.toString()).toBe('M 0 0')
+      const cmd = new Command(CommandType.MOVE, new Point(0, 0))
+      expect(cmd.toString()).toBe('M 0 0')
     })
     it('LINE', () => {
-      const commands = new Command(CommandType.LINE, new Point(1, 1))
-      expect(commands.toString()).toBe('L 1 1')
+      const cmd = new Command(CommandType.LINE, new Point(1, 1))
+      expect(cmd.toString()).toBe('L 1 1')
     })
     it('CURVE', () => {
-      const commands = new Command(CommandType.CURVE, new Point(1, 1))
-      expect(commands.toString()).toBe('L 1 1')
-      commands.cl = new Point(0.25, 0.25)
-      commands.cr = new Point(0.75, 0.25)
-      expect(commands.toString()).toBe('C 0.25 0.25 0.75 0.25 1 1')
+      const cmd = new Command(CommandType.CURVE, new Point(1, 1))
+      expect(cmd.toString()).toBe('L 1 1')
+      cmd.cl = new Point(0.25, 0.25)
+      cmd.cr = new Point(0.75, 0.25)
+      expect(cmd.toString()).toBe('C 0.25 0.25 0.75 0.25 1 1')
+    })
+
+    describe('clone', () => {
+      let cmd
+      let clone
+      beforeEach(() => {
+        cmd = new Command(CommandType.CURVE, new Point(1, 1))
+        cmd.cl = new Point(0.25, 0.25)
+        cmd.cr = new Point(0.75, 0.25)
+        clone = cmd.clone()
+      })
+      it('point is not overwritten', () => {
+        clone.x = 1.5
+        expect(cmd.point.x).toBe(1)
+        expect(clone.point.x).toBe(1)
+      })
+      it('cl is not overwritten', () => {
+        clone.cl = new Point(0.1, 0.1)
+        expect(cmd.cl.x).toBe(0.25)
+        expect(clone.cl.x).toBe(0.1)
+      })
+      it('cr is not overwritten', () => {
+        clone.cr = new Point(1.2, 0.1)
+        expect(cmd.cr.x).toBe(0.75)
+        expect(clone.cr.x).toBe(1.2)
+      })
     })
   })
   describe('Path', () => {
-    it('addPoint', () => {
-      const path = new Path().addPoint(new Point(1, 1))
-      expect(path.points.length).toBe(1)
-      expect(path.points[0].x).toBe(1)
-      expect(path.points[0].y).toBe(1)
+    let path: Path
+    beforeEach(() => {
+      path = new Path({ strokeWidth: 1 })
+        .addPoint(new Point(1, 1))
+        .addPoint(new Point(2, 2))
     })
-    it('addCommand', () => {
-      const path = new Path().addCommand(
-        new Command(CommandType.LINE, new Point(1, 1))
-      )
-      expect(path.commands.length).toBe(1)
-      expect(path.commands[0].type).toBe(CommandType.LINE)
+    it('addPoint', () => {
+      expect(path.commands.length).toBe(2)
+      expect(path.commands[0].type).toBe(CommandType.MOVE)
       expect(path.commands[0].point.x).toBe(1)
       expect(path.commands[0].point.y).toBe(1)
     })
+    it('addCommand', () => {
+      path.addCommand(new Command(CommandType.LINE, new Point(1, 1)))
+      expect(path.commands.length).toBe(3)
+      expect(path.commands[2].type).toBe(CommandType.LINE)
+      expect(path.commands[2].point.x).toBe(1)
+      expect(path.commands[2].point.y).toBe(1)
+    })
     it('scale', () => {
-      const path = new Path({ strokeWidth: 1 })
-        .addPoint(new Point(1, 1))
-        .scale(2)
+      path.scale(2)
       expect(path.strokeWidth).toBe(2)
-      expect(path.points[0].x).toBe(2)
-      expect(path.points[0].y).toBe(2)
+      expect(path.commands[0].type).toBe(CommandType.MOVE)
+      expect(path.commands[0].point.x).toBe(2)
+      expect(path.commands[0].point.y).toBe(2)
     })
     it('clone', () => {
-      const path = new Path({ strokeWidth: 1 }).addPoint(new Point(1, 1))
-      const clone = path.clone().addPoint(new Point(2, 2))
-      clone.points[0].x = 3
-      clone.formatCommand()
-      expect(path.points.length).toBe(1)
-      expect(path.commands.length).toBe(0)
-      expect(path.points[0].x).toBe(1)
-      expect(clone.points.length).toBe(2)
+      const origin = new Path({ strokeWidth: 1 }).addPoint(new Point(1, 1))
+      const clone = origin.clone().addPoint(new Point(2, 2))
+      clone.commands[0].point.x = 3
+      expect(origin.commands.length).toBe(1)
       expect(clone.commands.length).toBe(2)
-      expect(clone.points[0].x).toBe(3)
+      expect(origin.commands[0].point.x).toBe(1)
+      expect(clone.commands[0].point.x).toBe(3)
     })
     describe('toJson and toElement', () => {
       const path = new Path({ circuler: true, close: false })

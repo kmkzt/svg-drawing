@@ -26,6 +26,14 @@ export class Point {
     return new Point(this.x - p.x, this.y - p.y)
   }
 
+  public eql(p: Point): boolean {
+    return this.x === p.x && this.y === p.y
+  }
+
+  public clone(): Point {
+    return new Point(this.x, this.y)
+  }
+
   public commandMove(): string {
     return `M ${this.x} ${this.y}`
   }
@@ -73,6 +81,13 @@ export class Command {
     upd.cl = this.cl?.scale(r)
     return upd
   }
+
+  public clone(): Command {
+    const copy = new Command(this.type, this.point.clone())
+    copy.cl = this.cl?.clone()
+    copy.cr = this.cr?.clone()
+    return copy
+  }
 }
 
 export class Vector {
@@ -117,7 +132,6 @@ export class Path {
   public stroke: string
   public fill: string
   public smoothRatio: number
-  public points: Point[]
   public commands: Command[]
 
   constructor({ close, circuler, strokeWidth, stroke, fill }: PathOption = {}) {
@@ -127,35 +141,34 @@ export class Path {
     this.stroke = stroke ?? '#000'
     this.fill = fill ?? 'none'
     this.smoothRatio = 0.2
-    this.points = []
     this.commands = []
   }
 
   public scale(r: number): this {
-    this.points = this.points.map((p: Point) => p.scale(r))
     this.commands = this.commands.map((c: Command) => c.scale(r))
     this.strokeWidth *= r
     return this
   }
 
-  public addPoint(p: Point): this {
-    this.points.push(p)
+  public addPoint(po: Point): this {
+    this.commands.push(
+      new Command(
+        this.commands.length === 0 ? CommandType.MOVE : CommandType.LINE,
+        po
+      )
+    )
     return this
   }
-
   public addCommand(c: Command): this {
     this.commands.push(c)
     return this
   }
 
   public formatCommand(): this {
-    const isCirculer = this.circuler && this.points.length > 2
-    const points = this.close
-      ? [...this.points, this.points[0]]
-      : [...this.points]
-    this.commands = isCirculer
-      ? this._formatCurveCommand(points)
-      : this._formatLineCommand(points)
+    this.commands =
+      this.circuler && this.commands.length > 2
+        ? this._formatCurveCommand(this.commands)
+        : this._formatLineCommand(this.commands)
     return this
   }
 
@@ -200,14 +213,8 @@ export class Path {
       stroke: this.stroke,
       fill: this.fill
     })
-    this.points.map(p => {
-      path.addPoint(new Point(p.x, p.y))
-    })
     this.commands.map(c => {
-      const add = new Command(c.type, c.point)
-      add.cl = c.cl ? new Point(c.cl.x, c.cl.y) : undefined
-      add.cr = c.cr ? new Point(c.cr.x, c.cr.y) : undefined
-      path.addCommand(add)
+      path.addCommand(c.clone())
     })
     return path
   }
@@ -220,25 +227,16 @@ export class Path {
       .toPoint()
     return start.add(contolVectorPoint)
   }
-  private _formatCurveCommand(pts: Point[]): Command[] {
+  private _formatCurveCommand(cmds: Command[]): Command[] {
     let update = []
-    const endIndex = pts.length - 1
-    update.push(new Command(CommandType.MOVE, this.points[0]))
-    for (let i = 1; i < pts.length; i += 1) {
-      const p1 = i === 1 ? pts[0] : pts[i - 2]
-      const p2 = pts[i - 1]
-      const p3 = pts[i]
-      // TODO: Refactor
-      const p4 = this.close
-        ? i === endIndex
-          ? pts[1]
-          : i === endIndex - 1
-          ? pts[i]
-          : pts[i + 1]
-        : i === endIndex
-        ? pts[i]
-        : pts[i + 1]
-      const curveCommand = new Command(CommandType.CURVE, pts[i])
+    const endIndex = cmds.length - 1
+    update.push(new Command(CommandType.MOVE, cmds[0].point))
+    for (let i = 1; i < cmds.length; i += 1) {
+      const p1 = i === 1 ? cmds[0].point : cmds[i - 2].point
+      const p2 = cmds[i - 1].point
+      const p3 = cmds[i].point
+      const p4 = i === endIndex ? cmds[i].point : cmds[i + 1].point
+      const curveCommand = new Command(CommandType.CURVE, cmds[i].point)
       curveCommand.cl = this._createControlPoint(p1, p2, p3)
       curveCommand.cr = this._createControlPoint(p4, p3, p2)
       update.push(curveCommand)
@@ -246,11 +244,14 @@ export class Path {
     return update
   }
 
-  private _formatLineCommand(pts: Point[]): Command[] {
+  private _formatLineCommand(cmds: Command[]): Command[] {
     let update = []
-    update.push(new Command(CommandType.MOVE, pts[0]))
-    for (let i = 1; i < pts.length; i += 1) {
-      update.push(new Command(CommandType.LINE, pts[i]))
+    update.push(new Command(CommandType.MOVE, cmds[0].point))
+    for (let i = 1; i < cmds.length; i += 1) {
+      const ucmd = new Command(CommandType.LINE, cmds[i].point)
+      ucmd.cl = cmds[i].cl?.clone()
+      ucmd.cr = cmds[i].cl?.clone()
+      update.push(ucmd)
     }
     return update
   }
