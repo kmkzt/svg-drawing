@@ -2,18 +2,39 @@
 
 [![npm version](https://badge.fury.io/js/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing) [![npm download](https://img.shields.io/npm/dt/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing)
 
-### introduction
-
 `svg-drawing` is svg based drawing library with lightweight, no dependencies.
 
-**[demo](https://kmkzt.github.io/svg-drawing/)**
-[example code](src/example/)
+This is a **[demo](https://kmkzt.github.io/svg-drawing/)**.
 
 ## Install
 
+### npm
+
 ```shell
 yarn add svg-drawing
+# or
+# npm i svg-drawing
 ```
+
+Example code is [here](src/example/)
+
+### CDN
+
+```html
+<!-- Common JS-->
+<script src="https://unpkg.com/svg-drawing@2.0.0-alpha.3/lib/index.min.js"></script>
+
+<!-- ES Modules -->
+<script type="module">
+  import {
+    SvgDrawing,
+    SvgAnimation
+  } from 'https://unpkg.com/svg-drawing@2.0.0-alpha.4/lib/index.esm.js'
+  ...
+</script>
+```
+
+[Here](example/) is an example for Html only.
 
 ## How to use
 
