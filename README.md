@@ -101,11 +101,11 @@ const anim = new SvgAnimation(animEl, {
   ms: 20
 })
 
-// Example stroke animation.
+// Example drawing animation.
 // Callback function to set SvgAnimation
 // Since the Path Object before animation is passed as an argument, it is converted and returned.
 let cur = 0
-const strokeAnimation = paths => {
+const drawingAnimation = paths => {
   const total = paths.reduce((l, p) => l + p.commands.length, 0)
   if (cur > total) cur = 0
   else cur += 1
@@ -126,7 +126,7 @@ const strokeAnimation = paths => {
 const start = document.getElementById('start')
 start.onclick = () => {
   // Sets the animation callback function
-  anim.setAnimation(strokeAnimation)
+  anim.setAnimation(drawingAnimation)
   // Copy drawwing data
   anim.copy(draw)
   // Start Animation

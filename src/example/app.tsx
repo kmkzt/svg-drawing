@@ -25,7 +25,7 @@ const shake: FrameAnimation = paths => {
 }
 
 let cur = 0
-const strokeAnimation: FrameAnimation = paths => {
+const drawingAnimation: FrameAnimation = paths => {
   const total: number = paths.reduce((l, p) => l + p.commands.length, 0)
   if (cur > total) {
     cur = 0
@@ -262,10 +262,10 @@ const Example = () => {
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
   }, [])
-  const handleClickStrokeAnimation = useCallback(() => {
+  const handleClickDrawingAnimation = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
-    animationRef.current.setAnimation(strokeAnimation)
+    animationRef.current.setAnimation(drawingAnimation)
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
   }, [])
@@ -287,53 +287,49 @@ const Example = () => {
   return (
     <Fragment>
       <div>
-        <div>
-          STROKE WIDTH:
-          <input
-            type="number"
-            min="1"
-            max="20"
-            step="1"
-            value={penWidth}
-            onChange={handlePenWidth}
-          />
-          <input
-            type="range"
-            min="1"
-            max="20"
-            step="1"
-            value={penWidth}
-            onChange={handlePenWidth}
-          />
-        </div>
-        <div>
-          THROTTLE DELAY:
-          <input
-            type="number"
-            min="0"
-            max="300"
-            step="5"
-            value={delay}
-            onChange={handleChangeDelay}
-          />
-          <input
-            type="range"
-            min="0"
-            max="300"
-            step="5"
-            value={delay}
-            onChange={handleChangeDelay}
-          />
-        </div>
-        <label>
-          <input
-            type="checkbox"
-            checked={rainbowPen}
-            onChange={handleChangeRainbowPen}
-          />
-          Rainbow pen
-        </label>
-        {/* TODO: fix
+        <h1>svg-drawing</h1>
+        <a href="https://github.com/kmkzt/svg-drawing">src</a>
+        <fieldset>
+          <h3>PEN CONFIG</h3>
+          <div>
+            STROKE WIDTH:
+            <input
+              type="number"
+              min="1"
+              max="20"
+              step="1"
+              value={penWidth}
+              onChange={handlePenWidth}
+            />
+            <input
+              type="range"
+              min="1"
+              max="20"
+              step="1"
+              value={penWidth}
+              onChange={handlePenWidth}
+            />
+          </div>
+          <div>
+            THROTTLE DELAY:
+            <input
+              type="number"
+              min="0"
+              max="300"
+              step="5"
+              value={delay}
+              onChange={handleChangeDelay}
+            />
+            <input
+              type="range"
+              min="0"
+              max="300"
+              step="5"
+              value={delay}
+              onChange={handleChangeDelay}
+            />
+          </div>
+          {/* TODO: fix
         <label>
           <input
             type="checkbox"
@@ -342,16 +338,15 @@ const Example = () => {
           />
           Thinner
         </label> */}
-        <label>
-          <input
-            type="checkbox"
-            checked={curve}
-            onChange={handleChangeCiruler}
-          />
-          Curve
-        </label>
-        {!rainbowPen && (
-          <>
+          <label>
+            <input
+              type="checkbox"
+              checked={curve}
+              onChange={handleChangeCiruler}
+            />
+            Curve
+          </label>
+          {!rainbowPen && (
             <label>
               <input
                 type="checkbox"
@@ -360,82 +355,72 @@ const Example = () => {
               />
               Close
             </label>
-            <div>
-              FILL:
-              <input
-                type="text"
-                placeholder="#000 or black or rgba(0,0,0,1)"
-                value={fill}
-                onChange={handleChangeFill}
-              />
-            </div>
-            <div>
-              {colorList.map((col: string) => (
-                <div
-                  key={col}
-                  style={{
-                    display: 'inline-block',
-                    width: '15px',
-                    height: '15px',
-                    backgroundColor: col,
-                    border: col === fill ? '2px solid #000' : '2px solid #999'
-                  }}
-                  onClick={handleClickFill(col)}
+          )}
+        </fieldset>
+        <fieldset>
+          <h3>COLOR</h3>
+          <label>
+            <input
+              type="checkbox"
+              checked={rainbowPen}
+              onChange={handleChangeRainbowPen}
+            />
+            Rainbow pen
+          </label>
+          {!rainbowPen && (
+            <>
+              <div>
+                FILL:
+                <input
+                  type="text"
+                  placeholder="#000 or black or rgba(0,0,0,1)"
+                  value={fill}
+                  onChange={handleChangeFill}
                 />
-              ))}
-            </div>
-            <div>
-              PEN COLOR:
-              <input
-                type="text"
-                placeholder="#000 or black or rgba(0,0,0,1)"
-                value={penColor}
-                onChange={handleChangePenColor}
-              />
-            </div>
-            <div>
-              {colorList.map((col: string) => (
-                <div
-                  key={col}
-                  style={{
-                    display: 'inline-block',
-                    width: '15px',
-                    height: '15px',
-                    backgroundColor: col,
-                    border:
-                      col === penColor ? '2px solid #000' : '2px solid #999'
-                  }}
-                  onClick={handleClickPenColor(col)}
+              </div>
+              <div>
+                {colorList.map((col: string) => (
+                  <div
+                    key={col}
+                    style={{
+                      display: 'inline-block',
+                      width: '15px',
+                      height: '15px',
+                      backgroundColor: col,
+                      border: col === fill ? '2px solid #000' : '2px solid #999'
+                    }}
+                    onClick={handleClickFill(col)}
+                  />
+                ))}
+              </div>
+              <div>
+                PEN COLOR:
+                <input
+                  type="text"
+                  placeholder="#000 or black or rgba(0,0,0,1)"
+                  value={penColor}
+                  onChange={handleChangePenColor}
                 />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-      <div>
-        <button onClick={handleClickShake}>SHAKING ANIMATION</button>
-        <button onClick={handleClickStrokeAnimation}>STROKE ANIMATION</button>
-        <button onClick={handleClickStop}>STOP</button>
-        <button onClick={handleClickRestore}>RESTORE</button>
-        <div>
-          ANIMATION MS
-          <input
-            type="number"
-            min="0"
-            max="500"
-            step="5"
-            value={animMs}
-            onChange={handleChangeAnimMs}
-          />
-          <input
-            type="range"
-            min="0"
-            max="500"
-            step="5"
-            value={animMs}
-            onChange={handleChangeAnimMs}
-          />
-        </div>
+              </div>
+              <div>
+                {colorList.map((col: string) => (
+                  <div
+                    key={col}
+                    style={{
+                      display: 'inline-block',
+                      width: '15px',
+                      height: '15px',
+                      backgroundColor: col,
+                      border:
+                        col === penColor ? '2px solid #000' : '2px solid #999'
+                    }}
+                    onClick={handleClickPenColor(col)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </fieldset>
       </div>
       <div
         style={{
@@ -444,6 +429,15 @@ const Example = () => {
         }}
       >
         <div>
+          <fieldset>
+            <h3>Drawing methods</h3>
+            <button onClick={clickClear}>Clear</button>
+            <button onClick={clickUndo}>Undo</button>
+            <button onClick={clickDownload('png')}>Download PNG</button>
+            <button onClick={clickDownload('jpg')}>Download JPG</button>
+            {/* <button onClick={clickDownloadGIF}>Download GIF</button> */}
+            <button onClick={clickDownload('svg')}>Download SVG</button>
+          </fieldset>
           <div
             ref={divRef}
             style={{
@@ -457,6 +451,32 @@ const Example = () => {
           />
         </div>
         <div>
+          <fieldset>
+            <h3>Animation methods</h3>
+            <button onClick={handleClickShake}>Shaking</button>
+            <button onClick={handleClickDrawingAnimation}>Drawing</button>
+            <button onClick={handleClickStop}>Stop</button>
+            <button onClick={handleClickRestore}>Restore</button>
+            <div>
+              ANIMATION MS
+              <input
+                type="number"
+                min="0"
+                max="500"
+                step="5"
+                value={animMs}
+                onChange={handleChangeAnimMs}
+              />
+              <input
+                type="range"
+                min="0"
+                max="500"
+                step="5"
+                value={animMs}
+                onChange={handleChangeAnimMs}
+              />
+            </div>
+          </fieldset>
           <div
             ref={aniDivRef}
             style={{
@@ -468,14 +488,6 @@ const Example = () => {
             }}
           />
         </div>
-      </div>
-      <div>
-        <button onClick={clickClear}>Clear</button>
-        <button onClick={clickUndo}>Undo</button>
-        <button onClick={clickDownload('png')}>Download PNG</button>
-        <button onClick={clickDownload('jpg')}>Download JPG</button>
-        {/* <button onClick={clickDownloadGIF}>Download GIF</button> */}
-        <button onClick={clickDownload('svg')}>Download SVG</button>
       </div>
     </Fragment>
   )
