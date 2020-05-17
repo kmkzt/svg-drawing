@@ -9,20 +9,18 @@ describe('renderer', () => {
       renderer = new Renderer(el)
 
         .addPath(
-          new Path({ circuler: true, close: false })
+          new Path({ curve: true, close: false })
             .addCommand(new Point(0, 0))
             .addCommand(new Point(1, 1))
             .addCommand(new Point(2, 1))
             .addCommand(new Point(3, 0))
-            .formatCommand()
         )
         .addPath(
-          new Path({ circuler: false, close: true })
+          new Path({ curve: false, close: true })
             .addCommand(new Point(4, 4))
             .addCommand(new Point(9, 4))
             .addCommand(new Point(9, 8))
             .addCommand(new Point(3, 0))
-            .formatCommand()
         )
     })
     it('download svg', done => {

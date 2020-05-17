@@ -103,7 +103,7 @@ const Example = () => {
   const [rainbowPen, switchRainbowpen] = useState(false)
   // TODO: fix
   // const [thinner, switchThinner] = useState(true)
-  const [circuler, switchCirculer] = useState(true)
+  const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
@@ -145,9 +145,9 @@ const Example = () => {
   // }, [])
   const handleChangeCiruler = useCallback(() => {
     if (!drawingRef.current) return
-    drawingRef.current.circuler = !circuler
-    switchCirculer(!circuler)
-  }, [circuler])
+    drawingRef.current.curve = !curve
+    switchCurve(!curve)
+  }, [curve])
 
   const handleChangeClose = useCallback(() => {
     if (!drawingRef.current) return
@@ -229,7 +229,7 @@ const Example = () => {
     if (drawingRef.current) return
     if (!divRef.current) return
     drawingRef.current = new SvgDrawing(divRef.current, {
-      circuler,
+      curve,
       close,
       delay,
       penWidth,
@@ -345,10 +345,10 @@ const Example = () => {
         <label>
           <input
             type="checkbox"
-            checked={circuler}
+            checked={curve}
             onChange={handleChangeCiruler}
           />
-          Circuler
+          Curve
         </label>
         {!rainbowPen && (
           <>

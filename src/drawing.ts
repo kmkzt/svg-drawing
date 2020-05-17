@@ -7,7 +7,7 @@ export interface DrawingOption extends RendererOption {
   penColor?: string
   penWidth?: number
   close?: boolean
-  circuler?: boolean
+  curve?: boolean
   delay?: number
   fill?: string
 }
@@ -16,7 +16,7 @@ export class SvgDrawing extends Renderer {
   public penColor: string
   public penWidth: number
   public fill: string
-  public circuler: boolean
+  public curve: boolean
   public close: boolean
   public delay: number
   private _drawPath: Path | null
@@ -28,7 +28,7 @@ export class SvgDrawing extends Renderer {
     {
       penColor,
       penWidth,
-      circuler,
+      curve,
       close,
       delay,
       fill,
@@ -41,7 +41,7 @@ export class SvgDrawing extends Renderer {
      */
     this.penColor = penColor ?? '#333'
     this.penWidth = penWidth ?? 1
-    this.circuler = circuler ?? true
+    this.curve = curve ?? true
     this.close = close ?? false
     this.delay = delay ?? 20
     this.fill = fill ?? 'none'
@@ -124,7 +124,7 @@ export class SvgDrawing extends Renderer {
     this.resize()
     return new Path({
       close: this.close,
-      circuler: this.circuler,
+      curve: this.curve,
       stroke: this.penColor,
       strokeWidth: this.penWidth,
       fill: this.fill

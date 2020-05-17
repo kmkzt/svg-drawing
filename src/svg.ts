@@ -34,23 +34,15 @@ export class Point {
     return new Point(this.x, this.y)
   }
 
-  public commandMove(): string {
-    return `M ${this.x} ${this.y}`
-  }
-
-  public commandLine(): string {
-    return `L ${this.x} ${this.y}`
-  }
-
-  public commandCirculer(cl: Point, cr: Point): string {
-    return `C ${cl.x} ${cl.y} ${cr.x} ${cr.y} ${this.x} ${this.y}`
+  public toString(): string {
+    return `${this.x} ${this.y}`
   }
 }
 
 export enum CommandType {
-  MOVE,
-  LINE,
-  CURVE
+  MOVE = 'M',
+  LINE = 'L',
+  CURVE = 'C'
 }
 
 export class Command {
@@ -66,12 +58,14 @@ export class Command {
   public toString(): string {
     switch (this.type) {
       case CommandType.MOVE:
-        return this.point.commandMove()
       case CommandType.LINE:
-        return this.point.commandLine()
+        return `${this.type} ${this.point.toString()}`
       case CommandType.CURVE:
-        if (!this.cl || !this.cr) return this.point.commandLine()
-        return this.point.commandCirculer(this.cl, this.cr)
+        if (!this.cl || !this.cr)
+          return `${CommandType.LINE} ${this.point.x} ${this.point.y}`
+        return `${
+          this.type
+        } ${this.cl.toString()} ${this.cr.toString()} ${this.point.toString()}`
     }
   }
 
@@ -111,7 +105,7 @@ export class Vector {
 
 export interface PathOption {
   close?: boolean
-  circuler?: boolean
+  curve?: boolean
   strokeWidth?: number
   stroke?: string
   fill?: string
@@ -127,16 +121,16 @@ export interface PathObject {
 }
 export class Path {
   public close: boolean
-  public circuler: boolean
+  public curve: boolean
   public strokeWidth: number
   public stroke: string
   public fill: string
   public smoothRatio: number
   public commands: Command[]
 
-  constructor({ close, circuler, strokeWidth, stroke, fill }: PathOption = {}) {
+  constructor({ close, curve, strokeWidth, stroke, fill }: PathOption = {}) {
     this.close = close ?? false
-    this.circuler = circuler ?? true
+    this.curve = curve ?? true
     this.strokeWidth = strokeWidth ?? 1
     this.stroke = stroke ?? '#000'
     this.fill = fill ?? 'none'
@@ -152,7 +146,7 @@ export class Path {
 
   public addCommand(param: Command | Point): this {
     if (param instanceof Point) {
-      if (!this.circuler || this.commands.length < 2) {
+      if (!this.curve || this.commands.length < 2) {
         this.commands.push(
           new Command(
             this.commands.length === 0 ? CommandType.MOVE : CommandType.LINE,
@@ -196,8 +190,8 @@ export class Path {
       d: this.getCommandString(),
       stroke: this.stroke,
       strokeWidth: this.strokeWidth,
-      strokeLinecap: this.circuler ? 'round' : 'square',
-      strokeLinejoin: this.circuler ? 'round' : 'mitter'
+      strokeLinecap: this.curve ? 'round' : 'square',
+      strokeLinejoin: this.curve ? 'round' : 'mitter'
     }
   }
   public toElement(): SVGPathElement {
@@ -205,8 +199,8 @@ export class Path {
     path.setAttribute('stroke-width', String(this.strokeWidth))
     path.setAttribute('stroke', this.stroke)
     path.setAttribute('fill', this.fill)
-    path.setAttribute('stroke-linejoin', this.circuler ? 'round' : 'mitter')
-    path.setAttribute('stroke-linecap', this.circuler ? 'round' : 'square')
+    path.setAttribute('stroke-linejoin', this.curve ? 'round' : 'mitter')
+    path.setAttribute('stroke-linecap', this.curve ? 'round' : 'square')
     path.setAttribute('d', this.getCommandString())
     return path
   }
@@ -214,7 +208,7 @@ export class Path {
   public clone(): Path {
     const path = new Path({
       close: this.close,
-      circuler: this.circuler,
+      curve: this.curve,
       strokeWidth: this.strokeWidth,
       stroke: this.stroke,
       fill: this.fill

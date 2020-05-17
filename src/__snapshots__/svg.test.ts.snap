@@ -1,13 +1,69 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`svg Path formatCommand and getCommandString Circuler Close 1`] = `
+exports[`svg Path commands parameter and getCommandString Line Close 1`] = `
 Array [
   Command {
     "point": Point {
       "x": 0,
       "y": 0,
     },
-    "type": 0,
+    "type": "M",
+  },
+  Command {
+    "point": Point {
+      "x": 1,
+      "y": 1,
+    },
+    "type": "L",
+  },
+  Command {
+    "point": Point {
+      "x": -1,
+      "y": -1,
+    },
+    "type": "L",
+  },
+]
+`;
+
+exports[`svg Path commands parameter and getCommandString Line Close 2`] = `"M 0 0 L 1 1 L -1 -1 Z"`;
+
+exports[`svg Path commands parameter and getCommandString Line Normal 1`] = `
+Array [
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": "M",
+  },
+  Command {
+    "point": Point {
+      "x": 1,
+      "y": 1,
+    },
+    "type": "L",
+  },
+  Command {
+    "point": Point {
+      "x": -1,
+      "y": -1,
+    },
+    "type": "L",
+  },
+]
+`;
+
+exports[`svg Path commands parameter and getCommandString Line Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
+
+exports[`svg Path commands parameter and getCommandString curve Close 1`] = `
+Array [
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": "M",
   },
   Command {
     "cl": Point {
@@ -22,7 +78,7 @@ Array [
       "x": 1,
       "y": 1,
     },
-    "type": 2,
+    "type": "C",
   },
   Command {
     "cl": Point {
@@ -37,7 +93,7 @@ Array [
       "x": 2,
       "y": 1,
     },
-    "type": 2,
+    "type": "C",
   },
   Command {
     "cl": Point {
@@ -52,21 +108,21 @@ Array [
       "x": 3,
       "y": 0,
     },
-    "type": 2,
+    "type": "C",
   },
 ]
 `;
 
-exports[`svg Path formatCommand and getCommandString Circuler Close 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0 Z"`;
+exports[`svg Path commands parameter and getCommandString curve Close 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0 Z"`;
 
-exports[`svg Path formatCommand and getCommandString Circuler Normal 1`] = `
+exports[`svg Path commands parameter and getCommandString curve Normal 1`] = `
 Array [
   Command {
     "point": Point {
       "x": 0,
       "y": 0,
     },
-    "type": 0,
+    "type": "M",
   },
   Command {
     "cl": Point {
@@ -81,7 +137,7 @@ Array [
       "x": 1,
       "y": 1,
     },
-    "type": 2,
+    "type": "C",
   },
   Command {
     "cl": Point {
@@ -96,7 +152,7 @@ Array [
       "x": 2,
       "y": 1,
     },
-    "type": 2,
+    "type": "C",
   },
   Command {
     "cl": Point {
@@ -111,68 +167,12 @@ Array [
       "x": 3,
       "y": 0,
     },
-    "type": 2,
+    "type": "C",
   },
 ]
 `;
 
-exports[`svg Path formatCommand and getCommandString Circuler Normal 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"`;
-
-exports[`svg Path formatCommand and getCommandString Line Close 1`] = `
-Array [
-  Command {
-    "point": Point {
-      "x": 0,
-      "y": 0,
-    },
-    "type": 0,
-  },
-  Command {
-    "point": Point {
-      "x": 1,
-      "y": 1,
-    },
-    "type": 1,
-  },
-  Command {
-    "point": Point {
-      "x": -1,
-      "y": -1,
-    },
-    "type": 1,
-  },
-]
-`;
-
-exports[`svg Path formatCommand and getCommandString Line Close 2`] = `"M 0 0 L 1 1 L -1 -1 Z"`;
-
-exports[`svg Path formatCommand and getCommandString Line Normal 1`] = `
-Array [
-  Command {
-    "point": Point {
-      "x": 0,
-      "y": 0,
-    },
-    "type": 0,
-  },
-  Command {
-    "point": Point {
-      "x": 1,
-      "y": 1,
-    },
-    "type": 1,
-  },
-  Command {
-    "point": Point {
-      "x": -1,
-      "y": -1,
-    },
-    "type": 1,
-  },
-]
-`;
-
-exports[`svg Path formatCommand and getCommandString Line Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
+exports[`svg Path commands parameter and getCommandString curve Normal 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"`;
 
 exports[`svg Path toJson and toElement toElement 1`] = `
 <path

@@ -119,12 +119,12 @@ describe('svg', () => {
       expect(clone.commands[0].point.x).toBe(3)
     })
     describe('toJson and toElement', () => {
-      const path = new Path({ circuler: true, close: false })
+      const path = new Path({ curve: true, close: false })
         .addCommand(new Point(0, 0))
         .addCommand(new Point(1, 1))
         .addCommand(new Point(2, 1))
         .addCommand(new Point(3, 0))
-        .formatCommand()
+
       it('toJson', () => {
         expect(path.toJson()).toMatchSnapshot()
       })
@@ -132,9 +132,9 @@ describe('svg', () => {
         expect(path.toElement()).toMatchSnapshot()
       })
     })
-    describe('formatCommand and getCommandString', () => {
+    describe('commands parameter and getCommandString', () => {
       describe('Line', () => {
-        const path = new Path({ circuler: false })
+        const path = new Path({ curve: false })
           .addCommand(new Point(0, 0))
           .addCommand(new Point(1, 1))
           .addCommand(new Point(-1, -1))
@@ -149,8 +149,8 @@ describe('svg', () => {
           expect(path.getCommandString()).toMatchSnapshot()
         })
       })
-      describe('Circuler', () => {
-        const path = new Path({ circuler: true })
+      describe('curve', () => {
+        const path = new Path({ curve: true })
           .addCommand(new Point(0, 0))
           .addCommand(new Point(1, 1))
           .addCommand(new Point(2, 1))
@@ -173,14 +173,14 @@ describe('svg', () => {
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
         .addPath(
-          new Path({ circuler: true, close: false })
+          new Path({ curve: true, close: false })
             .addCommand(new Point(0, 0))
             .addCommand(new Point(1, 1))
             .addCommand(new Point(2, 1))
             .addCommand(new Point(3, 0))
         )
         .addPath(
-          new Path({ circuler: false, close: true })
+          new Path({ curve: false, close: true })
             .addCommand(new Point(4, 4))
             .addCommand(new Point(9, 4))
             .addCommand(new Point(9, 8))

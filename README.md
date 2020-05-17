@@ -75,7 +75,7 @@ draw.clear()
 // undo drawing
 draw.undo()
 
-// change parameter.　There are other changeable parameters like fill, close, circuler, etc.
+// change parameter.　There are other changeable parameters like fill, close, curve, etc.
 draw.penColor = '#00b'
 draw.penWidth = 10
 
