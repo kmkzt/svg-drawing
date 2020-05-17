@@ -68,11 +68,6 @@ export class SvgDrawing extends Renderer {
     this.on()
   }
 
-  private get _current(): Path | null {
-    if (this.paths.length === 0) return null
-    return this.paths[this.paths.length - 1]
-  }
-
   public on() {
     this.off()
 
