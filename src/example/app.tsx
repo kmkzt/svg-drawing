@@ -259,14 +259,14 @@ const Example = () => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
     animationRef.current.setAnimation(shake)
-    animationRef.current.replacePaths(drawingRef.current.clonePaths())
+    animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
   }, [])
   const handleClickStrokeAnimation = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
     animationRef.current.setAnimation(strokeAnimation)
-    animationRef.current.replacePaths(drawingRef.current.clonePaths())
+    animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
   }, [])
   const handleClickStop = useCallback(() => {

@@ -71,12 +71,12 @@ export class Renderer extends Svg {
     const img: any = new Image()
     const renderCanvas = () => {
       const canvas = document.createElement('canvas')
-      canvas.setAttribute('width', String(this._width))
-      canvas.setAttribute('height', String(this._height))
+      canvas.setAttribute('width', String(this.width))
+      canvas.setAttribute('height', String(this.height))
       const ctx = canvas.getContext('2d')
       if (!ctx) return
       ctx.fillStyle = this.background
-      ctx.fillRect(0, 0, this._width, this._height)
+      ctx.fillRect(0, 0, this.width, this.height)
       ctx.drawImage(img, 0, 0)
       if (ext === 'png') {
         cb({ data: canvas.toDataURL('image/png'), extension: 'png' })

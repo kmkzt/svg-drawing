@@ -253,8 +253,8 @@ export interface SvgObject {
 }
 export class Svg {
   private _paths: Path[]
-  protected _width: number
-  protected _height: number
+  private _width: number
+  private _height: number
   constructor({ width, height }: SvgOption) {
     this._paths = []
     this._width = width
@@ -265,6 +265,12 @@ export class Svg {
     // this.resizeElement = this.resizeElement.bind(this)
   }
 
+  public get width() {
+    return this._width
+  }
+  public get height() {
+    return this._width
+  }
   /**
    * @returns {boolean} resize?
    */
@@ -335,6 +341,12 @@ export class Svg {
       height: this._height,
       paths: this.paths.map(p => p.toJson())
     }
+  }
+
+  public copy(svg: any extends Svg ? Svg : never): this {
+    this._paths = svg.clonePaths()
+    this.scalePath(svg.width / this._width)
+    return this
   }
 
   public toElement(): SVGSVGElement {

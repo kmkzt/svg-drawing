@@ -128,7 +128,7 @@ start.onclick = () => {
   // Sets the animation callback function
   anim.setAnimation(strokeAnimation)
   // Copy drawwing data
-  anim.replacePaths(draw.clonePaths())
+  anim.copy(draw)
   // Start Animation
   anim.start()
 }
