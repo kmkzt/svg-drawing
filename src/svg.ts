@@ -200,8 +200,8 @@ export class Path {
       strokeLinejoin: this.circuler ? 'round' : 'mitter'
     }
   }
-  public toElement(): HTMLElement {
-    const path = document.createElement('path')
+  public toElement(): SVGPathElement {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
     path.setAttribute('stroke-width', String(this.strokeWidth))
     path.setAttribute('stroke', this.stroke)
     path.setAttribute('fill', this.fill)

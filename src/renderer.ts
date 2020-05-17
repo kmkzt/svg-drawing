@@ -24,10 +24,10 @@ export class Renderer extends Svg {
   }
   /**
    * render
-   * TODO: improve render
+   * TODO: XSS test
    */
   public update() {
-    this.el.innerHTML = this.toElement().outerHTML
+    this.el.replaceChild(this.toElement(), this.el.childNodes[0])
   }
 
   public resize(param?: DOMRect) {
