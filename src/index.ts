@@ -1,2 +1,5 @@
-export * from './SvgDrawing'
-export * from './SvgAnimation'
+export * from './drawing'
+export * from './animation'
+export * from './renderer'
+export * from './svg'
+export * from './throttle'

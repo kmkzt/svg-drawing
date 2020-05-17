@@ -1,0 +1,98 @@
+<html>
+  <body>
+    <div class="drawarea">
+      <div id="draw" class="box"></div>
+      <div id="anim" class="box"></div>
+    </div>
+    <button id="clear">Clear</button>
+    <button id="download">Download</button>
+    <button id="start">animation start</button>
+    <button id="stop">animation start</button>
+    <style>
+      .drawarea {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .box {
+        border: 1px solid #ddd;
+        width: 45vw;
+        height: 45vw;
+        margin: auto;
+      }
+    </style>
+    <div id="anim"></div>
+    <!-- For legacy browser.
+      <script src="https://unpkg.com/svg-drawing@2.0.0-alpha.5/lib/index.min.js"></script>
+      <script>
+      // var Mod = window['svg-drawing']
+      // Var SvgDrawing = Mod.SvgDrawing
+      // Var SvgAnimation = Mod.SvgAnimation
+      ...
+      </script>
+    -->
+    <script type="module">
+      import {
+        SvgDrawing,
+        SvgAnimation
+      } from 'https://unpkg.com/svg-drawing@2.0.0-alpha.5/lib/index.esm.js'
+
+      // Render Drawing area
+      // Drawing area will be resized to fit the rendering area
+      const drawEl = document.getElementById('draw')
+      const draw = new SvgDrawing(drawEl)
+
+      const clear = document.getElementById('clear')
+      clear.onclick = () => draw.clear()
+
+      const download = document.getElementById('download')
+      download.onclick = () => draw.download()
+
+      // Render Animation Area
+      // It is resized to fit the rendering area as well as the SvgDrawing area.
+      const animEl = document.getElementById('anim')
+      const anim = new SvgAnimation(animEl, {
+        ms: 20
+      })
+
+      // Example stroke animation.
+      // Callback function to set SvgAnimation
+      // Since the Path Object before animation is passed as an argument, it is converted and returned.
+      let cur = 0
+      const drawingAnimation = paths => {
+        const total = paths.reduce((l, p) => l + p.commands.length, 0)
+        if (cur > total) cur = 0
+        else cur += 1
+        const update = []
+        let count = cur
+        for (let i = 0; i < paths.length; i += 1) {
+          if (count < paths[i].commands.length) {
+            paths[i].commands = paths[i].commands.slice(0, count)
+            update.push(paths[i])
+            break
+          }
+          count -= paths[i].commands.length
+          update.push(paths[i])
+        }
+        return update
+      }
+
+      const start = document.getElementById('start')
+      start.onclick = () => {
+        // Sets the animation callback function
+        anim.setAnimation(drawingAnimation)
+        // Copy drawwing data
+        anim.copy(draw)
+        // Start Animation
+        anim.start()
+      }
+
+      const stop = document.getElementById('stop')
+      stop.onclick = () => {
+        // Stop Animation
+        anim.stop()
+        // Put it back before animating
+        anim.restore()
+      }
+    </script>
+  </body>
+</html>
