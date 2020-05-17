@@ -1,6 +1,6 @@
 {
   "name": "svg-drawing",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": "kmkzt<info.pscreator@gmail.com>",
