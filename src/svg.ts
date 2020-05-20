@@ -60,8 +60,9 @@ export enum CommandType {
 
 // TODO: compatible CommandType
 export class Command {
-  public point: Point
   public type: CommandType
+  // TODO: Convert data format to number array.
+  public point: Point
   public cl?: Point
   public cr?: Point
   constructor(type: CommandType, point: Point) {
@@ -135,6 +136,12 @@ export interface PathObject {
   fill: string
   d: string
 }
+
+/**
+ * TODO: refactor command.
+ * The following commands are not supported. Cannot support commands that use `M` or` z` more than once
+ * `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
+ */
 export class Path {
   public close: boolean
   public curve: boolean
@@ -200,10 +207,9 @@ export class Path {
   }
 
   // TODO: Increase supported command types
-  // TODO: Add fallback and error log
+  // TODO: Comma parse
   public parseCommandString(d: string): void {
     this.commands = []
-    // TODO: Comma parse
     const c = d.split(' ')
     if (c[c.length - 1] === CommandType.CLOSE) {
       this.close = true
