@@ -1,13 +1,12 @@
 import { Renderer } from './renderer'
 import { Path, Point } from './svg'
 
-describe('renderer', () => {
+describe('renderer.ts', () => {
   describe('Renderer', () => {
     let renderer: Renderer
     beforeEach(() => {
       const el = document.createElement('div')
       renderer = new Renderer(el)
-
         .addPath(
           new Path({ curve: true, close: false })
             .addCommand(new Point(0, 0))

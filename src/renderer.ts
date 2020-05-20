@@ -1,4 +1,4 @@
-import { Svg } from './svg'
+import { Svg, Path } from './svg'
 import { download } from './utils/download'
 
 export interface RendererOption {
@@ -30,28 +30,32 @@ export class Renderer extends Svg {
     this.el.replaceChild(this.toElement(), this.el.childNodes[0])
   }
 
-  public resize(param?: DOMRect) {
+  public resizeElement(param?: DOMRect) {
     const { width, height, left, top } =
       param || this.el.getBoundingClientRect()
-    if (this.resizeElement(width, height)) {
-      this.update()
+    if (this.width !== width) {
+      // TODO: Resizing improve
+      this.scalePath(width / this.width)
     }
+    this.width = width
+    this.height = height
     this.left = left
     this.top = top
+    this.update()
   }
 
   private _setupAdjustResize() {
     if ((window as any).ResizeObserver) {
       const resizeObserver: any = new (window as any).ResizeObserver(
         (entries: any[]) => {
-          this.resize(entries[0].contentRect)
+          this.resizeElement(entries[0].contentRect)
         }
       )
       resizeObserver.observe(this.el)
     } else {
       // TODO: improve
       window.addEventListener('resize', _ev => {
-        this.resize(this.el.getBoundingClientRect())
+        this.resizeElement(this.el.getBoundingClientRect())
       })
     }
   }

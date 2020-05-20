@@ -203,6 +203,7 @@ export class Path {
   // TODO: Add fallback and error log
   public parseCommandString(d: string): void {
     this.commands = []
+    // TODO: Comma parse
     const c = d.split(' ')
     if (c[c.length - 1] === CommandType.CLOSE) {
       this.close = true
@@ -253,6 +254,26 @@ export class Path {
           break
       }
     }
+  }
+
+  public parsePathElement(pEl: SVGPathElement): this {
+    const d = pEl.getAttribute('d')
+    if (d) {
+      this.parseCommandString(d)
+    }
+    const strokeWidth = pEl.getAttribute('stroke-width')
+    if (strokeWidth) {
+      this.strokeWidth = Number(strokeWidth)
+    }
+    const stroke = pEl.getAttribute('stroke')
+    if (stroke) {
+      this.stroke = stroke
+    }
+    const fill = pEl.getAttribute('fill')
+    if (fill) {
+      this.fill = fill
+    }
+    return this
   }
 
   public toJson(): PathObject {
@@ -324,36 +345,12 @@ export interface SvgObject {
 }
 export class Svg {
   private _paths: Path[]
-  private _width: number
-  private _height: number
+  public width: number
+  public height: number
   constructor({ width, height }: SvgOption) {
     this._paths = []
-    this._width = width
-    this._height = height
-    // this.scalePath = this.scalePath.bind(this)
-    // this.toElement = this.toElement.bind(this)
-    // this.toBase64 = this.toBase64.bind(this)
-    // this.resizeElement = this.resizeElement.bind(this)
-  }
-
-  public get width() {
-    return this._width
-  }
-  public get height() {
-    return this._width
-  }
-  /**
-   * @returns {boolean} resize?
-   */
-  public resizeElement(width: number, height: number): boolean {
-    // TODO: Resizing improve
-    if (this._width !== width || this._height !== height) {
-      this.scalePath(width / this._width)
-      this._width = width
-      this._height = height
-      return true
-    }
-    return false
+    this.width = width
+    this.height = height
   }
 
   public scalePath(r: number): this {
@@ -408,22 +405,22 @@ export class Svg {
 
   public toJson(): SvgObject {
     return {
-      width: this._width,
-      height: this._height,
+      width: this.width,
+      height: this.height,
       paths: this.paths.map(p => p.toJson())
     }
   }
 
   public copy(svg: any extends Svg ? Svg : never): this {
     this._paths = svg.clonePaths()
-    this.scalePath(svg.width / this._width)
+    this.scalePath(svg.width / this.width)
     return this
   }
 
   public toElement(): SVGSVGElement {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttribute('width', String(this._width))
-    svg.setAttribute('height', String(this._height))
+    svg.setAttribute('width', String(this.width))
+    svg.setAttribute('height', String(this.height))
     for (let i = 0; i < this._paths.length; i += 1) {
       svg.appendChild(this._paths[i].toElement())
     }
@@ -431,11 +428,34 @@ export class Svg {
   }
 
   public toBase64(): string {
-    const data = `<svg width="${this._width}" height="${
-      this._height
+    const data = `<svg width="${this.width}" height="${
+      this.height
     }" version="1.1" xmlns="http://www.w3.org/2000/svg">${
       this.toElement().innerHTML
     }</svg>`
     return `data:image/svg+xml;base64,${btoa(data)}`
+  }
+
+  public parseSVGString(svgStr: string): this {
+    const svgEl: SVGSVGElement | null = new DOMParser()
+      .parseFromString(svgStr, 'image/svg+xml')
+      .querySelector('svg')
+    return !svgEl ? this.clearPath() : this.parseSVGElement(svgEl)
+  }
+
+  public parseSVGElement(svgEl: SVGSVGElement): this {
+    const update: Path[] = []
+    svgEl.querySelectorAll('path').forEach(pEl => {
+      const pa = new Path().parsePathElement(pEl)
+      if (pa.commands.length !== 0) {
+        update.push(pa)
+      }
+    })
+    this.replacePaths(update)
+    const width = Number(svgEl.getAttribute('width'))
+    if (width) {
+      this.scalePath(this.width / width)
+    }
+    return this
   }
 }
