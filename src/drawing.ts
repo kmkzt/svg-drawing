@@ -122,7 +122,7 @@ export class SvgDrawing extends Renderer {
       curve: this.curve,
       stroke: this.penColor,
       strokeWidth: this.penWidth,
-      fill: this.fill
+      fill: this.fill,
     })
   }
   private _createDrawPoint({ x, y }: { x: number; y: number }): Point {
@@ -138,7 +138,7 @@ export class SvgDrawing extends Renderer {
       ev.preventDefault()
       cb({ x: ev.clientX, y: ev.clientY })
     }
-    const start = handleMouse(param => {
+    const start = handleMouse((param) => {
       this._drawingStart()
       this.el.addEventListener('pointermove', draw, getPassiveOptions(false))
       this.el.addEventListener('pointerup', end, getPassiveOptions(false))
@@ -167,14 +167,14 @@ export class SvgDrawing extends Renderer {
       ev.preventDefault()
       cb({ x: ev.clientX, y: ev.clientY })
     }
-    const start = handleMouse(_param => {
+    const start = handleMouse((_param) => {
       this._drawingStart()
       this.el.addEventListener('mousemove', draw, getPassiveOptions(false))
       this.el.addEventListener('mouseup', end, getPassiveOptions(false))
       this.el.addEventListener('mouseleave', end, getPassiveOptions(false))
     })
     const draw = throttle(handleMouse(this._drawingMove), this.delay)
-    const end = handleMouse(_param => {
+    const end = handleMouse((_param) => {
       this.el.removeEventListener('mousemove', draw)
       this.el.removeEventListener('mouseup', end)
       this.el.removeEventListener('mouseleave', end)
@@ -195,13 +195,13 @@ export class SvgDrawing extends Renderer {
       const touch = ev.touches[0]
       cb({ x: touch.clientX, y: touch.clientY })
     }
-    const start = handleTouch(_param => {
+    const start = handleTouch((_param) => {
       this._drawingStart()
       this.el.addEventListener('touchmove', draw, getPassiveOptions(false))
       this.el.addEventListener('touchend', end, getPassiveOptions(false))
     })
     const draw = throttle(handleTouch(this._drawingMove), this.delay)
-    const end = handleTouch(_param => {
+    const end = handleTouch((_param) => {
       this.el.removeEventListener('touchmove', draw)
       this.el.removeEventListener('touchend', end)
     })

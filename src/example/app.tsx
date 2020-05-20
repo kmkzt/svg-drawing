@@ -4,13 +4,13 @@ import React, {
   Fragment,
   useCallback,
   useState,
-  ChangeEvent
+  ChangeEvent,
 } from 'react'
 import { render } from 'react-dom'
 import { SvgDrawing, SvgAnimation, FrameAnimation, Command, Point } from '../'
 // import Pressure from 'pressure'
 
-const shake: FrameAnimation = paths => {
+const shake: FrameAnimation = (paths) => {
   const shaking = 5
   const randomShaking = (): number => Math.random() * shaking - shaking / 2
   for (let i = 0; i < paths.length; i += 1) {
@@ -25,7 +25,7 @@ const shake: FrameAnimation = paths => {
 }
 
 let cur = 0
-const drawingAnimation: FrameAnimation = paths => {
+const drawingAnimation: FrameAnimation = (paths) => {
   const total: number = paths.reduce((l, p) => l + p.commands.length, 0)
   if (cur > total) {
     cur = 0
@@ -84,7 +84,7 @@ const colorList = [
   '#ddd',
   '#9E9E9E',
   '#444',
-  'black'
+  'black',
 ]
 
 const getRandomInt = (max: number): number =>
@@ -131,7 +131,7 @@ const Example = () => {
   //   [thinner]
   // )
 
-  const handleChangeRainbowPen = useCallback(e => {
+  const handleChangeRainbowPen = useCallback((e) => {
     if (!drawingRef.current) return
     drawingRef.current.fill = 'none'
     drawingRef.current.close = false
@@ -233,7 +233,7 @@ const Example = () => {
       close,
       delay,
       penWidth,
-      fill
+      fill,
     })
   })
 
@@ -241,7 +241,7 @@ const Example = () => {
     if (animationRef.current) return
     if (!aniDivRef.current) return
     animationRef.current = new SvgAnimation(aniDivRef.current, {
-      ms: animMs
+      ms: animMs,
     })
   })
   useEffect(() => {
@@ -387,7 +387,8 @@ const Example = () => {
                       width: '15px',
                       height: '15px',
                       backgroundColor: col,
-                      border: col === fill ? '2px solid #000' : '2px solid #999'
+                      border:
+                        col === fill ? '2px solid #000' : '2px solid #999',
                     }}
                     onClick={handleClickFill(col)}
                   />
@@ -412,7 +413,7 @@ const Example = () => {
                       height: '15px',
                       backgroundColor: col,
                       border:
-                        col === penColor ? '2px solid #000' : '2px solid #999'
+                        col === penColor ? '2px solid #000' : '2px solid #999',
                     }}
                     onClick={handleClickPenColor(col)}
                   />
@@ -425,7 +426,7 @@ const Example = () => {
       <div
         style={{
           display: 'flex',
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
         }}
       >
         <div>
@@ -446,7 +447,7 @@ const Example = () => {
               border: '1px solid #333',
               width: CANVAS_SIZE,
               height: CANVAS_SIZE,
-              margin: 'auto'
+              margin: 'auto',
             }}
           />
         </div>
@@ -484,7 +485,7 @@ const Example = () => {
               border: '1px solid #333',
               width: CANVAS_SIZE,
               height: CANVAS_SIZE,
-              margin: 'auto'
+              margin: 'auto',
             }}
           />
         </div>

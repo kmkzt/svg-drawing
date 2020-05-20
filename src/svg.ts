@@ -47,7 +47,7 @@ export enum CommandType {
   // LINE_RELATIVE = 'l' // l 1 1
   CURVE = 'C', // C 1 1 2 2 3 3
   // CURVE_RELATIVE = 'c', // c 1 1 2 2 3 3
-  CLOSE = 'Z' // Z, z
+  CLOSE = 'Z', // Z, z
   // HORIZONTAL = 'H', // H 10
   // HORIZONTAL_RELATIVE = 'h', // h 10
   // VERTICAL = 'V', // V 20
@@ -289,7 +289,7 @@ export class Path {
       stroke: this.stroke,
       strokeWidth: this.strokeWidth,
       strokeLinecap: this.curve ? 'round' : 'square',
-      strokeLinejoin: this.curve ? 'round' : 'mitter'
+      strokeLinejoin: this.curve ? 'round' : 'mitter',
     }
   }
   public toElement(): SVGPathElement {
@@ -309,9 +309,9 @@ export class Path {
       curve: this.curve,
       strokeWidth: this.strokeWidth,
       stroke: this.stroke,
-      fill: this.fill
+      fill: this.fill,
     })
-    this.commands.map(c => {
+    this.commands.map((c) => {
       path.addCommand(c.clone())
     })
     return path
@@ -383,7 +383,7 @@ export class Svg {
   }
 
   public clonePaths(): Path[] {
-    return this._paths.map(p => p.clone())
+    return this._paths.map((p) => p.clone())
   }
 
   public addCommand(po: Point): this {
@@ -413,7 +413,7 @@ export class Svg {
     return {
       width: this.width,
       height: this.height,
-      paths: this.paths.map(p => p.toJson())
+      paths: this.paths.map((p) => p.toJson()),
     }
   }
 
@@ -451,7 +451,7 @@ export class Svg {
 
   public parseSVGElement(svgEl: SVGSVGElement): this {
     const update: Path[] = []
-    svgEl.querySelectorAll('path').forEach(pEl => {
+    svgEl.querySelectorAll('path').forEach((pEl) => {
       const pa = new Path().parsePathElement(pEl)
       if (pa.commands.length !== 0) {
         update.push(pa)

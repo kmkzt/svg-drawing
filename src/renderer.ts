@@ -54,7 +54,7 @@ export class Renderer extends Svg {
       resizeObserver.observe(this.el)
     } else {
       // TODO: improve
-      window.addEventListener('resize', _ev => {
+      window.addEventListener('resize', (_ev) => {
         this.resizeElement(this.el.getBoundingClientRect())
       })
     }
@@ -68,7 +68,7 @@ export class Renderer extends Svg {
     if (ext === 'svg') {
       cb({
         data: this.toBase64(),
-        extension: 'svg'
+        extension: 'svg',
       })
     }
 

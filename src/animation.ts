@@ -36,7 +36,7 @@ export class SvgAnimation extends Renderer {
 
   public frame() {
     if (!this._anim) return
-    const updPaths = this._anim(this._restorePath.map(p => p.clone()))
+    const updPaths = this._anim(this._restorePath.map((p) => p.clone()))
     this.replacePaths(updPaths)
     this.update()
   }
@@ -46,7 +46,7 @@ export class SvgAnimation extends Renderer {
     const ms = this.ms
     this._restorePath = this.clonePaths()
     let start: number | undefined
-    const frame: FrameRequestCallback = timestamp => {
+    const frame: FrameRequestCallback = (timestamp) => {
       if (ms !== this.ms) {
         this.start()
         return
