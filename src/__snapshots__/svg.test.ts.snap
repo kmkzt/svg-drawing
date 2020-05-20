@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`svg Path commands parameter and getCommandString Line Close 1`] = `
+exports[`svg.ts Path commands parameter and getCommandString Line Close 1`] = `
 Array [
   Command {
     "point": Point {
@@ -26,9 +26,9 @@ Array [
 ]
 `;
 
-exports[`svg Path commands parameter and getCommandString Line Close 2`] = `"M 0 0 L 1 1 L -1 -1 Z"`;
+exports[`svg.ts Path commands parameter and getCommandString Line Close 2`] = `"M 0 0 L 1 1 L -1 -1 Z"`;
 
-exports[`svg Path commands parameter and getCommandString Line Normal 1`] = `
+exports[`svg.ts Path commands parameter and getCommandString Line Normal 1`] = `
 Array [
   Command {
     "point": Point {
@@ -54,9 +54,9 @@ Array [
 ]
 `;
 
-exports[`svg Path commands parameter and getCommandString Line Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
+exports[`svg.ts Path commands parameter and getCommandString Line Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
 
-exports[`svg Path commands parameter and getCommandString curve Close 1`] = `
+exports[`svg.ts Path commands parameter and getCommandString curve Close 1`] = `
 Array [
   Command {
     "point": Point {
@@ -113,9 +113,9 @@ Array [
 ]
 `;
 
-exports[`svg Path commands parameter and getCommandString curve Close 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0 Z"`;
+exports[`svg.ts Path commands parameter and getCommandString curve Close 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0 Z"`;
 
-exports[`svg Path commands parameter and getCommandString curve Normal 1`] = `
+exports[`svg.ts Path commands parameter and getCommandString curve Normal 1`] = `
 Array [
   Command {
     "point": Point {
@@ -172,9 +172,91 @@ Array [
 ]
 `;
 
-exports[`svg Path commands parameter and getCommandString curve Normal 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"`;
+exports[`svg.ts Path commands parameter and getCommandString curve Normal 2`] = `"M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"`;
 
-exports[`svg Path toJson and toElement toElement 1`] = `
+exports[`svg.ts Path parseCommandString close command 1`] = `
+Array [
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": "M",
+  },
+  Command {
+    "point": Point {
+      "x": 1,
+      "y": 1,
+    },
+    "type": "L",
+  },
+  Command {
+    "cl": Point {
+      "x": 2,
+      "y": 2,
+    },
+    "cr": Point {
+      "x": 2,
+      "y": 4,
+    },
+    "point": Point {
+      "x": 6,
+      "y": 0,
+    },
+    "type": "C",
+  },
+]
+`;
+
+exports[`svg.ts Path parseCommandString failed pattern 1`] = `Array []`;
+
+exports[`svg.ts Path parseCommandString failed pattern 2`] = `
+Array [
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": "M",
+  },
+]
+`;
+
+exports[`svg.ts Path parseCommandString success pattern 1`] = `
+Array [
+  Command {
+    "point": Point {
+      "x": 0,
+      "y": 0,
+    },
+    "type": "M",
+  },
+  Command {
+    "point": Point {
+      "x": 1,
+      "y": 1,
+    },
+    "type": "L",
+  },
+  Command {
+    "cl": Point {
+      "x": 2,
+      "y": 2,
+    },
+    "cr": Point {
+      "x": 2,
+      "y": 4,
+    },
+    "point": Point {
+      "x": 6,
+      "y": 0,
+    },
+    "type": "C",
+  },
+]
+`;
+
+exports[`svg.ts Path toJson and toElement toElement 1`] = `
 <path
   d="M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"
   fill="none"
@@ -185,7 +267,7 @@ exports[`svg Path toJson and toElement toElement 1`] = `
 />
 `;
 
-exports[`svg Path toJson and toElement toJson 1`] = `
+exports[`svg.ts Path toJson and toElement toJson 1`] = `
 Object {
   "d": "M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0",
   "fill": "none",
@@ -196,9 +278,113 @@ Object {
 }
 `;
 
-exports[`svg Renderer toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSIjMDAwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2U9IiMwMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lam9pbj0ibWl0dGVyIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBkPSJNIDQgNCBMIDkgNCBMIDkgOCBMIDMgMCBaIj48L3BhdGg+PC9zdmc+"`;
+exports[`svg.ts Svg parseSVGElement 1`] = `
+Svg {
+  "_paths": Array [
+    Path {
+      "close": true,
+      "commands": Array [
+        Command {
+          "cl": undefined,
+          "cr": undefined,
+          "point": Point {
+            "x": 2,
+            "y": 2,
+          },
+          "type": "M",
+        },
+        Command {
+          "cl": undefined,
+          "cr": undefined,
+          "point": Point {
+            "x": 4,
+            "y": 4,
+          },
+          "type": "L",
+        },
+        Command {
+          "cl": Point {
+            "x": 6,
+            "y": 6,
+          },
+          "cr": Point {
+            "x": 10,
+            "y": 6,
+          },
+          "point": Point {
+            "x": 14,
+            "y": 6,
+          },
+          "type": "C",
+        },
+      ],
+      "curve": true,
+      "fill": "#f00",
+      "smoothRatio": 0.2,
+      "stroke": "#00f",
+      "strokeWidth": 8,
+    },
+  ],
+  "height": 400,
+  "width": 400,
+}
+`;
 
-exports[`svg Renderer toElement 1`] = `
+exports[`svg.ts Svg parseSVGString 1`] = `
+Svg {
+  "_paths": Array [
+    Path {
+      "close": true,
+      "commands": Array [
+        Command {
+          "cl": undefined,
+          "cr": undefined,
+          "point": Point {
+            "x": 2,
+            "y": 2,
+          },
+          "type": "M",
+        },
+        Command {
+          "cl": undefined,
+          "cr": undefined,
+          "point": Point {
+            "x": 4,
+            "y": 4,
+          },
+          "type": "L",
+        },
+        Command {
+          "cl": Point {
+            "x": 6,
+            "y": 6,
+          },
+          "cr": Point {
+            "x": 10,
+            "y": 6,
+          },
+          "point": Point {
+            "x": 14,
+            "y": 6,
+          },
+          "type": "C",
+        },
+      ],
+      "curve": true,
+      "fill": "#f00",
+      "smoothRatio": 0.2,
+      "stroke": "#00f",
+      "strokeWidth": 8,
+    },
+  ],
+  "height": 400,
+  "width": 400,
+}
+`;
+
+exports[`svg.ts Svg toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlPSIjMDAwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2U9IiMwMDAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lam9pbj0ibWl0dGVyIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBkPSJNIDQgNCBMIDkgNCBMIDkgOCBMIDMgMCBaIj48L3BhdGg+PC9zdmc+"`;
+
+exports[`svg.ts Svg toElement 1`] = `
 <svg
   height="500"
   width="500"
@@ -222,7 +408,7 @@ exports[`svg Renderer toElement 1`] = `
 </svg>
 `;
 
-exports[`svg Renderer toJson 1`] = `
+exports[`svg.ts Svg toJson 1`] = `
 Object {
   "height": 500,
   "paths": Array [

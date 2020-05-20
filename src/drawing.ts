@@ -116,7 +116,7 @@ export class SvgDrawing extends Renderer {
   }
 
   private _createDrawPath(): Path {
-    this.resize()
+    this.resizeElement()
     return new Path({
       close: this.close,
       curve: this.curve,

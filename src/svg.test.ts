@@ -1,6 +1,6 @@
 import { Point, Vector, Path, Svg, Command, CommandType } from './svg'
 
-describe('svg', () => {
+describe('svg.ts', () => {
   describe('Point', () => {
     it('add', () => {
       const po = new Point(1.0, 1.0).add(new Point(2.0, 2.0))
@@ -109,6 +109,39 @@ describe('svg', () => {
       expect(path.commands[0].point.x).toBe(2)
       expect(path.commands[0].point.y).toBe(2)
     })
+    describe('parsePathElement', () => {
+      it('success pattern', () => {
+        const pathEl = document.createElementNS(
+          'http://www.w3.org/2000/svg',
+          'path'
+        )
+        pathEl.setAttribute('fill', '#00f')
+        pathEl.setAttribute('stroke', '#f00')
+        pathEl.setAttribute('stroke-width', '4')
+        pathEl.setAttribute('d', 'M 0 0 L 1 1 C 2 2 2 4 6 0')
+      })
+    })
+    describe('parseCommandString', () => {
+      beforeEach(() => {
+        path = new Path()
+      })
+      it('success pattern', () => {
+        path.parseCommandString('M 0 0 L 1 1 C 2 2 2 4 6 0')
+        expect(path.commands).toMatchSnapshot()
+        expect(path.close).toBe(false)
+      })
+      it('close command', () => {
+        path.parseCommandString('M 0 0 L 1 1 C 2 2 2 4 6 0 Z')
+        expect(path.commands).toMatchSnapshot()
+        expect(path.close).toBe(true)
+      })
+      it('failed pattern', () => {
+        path.parseCommandString('M a b')
+        expect(path.commands).toMatchSnapshot()
+        path.parseCommandString('M 0 0 C 0 1 2')
+        expect(path.commands).toMatchSnapshot()
+      })
+    })
     it('clone', () => {
       const origin = new Path({ strokeWidth: 1 }).addCommand(new Point(1, 1))
       const clone = origin.clone().addCommand(new Point(2, 2))
@@ -168,7 +201,7 @@ describe('svg', () => {
       })
     })
   })
-  describe('Renderer', () => {
+  describe('Svg', () => {
     let svg: Svg
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
@@ -186,6 +219,35 @@ describe('svg', () => {
             .addCommand(new Point(9, 8))
             .addCommand(new Point(3, 0))
         )
+    })
+
+    it('parseSVGString', () => {
+      expect(
+        new Svg({ width: 400, height: 400 }).parseSVGString(`
+      <svg width="200" height="200">
+        <path fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>
+      </svg>`)
+      ).toMatchSnapshot()
+    })
+    it('parseSVGElement', () => {
+      const svgEl = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'svg'
+      )
+      svgEl.setAttribute('width', '200')
+      svgEl.setAttribute('height', '200')
+      const pathEl = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path'
+      )
+      pathEl.setAttribute('fill', '#f00')
+      pathEl.setAttribute('stroke', '#00f')
+      pathEl.setAttribute('stroke-width', '4')
+      pathEl.setAttribute('d', 'M 1 1 L 2 2 C 3 3 5 3 7 3 Z')
+      svgEl.appendChild(pathEl)
+      expect(
+        new Svg({ width: 400, height: 400 }).parseSVGElement(svgEl)
+      ).toMatchSnapshot()
     })
     // TODO: Fix width, height
     it('toElement', () => {
