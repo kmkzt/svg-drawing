@@ -44,7 +44,8 @@ export class Point {
 export enum CommandType {
   MOVE = 'M',
   LINE = 'L',
-  CURVE = 'C'
+  CURVE = 'C',
+  CLOSE = 'Z'
 }
 
 export class Command {
@@ -68,6 +69,8 @@ export class Command {
         return `${
           this.type
         } ${this.cl.toString()} ${this.cr.toString()} ${this.point.toString()}`
+      default:
+        return ''
     }
   }
 
@@ -177,13 +180,12 @@ export class Path {
   public getCommandString(): string {
     if (this.commands.length === 0) return ''
 
-    let d = this.commands
-      .map((com: Command, _i: number) => com.toString())
-      .join(' ')
+    let d = this.commands.map((com: Command, _i: number) => com.toString())
+
     if (this.close) {
-      d += ` Z`
+      d.push(CommandType.CLOSE)
     }
-    return d
+    return d.join(' ')
   }
 
   // TODO: Increase supported command types
@@ -191,6 +193,9 @@ export class Path {
   public parseCommandString(d: string): void {
     this.commands = []
     const c = d.split(' ')
+    if (c[c.length - 1] === CommandType.CLOSE) {
+      this.close = true
+    }
     for (let i = 0; i < c.length; i += 1) {
       switch (c[i]) {
         case CommandType.MOVE:

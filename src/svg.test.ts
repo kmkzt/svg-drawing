@@ -110,9 +110,18 @@ describe('svg', () => {
       expect(path.commands[0].point.y).toBe(2)
     })
     describe('parseCommandString', () => {
+      beforeEach(() => {
+        path = new Path()
+      })
       it('success pattern', () => {
         path.parseCommandString('M 0 0 L 1 1 C 2 2 2 4 6 0')
         expect(path.commands).toMatchSnapshot()
+        expect(path.close).toBe(false)
+      })
+      it('close command', () => {
+        path.parseCommandString('M 0 0 L 1 1 C 2 2 2 4 6 0 Z')
+        expect(path.commands).toMatchSnapshot()
+        expect(path.close).toBe(true)
       })
       it('failed pattern', () => {
         path.parseCommandString('M a b')
