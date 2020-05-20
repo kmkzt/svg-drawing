@@ -109,6 +109,18 @@ describe('svg', () => {
       expect(path.commands[0].point.x).toBe(2)
       expect(path.commands[0].point.y).toBe(2)
     })
+    describe('parseCommandString', () => {
+      it('success pattern', () => {
+        path.parseCommandString('M 0 0 L 1 1 C 2 2 2 4 6 0')
+        expect(path.commands).toMatchSnapshot()
+      })
+      it('failed pattern', () => {
+        path.parseCommandString('M a b')
+        expect(path.commands).toMatchSnapshot()
+        path.parseCommandString('M 0 0 C 0 1 2')
+        expect(path.commands).toMatchSnapshot()
+      })
+    })
     it('clone', () => {
       const origin = new Path({ strokeWidth: 1 }).addCommand(new Point(1, 1))
       const clone = origin.clone().addCommand(new Point(2, 2))

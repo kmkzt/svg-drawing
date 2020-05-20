@@ -1,4 +1,5 @@
 const roundUp = (num: number) => Number(num.toFixed(2))
+const isNaN = (num: Number) => num !== num
 
 export class Point {
   public x: number
@@ -39,6 +40,7 @@ export class Point {
   }
 }
 
+// TODO: Add commands
 export enum CommandType {
   MOVE = 'M',
   LINE = 'L',
@@ -182,6 +184,59 @@ export class Path {
       d += ` Z`
     }
     return d
+  }
+
+  // TODO: Increase supported command types
+  // TODO: Add fallback and error log
+  public parseCommandString(d: string): void {
+    this.commands = []
+    const c = d.split(' ')
+    for (let i = 0; i < c.length; i += 1) {
+      switch (c[i]) {
+        case CommandType.MOVE:
+        case CommandType.LINE: {
+          if (i + 2 > c.length) return
+          const p1 = Number(c[i + 1])
+          const p2 = Number(c[i + 2])
+          if (isNaN(p1) || isNaN(p2)) return // check NaN
+          this.commands.push(
+            new Command(c[i] as CommandType, new Point(p1, p2))
+          )
+          i += 2
+          break
+        }
+        case CommandType.CURVE: {
+          if (i + 6 > c.length) return
+          const p1 = Number(c[i + 1])
+          const p2 = Number(c[i + 2])
+          const p3 = Number(c[i + 3])
+          const p4 = Number(c[i + 4])
+          const p5 = Number(c[i + 5])
+          const p6 = Number(c[i + 6])
+          if (
+            isNaN(p1) ||
+            isNaN(p2) ||
+            isNaN(p3) ||
+            isNaN(p4) ||
+            isNaN(p5) ||
+            isNaN(p6)
+          )
+            return // check NaN
+          const curveComand = new Command(
+            c[i] as CommandType,
+            new Point(p5, p6)
+          )
+          curveComand.cl = new Point(p1, p2)
+          curveComand.cr = new Point(p3, p4)
+
+          this.commands.push(curveComand)
+          i += 6
+          break
+        }
+        default:
+          break
+      }
+    }
   }
 
   public toJson(): PathObject {
