@@ -40,14 +40,25 @@ export class Point {
   }
 }
 
-// TODO: Add commands
 export enum CommandType {
-  MOVE = 'M',
-  LINE = 'L',
-  CURVE = 'C',
-  CLOSE = 'Z'
+  MOVE = 'M', // M 0 0
+  // MOVE_RELATIVE = 'm', // m 0 0
+  LINE = 'L', // L 1 1
+  // LINE_RELATIVE = 'l' // l 1 1
+  CURVE = 'C', // C 1 1 2 2 3 3
+  // CURVE_RELATIVE = 'c', // c 1 1 2 2 3 3
+  CLOSE = 'Z' // Z, z
+  // HORIZONTAL = 'H', // H 10
+  // HORIZONTAL_RELATIVE = 'h', // h 10
+  // VERTICAL = 'V', // V 20
+  // VERTICAL_RELATIVE = 'v', // v 20
+  // ARC_CURVE = 'A', // A 6 4 10 0 1 14 10
+  // ARC_CURVE_RELATIVE = 'a', // A 6 4 10 0 1 14 10
+  // QUADRATIC_CURVE = 'Q' // Q 10 60 10 30
+  // QUADRATIC_CURVE_RELATIVE = 'q' // q 10 60 10 30
 }
 
+// TODO: compatible CommandType
 export class Command {
   public point: Point
   public type: CommandType
