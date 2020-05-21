@@ -33,15 +33,12 @@ export class Renderer extends Svg {
   public resizeElement(param?: DOMRect) {
     const { width, height, left, top } =
       param || this.el.getBoundingClientRect()
-    if (this.width !== width) {
-      // TODO: Resizing improve
-      this.scalePath(width / this.width)
-    }
+    // TODO: Resizing improve
+    this.scalePath(width / this.width)
     this.width = width
     this.height = height
     this.left = left
     this.top = top
-    this.update()
   }
 
   private _setupAdjustResize() {
@@ -49,6 +46,7 @@ export class Renderer extends Svg {
       const resizeObserver: any = new (window as any).ResizeObserver(
         (entries: any[]) => {
           this.resizeElement(entries[0].contentRect)
+          this.update()
         }
       )
       resizeObserver.observe(this.el)
@@ -56,6 +54,7 @@ export class Renderer extends Svg {
       // TODO: improve
       window.addEventListener('resize', _ev => {
         this.resizeElement(this.el.getBoundingClientRect())
+        this.update()
       })
     }
   }
