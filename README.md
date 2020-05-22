@@ -22,14 +22,14 @@ Example code is [here](src/example/)
 
 ```html
 <!-- Common JS-->
-<script src="https://unpkg.com/svg-drawing@2.0.0-alpha.3/lib/index.min.js"></script>
+<script src="https://unpkg.com/svg-drawing@2.1.1/lib/index.min.js"></script>
 
 <!-- ES Modules -->
 <script type="module">
   import {
     SvgDrawing,
     SvgAnimation
-  } from 'https://unpkg.com/svg-drawing@2.0.0-alpha.4/lib/index.esm.js'
+  } from 'https://unpkg.com/svg-drawing@2.1.1/lib/index.esm.js'
   ...
 </script>
 ```
