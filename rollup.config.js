@@ -8,12 +8,9 @@ import { terser } from 'rollup-plugin-terser'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 import pkg from './package.json'
 
-const globals = {
-  'two.js': 'Two'
-}
-
-const external = Object.keys(globals)
-// Fix:
+// const globals = {}
+// const external = Object.keys(globals)
+// Fix: auto dependencies
 // const external = id => !id.startsWith('.') && !id.startsWith('/')
 
 const esm_targets = '>1%, not dead, not ie 11, not op_mini all'
@@ -56,11 +53,11 @@ export default [
       file: pkg.browser,
       format: 'umd',
       name: pkg.name,
-      globals,
+      // globals,
       exports: 'named',
       sourcemap: false
     },
-    external,
+    // external,
     plugins: [
       commonjs(),
       babel(getBabelOptions({ useESModules: true })),
@@ -104,7 +101,7 @@ export default [
       exports: 'named',
       sourcemap: true
     },
-    external,
+    // external,
     plugins: [
       sourceMaps(),
       commonjs(),
@@ -119,7 +116,7 @@ export default [
   {
     input,
     output: { file: pkg.module, format: 'esm', sourcemap: true },
-    external,
+    // external,
     plugins: [
       sourceMaps(),
       babel(
