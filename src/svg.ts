@@ -1,6 +1,12 @@
 const roundUp = (num: number) => Number(num.toFixed(2))
 const isNaN = (num: Number) => num !== num
 
+const camel2kebab = (str: string) =>
+  str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
+
+const kebab2camel = (str: string) =>
+  str.replace(/-([a-z])/g, (a: string, b: string) => b.toUpperCase())
+
 export class Point {
   public x: number
   public y: number
@@ -40,63 +46,90 @@ export class Point {
   }
 }
 
-export enum CommandType {
-  MOVE = 'M', // M 0 0
-  // MOVE_RELATIVE = 'm', // m 0 0
-  LINE = 'L', // L 1 1
-  // LINE_RELATIVE = 'l' // l 1 1
-  CURVE = 'C', // C 1 1 2 2 3 3
-  // CURVE_RELATIVE = 'c', // c 1 1 2 2 3 3
-  CLOSE = 'Z' // Z, z
-  // HORIZONTAL = 'H', // H 10
-  // HORIZONTAL_RELATIVE = 'h', // h 10
-  // VERTICAL = 'V', // V 20
-  // VERTICAL_RELATIVE = 'v', // v 20
-  // ARC_CURVE = 'A', // A 6 4 10 0 1 14 10
-  // ARC_CURVE_RELATIVE = 'a', // A 6 4 10 0 1 14 10
-  // QUADRATIC_CURVE = 'Q' // Q 10 60 10 30
-  // QUADRATIC_CURVE_RELATIVE = 'q' // q 10 60 10 30
-}
+export const COMMAND_TYPE = {
+  MOVE: 'M', // M 0 0
+  MOVE_RELATIVE: 'm', // m 0 0
+  LINE: 'L', // L 1 1
+  LINE_RELATIVE: 'l', // l 1 1
+  CURVE: 'C', // C 1 1 2 2 3 3
+  CURVE_RELATIVE: 'c', // c 1 1 2 2 3 3
+  CLOSE: 'Z', // Z, z
+  HORIZONTAL: 'H', // H 10
+  HORIZONTAL_RELATIVE: 'h', // h 10
+  VERTICAL: 'V', // V 20
+  VERTICAL_RELATIVE: 'v', // v 20
+  ARC_CURVE: 'A', // A 6 4 10 0 1 14 10
+  ARC_CURVE_RELATIVE: 'a', // A 6 4 10 0 1 14 10
+  QUADRATIC_CURVE: 'Q', // Q 10 60 10 30
+  QUADRATIC_CURVE_RELATIVE: 'q' // q 10 60 10 30
+} as const
 
-// TODO: compatible CommandType
+type COMMAND = typeof COMMAND_TYPE[keyof typeof COMMAND_TYPE]
+// TODO: compatible COMMAND_TYPE
 export class Command {
-  public type: CommandType
+  public type: COMMAND
+  public value: number[]
   // TODO: Convert data format to number array.
-  public point: Point
-  public cl?: Point
-  public cr?: Point
-  constructor(type: CommandType, point: Point) {
-    this.point = point
+  constructor(type: COMMAND, value: number[] = []) {
+    this.value = value
     this.type = type
   }
 
-  public toString(): string {
-    switch (this.type) {
-      case CommandType.MOVE:
-      case CommandType.LINE:
-        return `${this.type} ${this.point.toString()}`
-      case CommandType.CURVE:
-        if (!this.cl || !this.cr)
-          return `${CommandType.LINE} ${this.point.x} ${this.point.y}`
-        return `${
-          this.type
-        } ${this.cl.toString()} ${this.cr.toString()} ${this.point.toString()}`
-      default:
-        return ''
+  public set cr(po: Point | undefined) {
+    if (!po) return
+    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+      return
     }
+    this.value.splice(2, 1, po.x)
+    this.value.splice(3, 1, po.y)
+  }
+  public get cr(): Point | undefined {
+    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+      return undefined
+    }
+    const [x, y] = this.value.slice(2, 4)
+    return new Point(x, y)
+  }
+  public set cl(po: Point | undefined) {
+    if (!po) return
+    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+      return
+    }
+    this.value.splice(0, 1, po.x)
+    this.value.splice(1, 1, po.y)
+  }
+  public get cl(): Point | undefined {
+    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+      return undefined
+    }
+    const [x, y] = this.value.slice(0, 2)
+    return new Point(x, y)
+  }
+
+  public set point(po: Point | undefined) {
+    if (!po) return
+    this.value.splice(this.value.length - 2, 1, po.x)
+    this.value.splice(this.value.length - 1, 1, po.y)
+  }
+  public get point(): Point | undefined {
+    const xy = this.value.slice(this.value.length - 2)
+    return xy.length === 2 ? new Point(xy[0], xy[1]) : undefined
+  }
+
+  public toString(): string {
+    return `${this.type} ${this.value.join(' ')}`
   }
 
   public scale(r: number): Command {
-    const upd = new Command(this.type, this.point.scale(r))
-    upd.cr = this.cr?.scale(r)
-    upd.cl = this.cl?.scale(r)
+    const upd = new Command(
+      this.type,
+      this.value.map(p => p * r)
+    )
     return upd
   }
 
   public clone(): Command {
-    const copy = new Command(this.type, this.point.clone())
-    copy.cl = this.cl?.clone()
-    copy.cr = this.cr?.clone()
+    const copy = new Command(this.type, this.value.concat())
     return copy
   }
 }
@@ -121,43 +154,44 @@ export class Vector {
 }
 
 export interface PathOption {
-  close?: boolean
-  curve?: boolean
   strokeWidth?: number
+  attrs?: Attrs
   stroke?: string
   fill?: string
 }
 
+interface Attrs {
+  [key: string]: string
+}
 export interface PathObject {
-  stroke: string
-  strokeWidth: number
-  strokeLinecap: 'round' | 'square'
-  strokeLinejoin: 'round' | 'mitter'
-  fill: string
+  attrs: Attrs
   d: string
 }
 
+const defaultAttrs: Attrs = {
+  strokeLinecap: 'round', // 'square'
+  strokeLinejoin: 'round' // 'mitter'
+}
 /**
  * TODO: refactor command.
  * The following commands are not supported. Cannot support commands that use `M` or` z` more than once
  * `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
  */
 export class Path {
-  public close: boolean
-  public curve: boolean
   public strokeWidth: number
+  public attrs: { [key: string]: string }
   public stroke: string
   public fill: string
-  public smoothRatio: number
   public commands: Command[]
 
-  constructor({ close, curve, strokeWidth, stroke, fill }: PathOption = {}) {
-    this.close = close ?? false
-    this.curve = curve ?? true
+  constructor({ strokeWidth, fill, stroke, attrs }: PathOption = {}) {
     this.strokeWidth = strokeWidth ?? 1
     this.stroke = stroke ?? '#000'
     this.fill = fill ?? 'none'
-    this.smoothRatio = 0.2
+    this.attrs = {
+      ...defaultAttrs,
+      ...attrs
+    }
     this.commands = []
   }
 
@@ -167,97 +201,42 @@ export class Path {
     return this
   }
 
-  public addCommand(param: Command | Point): this {
-    if (param instanceof Point) {
-      if (!this.curve || this.commands.length < 2) {
-        this.commands.push(
-          new Command(
-            this.commands.length === 0 ? CommandType.MOVE : CommandType.LINE,
-            param
-          )
-        )
-      } else {
-        const p1 =
-          this.commands.length === 2
-            ? this.commands[this.commands.length - 2].point
-            : this.commands[this.commands.length - 3].point
-        const p2 = this.commands[this.commands.length - 2].point
-        const p3 = this.commands[this.commands.length - 1].point
-        const p4 = param
-        this.commands[
-          this.commands.length - 1
-        ] = this._createBezierCurveCommand(p1, p2, p3, p4)
-        this.commands.push(this._createBezierCurveCommand(p2, p3, p4, p4))
-      }
-    } else {
-      this.commands.push(param)
-    }
+  public addCommand(param: Command): this {
+    this.commands.push(param)
     return this
   }
 
   public getCommandString(): string {
     if (this.commands.length === 0) return ''
-
-    let d = this.commands.map((com: Command, _i: number) => com.toString())
-
-    if (this.close) {
-      d.push(CommandType.CLOSE)
-    }
-    return d.join(' ')
+    return this.commands
+      .map((com: Command, _i: number) => com.toString())
+      .join(' ')
   }
 
   // TODO: Increase supported command types
   // TODO: Comma parse
   public parseCommandString(d: string): void {
     this.commands = []
+    let type: COMMAND | null = null
+    let value: number[] = []
     const c = d.split(' ')
-    if (c[c.length - 1] === CommandType.CLOSE) {
-      this.close = true
-    }
+    const checkType = (c: any): COMMAND | null =>
+      Object.values(COMMAND_TYPE).includes(c) ? c : null
     for (let i = 0; i < c.length; i += 1) {
-      switch (c[i]) {
-        case CommandType.MOVE:
-        case CommandType.LINE: {
-          if (i + 2 > c.length) return
-          const p1 = Number(c[i + 1])
-          const p2 = Number(c[i + 2])
-          if (isNaN(p1) || isNaN(p2)) return // check NaN
-          this.commands.push(
-            new Command(c[i] as CommandType, new Point(p1, p2))
-          )
-          i += 2
-          break
+      const t = checkType(c[i])
+      // COMMAND_TYPE
+      if (t) {
+        if (!type) {
+          type = t
+          continue
         }
-        case CommandType.CURVE: {
-          if (i + 6 > c.length) return
-          const p1 = Number(c[i + 1])
-          const p2 = Number(c[i + 2])
-          const p3 = Number(c[i + 3])
-          const p4 = Number(c[i + 4])
-          const p5 = Number(c[i + 5])
-          const p6 = Number(c[i + 6])
-          if (
-            isNaN(p1) ||
-            isNaN(p2) ||
-            isNaN(p3) ||
-            isNaN(p4) ||
-            isNaN(p5) ||
-            isNaN(p6)
-          )
-            return // check NaN
-          const curveComand = new Command(
-            c[i] as CommandType,
-            new Point(p5, p6)
-          )
-          curveComand.cl = new Point(p1, p2)
-          curveComand.cr = new Point(p3, p4)
-
-          this.commands.push(curveComand)
-          i += 6
-          break
-        }
-        default:
-          break
+        this.commands.push(new Command(type, value))
+        type = t
+        value = []
+        continue
+      }
+      if (!isNaN(+c[i])) {
+        value.push(+c[i])
       }
     }
   }
@@ -267,75 +246,60 @@ export class Path {
     if (d) {
       this.parseCommandString(d)
     }
-    const strokeWidth = pEl.getAttribute('stroke-width')
-    if (strokeWidth) {
-      this.strokeWidth = Number(strokeWidth)
-    }
-    const stroke = pEl.getAttribute('stroke')
-    if (stroke) {
-      this.stroke = stroke
-    }
-    const fill = pEl.getAttribute('fill')
-    if (fill) {
-      this.fill = fill
+
+    for (let i = 0; i < pEl.attributes.length; i += 1) {
+      const attr: Attr | null = pEl.attributes.item(i)
+      if (attr) {
+        if (attr.name === 'stroke-width') {
+          this.strokeWidth = Number(attr.value)
+          continue
+        }
+        if (attr.name === 'fill') {
+          this.fill = attr.value
+          continue
+        }
+        if (attr.name === 'stroke') {
+          this.stroke = attr.value
+          continue
+        }
+        this.attrs = {
+          ...this.attrs,
+          [kebab2camel(attr.name)]: attr.value
+        }
+      }
     }
     return this
   }
 
   public toJson(): PathObject {
     return {
-      fill: this.fill,
-      d: this.getCommandString(),
-      stroke: this.stroke,
-      strokeWidth: this.strokeWidth,
-      strokeLinecap: this.curve ? 'round' : 'square',
-      strokeLinejoin: this.curve ? 'round' : 'mitter'
+      attrs: this.attrs,
+      d: this.getCommandString()
     }
   }
   public toElement(): SVGPathElement {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
     path.setAttribute('stroke-width', String(this.strokeWidth))
-    path.setAttribute('stroke', this.stroke)
     path.setAttribute('fill', this.fill)
-    path.setAttribute('stroke-linejoin', this.curve ? 'round' : 'mitter')
-    path.setAttribute('stroke-linecap', this.curve ? 'round' : 'square')
+    path.setAttribute('stroke', this.stroke)
+    Object.entries(this.attrs).map(([key, val], _i) =>
+      path.setAttribute(camel2kebab(key), val)
+    )
     path.setAttribute('d', this.getCommandString())
     return path
   }
 
   public clone(): Path {
     const path = new Path({
-      close: this.close,
-      curve: this.curve,
       strokeWidth: this.strokeWidth,
+      fill: this.fill,
       stroke: this.stroke,
-      fill: this.fill
+      attrs: { ...this.attrs }
     })
     this.commands.map(c => {
       path.addCommand(c.clone())
     })
     return path
-  }
-
-  private _createBezierCurveCommand(
-    p1: Point,
-    p2: Point,
-    p3: Point,
-    p4: Point
-  ): Command {
-    const cmd = new Command(CommandType.CURVE, p3)
-    cmd.cl = this._createControlPoint(p1, p2, p3)
-    cmd.cr = this._createControlPoint(p4, p3, p2)
-    return cmd
-  }
-
-  private _createControlPoint(prev: Point, start: Point, next: Point): Point {
-    const contolVectorPoint = next
-      .sub(prev)
-      .toVector()
-      .scale(this.smoothRatio)
-      .toPoint()
-    return start.add(contolVectorPoint)
   }
 }
 
@@ -384,13 +348,6 @@ export class Svg {
 
   public clonePaths(): Path[] {
     return this._paths.map(p => p.clone())
-  }
-
-  public addCommand(po: Point): this {
-    if (this._paths.length === 0) return this
-    const updateIndex = this._paths.length - 1
-    this._paths[updateIndex].addCommand(po)
-    return this
   }
 
   public updatePath(pa: Path, i?: number): this {
