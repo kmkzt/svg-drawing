@@ -22,6 +22,7 @@ export class SvgDrawing extends Renderer {
   public delay: number
   public bezier: BezierCurve
   private _drawPath: Path | null
+  private _listenerOption: ReturnType<typeof getPassiveOptions>
   private _clearPointListener: (() => void) | null
   private _clearMouseListener: (() => void) | null
   private _clearTouchListener: (() => void) | null
@@ -49,6 +50,7 @@ export class SvgDrawing extends Renderer {
     this.fill = fill ?? 'none'
     this.bezier = new BezierCurve()
     this._drawPath = null
+    this._listenerOption = getPassiveOptions(false)
     this._clearPointListener = null
     this._clearMouseListener = null
     this._clearTouchListener = null
@@ -190,13 +192,12 @@ export class SvgDrawing extends Renderer {
       ev.preventDefault()
       cb({ x: ev.clientX, y: ev.clientY })
     }
-    const listenerOption = getPassiveOptions(false)
     const start = handleMouse(param => {
       this._drawingStart()
-      this.el.addEventListener('pointermove', draw, listenerOption)
-      this.el.addEventListener('pointerup', end, listenerOption)
-      this.el.addEventListener('pointerleave', end, listenerOption)
-      this.el.addEventListener('pointercancel', end, listenerOption)
+      this.el.addEventListener('pointermove', draw, this._listenerOption)
+      this.el.addEventListener('pointerup', end, this._listenerOption)
+      this.el.addEventListener('pointerleave', end, this._listenerOption)
+      this.el.addEventListener('pointercancel', end, this._listenerOption)
     })
     const draw = throttle(handleMouse(this._drawingMove), this.delay)
     const end = handleMouse((param: { x: number; y: number }) => {
@@ -206,7 +207,7 @@ export class SvgDrawing extends Renderer {
       this.el.addEventListener('pointercancel', end)
       this._drawingEnd()
     })
-    this.el.addEventListener('pointerdown', start, listenerOption)
+    this.el.addEventListener('pointerdown', start, this._listenerOption)
     this._clearPointListener = () =>
       this.el.removeEventListener('pointerdown', start)
   }
@@ -221,12 +222,11 @@ export class SvgDrawing extends Renderer {
       ev.preventDefault()
       cb({ x: ev.clientX, y: ev.clientY })
     }
-    const listenerOption = getPassiveOptions(false)
     const start = handleMouse(_param => {
       this._drawingStart()
-      this.el.addEventListener('mousemove', draw, listenerOption)
-      this.el.addEventListener('mouseup', end, listenerOption)
-      this.el.addEventListener('mouseleave', end, listenerOption)
+      this.el.addEventListener('mousemove', draw, this._listenerOption)
+      this.el.addEventListener('mouseup', end, this._listenerOption)
+      this.el.addEventListener('mouseleave', end, this._listenerOption)
     })
     const draw = throttle(handleMouse(this._drawingMove), this.delay)
     const end = handleMouse(_param => {
@@ -235,7 +235,7 @@ export class SvgDrawing extends Renderer {
       this.el.removeEventListener('mouseleave', end)
       this._drawingEnd()
     })
-    this.el.addEventListener('mousedown', start, listenerOption)
+    this.el.addEventListener('mousedown', start, this._listenerOption)
     this._clearMouseListener = () =>
       this.el.removeEventListener('mousedown', start)
   }
@@ -251,11 +251,10 @@ export class SvgDrawing extends Renderer {
       const touch = ev.touches[0]
       cb({ x: touch.clientX, y: touch.clientY })
     }
-    const listenerOption = getPassiveOptions(false)
     const start = handleTouch(_param => {
       this._drawingStart()
-      this.el.addEventListener('touchmove', draw, listenerOption)
-      this.el.addEventListener('touchend', end, listenerOption)
+      this.el.addEventListener('touchmove', draw, this._listenerOption)
+      this.el.addEventListener('touchend', end, this._listenerOption)
     })
     const draw = throttle(handleTouch(this._drawingMove), this.delay)
     const end = handleTouch(_param => {
@@ -263,7 +262,7 @@ export class SvgDrawing extends Renderer {
       this.el.removeEventListener('touchend', end)
       this._drawingEnd()
     })
-    this.el.addEventListener('touchstart', start, listenerOption)
+    this.el.addEventListener('touchstart', start, this._listenerOption)
     this._clearTouchListener = () =>
       this.el.removeEventListener('touchstart', start)
   }
