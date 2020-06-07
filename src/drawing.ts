@@ -1,5 +1,6 @@
 import { Renderer, RendererOption } from './renderer'
 import { Path, Point, Command, COMMAND_TYPE } from './svg'
+import { BezierCurve } from './bezier'
 import { throttle } from './throttle'
 import { getPassiveOptions } from './utils/getPassiveOptions'
 
@@ -19,7 +20,7 @@ export class SvgDrawing extends Renderer {
   public curve: boolean
   public close: boolean
   public delay: number
-  public smoothRatio: number
+  public bezier: BezierCurve
   private _drawPath: Path | null
   private _clearPointListener: (() => void) | null
   private _clearMouseListener: (() => void) | null
@@ -46,7 +47,7 @@ export class SvgDrawing extends Renderer {
     this.close = close ?? false
     this.delay = delay ?? 20
     this.fill = fill ?? 'none'
-    this.smoothRatio = 0.2
+    this.bezier = new BezierCurve()
     this._drawPath = null
     this._clearPointListener = null
     this._clearMouseListener = null
@@ -128,63 +129,34 @@ export class SvgDrawing extends Renderer {
   public addDrawPoint(po: number[]) {
     if (!this._drawPath) return
     const commands = this._drawPath.commands
-    if (!this.curve || commands.length < 2) {
-      commands.push(
-        new Command(
-          commands.length === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE,
-          po
-        )
-      )
-    } else {
-      const p1 =
-        commands.length === 2
-          ? commands[commands.length - 2].point
-          : commands[commands.length - 3].point
-      const p2 = commands[commands.length - 2].point
-      const p3 = commands[commands.length - 1].point
-
-      if (!p1 || !p2 || !p3) {
-        new Command(COMMAND_TYPE.LINE, po)
-      } else {
-        const p4 = new Point(po[0], po[1])
-        commands[commands.length - 1] = this._createBezierCurveCommand(
-          p1,
-          p2,
-          p3,
-          p4
-        )
-        commands.push(this._createBezierCurveCommand(p2, p3, p4, p4))
-      }
+    if (
+      commands.length === 0 ||
+      commands[commands.length - 1].type === COMMAND_TYPE.CLOSE
+    ) {
+      commands.push(new Command(COMMAND_TYPE.MOVE, po))
+      return
     }
-  }
 
-  private _createBezierCurveCommand(
-    p1: Point,
-    p2: Point,
-    p3: Point,
-    p4: Point
-  ): Command {
-    const value = [
-      ...this._createControlPoint(p1, p2, p3),
-      ...this._createControlPoint(p4, p3, p2),
-      p3.x,
-      p3.y
-    ]
-    return new Command(COMMAND_TYPE.CURVE, value)
-  }
+    if (!this.curve || commands.length < 2) {
+      commands.push(new Command(COMMAND_TYPE.LINE, po))
+      return
+    }
 
-  private _createControlPoint(
-    prev: Point,
-    start: Point,
-    next: Point
-  ): [number, number] {
-    const contolVectorPoint = next
-      .sub(prev)
-      .toVector()
-      .scale(this.smoothRatio)
-      .toPoint()
-    const po = start.add(contolVectorPoint)
-    return [po.x, po.y]
+    const p1 =
+      commands.length === 2
+        ? commands[commands.length - 2].point
+        : commands[commands.length - 3].point
+    const p2 = commands[commands.length - 2].point
+    const p3 = commands[commands.length - 1].point
+
+    if (!p1 || !p2 || !p3) {
+      commands.push(new Command(COMMAND_TYPE.LINE, po))
+      return
+    }
+
+    const p4 = new Point(po[0], po[1])
+    commands[commands.length - 1] = this.bezier.createCommand(p1, p2, p3, p4)
+    commands.push(this.bezier.createCommand(p2, p3, p4, p4))
   }
 
   private _createDrawPath(): Path {
@@ -218,12 +190,13 @@ export class SvgDrawing extends Renderer {
       ev.preventDefault()
       cb({ x: ev.clientX, y: ev.clientY })
     }
+    const listenerOption = getPassiveOptions(false)
     const start = handleMouse(param => {
       this._drawingStart()
-      this.el.addEventListener('pointermove', draw, getPassiveOptions(false))
-      this.el.addEventListener('pointerup', end, getPassiveOptions(false))
-      this.el.addEventListener('pointerleave', end, getPassiveOptions(false))
-      this.el.addEventListener('pointercancel', end, getPassiveOptions(false))
+      this.el.addEventListener('pointermove', draw, listenerOption)
+      this.el.addEventListener('pointerup', end, listenerOption)
+      this.el.addEventListener('pointerleave', end, listenerOption)
+      this.el.addEventListener('pointercancel', end, listenerOption)
     })
     const draw = throttle(handleMouse(this._drawingMove), this.delay)
     const end = handleMouse((param: { x: number; y: number }) => {
@@ -233,7 +206,7 @@ export class SvgDrawing extends Renderer {
       this.el.addEventListener('pointercancel', end)
       this._drawingEnd()
     })
-    this.el.addEventListener('pointerdown', start, getPassiveOptions(false))
+    this.el.addEventListener('pointerdown', start, listenerOption)
     this._clearPointListener = () =>
       this.el.removeEventListener('pointerdown', start)
   }
@@ -248,11 +221,12 @@ export class SvgDrawing extends Renderer {
       ev.preventDefault()
       cb({ x: ev.clientX, y: ev.clientY })
     }
+    const listenerOption = getPassiveOptions(false)
     const start = handleMouse(_param => {
       this._drawingStart()
-      this.el.addEventListener('mousemove', draw, getPassiveOptions(false))
-      this.el.addEventListener('mouseup', end, getPassiveOptions(false))
-      this.el.addEventListener('mouseleave', end, getPassiveOptions(false))
+      this.el.addEventListener('mousemove', draw, listenerOption)
+      this.el.addEventListener('mouseup', end, listenerOption)
+      this.el.addEventListener('mouseleave', end, listenerOption)
     })
     const draw = throttle(handleMouse(this._drawingMove), this.delay)
     const end = handleMouse(_param => {
@@ -261,7 +235,7 @@ export class SvgDrawing extends Renderer {
       this.el.removeEventListener('mouseleave', end)
       this._drawingEnd()
     })
-    this.el.addEventListener('mousedown', start, getPassiveOptions(false))
+    this.el.addEventListener('mousedown', start, listenerOption)
     this._clearMouseListener = () =>
       this.el.removeEventListener('mousedown', start)
   }
@@ -277,10 +251,11 @@ export class SvgDrawing extends Renderer {
       const touch = ev.touches[0]
       cb({ x: touch.clientX, y: touch.clientY })
     }
+    const listenerOption = getPassiveOptions(false)
     const start = handleTouch(_param => {
       this._drawingStart()
-      this.el.addEventListener('touchmove', draw, getPassiveOptions(false))
-      this.el.addEventListener('touchend', end, getPassiveOptions(false))
+      this.el.addEventListener('touchmove', draw, listenerOption)
+      this.el.addEventListener('touchend', end, listenerOption)
     })
     const draw = throttle(handleTouch(this._drawingMove), this.delay)
     const end = handleTouch(_param => {
@@ -288,7 +263,7 @@ export class SvgDrawing extends Renderer {
       this.el.removeEventListener('touchend', end)
       this._drawingEnd()
     })
-    this.el.addEventListener('touchstart', start, getPassiveOptions(false))
+    this.el.addEventListener('touchstart', start, listenerOption)
     this._clearTouchListener = () =>
       this.el.removeEventListener('touchstart', start)
   }
