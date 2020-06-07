@@ -1,5 +1,6 @@
 export * from './drawing'
 export * from './animation'
+export * from './bezier'
 export * from './renderer'
 export * from './svg'
 export * from './throttle'

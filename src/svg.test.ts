@@ -116,18 +116,21 @@ describe('svg.ts', () => {
         path = new Path()
       })
       it('success pattern', () => {
-        path.parseCommandString('M 0 0 L 1 1 C 2 2 2 4 6 0')
-        expect(path.commands).toMatchSnapshot()
+        const testData = 'M 0 0 L 1 1 C 2 2 2 4 6 0'
+        path.parseCommandString(testData)
+        expect(path.getCommandString()).toBe(testData)
       })
       it('close command', () => {
-        path.parseCommandString('M 0 0 L 1 1 C 2 2 2 4 6 0 Z')
-        expect(path.commands).toMatchSnapshot()
+        const testData = 'M 0 0 L 1 1 C 2 2 2 4 6 0 Z'
+        path.parseCommandString(testData)
+        expect(path.getCommandString()).toBe(testData)
       })
+      // FIX Test
       it('failed pattern', () => {
         path.parseCommandString('M a b')
-        expect(path.commands).toMatchSnapshot()
+        expect(path.getCommandString()).toBe('')
         path.parseCommandString('M 0 0 C 0 1 2')
-        expect(path.commands).toMatchSnapshot()
+        expect(path.getCommandString()).toBe('M 0 0')
       })
     })
     it('clone', () => {
@@ -165,29 +168,6 @@ describe('svg.ts', () => {
         expect(path.commands).toMatchSnapshot()
         expect(path.getCommandString()).toMatchSnapshot()
       })
-      it('Close', () => {
-        path.addCommand(new Command(COMMAND_TYPE.CLOSE))
-        expect(path.commands).toMatchSnapshot()
-        expect(path.getCommandString()).toMatchSnapshot()
-      })
-      // TODO: rewrite bezier curve test
-      // describe('curve', () => {
-      //   const path = new Path({ curve: true })
-      //     .addCommand(new Point(0, 0))
-      //     .addCommand(new Point(1, 1))
-      //     .addCommand(new Point(2, 1))
-      //     .addCommand(new Point(3, 0))
-      //   it('Normal', () => {
-      //     path.close = false
-      //     expect(path.commands).toMatchSnapshot()
-      //     expect(path.getCommandString()).toMatchSnapshot()
-      //   })
-      //   it('Close', () => {
-      //     path.close = true
-      //     expect(path.commands).toMatchSnapshot()
-      //     expect(path.getCommandString()).toMatchSnapshot()
-      //   })
-      // })
     })
   })
   describe('Svg', () => {
@@ -195,15 +175,26 @@ describe('svg.ts', () => {
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
         // TODO: rewrite bezier curve test
-        // .addPath(
-        //   new Path({ curve: true, close: false })
-        //     .addCommand(new Point(0, 0))
-        //     .addCommand(new Point(1, 1))
-        //     .addCommand(new Point(2, 1))
-        //     .addCommand(new Point(3, 0))
-        // )
         .addPath(
           new Path()
+            .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
+            .addCommand(
+              new Command(COMMAND_TYPE.CURVE, [0.2, 0.2, 0.6, 0.8, 1, 1])
+            )
+            .addCommand(
+              new Command(COMMAND_TYPE.CURVE, [1.4, 1.2, 1.6, 1.2, 2, 1])
+            )
+            .addCommand(
+              new Command(COMMAND_TYPE.CURVE, [2.4, 0.8, 2.8, 0.2, 3, 0])
+            )
+        )
+        .addPath(
+          new Path({
+            attrs: {
+              strokeLinecap: 'square',
+              strokeLinejoin: 'mitter'
+            }
+          })
             .addCommand(new Command(COMMAND_TYPE.MOVE, [4, 4]))
             .addCommand(new Command(COMMAND_TYPE.LINE, [9, 4]))
             .addCommand(new Command(COMMAND_TYPE.LINE, [9, 8]))

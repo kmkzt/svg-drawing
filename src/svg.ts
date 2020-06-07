@@ -169,8 +169,8 @@ export interface PathObject {
 }
 
 const defaultAttrs: Attrs = {
-  strokeLinecap: 'round', // 'square'
-  strokeLinejoin: 'round' // 'mitter'
+  strokeLinecap: 'round', // 'mitter'
+  strokeLinejoin: 'round' // 'square'
 }
 /**
  * TODO: refactor command.
@@ -211,10 +211,10 @@ export class Path {
     return this.commands
       .map((com: Command, _i: number) => com.toString())
       .join(' ')
+      .trim()
   }
 
-  // TODO: Increase supported command types
-  // TODO: Comma parse
+  // TODO: Valid Command type
   public parseCommandString(d: string): void {
     this.commands = []
     let type: COMMAND | null = null
@@ -224,7 +224,7 @@ export class Path {
       Object.values(COMMAND_TYPE).includes(c) ? c : null
     for (let i = 0; i < c.length; i += 1) {
       const t = checkType(c[i])
-      // COMMAND_TYPE
+      // COMMAND Parse
       if (t) {
         if (!type) {
           type = t
@@ -235,13 +235,22 @@ export class Path {
         value = []
         continue
       }
-      if (!isNaN(+c[i])) {
-        value.push(+c[i])
+      if (isNaN(+c[i])) {
+        return
       }
+      value.push(+c[i])
+    }
+
+    if (type !== null) {
+      this.commands.push(new Command(type, value))
     }
   }
 
   public parsePathElement(pEl: SVGPathElement): this {
+    this.strokeWidth = 1
+    this.stroke = '#000'
+    this.fill = 'none'
+    this.attrs = defaultAttrs
     for (let i = 0; i < pEl.attributes.length; i += 1) {
       const attr: Attr | null = pEl.attributes.item(i)
       if (attr) {
