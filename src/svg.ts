@@ -129,7 +129,7 @@ export class Command {
   }
 
   public clone(): Command {
-    const copy = new Command(this.type, this.value.concat())
+    const copy = new Command(this.type, this.value.slice())
     return copy
   }
 }
@@ -242,14 +242,12 @@ export class Path {
   }
 
   public parsePathElement(pEl: SVGPathElement): this {
-    const d = pEl.getAttribute('d')
-    if (d) {
-      this.parseCommandString(d)
-    }
-
     for (let i = 0; i < pEl.attributes.length; i += 1) {
       const attr: Attr | null = pEl.attributes.item(i)
       if (attr) {
+        if (attr.name === 'd') {
+          this.parseCommandString(attr.value)
+        }
         if (attr.name === 'stroke-width') {
           this.strokeWidth = Number(attr.value)
           continue
