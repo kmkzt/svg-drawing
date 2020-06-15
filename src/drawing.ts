@@ -102,15 +102,16 @@ export class SvgDrawing extends Renderer {
   }
 
   public drawingStart() {
+    if (this._drawPath) return
     this._drawPath = this._createDrawPath()
     this.addPath(this._drawPath)
   }
 
   public drawingMove({ x, y }: { x: number; y: number }): void {
+    if (!this._drawPath) return
     const po = this._createDrawPoint({ x, y })
     this._addDrawPoint(po)
     if (
-      !this._drawPath ||
       this._drawPath.strokeWidth !== this.penWidth ||
       this._drawPath.stroke !== this.penColor
     ) {
@@ -125,6 +126,7 @@ export class SvgDrawing extends Renderer {
     if (this.close && this._drawPath) {
       this._drawPath.commands.push(new Command(COMMAND_TYPE.CLOSE))
     }
+    this._drawPath = null
     this.update()
   }
 
