@@ -1,5 +1,5 @@
 const roundUp = (num: number) => Number(num.toFixed(2))
-const isNaN = (num: Number) => num !== num
+const isNaN = (num: number) => num !== num
 
 const camel2kebab = (str: string) =>
   str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
@@ -396,7 +396,6 @@ export class Svg {
     }
     return svg
   }
-
   public toBase64(): string {
     const data = `<svg width="${this.width}" height="${
       this.height
