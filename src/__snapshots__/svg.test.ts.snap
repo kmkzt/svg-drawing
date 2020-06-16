@@ -28,27 +28,6 @@ Array [
 
 exports[`svg.ts Path commands parameter and getCommandString Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
 
-exports[`svg.ts Path parseCommandString failed pattern 1`] = `
-Array [
-  Command {
-    "type": "M",
-    "value": Array [],
-  },
-]
-`;
-
-exports[`svg.ts Path parseCommandString failed pattern 2`] = `
-Array [
-  Command {
-    "type": "M",
-    "value": Array [
-      0,
-      0,
-    ],
-  },
-]
-`;
-
 exports[`svg.ts Path toJson and toElement toElement 1`] = `
 <path
   d="M 0 0 L 1 1 L 2 1 L 3 0"
