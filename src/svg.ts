@@ -253,26 +253,26 @@ export class Path {
     this.attrs = defaultAttrs
     for (let i = 0; i < pEl.attributes.length; i += 1) {
       const attr: Attr | null = pEl.attributes.item(i)
-      if (attr) {
-        if (attr.name === 'd') {
-          this.parseCommandString(attr.value)
-        }
-        if (attr.name === 'stroke-width') {
-          this.strokeWidth = Number(attr.value)
-          continue
-        }
-        if (attr.name === 'fill') {
-          this.fill = attr.value
-          continue
-        }
-        if (attr.name === 'stroke') {
-          this.stroke = attr.value
-          continue
-        }
-        this.attrs = {
-          ...this.attrs,
-          [kebab2camel(attr.name)]: attr.value
-        }
+      if (!attr) continue
+      if (attr.name === 'd') {
+        this.parseCommandString(attr.value)
+        continue
+      }
+      if (attr.name === 'stroke-width') {
+        this.strokeWidth = Number(attr.value)
+        continue
+      }
+      if (attr.name === 'fill') {
+        this.fill = attr.value
+        continue
+      }
+      if (attr.name === 'stroke') {
+        this.stroke = attr.value
+        continue
+      }
+      this.attrs = {
+        ...this.attrs,
+        [kebab2camel(attr.name)]: attr.value
       }
     }
     return this

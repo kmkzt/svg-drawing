@@ -54,7 +54,6 @@ Svg {
   "_paths": Array [
     Path {
       "attrs": Object {
-        "d": "M 1 1 L 2 2 C 3 3 5 3 7 3 Z",
         "strokeLinecap": "round",
         "strokeLinejoin": "round",
       },
@@ -104,7 +103,6 @@ Svg {
   "_paths": Array [
     Path {
       "attrs": Object {
-        "d": "M 1 1 L 2 2 C 3 3 5 3 7 3 Z",
         "strokeLinecap": "round",
         "strokeLinejoin": "round",
       },
