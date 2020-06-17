@@ -255,6 +255,20 @@ const Example = () => {
     return () => clearInterval(stop)
   }, [delay, rainbowPen])
 
+  const handleFiles = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const reader = new FileReader()
+    reader.onload = function(ev: ProgressEvent<FileReader>) {
+      if (typeof ev.target.result !== 'string') return
+      const [type, data] = ev.target.result.split(',')
+      if (type === 'data:image/svg+xml;base64') {
+        const svgxml = atob(data)
+        if (!drawingRef.current) return
+        drawingRef.current.parseSVGString(svgxml)
+        drawingRef.current.update()
+      }
+    }
+    reader.readAsDataURL(e.target.files[0])
+  }, [])
   const handleClickShake = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
@@ -420,6 +434,11 @@ const Example = () => {
               </div>
             </>
           )}
+        </fieldset>
+        <fieldset>
+          <h3>Load Svg files</h3>
+          <p>Svg exported by this library can be read.</p>
+          <input type="file" onChange={handleFiles} multiple accept="image/*" />
         </fieldset>
       </div>
       <div
