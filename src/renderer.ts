@@ -69,6 +69,7 @@ export class Renderer extends Svg {
         data: this.toBase64(),
         extension: 'svg'
       })
+      return
     }
 
     const img: any = new Image()
