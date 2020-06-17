@@ -84,7 +84,7 @@ draw.download('svg')
 draw.download('jpg')
 draw.download('png')
 
-// Load svg data. Only the path element and `C`,` L`, `M`` Z` commands are supported.
+// Load svg data. Only the path element.
 // SVG exported by this library can be read.
 draw.parseSVGString(
   'svg width="200" height="200"><path fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path></svg>'
