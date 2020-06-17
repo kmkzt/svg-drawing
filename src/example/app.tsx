@@ -15,7 +15,7 @@ const shake: FrameAnimation = paths => {
   const randomShaking = (): number => Math.random() * shaking - shaking / 2
   for (let i = 0; i < paths.length; i += 1) {
     paths[i].commands = paths[i].commands.map((c: Command) => {
-      c.point = c.point.add(new Point(randomShaking(), randomShaking()))
+      c.point = c.point?.add(new Point(randomShaking(), randomShaking()))
       c.cl = c.cl?.add(new Point(randomShaking(), randomShaking()))
       c.cr = c.cr?.add(new Point(randomShaking(), randomShaking()))
       return c
