@@ -1,4 +1,4 @@
-const roundUp = (num: number) => Number(num.toFixed(2))
+import { roundUp } from './utils/roundUp'
 const isNaN = (num: number) => num !== num
 
 const camel2kebab = (str: string) =>
