@@ -1,6 +1,5 @@
 import { Point, Command, COMMAND_TYPE } from './svg'
-
-const roundUp = (num: number) => +num.toFixed(2)
+import { roundUp } from './utils/roundUp'
 interface BezierCurveOption {
   ratio?: number
 }
