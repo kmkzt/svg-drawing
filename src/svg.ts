@@ -389,6 +389,9 @@ export class Svg {
 
   public toElement(): SVGSVGElement {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svg.setAttributeNS(null, 'version', '1.1')
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
     svg.setAttribute('width', String(this.width))
     svg.setAttribute('height', String(this.height))
     for (let i = 0; i < this._paths.length; i += 1) {
@@ -397,12 +400,7 @@ export class Svg {
     return svg
   }
   public toBase64(): string {
-    const data = `<svg width="${this.width}" height="${
-      this.height
-    }" version="1.1" xmlns="http://www.w3.org/2000/svg">${
-      this.toElement().innerHTML
-    }</svg>`
-    return `data:image/svg+xml;base64,${btoa(data)}`
+    return `data:image/svg+xml;base64,${btoa(this.toElement().outerHTML)}`
   }
 
   public parseSVGString(svgStr: string): this {
