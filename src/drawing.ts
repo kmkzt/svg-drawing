@@ -1,7 +1,7 @@
 import { Renderer, RendererOption } from './renderer'
 import { Path, Point, Command, COMMAND_TYPE } from './svg'
 import { BezierCurve } from './bezier'
-import { throttle } from './throttle'
+import { throttle } from './utils/throttle'
 import { getPassiveOptions } from './utils/getPassiveOptions'
 
 export interface DrawingOption extends RendererOption {
