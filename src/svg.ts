@@ -383,7 +383,9 @@ export class Svg {
 
   public copy(svg: any extends Svg ? Svg : never): this {
     this._paths = svg.clonePaths()
-    this.scalePath(svg.width / this.width)
+    if (svg.width && this.width) {
+      this.scalePath(svg.width / this.width)
+    }
     return this
   }
 
@@ -420,7 +422,7 @@ export class Svg {
     })
     this.replacePaths(update)
     const width = Number(svgEl.getAttribute('width'))
-    if (width) {
+    if (width && this.width) {
       this.scalePath(this.width / width)
     }
     return this
