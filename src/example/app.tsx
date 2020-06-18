@@ -24,16 +24,8 @@ const shake: FrameAnimation = paths => {
   return paths
 }
 
-let cur = 0
-const drawingAnimation: FrameAnimation = paths => {
-  const total: number = paths.reduce((l, p) => l + p.commands.length, 0)
-  if (cur > total) {
-    cur = 0
-  } else {
-    cur += 1
-  }
+const drawingAnimation: FrameAnimation = (paths, count) => {
   const update = []
-  let count = cur
   for (let i = 0; i < paths.length; i += 1) {
     if (count < paths[i].commands.length) {
       paths[i].commands = paths[i].commands.slice(0, count)
