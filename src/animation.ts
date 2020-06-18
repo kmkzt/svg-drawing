@@ -10,9 +10,12 @@ export class SvgAnimation extends Renderer {
   private _stop: (() => void) | null
   private _anim: FrameAnimation | null
   private _restorePath: Path[]
-  constructor(el: HTMLElement, { background, ms }: AnimationOption) {
+  constructor(
+    el: HTMLElement,
+    { background, ms }: AnimationOption = { ms: 60 }
+  ) {
     super(el, { background })
-    this.ms = ms ?? 60
+    this.ms = ms
     this._stop = null
     this._anim = null
     this._restorePath = []
@@ -38,7 +41,6 @@ export class SvgAnimation extends Renderer {
     if (!this._anim) return
     const updPaths = this._anim(this._restorePath.map(p => p.clone()))
     this.replacePaths(updPaths)
-    this.update()
   }
 
   public start(): void {
@@ -54,6 +56,7 @@ export class SvgAnimation extends Renderer {
       if (!start || timestamp - start > ms) {
         start = timestamp
         this.frame()
+        this.update()
       }
       this._stopId = requestAnimationFrame(frame)
     }

@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`animation.ts SvgAnimation init 1`] = `
+SvgAnimation {
+  "_anim": null,
+  "_paths": Array [
+    Path {
+      "attrs": Object {
+        "strokeLinecap": "round",
+        "strokeLinejoin": "round",
+      },
+      "commands": Array [
+        Command {
+          "type": "M",
+          "value": Array [
+            0,
+            0,
+          ],
+        },
+        Command {
+          "type": "L",
+          "value": Array [
+            0,
+            0,
+          ],
+        },
+        Command {
+          "type": "C",
+          "value": Array [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+          ],
+        },
+        Command {
+          "type": "Z",
+          "value": Array [],
+        },
+      ],
+      "fill": "#f00",
+      "stroke": "#00f",
+      "strokeWidth": 0,
+    },
+    Path {
+      "attrs": Object {
+        "strokeLinecap": "round",
+        "strokeLinejoin": "round",
+      },
+      "commands": Array [
+        Command {
+          "type": "M",
+          "value": Array [
+            0,
+            0,
+          ],
+        },
+        Command {
+          "type": "L",
+          "value": Array [
+            0,
+            0,
+          ],
+        },
+        Command {
+          "type": "C",
+          "value": Array [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+          ],
+        },
+        Command {
+          "type": "Z",
+          "value": Array [],
+        },
+      ],
+      "fill": "#ff0",
+      "stroke": "#f0f",
+      "strokeWidth": 0,
+    },
+  ],
+  "_restorePath": Array [],
+  "_stop": null,
+  "_stopId": 0,
+  "background": "#fff",
+  "el": <div>
+    <svg
+      height="0"
+      width="0"
+    />
+  </div>,
+  "height": 0,
+  "left": 0,
+  "ms": 60,
+  "top": 0,
+  "width": 0,
+}
+`;
