@@ -13,26 +13,26 @@ SvgAnimation {
         Command {
           "type": "M",
           "value": Array [
-            0,
-            0,
+            1,
+            1,
           ],
         },
         Command {
           "type": "L",
           "value": Array [
-            0,
-            0,
+            2,
+            2,
           ],
         },
         Command {
           "type": "C",
           "value": Array [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            3,
+            3,
+            5,
+            3,
+            7,
+            3,
           ],
         },
         Command {
@@ -42,7 +42,7 @@ SvgAnimation {
       ],
       "fill": "#f00",
       "stroke": "#00f",
-      "strokeWidth": 0,
+      "strokeWidth": 4,
     },
     Path {
       "attrs": Object {
@@ -53,26 +53,26 @@ SvgAnimation {
         Command {
           "type": "M",
           "value": Array [
-            0,
-            0,
+            2,
+            2,
           ],
         },
         Command {
           "type": "L",
           "value": Array [
-            0,
-            0,
+            4,
+            4,
           ],
         },
         Command {
           "type": "C",
           "value": Array [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            6,
+            6,
+            10,
+            6,
+            14,
+            6,
           ],
         },
         Command {
@@ -82,10 +82,10 @@ SvgAnimation {
       ],
       "fill": "#ff0",
       "stroke": "#f0f",
-      "strokeWidth": 0,
+      "strokeWidth": 2,
     },
   ],
-  "_restorePath": Array [],
+  "_restorePaths": Array [],
   "_stop": null,
   "_stopId": 0,
   "background": "#fff",
@@ -104,4 +104,49 @@ SvgAnimation {
   "top": 0,
   "width": 0,
 }
+`;
+
+exports[`animation.ts SvgAnimation toAnimationSvgXML 1`] = `
+<svg
+  height="0"
+  version="1.1"
+  width="0"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <path
+    d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"
+    fill="#f00"
+    id="t0"
+    stroke="#00f"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="4"
+  >
+    <animate
+      attributeName="d"
+      dur="480ms"
+      keyTimes="0;0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      repeatCount="indefinite"
+      values="M 1 1;M 1 1;M 1 1;M 1 1 L 2 2;M 1 1 L 2 2 C 3 3 5 3 7 3;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z"
+    />
+  </path>
+  <path
+    d="M 2 2 L 4 4 C 6 6 10 6 14 6 Z"
+    fill="#ff0"
+    id="t1"
+    stroke="#f0f"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2"
+  >
+    <animate
+      attributeName="d"
+      dur="480ms"
+      keyTimes="0;0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      repeatCount="indefinite"
+      values="M 2 2;M 2 2;M 2 2;M 2 2;M 2 2;M 2 2;M 2 2;M 2 2 L 4 4;M 2 2 L 4 4 C 6 6 10 6 14 6;M 2 2 L 4 4 C 6 6 10 6 14 6 Z"
+    />
+  </path>
+</svg>
 `;
