@@ -1,5 +1,6 @@
 import { Renderer, RendererOption } from './renderer'
 import { Path } from './svg'
+import { camel2kebab } from './utils/camel2kebab'
 export interface AnimationOption extends RendererOption {
   ms: number
 }
@@ -77,9 +78,9 @@ export class SvgAnimation extends Renderer {
     }
   }
 
-  public toAnimationSvgXML() {
+  public toAnimationSvgXML(): null | SVGSVGElement {
     this._registerPaths()
-    if (!this._restorePaths) return
+    if (!this._restorePaths) return null
     const animPathsList: Path[][] = []
     for (let i = 0; i < this.totalCommandsLength; i += 1) {
       animPathsList.push(this.generateFrame(i))
@@ -90,30 +91,74 @@ export class SvgAnimation extends Renderer {
       .fill(undefined)
       .map((_, i) => i * t + '')
       .join(';')};1`
-    const animPaths = this._restorePaths.map(p => {
+
+    const createAnimationElement = (
+      origin: Path,
+      attrName: string,
+      getValue: (path: Path) => string | undefined,
+      getDefault: (origin: Path) => string
+    ): SVGElement | null => {
+      const defaultValue = getDefault(origin)
+      const animValues = animPathsList.map(ap => {
+        const path = ap.find(p => p.attrs.id === origin.attrs.id)
+        return path ? getValue(path) || defaultValue : defaultValue
+      })
+      // return null if value is same all.
+      if (animValues.every(v => v === animValues[0])) return null
+
+      const values = [defaultValue, ...animValues, defaultValue]
       const aEl = document.createElementNS(
         'http://www.w3.org/2000/svg',
         'animate'
       )
-      aEl.setAttribute('attributeName', 'd')
       aEl.setAttribute('repeatCount', 'indefinite')
       aEl.setAttribute('dur', dur)
       aEl.setAttribute('keyTimes', keyTimes)
+      aEl.setAttribute('attributeName', attrName)
+      aEl.setAttribute('values', values.join(';'))
+      return aEl
+    }
+    const animPaths = this._restorePaths.map(p => {
+      const pEl = p.toElement()
+      const dAnimEl = createAnimationElement(
+        p,
+        'd',
+        (path: Path) =>
+          path && path.commands.length > 0
+            ? path.getCommandString()
+            : undefined,
+        (origin: Path) => origin.getCommandString()
+      )
+      if (dAnimEl) pEl.appendChild(dAnimEl)
 
-      const dList = animPathsList.map(animPaths => {
-        const path = animPaths.find(ap => ap.attrs.id === p.attrs.id)
-        return path && path.commands.length > 0
-          ? path.getCommandString()
-          : p.commands[0].toString()
+      Object.entries({
+        fill: 'fill',
+        stroke: 'stroke',
+        strokeWidth: 'stroke-width'
+      }).map(([propertyName, attrName]) => {
+        const aEl = createAnimationElement(
+          p,
+          attrName,
+          path => path[propertyName],
+          origin => origin[propertyName]
+        )
+        if (aEl) pEl.appendChild(aEl)
       })
 
-      aEl.setAttribute(
-        'values',
-        [p.commands[0].toString(), ...dList, p.getCommandString()].join(';')
-      )
+      // TODO: Validate attrs
+      // exclude id
+      const { id, ...attrs } = p.attrs
+      Object.keys(attrs).map((keyName: string) => {
+        const attrName = camel2kebab(keyName)
+        const aEl = createAnimationElement(
+          p,
+          attrName,
+          path => path.attrs[keyName],
+          origin => origin.attrs[keyName]
+        )
+        if (aEl) pEl.appendChild(aEl)
+      })
 
-      const pEl = p.toElement()
-      pEl.appendChild(aEl)
       return pEl
     })
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')

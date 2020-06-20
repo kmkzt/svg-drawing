@@ -1,11 +1,7 @@
 import { roundUp } from './utils/roundUp'
+import { camel2kebab } from './utils/camel2kebab'
+import { kebab2camel } from './utils/kebab2camel'
 const isNaN = (num: number) => num !== num
-
-const camel2kebab = (str: string) =>
-  str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
-
-const kebab2camel = (str: string) =>
-  str.replace(/-([a-z])/g, (a: string, b: string) => b.toUpperCase())
 
 export class Point {
   public x: number
