@@ -27,11 +27,12 @@ describe('animation.ts', () => {
         <path fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>
         <path fill="#ff0" stroke="#f0f" stroke-width="2" d="M 2 2 L 4 4 C 6 6 10 6 14 6 Z"></path>
       </svg>`)
-      expect(svg.totalCommandsLength).toBe(8)
+      svg.start()
+      expect(svg.totalCommandsLength()).toBe(8)
     })
 
     // TODO: Improve test pattern
-    it('toAnimationSvgXML', () => {
+    it('toAnimationElement', () => {
       const svg = generateAniamtion()
       const testAnimation: FrameAnimation = (paths, count) => {
         const update = []
@@ -39,7 +40,10 @@ describe('animation.ts', () => {
           // Test property
           if (count % 2 === 0) paths[i].stroke = '#0ff'
           // Test Attribute
-          if (count % 3 === 0) paths[i].attrs.strokeLinecap = 'mitter'
+          if (count % 3 === 0)
+            Object.assign(paths[i].attrs, {
+              strokeLinecap: 'mitter'
+            })
           if (count < paths[i].commands.length) {
             paths[i].commands = paths[i].commands.slice(0, count)
             update.push(paths[i])
@@ -51,7 +55,7 @@ describe('animation.ts', () => {
         return update
       }
       svg.setAnimation(testAnimation)
-      expect(svg.toAnimationSvgXML()).toMatchSnapshot()
+      expect(svg.toAnimationElement()).toMatchSnapshot()
     })
   })
 })
