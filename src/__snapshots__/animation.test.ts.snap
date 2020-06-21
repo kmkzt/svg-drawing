@@ -128,7 +128,7 @@ exports[`animation.ts SvgAnimation toAnimationSvgXML 1`] = `
       dur="480ms"
       keyTimes="0;0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
       repeatCount="indefinite"
-      values="M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1;M 1 1 L 2 2;M 1 1 L 2 2 C 3 3 5 3 7 3;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z"
+      values="M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1;M 1 1;M 1 1 L 2 2;M 1 1 L 2 2 C 3 3 5 3 7 3;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z;M 1 1 L 2 2 C 3 3 5 3 7 3 Z"
     />
     <animate
       attributeName="stroke"
@@ -159,7 +159,7 @@ exports[`animation.ts SvgAnimation toAnimationSvgXML 1`] = `
       dur="480ms"
       keyTimes="0;0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
       repeatCount="indefinite"
-      values="M 2 2 L 4 4 C 6 6 10 6 14 6 Z;M 2 2 L 4 4 C 6 6 10 6 14 6 Z;M 2 2 L 4 4 C 6 6 10 6 14 6 Z;M 2 2 L 4 4 C 6 6 10 6 14 6 Z;M 2 2 L 4 4 C 6 6 10 6 14 6 Z;M 2 2 L 4 4 C 6 6 10 6 14 6 Z;M 2 2;M 2 2 L 4 4;M 2 2 L 4 4 C 6 6 10 6 14 6;M 2 2 L 4 4 C 6 6 10 6 14 6 Z"
+      values="M 2 2 L 4 4 C 6 6 10 6 14 6 Z;M 2 2;M 2 2;M 2 2;M 2 2;M 2 2;M 2 2;M 2 2 L 4 4;M 2 2 L 4 4 C 6 6 10 6 14 6;M 2 2 L 4 4 C 6 6 10 6 14 6 Z"
     />
     <animate
       attributeName="stroke"
@@ -173,7 +173,14 @@ exports[`animation.ts SvgAnimation toAnimationSvgXML 1`] = `
       dur="480ms"
       keyTimes="0;0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
       repeatCount="indefinite"
-      values="round;round;round;round;round;mitter;round;round;mitter;round"
+      values="round;;;;;mitter;round;round;mitter;round"
+    />
+    <animate
+      attributeName="stroke-linejoin"
+      dur="480ms"
+      keyTimes="0;0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
+      repeatCount="indefinite"
+      values="round;;;;;round;round;round;round;round"
     />
   </path>
 </svg>

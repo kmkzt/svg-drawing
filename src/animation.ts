@@ -95,13 +95,12 @@ export class SvgAnimation extends Renderer {
     const createAnimationElement = (
       origin: Path,
       attrName: string,
-      getValue: (path: Path) => string | undefined,
-      getDefault: (origin: Path) => string
+      defaultValue: string,
+      getValue: (origin: Path, path?: Path) => string
     ): SVGElement | null => {
-      const defaultValue = getDefault(origin)
       const animValues = animPathsList.map(ap => {
         const path = ap.find(p => p.attrs.id === origin.attrs.id)
-        return path ? getValue(path) || defaultValue : defaultValue
+        return getValue(origin, path)
       })
       // return null if value is same all.
       if (animValues.every(v => v === animValues[0])) return null
@@ -123,11 +122,11 @@ export class SvgAnimation extends Renderer {
       const dAnimEl = createAnimationElement(
         p,
         'd',
-        (path: Path) =>
+        p.getCommandString(),
+        (origin: Path, path?: Path) =>
           path && path.commands.length > 0
             ? path.getCommandString()
-            : undefined,
-        (origin: Path) => origin.getCommandString()
+            : origin.commands[0].toString()
       )
       if (dAnimEl) pEl.appendChild(dAnimEl)
 
@@ -139,8 +138,8 @@ export class SvgAnimation extends Renderer {
         const aEl = createAnimationElement(
           p,
           attrName,
-          path => path[propertyName],
-          origin => origin[propertyName]
+          p[attrName],
+          (origin, path) => (path ? path[propertyName] : origin[propertyName])
         )
         if (aEl) pEl.appendChild(aEl)
       })
@@ -148,13 +147,14 @@ export class SvgAnimation extends Renderer {
       // TODO: Validate attrs
       // exclude id
       const { id, ...attrs } = p.attrs
-      Object.keys(attrs).map((keyName: string) => {
-        const attrName = camel2kebab(keyName)
+      Object.keys(attrs).map((propertyName: string) => {
+        const attrName = camel2kebab(propertyName)
         const aEl = createAnimationElement(
           p,
           attrName,
-          path => path.attrs[keyName],
-          origin => origin.attrs[keyName]
+          p.attrs[propertyName],
+          (origin, path) =>
+            path ? path.attrs[propertyName] : origin[propertyName]
         )
         if (aEl) pEl.appendChild(aEl)
       })
