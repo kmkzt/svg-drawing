@@ -1,6 +1,6 @@
 # svg-drawing
 
-[![npm version](https://badge.fury.io/js/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing) [![npm download](https://img.shields.io/npm/dt/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing)[![codecov](https://codecov.io/gh/kmkzt/svg-drawing/branch/master/graph/badge.svg)](https://codecov.io/gh/kmkzt/svg-drawing)
+[![npm version](https://badge.fury.io/js/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing) [![npm download](https://img.shields.io/npm/dt/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing) [![codecov](https://codecov.io/gh/kmkzt/svg-drawing/branch/master/graph/badge.svg)](https://codecov.io/gh/kmkzt/svg-drawing)
 
 `svg-drawing` is svg based drawing library with lightweight, no dependencies.
 
@@ -87,7 +87,7 @@ draw.download('png')
 // Load svg data. Only the path element.
 // SVG exported by this library can be read.
 draw.parseSVGString(
-  'svg width="200" height="200"><path fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path></svg>'
+  '<svg width="200" height="200"><path fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path></svg>'
 )
 draw.parseSVGElement(document.getElementByID('loadSVG'))
 ```
@@ -95,6 +95,8 @@ draw.parseSVGElement(document.getElementByID('loadSVG'))
 ### Animation Example
 
 This example is to animate what you drew with Svg Drawing
+
+![animation svg sample](./src/example/animation.svg)
 
 ```js
 import { SvgDrawing, SvgAnimation } from 'svg-drawing'
@@ -111,41 +113,66 @@ const anim = new SvgAnimation(animEl, {
 // Example drawing animation.
 // Callback function to set SvgAnimation
 // Since the Path Object before animation is passed as an argument, it is converted and returned.
-let cur = 0
-const drawingAnimation = paths => {
-  const total = paths.reduce((l, p) => l + p.commands.length, 0)
-  if (cur > total) cur = 0
-  else cur += 1
-  const update = []
-  let count = cur
-  for (let i = 0; i < paths.length; i += 1) {
-    if (count < paths[i].commands.length) {
-      paths[i].commands = paths[i].commands.slice(0, count)
-      update.push(paths[i])
-      break
+
+const setupAnimation = () => {
+  // Copy drawwing data.
+  // You can also use `parseSVGElement` or `parseSVGString`.
+  // anim.parseSVGElement(document.getElementByID('targetSvg'))
+  // draw.parseSVGString('<svg width="100" height="100"><path fill="#f00" stroke="#00f"stroke-width="4" d="M 10 10 L 20 20 C 30 30 50 30 70 30 Z"></path></svg>')
+  anim.copy(draw)
+
+  // Sets the animation callback function. `fid` is number of frame index.
+  // It repeat times number of total commands. You can change the number of repeats as an option.
+  anim.setAnimation(
+    (paths, fid) => {
+      let dispNum = fid
+      const update = []
+      for (let i = 0; i < paths.length; i += 1) {
+        if (count < paths[i].commands.length) {
+          paths[i].commands = paths[i].commands.slice(0, dispNum)
+          update.push(paths[i])
+          break
+        }
+        dispNum -= paths[i].commands.length
+        update.push(paths[i])
+      }
+      return update
     }
-    count -= paths[i].commands.length
-    update.push(paths[i])
-  }
-  return update
+
+    // The default value for the option. It works the same without writing.
+    {
+      frames: anim.paths.reduce((l, p) => l + p.commands.length, 0), // The number of frames in the animation.
+      repeatCount: 'indefinete' // Set repeatCount attribute  to animate element
+    }
+  )
 }
+
 
 const start = document.getElementById('start')
 start.onclick = () => {
-  // Sets the animation callback function
-  anim.setAnimation(drawingAnimation)
-  // Copy drawwing data
-  anim.copy(draw)
-  // Start Animation
+  // load draw data
+  loadSvgAnimation()
+
+  // This method animates Svg with Javascript
   anim.start()
+
+  // Or use SVGAnimateElement.
+  anim.el.replaceChild(this.toAnimationElement(), anim.el.childNodes[0])
+  console.log(this.toAnimationElement()) // <svg height="100" version="1.1" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M 10 10 L 20 20 C 30 30 50 30 70 30 Z" fill="#f00" id="t0" stroke="#00f" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><animateattributeName="d" dur="240ms" keyTimes="0;0.25;0.5;0.75;1" repeatCount="indefinite" values="M 10 10 L 20 20 C 30 30 50 30 70 30 Z;M 10 10;M 10 10;M 10 10 L 20 20;M 10 10 L 20 20 C 30 30 50 30 70 30" /></path></svg>
 }
 
 const stop = document.getElementById('stop')
 stop.onclick = () => {
-  // Stop Animation
+  // Stop Animation.
   anim.stop()
-  // Put it back before animating
+  // Restore Svg before animation.
   anim.resotre()
+}
+
+const stop = document.getElementById('download')
+stop.onclick = () => {
+  loadAnimation()
+  anim.downloadAnimation()
 }
 ```
 
