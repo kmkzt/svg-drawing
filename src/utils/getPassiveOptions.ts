@@ -1,5 +1,5 @@
 export const getPassiveOptions = (
-  passive: boolean = true
+  passive = true
 ): boolean | { passive: boolean } => {
   try {
     const check = () => null

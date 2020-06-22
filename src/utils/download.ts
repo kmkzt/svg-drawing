@@ -2,7 +2,7 @@ const mimeTypeMap = {
   png: 'image/png',
   jpg: 'image/jpeg',
   svg: 'image/svg+xml'
-}
+} as const
 
 export const download = ({
   data,

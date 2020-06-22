@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`drawing.ts SvgDrawing close 1`] = `
+<svg
+  height="0"
+  version="1.1"
+  width="0"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <path
+    d="M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0 Z"
+    fill="none"
+    stroke="#333"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1"
+  />
+</svg>
+`;
+
+exports[`drawing.ts SvgDrawing curve = false 1`] = `
+<svg
+  height="0"
+  version="1.1"
+  width="0"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <path
+    d="M 0 0 L 1 1 L 2 1 L 3 0"
+    fill="none"
+    stroke="#333"
+    stroke-linecap="mitter"
+    stroke-linejoin="square"
+    stroke-width="1"
+  />
+</svg>
+`;
+
+exports[`drawing.ts SvgDrawing default 1`] = `
+<svg
+  height="0"
+  version="1.1"
+  width="0"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <path
+    d="M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"
+    fill="none"
+    stroke="#333"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1"
+  />
+</svg>
+`;

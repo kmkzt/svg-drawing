@@ -24,6 +24,13 @@ export function throttle<T extends (...args: any) => any>(
     }
   }
 
+  const stop = () => {
+    if (timeout) {
+      clearTimeout(timeout)
+      timeout = null
+    }
+  }
+
   return function wrap(
     this: typeof func,
     ...wraparg: Parameters<T>
@@ -34,10 +41,7 @@ export function throttle<T extends (...args: any) => any>(
     context = this
     args = wraparg
     if (remaining <= 0 || remaining > wait) {
-      if (timeout) {
-        clearTimeout(timeout)
-        timeout = null
-      }
+      stop()
       previous = now
       result = func.apply(context, args)
       if (!timeout) {

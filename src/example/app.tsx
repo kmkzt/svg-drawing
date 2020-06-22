@@ -15,7 +15,7 @@ const shake: FrameAnimation = paths => {
   const randomShaking = (): number => Math.random() * shaking - shaking / 2
   for (let i = 0; i < paths.length; i += 1) {
     paths[i].commands = paths[i].commands.map((c: Command) => {
-      c.point = c.point.add(new Point(randomShaking(), randomShaking()))
+      c.point = c.point?.add(new Point(randomShaking(), randomShaking()))
       c.cl = c.cl?.add(new Point(randomShaking(), randomShaking()))
       c.cr = c.cr?.add(new Point(randomShaking(), randomShaking()))
       return c
@@ -24,16 +24,8 @@ const shake: FrameAnimation = paths => {
   return paths
 }
 
-let cur = 0
-const drawingAnimation: FrameAnimation = paths => {
-  const total: number = paths.reduce((l, p) => l + p.commands.length, 0)
-  if (cur > total) {
-    cur = 0
-  } else {
-    cur += 1
-  }
+const drawingAnimation: FrameAnimation = (paths, count) => {
   const update = []
-  let count = cur
   for (let i = 0; i < paths.length; i += 1) {
     if (count < paths[i].commands.length) {
       paths[i].commands = paths[i].commands.slice(0, count)
@@ -255,17 +247,36 @@ const Example = () => {
     return () => clearInterval(stop)
   }, [delay, rainbowPen])
 
+  const handleFiles = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const reader = new FileReader()
+    reader.onload = function(ev: ProgressEvent<FileReader>) {
+      if (typeof ev.target.result !== 'string') return
+      const [type, data] = ev.target.result.split(',')
+      if (type === 'data:image/svg+xml;base64') {
+        const svgxml = atob(data)
+        if (!drawingRef.current) return
+        drawingRef.current.parseSVGString(svgxml)
+        drawingRef.current.update()
+      }
+    }
+    reader.readAsDataURL(e.target.files[0])
+  }, [])
   const handleClickShake = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
-    animationRef.current.setAnimation(shake)
+    animationRef.current.setAnimation(shake, {
+      frame: 3,
+      repeat: 100
+    })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
   }, [])
   const handleClickDrawingAnimation = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
-    animationRef.current.setAnimation(drawingAnimation)
+    animationRef.current.setAnimation(drawingAnimation, {
+      repeat: 1
+    })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
   }, [])
@@ -276,6 +287,10 @@ const Example = () => {
   const handleClickRestore = useCallback(() => {
     if (!animationRef.current) return
     animationRef.current.restore()
+  }, [])
+  const handleDownloadAnimation = useCallback(() => {
+    if (!animationRef.current) return
+    animationRef.current.downloadAnimation()
   }, [])
   // TODO: fix
   // useEffect(() => {
@@ -421,6 +436,11 @@ const Example = () => {
             </>
           )}
         </fieldset>
+        <fieldset>
+          <h3>Load Svg files</h3>
+          <p>Svg exported by this library can be read.</p>
+          <input type="file" onChange={handleFiles} multiple accept="image/*" />
+        </fieldset>
       </div>
       <div
         style={{
@@ -457,6 +477,9 @@ const Example = () => {
             <button onClick={handleClickDrawingAnimation}>Drawing</button>
             <button onClick={handleClickStop}>Stop</button>
             <button onClick={handleClickRestore}>Restore</button>
+            <button onClick={handleDownloadAnimation}>
+              Download Anmation SVG
+            </button>
             <div>
               ANIMATION MS
               <input

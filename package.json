@@ -76,6 +76,8 @@
     "eslint": "7.2.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-loader": "4.0.2",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-jest": "23.13.2",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-react": "7.20.0",
     "eslint-plugin-react-hooks": "4.0.4",
@@ -102,6 +104,9 @@
     "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.11.0",
     "webpack-merge": "4.2.2"
+  },
+  "resolutions": {
+    "http-proxy": "1.18.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

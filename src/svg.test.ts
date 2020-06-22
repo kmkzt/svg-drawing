@@ -1,4 +1,4 @@
-import { Point, Vector, Path, Svg, Command, CommandType } from './svg'
+import { Point, Vector, Path, Svg, Command, COMMAND_TYPE } from './svg'
 
 describe('svg.ts', () => {
   describe('Point', () => {
@@ -48,34 +48,36 @@ describe('svg.ts', () => {
   })
   describe('Command', () => {
     it('MOVE', () => {
-      const cmd = new Command(CommandType.MOVE, new Point(0, 0))
+      const cmd = new Command(COMMAND_TYPE.MOVE, [0, 0])
       expect(cmd.toString()).toBe('M 0 0')
     })
     it('LINE', () => {
-      const cmd = new Command(CommandType.LINE, new Point(1, 1))
+      const cmd = new Command(COMMAND_TYPE.LINE, [1, 1])
       expect(cmd.toString()).toBe('L 1 1')
     })
     it('CURVE', () => {
-      const cmd = new Command(CommandType.CURVE, new Point(1, 1))
-      expect(cmd.toString()).toBe('L 1 1')
-      cmd.cl = new Point(0.25, 0.25)
-      cmd.cr = new Point(0.75, 0.25)
+      const cmd = new Command(COMMAND_TYPE.CURVE, [
+        0.25,
+        0.25,
+        0.75,
+        0.25,
+        1,
+        1
+      ])
       expect(cmd.toString()).toBe('C 0.25 0.25 0.75 0.25 1 1')
     })
 
     describe('clone', () => {
-      let cmd
-      let clone
+      let cmd: Command
+      let clone: Command
       beforeEach(() => {
-        cmd = new Command(CommandType.CURVE, new Point(1, 1))
-        cmd.cl = new Point(0.25, 0.25)
-        cmd.cr = new Point(0.75, 0.25)
+        cmd = new Command(COMMAND_TYPE.CURVE, [0.25, 0.25, 0.75, 0.25, 1, 1])
         clone = cmd.clone()
       })
       it('point is not overwritten', () => {
-        clone.x = 1.5
+        clone.point = new Point(1.5, 1)
         expect(cmd.point.x).toBe(1)
-        expect(clone.point.x).toBe(1)
+        expect(clone.point.x).toBe(1.5)
       })
       it('cl is not overwritten', () => {
         clone.cl = new Point(0.1, 0.1)
@@ -93,71 +95,64 @@ describe('svg.ts', () => {
     let path: Path
     beforeEach(() => {
       path = new Path({ strokeWidth: 1 })
-        .addCommand(new Point(1, 1))
-        .addCommand(new Point(2, 2))
+        .addCommand(new Command(COMMAND_TYPE.MOVE, [1, 1]))
+        .addCommand(new Command(COMMAND_TYPE.LINE, [2, 2]))
     })
     it('addCommand', () => {
       expect(path.commands.length).toBe(2)
-      expect(path.commands[0].type).toBe(CommandType.MOVE)
+      expect(path.commands[0].type).toBe(COMMAND_TYPE.MOVE)
       expect(path.commands[0].point.x).toBe(1)
       expect(path.commands[0].point.y).toBe(1)
     })
     it('scale', () => {
       path.scale(2)
       expect(path.strokeWidth).toBe(2)
-      expect(path.commands[0].type).toBe(CommandType.MOVE)
+      expect(path.commands[0].type).toBe(COMMAND_TYPE.MOVE)
       expect(path.commands[0].point.x).toBe(2)
       expect(path.commands[0].point.y).toBe(2)
-    })
-    describe('parsePathElement', () => {
-      it('success pattern', () => {
-        const pathEl = document.createElementNS(
-          'http://www.w3.org/2000/svg',
-          'path'
-        )
-        pathEl.setAttribute('fill', '#00f')
-        pathEl.setAttribute('stroke', '#f00')
-        pathEl.setAttribute('stroke-width', '4')
-        pathEl.setAttribute('d', 'M 0 0 L 1 1 C 2 2 2 4 6 0')
-      })
     })
     describe('parseCommandString', () => {
       beforeEach(() => {
         path = new Path()
       })
       it('success pattern', () => {
-        path.parseCommandString('M 0 0 L 1 1 C 2 2 2 4 6 0')
-        expect(path.commands).toMatchSnapshot()
-        expect(path.close).toBe(false)
+        const testData =
+          'M 0 0 L 1 1 C 2 2 2 4 6 0 Q 0 0 1 1 H 10 V 20 m 0 0 l 1 1 c 1 1 2 2 3 3 h 10 v 20 A 6 4 10 0 1 14 10 a 6 4 10 0 1 14 10'
+        path.parseCommandString(testData)
+        expect(path.getCommandString()).toBe(testData)
       })
       it('close command', () => {
-        path.parseCommandString('M 0 0 L 1 1 C 2 2 2 4 6 0 Z')
-        expect(path.commands).toMatchSnapshot()
-        expect(path.close).toBe(true)
+        const testData = 'M 0 0 L 1 1 C 2 2 2 4 6 0 Z'
+        path.parseCommandString(testData)
+        expect(path.getCommandString()).toBe(testData)
       })
-      it('failed pattern', () => {
-        path.parseCommandString('M a b')
-        expect(path.commands).toMatchSnapshot()
-        path.parseCommandString('M 0 0 C 0 1 2')
-        expect(path.commands).toMatchSnapshot()
-      })
+      // TODO: Validate command
+      // it('failed pattern', () => {
+      //   path.parseCommandString('M a b')
+      //   expect(path.getCommandString()).toBe('')
+      //   path.parseCommandString('M 0 0 C 0 1 2')
+      //   expect(path.getCommandString()).toBe('M 0 0')
+      // })
     })
     it('clone', () => {
-      const origin = new Path({ strokeWidth: 1 }).addCommand(new Point(1, 1))
-      const clone = origin.clone().addCommand(new Point(2, 2))
-      clone.commands[0].point.x = 3
+      const origin = new Path({ strokeWidth: 1 }).addCommand(
+        new Command(COMMAND_TYPE.MOVE, [1, 1])
+      )
+      const clone = origin
+        .clone()
+        .addCommand(new Command(COMMAND_TYPE.LINE, [2, 2]))
+      clone.commands[0].point = new Point(3, clone.commands[0].point.y)
       expect(origin.commands.length).toBe(1)
       expect(clone.commands.length).toBe(2)
       expect(origin.commands[0].point.x).toBe(1)
       expect(clone.commands[0].point.x).toBe(3)
     })
     describe('toJson and toElement', () => {
-      const path = new Path({ curve: true, close: false })
-        .addCommand(new Point(0, 0))
-        .addCommand(new Point(1, 1))
-        .addCommand(new Point(2, 1))
-        .addCommand(new Point(3, 0))
-
+      const path = new Path()
+        .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
+        .addCommand(new Command(COMMAND_TYPE.LINE, [1, 1]))
+        .addCommand(new Command(COMMAND_TYPE.LINE, [2, 1]))
+        .addCommand(new Command(COMMAND_TYPE.LINE, [3, 0]))
       it('toJson', () => {
         expect(path.toJson()).toMatchSnapshot()
       })
@@ -166,38 +161,13 @@ describe('svg.ts', () => {
       })
     })
     describe('commands parameter and getCommandString', () => {
-      describe('Line', () => {
-        const path = new Path({ curve: false })
-          .addCommand(new Point(0, 0))
-          .addCommand(new Point(1, 1))
-          .addCommand(new Point(-1, -1))
-        it('Normal', () => {
-          path.close = false
-          expect(path.commands).toMatchSnapshot()
-          expect(path.getCommandString()).toMatchSnapshot()
-        })
-        it('Close', () => {
-          path.close = true
-          expect(path.commands).toMatchSnapshot()
-          expect(path.getCommandString()).toMatchSnapshot()
-        })
-      })
-      describe('curve', () => {
-        const path = new Path({ curve: true })
-          .addCommand(new Point(0, 0))
-          .addCommand(new Point(1, 1))
-          .addCommand(new Point(2, 1))
-          .addCommand(new Point(3, 0))
-        it('Normal', () => {
-          path.close = false
-          expect(path.commands).toMatchSnapshot()
-          expect(path.getCommandString()).toMatchSnapshot()
-        })
-        it('Close', () => {
-          path.close = true
-          expect(path.commands).toMatchSnapshot()
-          expect(path.getCommandString()).toMatchSnapshot()
-        })
+      const path = new Path()
+        .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
+        .addCommand(new Command(COMMAND_TYPE.LINE, [1, 1]))
+        .addCommand(new Command(COMMAND_TYPE.LINE, [-1, -1]))
+      it('Normal', () => {
+        expect(path.commands).toMatchSnapshot()
+        expect(path.getCommandString()).toMatchSnapshot()
       })
     })
   })
@@ -205,19 +175,32 @@ describe('svg.ts', () => {
     let svg: Svg
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
+        // TODO: rewrite bezier curve test
         .addPath(
-          new Path({ curve: true, close: false })
-            .addCommand(new Point(0, 0))
-            .addCommand(new Point(1, 1))
-            .addCommand(new Point(2, 1))
-            .addCommand(new Point(3, 0))
+          new Path()
+            .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
+            .addCommand(
+              new Command(COMMAND_TYPE.CURVE, [0.2, 0.2, 0.6, 0.8, 1, 1])
+            )
+            .addCommand(
+              new Command(COMMAND_TYPE.CURVE, [1.4, 1.2, 1.6, 1.2, 2, 1])
+            )
+            .addCommand(
+              new Command(COMMAND_TYPE.CURVE, [2.4, 0.8, 2.8, 0.2, 3, 0])
+            )
         )
         .addPath(
-          new Path({ curve: false, close: true })
-            .addCommand(new Point(4, 4))
-            .addCommand(new Point(9, 4))
-            .addCommand(new Point(9, 8))
-            .addCommand(new Point(3, 0))
+          new Path({
+            attrs: {
+              strokeLinecap: 'square',
+              strokeLinejoin: 'mitter'
+            }
+          })
+            .addCommand(new Command(COMMAND_TYPE.MOVE, [4, 4]))
+            .addCommand(new Command(COMMAND_TYPE.LINE, [9, 4]))
+            .addCommand(new Command(COMMAND_TYPE.LINE, [9, 8]))
+            .addCommand(new Command(COMMAND_TYPE.LINE, [3, 0]))
+            .addCommand(new Command(COMMAND_TYPE.CLOSE))
         )
     })
 
