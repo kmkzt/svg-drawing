@@ -8,5 +8,5 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.(t|j)s?(x)']
+  collectCoverageFrom: ['src/**/*.(t|j)s?(x)', '!src/example/**/**']
 }

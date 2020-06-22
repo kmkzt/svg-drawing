@@ -14,11 +14,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.13.0
-      - name: install
-        run: |
-          yarn install
       - name: Build
         run: |
+          yarn install --frozen-lockfile
           yarn demo
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

@@ -30,19 +30,16 @@ jobs:
           key: nodeModules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             nodeModules-
-      - name: Install dependencies
-        # TODO: add check yarn.lock
-        # run: yarn install --frozen-lockfile
-        run: yarn install
+      - name: install, lint, test
+        run: |
+          yarn install --frozen-lockfile
+          yarn lint
+          yarn test
         env:
           CI: true
 
-      - name: Lint
-        run: yarn lint
-        env:
-          CI: true
-
-      - name: Test
-        run: yarn test
-        env:
-          CI: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.0.3
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          file: ./coverage/clover.xml
