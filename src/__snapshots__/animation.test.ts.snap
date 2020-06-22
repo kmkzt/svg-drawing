@@ -85,6 +85,7 @@ SvgAnimation {
       "strokeWidth": 2,
     },
   ],
+  "_repeatCount": "indefinite",
   "_restorePaths": Array [],
   "_stop": null,
   "_stopId": 0,

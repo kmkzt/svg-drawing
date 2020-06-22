@@ -264,14 +264,19 @@ const Example = () => {
   const handleClickShake = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
-    animationRef.current.setAnimation(shake)
+    animationRef.current.setAnimation(shake, {
+      frame: 3,
+      repeat: 100
+    })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
   }, [])
   const handleClickDrawingAnimation = useCallback(() => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
-    animationRef.current.setAnimation(drawingAnimation)
+    animationRef.current.setAnimation(drawingAnimation, {
+      repeat: 1
+    })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
   }, [])
@@ -282,6 +287,10 @@ const Example = () => {
   const handleClickRestore = useCallback(() => {
     if (!animationRef.current) return
     animationRef.current.restore()
+  }, [])
+  const handleDownloadAnimation = useCallback(() => {
+    if (!animationRef.current) return
+    animationRef.current.downloadAnimation()
   }, [])
   // TODO: fix
   // useEffect(() => {
@@ -468,6 +477,9 @@ const Example = () => {
             <button onClick={handleClickDrawingAnimation}>Drawing</button>
             <button onClick={handleClickStop}>Stop</button>
             <button onClick={handleClickRestore}>Restore</button>
+            <button onClick={handleDownloadAnimation}>
+              Download Anmation SVG
+            </button>
             <div>
               ANIMATION MS
               <input

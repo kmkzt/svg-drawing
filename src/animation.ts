@@ -13,6 +13,13 @@ export class SvgAnimation extends Renderer {
   private _stop: (() => void) | null
   private _anim: FrameAnimation | null
   private _restorePaths: Path[]
+  private _framesNumber: number | undefined
+
+  /**
+   * Releation animate element
+   * TODO: add easing option
+   */
+  private _repeatCount: string
   constructor(
     el: HTMLElement,
     { background, ms }: AnimationOption = { ms: 60 }
@@ -23,10 +30,22 @@ export class SvgAnimation extends Renderer {
     this._anim = null
     this._restorePaths = []
     this._stopId = 0
+    this._repeatCount = 'indefinite'
   }
 
-  public setAnimation(fn: FrameAnimation): void {
+  /**
+   * @param {FramaAnimation} fn
+   * @param {{ frame?: number; repeat?: number }} opts
+   * `frame` is the number of frames to animate
+   * `repeat` is related for rapeatCount of animate element attribute.
+   */
+  public setAnimation(
+    fn: FrameAnimation,
+    { frame, repeat }: { frame?: number; repeat?: number } = {}
+  ): void {
     this._anim = fn
+    this._framesNumber = frame
+    this._repeatCount = repeat ? `${repeat}` : 'indefinite'
   }
 
   public stop(): boolean {
@@ -50,16 +69,11 @@ export class SvgAnimation extends Renderer {
     )
   }
 
-  public totalCommandsLength(): number {
-    return this._restorePaths.reduce((l, p) => l + p.commands.length, 0)
-  }
-
-  public start(count?: number): void {
+  public start(): void {
     let index = 0
     let start: number | undefined
     const ms = this.ms
-    const loopCount: number = count || this.totalCommandsLength()
-
+    const loopCount: number = this._getFramesNumber()
     this.stop()
     this._registerPaths()
     const frame: FrameRequestCallback = timestamp => {
@@ -90,12 +104,12 @@ export class SvgAnimation extends Renderer {
       this._registerPaths()
     }
 
-    const loopNumber = this.totalCommandsLength()
+    const loopNumber = this._getFramesNumber()
     const animPathsList: Path[][] = Array(loopNumber)
       .fill(null)
       .map((_: any, i: number) => this.generateFrame(i))
 
-    const dur = loopNumber * this.ms + 'ms'
+    const dur = loopNumber * (this.ms > 0 ? this.ms : 1) + 'ms'
     const t = 1 / loopNumber
     const keyTimes = `0;${Array(loopNumber)
       .fill(undefined)
@@ -106,11 +120,17 @@ export class SvgAnimation extends Renderer {
       origin: Path,
       attrName: string,
       defaultValue: string,
-      getValue: (origin: Path, path?: Path) => string | undefined
+      getValue: ({
+        origin,
+        path
+      }: {
+        origin: Path
+        path?: Path
+      }) => string | undefined
     ): SVGElement | null => {
       const animValues = animPathsList.map(ap => {
         const path = ap.find(p => p.attrs.id === origin.attrs.id)
-        return getValue(origin, path) || defaultValue
+        return getValue({ origin, path }) || defaultValue
       })
       // return null if value is same all.
       if (animValues.every(v => v === defaultValue)) return null
@@ -120,7 +140,7 @@ export class SvgAnimation extends Renderer {
         'http://www.w3.org/2000/svg',
         'animate'
       )
-      aEl.setAttribute('repeatCount', 'indefinite')
+      aEl.setAttribute('repeatCount', this._repeatCount)
       aEl.setAttribute('dur', dur)
       aEl.setAttribute('keyTimes', keyTimes)
       aEl.setAttribute('attributeName', attrName)
@@ -133,7 +153,7 @@ export class SvgAnimation extends Renderer {
         p,
         'd',
         p.getCommandString(),
-        (origin: Path, path?: Path) =>
+        ({ origin, path }) =>
           path && path.commands.length > 0
             ? path.getCommandString()
             : origin.commands[0].toString()
@@ -149,7 +169,7 @@ export class SvgAnimation extends Renderer {
           p,
           attrName,
           p[propertyName],
-          (origin, path) => (path ? path[propertyName] : undefined)
+          ({ path }) => (path ? path[propertyName] : undefined)
         )
         if (aEl) pEl.appendChild(aEl)
       })
@@ -163,7 +183,7 @@ export class SvgAnimation extends Renderer {
           p,
           attrName,
           p.attrs[propertyName],
-          (origin, path) => path?.attrs[propertyName]
+          ({ path }) => path?.attrs[propertyName]
         )
         if (aEl) pEl.appendChild(aEl)
       })
@@ -180,6 +200,10 @@ export class SvgAnimation extends Renderer {
     return svg
   }
 
+  /**
+   * @param filename
+   * TODO: Support gif and apng
+   */
   public downloadAnimation(filename?: string) {
     download({
       data: `data:image/svg+xml;base64,${btoa(
@@ -188,6 +212,16 @@ export class SvgAnimation extends Renderer {
       extension: 'svg',
       filename
     })
+  }
+
+  /**
+   * @return {number}
+   * Default value is total of commands length.
+   */
+  private _getFramesNumber(): number {
+    return this._framesNumber && this._framesNumber > 0
+      ? this._framesNumber
+      : this._restorePaths.reduce((l, p) => l + p.commands.length, 0)
   }
 
   private _registerPaths() {
