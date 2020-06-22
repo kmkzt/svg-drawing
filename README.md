@@ -2,6 +2,8 @@
 
 [![npm version](https://badge.fury.io/js/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing) [![npm download](https://img.shields.io/npm/dt/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing) [![codecov](https://codecov.io/gh/kmkzt/svg-drawing/branch/master/graph/badge.svg)](https://codecov.io/gh/kmkzt/svg-drawing)
 
+![animation svg sample](./src/example/animation.svg)
+
 `svg-drawing` is svg based drawing library with lightweight, no dependencies.
 
 This is a **[demo](https://kmkzt.github.io/svg-drawing/)**.
@@ -96,8 +98,6 @@ draw.parseSVGElement(document.getElementByID('loadSVG'))
 
 This example is to animate what you drew with Svg Drawing
 
-![animation svg sample](./src/example/animation.svg)
-
 ```js
 import { SvgDrawing, SvgAnimation } from 'svg-drawing'
 
@@ -140,6 +140,7 @@ const setupAnimation = () => {
     }
 
     // The default value for the option. It works the same without writing.
+    // This option cannot be used before version 2. When setting the number of frames, you need to have a global variable used in the animation function
     {
       frames: anim.paths.reduce((l, p) => l + p.commands.length, 0), // The number of frames in the animation.
       repeatCount: 'indefinete' // Set repeatCount attribute  to animate element
@@ -148,19 +149,21 @@ const setupAnimation = () => {
 }
 
 
+// Animation Start
 const start = document.getElementById('start')
 start.onclick = () => {
   // load draw data
   loadSvgAnimation()
 
-  // This method animates Svg with Javascript
+  // Method to animate Svg with JavaScript
   anim.start()
 
   // Or use SVGAnimateElement.
-  anim.el.replaceChild(this.toAnimationElement(), anim.el.childNodes[0])
-  console.log(this.toAnimationElement()) // <svg height="100" version="1.1" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M 10 10 L 20 20 C 30 30 50 30 70 30 Z" fill="#f00" id="t0" stroke="#00f" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><animateattributeName="d" dur="240ms" keyTimes="0;0.25;0.5;0.75;1" repeatCount="indefinite" values="M 10 10 L 20 20 C 30 30 50 30 70 30 Z;M 10 10;M 10 10;M 10 10 L 20 20;M 10 10 L 20 20 C 30 30 50 30 70 30" /></path></svg>
+  anim.el.replaceChild(anim.toAnimationElement(), anim.el.childNodes[0])
+  console.log(anim.toAnimationElement()) // <svg height="100" version="1.1" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M 10 10 L 20 20 C 30 30 50 30 70 30 Z" fill="#f00" id="t0" stroke="#00f" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><animateattributeName="d" dur="240ms" keyTimes="0;0.25;0.5;0.75;1" repeatCount="indefinite" values="M 10 10 L 20 20 C 30 30 50 30 70 30 Z;M 10 10;M 10 10;M 10 10 L 20 20;M 10 10 L 20 20 C 30 30 50 30 70 30" /></path></svg>
 }
 
+// Animation Stop
 const stop = document.getElementById('stop')
 stop.onclick = () => {
   // Stop Animation.
@@ -169,17 +172,20 @@ stop.onclick = () => {
   anim.resotre()
 }
 
-const stop = document.getElementById('download')
-stop.onclick = () => {
+// Download animtaion svg.
+const download = document.getElementById('download')
+download.onclick = () => {
   loadAnimation()
   anim.downloadAnimation()
 }
 ```
 
-SvgAnimation methods.
-
 ```javascript
 const anim = new SvgAnimation(el)
+
+// Property `ms` can be changed to set Animation frame. `ms` is mili seconds.
+// Can be changed during animation
+anim.ms = 50
 
 // Animation Start
 anim.start()
@@ -188,7 +194,11 @@ anim.stop()
 // Return to Svg before animation
 anim.restore()
 
-// Parameter `ms` can be changed to set Animation frame. `ms` is mili seconds.
-// Can be changed during animation
-anim.ms = 50
+/**
+ * Only version 3 or later is supported
+ */
+// Creata animation svg element.
+anim.toAnimationElement()
+// Download animation svg element.
+anim.downloadAnimation()
 ```
