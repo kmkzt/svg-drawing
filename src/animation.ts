@@ -41,11 +41,14 @@ export class SvgAnimation extends Renderer {
    */
   public setAnimation(
     fn: FrameAnimation,
-    { frame, repeat }: { frame?: number; repeat?: number } = {}
+    {
+      frames,
+      repeatCount
+    }: { frames?: number; repeatCount?: number | string } = {}
   ): void {
     this._anim = fn
-    this._framesNumber = frame
-    this._repeatCount = repeat ? `${repeat}` : 'indefinite'
+    this._framesNumber = frames
+    this._repeatCount = repeatCount ? `${repeatCount}` : 'indefinite'
   }
 
   public stop(): boolean {

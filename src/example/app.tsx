@@ -265,8 +265,8 @@ const Example = () => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
     animationRef.current.setAnimation(shake, {
-      frame: 3,
-      repeat: 100
+      frames: 3,
+      repeatCount: 100
     })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
@@ -275,7 +275,7 @@ const Example = () => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
     animationRef.current.setAnimation(drawingAnimation, {
-      repeat: 1
+      repeatCount: 1
     })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
