@@ -35,10 +35,9 @@ describe('renderer.ts', () => {
         )
     })
 
-    it('download svg', done => {
+    it('download svg', () => {
       const testDownload = (param: any): void => {
         expect(param).toMatchSnapshot()
-        done()
       }
       renderer.download('svg', testDownload)
     })
