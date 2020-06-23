@@ -10,50 +10,6 @@ import { render } from 'react-dom'
 import { SvgDrawing, SvgAnimation, FrameAnimation, Command, Point } from '../'
 // import Pressure from 'pressure'
 
-const shake: FrameAnimation = paths => {
-  const shaking = 5
-  const randomShaking = (): number => Math.random() * shaking - shaking / 2
-  for (let i = 0; i < paths.length; i += 1) {
-    paths[i].commands = paths[i].commands.map((c: Command) => {
-      c.point = c.point?.add(new Point(randomShaking(), randomShaking()))
-      c.cl = c.cl?.add(new Point(randomShaking(), randomShaking()))
-      c.cr = c.cr?.add(new Point(randomShaking(), randomShaking()))
-      return c
-    })
-  }
-  return paths
-}
-
-const drawingAnimation: FrameAnimation = (paths, count) => {
-  const update = []
-  for (let i = 0; i < paths.length; i += 1) {
-    if (count < paths[i].commands.length) {
-      paths[i].commands = paths[i].commands.slice(0, count)
-      update.push(paths[i])
-      break
-    }
-    count -= paths[i].commands.length
-    update.push(paths[i])
-  }
-  return update
-}
-
-const lattice = (size: number) => `
-  repeating-linear-gradient(
-    90deg,
-    #ddd ,
-    #ddd 1px,
-    transparent 1px,
-    transparent ${String(size)}px
-  ),
-  repeating-linear-gradient(
-    0deg,
-    #ddd ,
-    #ddd 1px,
-    transparent 1px,
-    transparent ${String(size)}px
-  )
-`
 const size = 30
 const colorList = [
   'none',
@@ -87,6 +43,78 @@ const getRandomColor = (): string =>
   ).join('')}`
 
 const CANVAS_SIZE = innerHeight > innerWidth ? '98vw' : '49vw'
+
+const shake: FrameAnimation = paths => {
+  const range = 5
+  const randomShaking = (): number => Math.random() * range - range / 2
+  for (let i = 0; i < paths.length; i += 1) {
+    paths[i].commands = paths[i].commands.map((c: Command) => {
+      c.point = c.point?.add(new Point(randomShaking(), randomShaking()))
+      c.cl = c.cl?.add(new Point(randomShaking(), randomShaking()))
+      c.cr = c.cr?.add(new Point(randomShaking(), randomShaking()))
+      return c
+    })
+  }
+  return paths
+}
+
+const colorfulList = [
+  '#F44336',
+  '#E91E63',
+  '#9C27B0',
+  '#673AB7',
+  '#3F51B5',
+  '#2196F3',
+  '#00BCD4',
+  '#009688',
+  '#4CAF50',
+  '#8BC34A',
+  '#CDDC39',
+  '#FFEB3B',
+  '#FFC107',
+  '#FF9800',
+  '#FF5722'
+]
+
+const colorfulAnimation: FrameAnimation = (paths, fid) => {
+  for (let i = 0; i < paths.length; i += 1) {
+    paths[i].stroke = colorfulList[fid % colorfulList.length]
+    paths[i].fill = colorfulList[(fid + 4) % colorfulList.length]
+  }
+  return paths
+}
+
+const drawingAnimation: FrameAnimation = (paths, count) => {
+  const update = []
+  for (let i = 0; i < paths.length; i += 1) {
+    if (count < paths[i].commands.length) {
+      paths[i].commands = paths[i].commands.slice(0, count)
+      update.push(paths[i])
+      break
+    }
+    count -= paths[i].commands.length
+    update.push(paths[i])
+  }
+  return update
+}
+
+const lattice = (s: number) => `
+  repeating-linear-gradient(
+    90deg,
+    #ddd ,
+    #ddd 1px,
+    transparent 1px,
+    transparent ${String(s)}px
+  ),
+  repeating-linear-gradient(
+    0deg,
+    #ddd ,
+    #ddd 1px,
+    transparent 1px,
+    transparent ${String(s)}px
+  )
+`
+
 const Example = () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const drawingRef = useRef<SvgDrawing | null>(null)
@@ -265,8 +293,7 @@ const Example = () => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
     animationRef.current.setAnimation(shake, {
-      frames: 3,
-      repeatCount: 100
+      frames: 3
     })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
@@ -276,6 +303,15 @@ const Example = () => {
     if (!drawingRef.current) return
     animationRef.current.setAnimation(drawingAnimation, {
       repeatCount: 1
+    })
+    animationRef.current.copy(drawingRef.current)
+    animationRef.current.start()
+  }, [])
+  const handleClickColorfulAnimation = useCallback(() => {
+    if (!animationRef.current) return
+    if (!drawingRef.current) return
+    animationRef.current.setAnimation(colorfulAnimation, {
+      frames: colorfulList.length
     })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
@@ -475,6 +511,7 @@ const Example = () => {
             <h3>Animation methods</h3>
             <button onClick={handleClickShake}>Shaking</button>
             <button onClick={handleClickDrawingAnimation}>Drawing</button>
+            <button onClick={handleClickColorfulAnimation}>Colorful</button>
             <button onClick={handleClickStop}>Stop</button>
             <button onClick={handleClickRestore}>Restore</button>
             <button onClick={handleDownloadAnimation}>
