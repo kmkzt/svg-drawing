@@ -73,12 +73,14 @@ export class SvgAnimation extends Renderer {
   }
 
   public start(): void {
+    // If do not this first, this cannot get the number of frames well.
+    this.stop()
+    this._registerRestorePaths()
+
     let index = 0
     let start: number | undefined
     const ms = this.ms
     const loopCount: number = this._getFramesNumber()
-    this.stop()
-    this._registerPaths()
     const frame: FrameRequestCallback = timestamp => {
       if (ms !== this.ms) {
         this.restore()
@@ -104,7 +106,7 @@ export class SvgAnimation extends Renderer {
     // If the animation is stopped, read the currently displayed Svg data.
     // If stopped in the middle, SVG in that state is displayed
     if (!this._stop) {
-      this._registerPaths()
+      this._registerRestorePaths()
     }
 
     const loopNumber = this._getFramesNumber()
@@ -227,7 +229,7 @@ export class SvgAnimation extends Renderer {
       : this._restorePaths.reduce((l, p) => l + p.commands.length, 0)
   }
 
-  private _registerPaths() {
+  private _registerRestorePaths() {
     this._restorePaths = this.clonePaths().map((p, i) => {
       p.attrs.id = `t${i}`
       return p
