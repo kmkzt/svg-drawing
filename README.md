@@ -144,6 +144,7 @@ const setupAnimation = () => {
     {
       frames: anim.paths.reduce((l, p) => l + p.commands.length, 0), // The number of frames in the animation.
       repeatCount: 'indefinete' // Set repeatCount attribute  to animate element
+      ms: 20 // Set seconds per frame
     }
   )
 }
@@ -183,7 +184,7 @@ download.onclick = () => {
 ```javascript
 const anim = new SvgAnimation(el)
 
-// Property `ms` can be changed to set Animation frame. `ms` is mili seconds.
+// Property `ms` can be changed to set seconds per frame. `ms` is mili seconds.
 // Can be changed during animation
 anim.ms = 50
 
