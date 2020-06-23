@@ -36,8 +36,8 @@ describe('svg.ts', () => {
   })
   describe('Vector', () => {
     it('toPoint', () => {
-      const po = new Vector(1.4142135, 0.7853982).toPoint()
-      expect(po.x).toBe(1.0)
+      const po = new Vector(1.4142135623730951, 0.7853981633974483).toPoint()
+      expect(po.x).toBe(1.0000000000000002)
       expect(po.y).toBe(1.0)
     })
     it('scale', () => {

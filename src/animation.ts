@@ -2,6 +2,7 @@ import { Renderer, RendererOption } from './renderer'
 import { Path } from './svg'
 import { camel2kebab } from './utils/camel2kebab'
 import { download } from './utils/download'
+import { roundUp } from './utils/roundUp'
 export interface AnimationOption extends RendererOption {
   ms: number
 }
@@ -15,7 +16,7 @@ export class SvgAnimation extends Renderer {
   private _restorePaths: Path[]
   private _framesNumber: number | undefined
 
-  /**
+  /**d
    * Releation animate element
    * TODO: add easing option
    */
@@ -120,7 +121,7 @@ export class SvgAnimation extends Renderer {
     const t = 1 / loopNumber
     const keyTimes = `0;${Array(loopNumber)
       .fill(undefined)
-      .map((_, i) => (i + 1) * t + '')
+      .map((_, i) => roundUp((i + 1) * t, 4) + '')
       .join(';')}`
 
     const createAnimationElement = (

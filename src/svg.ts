@@ -36,10 +36,6 @@ export class Point {
   public clone(): Point {
     return new Point(this.x, this.y)
   }
-
-  public toString(): string {
-    return `${this.x} ${this.y}`
-  }
 }
 
 export const COMMAND_TYPE = {
@@ -113,7 +109,7 @@ export class Command {
   }
 
   public toString(): string {
-    return `${this.type} ${this.value.join(' ')}`
+    return `${this.type} ${this.value.map(v => roundUp(v)).join(' ')}`
   }
 
   public scale(r: number): Command {
@@ -141,7 +137,7 @@ export class Vector {
   public toPoint(): Point {
     const x = Math.cos(this.angle) * this.value
     const y = Math.sin(this.angle) * this.value
-    return new Point(roundUp(x), roundUp(y))
+    return new Point(x, y)
   }
 
   public scale(r: number): Vector {
