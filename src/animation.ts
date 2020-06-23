@@ -63,7 +63,7 @@ export class SvgAnimation extends Renderer {
   }
 
   public restore() {
-    this.replacePaths(this._restorePaths)
+    this.paths = this._restorePaths
     this.update()
   }
 
@@ -92,7 +92,7 @@ export class SvgAnimation extends Renderer {
       }
       if (!start || timestamp - start > ms) {
         start = timestamp
-        this.replacePaths(this.generateFrame(index))
+        this.paths = this.generateFrame(index)
         this.update()
         index = index > loopCount ? 0 : index + 1
       }

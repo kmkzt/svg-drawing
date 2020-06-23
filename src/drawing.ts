@@ -59,12 +59,12 @@ export class SvgDrawing extends Renderer {
   }
 
   public clear() {
-    this.clearPath()
+    this.paths = []
     this.update()
   }
 
   public undo() {
-    this.undoPath()
+    this.paths.pop()
     this.update()
   }
 

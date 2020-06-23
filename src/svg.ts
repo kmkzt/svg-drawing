@@ -197,7 +197,6 @@ export class Path {
     this.commands.push(param)
     return this
   }
-
   public getCommandString(): string {
     if (this.commands.length === 0) return ''
     return this.commands
@@ -296,7 +295,7 @@ export class Path {
       attrs: { ...this.attrs }
     })
     this.commands.map(c => {
-      path.addCommand(c.clone())
+      path.commands.push(c.clone())
     })
     return path
   }
@@ -313,56 +312,37 @@ export interface SvgObject {
   paths: PathObject[]
 }
 export class Svg {
-  private _paths: Path[]
+  public paths: Path[]
   public width: number
   public height: number
   constructor({ width, height }: SvgOption) {
-    this._paths = []
+    this.paths = []
     this.width = width
     this.height = height
   }
 
   public scalePath(r: number): this {
     if (r !== 1) {
-      for (let i = 0; i < this._paths.length; i += 1) {
-        this._paths[i].scale(r)
+      for (let i = 0; i < this.paths.length; i += 1) {
+        this.paths[i].scale(r)
       }
     }
     return this
   }
 
   public addPath(pa: Path): this {
-    this._paths.push(pa)
+    this.paths.push(pa)
     return this
   }
-
-  public undoPath(): Path | undefined {
-    return this._paths.pop()
-  }
-
-  public replacePaths(paths: Path[]): this {
-    this._paths = paths
-    return this
-  }
-
   public clonePaths(): Path[] {
-    return this._paths.map(p => p.clone())
+    return this.paths.map(p => p.clone())
   }
 
   public updatePath(pa: Path, i?: number): this {
-    const updateIndex = i || this._paths.length - 1
-    if (updateIndex < 0) this._paths.push(pa)
-    this._paths[updateIndex] = pa
+    const updateIndex = i || this.paths.length - 1
+    if (updateIndex < 0) this.paths.push(pa)
+    this.paths[updateIndex] = pa
     return this
-  }
-
-  public clearPath() {
-    this._paths = []
-    return this
-  }
-
-  public get paths(): Path[] {
-    return this._paths
   }
 
   public toJson(): SvgObject {
@@ -374,7 +354,7 @@ export class Svg {
   }
 
   public copy(svg: any extends Svg ? Svg : never): this {
-    this._paths = svg.clonePaths()
+    this.paths = svg.clonePaths()
     if (svg.width && this.width) {
       this.scalePath(svg.width / this.width)
     }
@@ -388,8 +368,8 @@ export class Svg {
     svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
     svg.setAttribute('width', String(this.width))
     svg.setAttribute('height', String(this.height))
-    for (let i = 0; i < this._paths.length; i += 1) {
-      svg.appendChild(this._paths[i].toElement())
+    for (let i = 0; i < this.paths.length; i += 1) {
+      svg.appendChild(this.paths[i].toElement())
     }
     return svg
   }
@@ -401,7 +381,11 @@ export class Svg {
     const svgEl: SVGSVGElement | null = new DOMParser()
       .parseFromString(svgStr, 'image/svg+xml')
       .querySelector('svg')
-    return !svgEl ? this.clearPath() : this.parseSVGElement(svgEl)
+    if (!svgEl) {
+      this.paths = []
+      return this
+    }
+    return this.parseSVGElement(svgEl)
   }
 
   public parseSVGElement(svgEl: SVGSVGElement): this {
@@ -412,7 +396,7 @@ export class Svg {
         update.push(pa)
       }
     })
-    this.replacePaths(update)
+    this.paths = update
     const width = Number(svgEl.getAttribute('width'))
     if (width && this.width) {
       this.scalePath(this.width / width)

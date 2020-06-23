@@ -3,7 +3,24 @@
 exports[`animation.ts SvgAnimation init 1`] = `
 SvgAnimation {
   "_anim": null,
-  "_paths": Array [
+  "_repeatCount": "indefinite",
+  "_restorePaths": Array [],
+  "_stop": null,
+  "_stopId": 0,
+  "background": "#fff",
+  "el": <div>
+    <svg
+      height="0"
+      version="1.1"
+      width="0"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+    />
+  </div>,
+  "height": 0,
+  "left": 0,
+  "ms": 60,
+  "paths": Array [
     Path {
       "attrs": Object {
         "strokeLinecap": "round",
@@ -85,23 +102,6 @@ SvgAnimation {
       "strokeWidth": 2,
     },
   ],
-  "_repeatCount": "indefinite",
-  "_restorePaths": Array [],
-  "_stop": null,
-  "_stopId": 0,
-  "background": "#fff",
-  "el": <div>
-    <svg
-      height="0"
-      version="1.1"
-      width="0"
-      xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-    />
-  </div>,
-  "height": 0,
-  "left": 0,
-  "ms": 60,
   "top": 0,
   "width": 0,
 }

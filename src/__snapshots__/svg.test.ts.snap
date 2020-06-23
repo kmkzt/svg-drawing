@@ -51,7 +51,8 @@ Object {
 
 exports[`svg.ts Svg parseSVGElement 1`] = `
 Svg {
-  "_paths": Array [
+  "height": 400,
+  "paths": Array [
     Path {
       "attrs": Object {
         "strokeLinecap": "round",
@@ -93,14 +94,14 @@ Svg {
       "strokeWidth": 8,
     },
   ],
-  "height": 400,
   "width": 400,
 }
 `;
 
 exports[`svg.ts Svg parseSVGString 1`] = `
 Svg {
-  "_paths": Array [
+  "height": 400,
+  "paths": Array [
     Path {
       "attrs": Object {
         "strokeLinecap": "round",
@@ -142,7 +143,6 @@ Svg {
       "strokeWidth": 8,
     },
   ],
-  "height": 400,
   "width": 400,
 }
 `;
