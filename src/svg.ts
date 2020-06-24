@@ -2,6 +2,11 @@ import { roundUp } from './utils/roundUp'
 import { camel2kebab } from './utils/camel2kebab'
 import { kebab2camel } from './utils/kebab2camel'
 import { svg2base64 } from './utils/svg2base64'
+import {
+  createSvgElement,
+  createSvgChildElement
+} from './utils/createSvgElement'
+
 const isNaN = (num: number) => num !== num
 
 export class Point {
@@ -276,16 +281,20 @@ export class Path {
       d: this.getCommandString()
     }
   }
-  public toElement(): SVGPathElement {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    path.setAttribute('stroke-width', String(this.strokeWidth))
-    path.setAttribute('fill', this.fill)
-    path.setAttribute('stroke', this.stroke)
-    Object.entries(this.attrs).map(([key, val], _i) =>
-      path.setAttribute(camel2kebab(key), val)
-    )
-    path.setAttribute('d', this.getCommandString())
-    return path
+  public toElement(): SVGElement {
+    return createSvgChildElement('path', {
+      fill: this.fill,
+      stroke: this.stroke,
+      ['stroke-width']: String(this.strokeWidth),
+      d: this.getCommandString(),
+      ...Object.entries(this.attrs).reduce(
+        (acc, [key, val], _i) => ({
+          ...acc,
+          [camel2kebab(key)]: val
+        }),
+        {}
+      )
+    })
   }
 
   public clone(): Path {
@@ -363,16 +372,10 @@ export class Svg {
   }
 
   public toElement(): SVGSVGElement {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttributeNS(null, 'version', '1.1')
-    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-    svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-    svg.setAttribute('width', String(this.width))
-    svg.setAttribute('height', String(this.height))
-    for (let i = 0; i < this.paths.length; i += 1) {
-      svg.appendChild(this.paths[i].toElement())
-    }
-    return svg
+    return createSvgElement(
+      { width: String(this.width), height: String(this.height) },
+      this.paths.map(p => p.toElement())
+    )
   }
   public toBase64(): string {
     return svg2base64(this.toElement().outerHTML)

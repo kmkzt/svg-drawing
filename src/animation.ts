@@ -4,6 +4,10 @@ import { camel2kebab } from './utils/camel2kebab'
 import { download } from './utils/download'
 import { roundUp } from './utils/roundUp'
 import { svg2base64 } from './utils/svg2base64'
+import {
+  createSvgElement,
+  createSvgChildElement
+} from './utils/createSvgElement'
 
 export interface AnimationOption extends RendererOption {
   ms: number
@@ -128,7 +132,7 @@ export class SvgAnimation extends Renderer {
 
     const createAnimationElement = (
       origin: Path,
-      attrName: string,
+      attributeName: string,
       defaultValue: string,
       getValue: ({
         origin,
@@ -145,19 +149,15 @@ export class SvgAnimation extends Renderer {
       // return null if value is same all.
       if (animValues.every(v => v === defaultValue)) return null
 
-      const values = [defaultValue, ...animValues]
-      const aEl = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'animate'
-      )
-      aEl.setAttribute('repeatCount', this._repeatCount)
-      aEl.setAttribute('dur', dur)
-      aEl.setAttribute('keyTimes', keyTimes)
-      aEl.setAttribute('attributeName', attrName)
-      aEl.setAttribute('values', values.join(';'))
-      return aEl
+      return createSvgChildElement('animate', {
+        dur,
+        keyTimes,
+        attributeName,
+        repeatCount: this._repeatCount,
+        values: [defaultValue, ...animValues].join(';')
+      })
     }
-    const animPaths = this._restorePaths.map(p => {
+    const animEls = this._restorePaths.map(p => {
       const pEl = p.toElement()
       const dAnimEl = createAnimationElement(
         p,
@@ -200,14 +200,11 @@ export class SvgAnimation extends Renderer {
 
       return pEl
     })
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttributeNS(null, 'version', '1.1')
-    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-    svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-    svg.setAttribute('width', String(this.width))
-    svg.setAttribute('height', String(this.height))
-    animPaths.map(el => svg.appendChild(el))
-    return svg
+
+    return createSvgElement(
+      { width: String(this.width), height: String(this.height) },
+      animEls
+    )
   }
 
   /**
