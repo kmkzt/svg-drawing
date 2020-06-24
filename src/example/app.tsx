@@ -245,6 +245,14 @@ const Example = () => {
     if (!drawingRef.current) return
     drawingRef.current.undo()
   }, [drawingRef])
+  const clickOff = useCallback(() => {
+    if (!drawingRef.current) return
+    drawingRef.current.off()
+  }, [drawingRef])
+  const clickOn = useCallback(() => {
+    if (!drawingRef.current) return
+    drawingRef.current.on()
+  }, [drawingRef])
   useEffect(() => {
     if (drawingRef.current) return
     if (!divRef.current) return
@@ -489,6 +497,8 @@ const Example = () => {
             <h3>Drawing methods</h3>
             <button onClick={clickClear}>Clear</button>
             <button onClick={clickUndo}>Undo</button>
+            <button onClick={clickOff}>OFF</button>
+            <button onClick={clickOn}>ON</button>
             <button onClick={clickDownload('png')}>Download PNG</button>
             <button onClick={clickDownload('jpg')}>Download JPG</button>
             {/* <button onClick={clickDownloadGIF}>Download GIF</button> */}
