@@ -1,6 +1,7 @@
 import { roundUp } from './utils/roundUp'
 import { camel2kebab } from './utils/camel2kebab'
 import { kebab2camel } from './utils/kebab2camel'
+import { svg2base64 } from './utils/svg2base64'
 const isNaN = (num: number) => num !== num
 
 export class Point {
@@ -374,7 +375,7 @@ export class Svg {
     return svg
   }
   public toBase64(): string {
-    return `data:image/svg+xml;base64,${btoa(this.toElement().outerHTML)}`
+    return svg2base64(this.toElement().outerHTML)
   }
 
   public parseSVGString(svgStr: string): this {

@@ -3,6 +3,8 @@ import { Path } from './svg'
 import { camel2kebab } from './utils/camel2kebab'
 import { download } from './utils/download'
 import { roundUp } from './utils/roundUp'
+import { svg2base64 } from './utils/svg2base64'
+
 export interface AnimationOption extends RendererOption {
   ms: number
 }
@@ -214,9 +216,7 @@ export class SvgAnimation extends Renderer {
    */
   public downloadAnimation(filename?: string) {
     download({
-      data: `data:image/svg+xml;base64,${btoa(
-        this.toAnimationElement().outerHTML
-      )}`,
+      data: svg2base64(this.toAnimationElement().outerHTML),
       extension: 'svg',
       filename
     })
