@@ -51,7 +51,8 @@ Object {
 
 exports[`svg.ts Svg parseSVGElement 1`] = `
 Svg {
-  "_paths": Array [
+  "height": 400,
+  "paths": Array [
     Path {
       "attrs": Object {
         "strokeLinecap": "round",
@@ -93,14 +94,14 @@ Svg {
       "strokeWidth": 8,
     },
   ],
-  "height": 400,
   "width": 400,
 }
 `;
 
 exports[`svg.ts Svg parseSVGString 1`] = `
 Svg {
-  "_paths": Array [
+  "height": 400,
+  "paths": Array [
     Path {
       "attrs": Object {
         "strokeLinecap": "round",
@@ -142,12 +143,11 @@ Svg {
       "strokeWidth": 8,
     },
   ],
-  "height": 400,
   "width": 400,
 }
 `;
 
-exports[`svg.ts Svg toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48cGF0aCBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBkPSJNIDAgMCBDIDAuMiAwLjIgMC42IDAuOCAxIDEgQyAxLjQgMS4yIDEuNiAxLjIgMiAxIEMgMi40IDAuOCAyLjggMC4yIDMgMCI+PC9wYXRoPjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbGluZWpvaW49Im1pdHRlciIgZD0iTSA0IDQgTCA5IDQgTCA5IDggTCAzIDAgWiI+PC9wYXRoPjwvc3ZnPg=="`;
+exports[`svg.ts Svg toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMSIgZD0iTSAwIDAgQyAwLjIgMC4yIDAuNiAwLjggMSAxIEMgMS40IDEuMiAxLjYgMS4yIDIgMSBDIDIuNCAwLjggMi44IDAuMiAzIDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9wYXRoPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBkPSJNIDQgNCBMIDkgNCBMIDkgOCBMIDMgMCBaIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbGluZWpvaW49Im1pdHRlciI+PC9wYXRoPjwvc3ZnPg=="`;
 
 exports[`svg.ts Svg toElement 1`] = `
 <svg

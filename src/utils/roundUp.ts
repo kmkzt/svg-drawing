@@ -1,1 +1,1 @@
-export const roundUp = (num: number) => +num.toFixed(2)
+export const roundUp = (num: number, digits = 2) => +num.toFixed(digits)

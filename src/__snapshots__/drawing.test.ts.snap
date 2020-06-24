@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`drawing.ts SvgDrawing clear() 1`] = `
+<svg
+  height="0"
+  version="1.1"
+  width="0"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+/>
+`;
+
 exports[`drawing.ts SvgDrawing close 1`] = `
 <svg
   height="0"
@@ -55,4 +65,69 @@ exports[`drawing.ts SvgDrawing default 1`] = `
     stroke-width="1"
   />
 </svg>
+`;
+
+exports[`drawing.ts SvgDrawing undo() 1`] = `
+SvgDrawing {
+  "_clearMouseListener": [Function],
+  "_clearPointListener": null,
+  "_clearTouchListener": null,
+  "_drawPath": null,
+  "_listenerOption": Object {
+    "passive": false,
+  },
+  "background": "#fff",
+  "bezier": BezierCurve {
+    "ratio": 0.2,
+  },
+  "close": false,
+  "curve": true,
+  "delay": 20,
+  "drawingMove": [Function],
+  "el": <div>
+    <svg
+      height="0"
+      version="1.1"
+      width="0"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+    >
+      <path
+        d="M NaN NaN"
+        fill="none"
+        stroke="#333"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="NaN"
+      />
+    </svg>
+  </div>,
+  "fill": "none",
+  "height": 0,
+  "left": 0,
+  "paths": Array [
+    Path {
+      "attrs": Object {
+        "strokeLinecap": "round",
+        "strokeLinejoin": "round",
+      },
+      "commands": Array [
+        Command {
+          "type": "M",
+          "value": Array [
+            NaN,
+            NaN,
+          ],
+        },
+      ],
+      "fill": "none",
+      "stroke": "#333",
+      "strokeWidth": NaN,
+    },
+  ],
+  "penColor": "#333",
+  "penWidth": 1,
+  "top": 0,
+  "width": 0,
+}
 `;

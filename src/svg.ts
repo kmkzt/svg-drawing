@@ -1,6 +1,12 @@
 import { roundUp } from './utils/roundUp'
 import { camel2kebab } from './utils/camel2kebab'
 import { kebab2camel } from './utils/kebab2camel'
+import { svg2base64 } from './utils/svg2base64'
+import {
+  createSvgElement,
+  createSvgChildElement
+} from './utils/createSvgElement'
+
 const isNaN = (num: number) => num !== num
 
 export class Point {
@@ -35,10 +41,6 @@ export class Point {
 
   public clone(): Point {
     return new Point(this.x, this.y)
-  }
-
-  public toString(): string {
-    return `${this.x} ${this.y}`
   }
 }
 
@@ -113,7 +115,7 @@ export class Command {
   }
 
   public toString(): string {
-    return `${this.type} ${this.value.join(' ')}`
+    return `${this.type} ${this.value.map(v => roundUp(v)).join(' ')}`
   }
 
   public scale(r: number): Command {
@@ -141,7 +143,7 @@ export class Vector {
   public toPoint(): Point {
     const x = Math.cos(this.angle) * this.value
     const y = Math.sin(this.angle) * this.value
-    return new Point(roundUp(x), roundUp(y))
+    return new Point(x, y)
   }
 
   public scale(r: number): Vector {
@@ -201,7 +203,6 @@ export class Path {
     this.commands.push(param)
     return this
   }
-
   public getCommandString(): string {
     if (this.commands.length === 0) return ''
     return this.commands
@@ -280,16 +281,20 @@ export class Path {
       d: this.getCommandString()
     }
   }
-  public toElement(): SVGPathElement {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    path.setAttribute('stroke-width', String(this.strokeWidth))
-    path.setAttribute('fill', this.fill)
-    path.setAttribute('stroke', this.stroke)
-    Object.entries(this.attrs).map(([key, val], _i) =>
-      path.setAttribute(camel2kebab(key), val)
-    )
-    path.setAttribute('d', this.getCommandString())
-    return path
+  public toElement(): SVGElement {
+    return createSvgChildElement('path', {
+      fill: this.fill,
+      stroke: this.stroke,
+      ['stroke-width']: String(this.strokeWidth),
+      d: this.getCommandString(),
+      ...Object.entries(this.attrs).reduce(
+        (acc, [key, val], _i) => ({
+          ...acc,
+          [camel2kebab(key)]: val
+        }),
+        {}
+      )
+    })
   }
 
   public clone(): Path {
@@ -300,7 +305,7 @@ export class Path {
       attrs: { ...this.attrs }
     })
     this.commands.map(c => {
-      path.addCommand(c.clone())
+      path.commands.push(c.clone())
     })
     return path
   }
@@ -317,56 +322,37 @@ export interface SvgObject {
   paths: PathObject[]
 }
 export class Svg {
-  private _paths: Path[]
+  public paths: Path[]
   public width: number
   public height: number
   constructor({ width, height }: SvgOption) {
-    this._paths = []
+    this.paths = []
     this.width = width
     this.height = height
   }
 
   public scalePath(r: number): this {
     if (r !== 1) {
-      for (let i = 0; i < this._paths.length; i += 1) {
-        this._paths[i].scale(r)
+      for (let i = 0; i < this.paths.length; i += 1) {
+        this.paths[i].scale(r)
       }
     }
     return this
   }
 
   public addPath(pa: Path): this {
-    this._paths.push(pa)
+    this.paths.push(pa)
     return this
   }
-
-  public undoPath(): Path | undefined {
-    return this._paths.pop()
-  }
-
-  public replacePaths(paths: Path[]): this {
-    this._paths = paths
-    return this
-  }
-
   public clonePaths(): Path[] {
-    return this._paths.map(p => p.clone())
+    return this.paths.map(p => p.clone())
   }
 
   public updatePath(pa: Path, i?: number): this {
-    const updateIndex = i || this._paths.length - 1
-    if (updateIndex < 0) this._paths.push(pa)
-    this._paths[updateIndex] = pa
+    const updateIndex = i || this.paths.length - 1
+    if (updateIndex < 0) this.paths.push(pa)
+    this.paths[updateIndex] = pa
     return this
-  }
-
-  public clearPath() {
-    this._paths = []
-    return this
-  }
-
-  public get paths(): Path[] {
-    return this._paths
   }
 
   public toJson(): SvgObject {
@@ -378,7 +364,7 @@ export class Svg {
   }
 
   public copy(svg: any extends Svg ? Svg : never): this {
-    this._paths = svg.clonePaths()
+    this.paths = svg.clonePaths()
     if (svg.width && this.width) {
       this.scalePath(svg.width / this.width)
     }
@@ -386,26 +372,24 @@ export class Svg {
   }
 
   public toElement(): SVGSVGElement {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttributeNS(null, 'version', '1.1')
-    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-    svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-    svg.setAttribute('width', String(this.width))
-    svg.setAttribute('height', String(this.height))
-    for (let i = 0; i < this._paths.length; i += 1) {
-      svg.appendChild(this._paths[i].toElement())
-    }
-    return svg
+    return createSvgElement(
+      { width: String(this.width), height: String(this.height) },
+      this.paths.map(p => p.toElement())
+    )
   }
   public toBase64(): string {
-    return `data:image/svg+xml;base64,${btoa(this.toElement().outerHTML)}`
+    return svg2base64(this.toElement().outerHTML)
   }
 
   public parseSVGString(svgStr: string): this {
     const svgEl: SVGSVGElement | null = new DOMParser()
       .parseFromString(svgStr, 'image/svg+xml')
       .querySelector('svg')
-    return !svgEl ? this.clearPath() : this.parseSVGElement(svgEl)
+    if (!svgEl) {
+      this.paths = []
+      return this
+    }
+    return this.parseSVGElement(svgEl)
   }
 
   public parseSVGElement(svgEl: SVGSVGElement): this {
@@ -416,7 +400,7 @@ export class Svg {
         update.push(pa)
       }
     })
-    this.replacePaths(update)
+    this.paths = update
     const width = Number(svgEl.getAttribute('width'))
     if (width && this.width) {
       this.scalePath(this.width / width)
