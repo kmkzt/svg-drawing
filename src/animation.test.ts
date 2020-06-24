@@ -48,5 +48,25 @@ describe('animation.ts', () => {
       svg.setAnimation(testAnimation)
       expect(svg.toAnimationElement()).toMatchSnapshot()
     })
+
+    it('setAnimation, start, stop', () => {
+      const svg = generateAniamtion()
+      let loop = 0
+      svg.setAnimation(
+        (_paths, fid) => {
+          loop += 1
+          return []
+        },
+        {
+          ms: 300,
+          frames: 3
+        }
+      )
+      svg.start()
+      setTimeout(() => {
+        svg.stop()
+        expect(loop).toBe(3)
+      }, 1000)
+    })
   })
 })
