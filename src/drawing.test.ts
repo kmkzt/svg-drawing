@@ -34,5 +34,29 @@ describe('drawing.ts', () => {
       draw.drawingEnd()
       expect(draw.toElement()).toMatchSnapshot()
     })
+    it('clear()', () => {
+      const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
+      draw.curve = false
+      draw.drawingStart()
+      draw.drawingMove({ x: 0, y: 0 })
+      draw.drawingEnd()
+      draw.clear()
+      expect(draw.toElement()).toMatchSnapshot()
+    })
+
+    /**
+     * TODO: Fix NaN
+     */
+    it('undo()', () => {
+      const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
+      draw.drawingStart()
+      draw.drawingMove({ x: 0, y: 0 })
+      draw.drawingEnd()
+      draw.drawingStart()
+      draw.drawingMove({ x: 0, y: 0 })
+      draw.drawingEnd()
+      draw.undo()
+      expect(draw).toMatchSnapshot()
+    })
   })
 })
