@@ -79,7 +79,7 @@
     "eslint-plugin-jsx-a11y": "6.3.1",
     "eslint-plugin-jest": "23.17.1",
     "eslint-plugin-prettier": "3.1.4",
-    "eslint-plugin-react": "7.20.0",
+    "eslint-plugin-react": "7.20.1",
     "eslint-plugin-react-hooks": "4.0.4",
     "fork-ts-checker-webpack-plugin": "4.1.6",
     "html-loader": "0.5.5",
