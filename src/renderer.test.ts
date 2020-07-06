@@ -24,8 +24,8 @@ describe('renderer.ts', () => {
           new Path({
             attrs: {
               strokeLinecap: 'square',
-              strokeLinejoin: 'mitter'
-            }
+              strokeLinejoin: 'mitter',
+            },
           })
             .addCommand(new Command(COMMAND_TYPE.MOVE, [4, 4]))
             .addCommand(new Command(COMMAND_TYPE.LINE, [9, 4]))
@@ -42,19 +42,19 @@ describe('renderer.ts', () => {
       renderer.download('svg', testDownload)
     })
     // TODO: Fix download test
-    // it('download jpg', done => {
-    //   const testDownload = (param: any): void => {
-    //     expect(param).toMatchSnapshot()
-    //     done()
-    //   }
-    //   renderer.download('jpg', testDownload)
-    // }, 30000)
-    // it('download png', done => {
-    //   const testDownload = (param: any): void => {
-    //     expect(param).toMatchSnapshot()
-    //     done()
-    //   }
-    //   renderer.download('png', testDownload)
-    // }, 30000)
+    it.skip('download jpg', (done) => {
+      const testDownload = (param: any): void => {
+        expect(param).toMatchSnapshot()
+        done()
+      }
+      renderer.download('jpg', testDownload)
+    }, 30000)
+    it.skip('download png', (done) => {
+      const testDownload = (param: any): void => {
+        expect(param).toMatchSnapshot()
+        done()
+      }
+      renderer.download('png', testDownload)
+    }, 30000)
   })
 })

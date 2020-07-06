@@ -62,7 +62,7 @@ describe('svg.ts', () => {
         0.75,
         0.25,
         1,
-        1
+        1,
       ])
       expect(cmd.toString()).toBe('C 0.25 0.25 0.75 0.25 1 1')
     })
@@ -127,12 +127,12 @@ describe('svg.ts', () => {
         expect(path.getCommandString()).toBe(testData)
       })
       // TODO: Validate command
-      // it('failed pattern', () => {
-      //   path.parseCommandString('M a b')
-      //   expect(path.getCommandString()).toBe('')
-      //   path.parseCommandString('M 0 0 C 0 1 2')
-      //   expect(path.getCommandString()).toBe('M 0 0')
-      // })
+      it.skip('failed pattern', () => {
+        path.parseCommandString('M a b')
+        expect(path.getCommandString()).toBe('')
+        path.parseCommandString('M 0 0 C 0 1 2')
+        expect(path.getCommandString()).toBe('M 0 0')
+      })
     })
     it('clone', () => {
       const origin = new Path({ strokeWidth: 1 }).addCommand(
@@ -193,8 +193,8 @@ describe('svg.ts', () => {
           new Path({
             attrs: {
               strokeLinecap: 'square',
-              strokeLinejoin: 'mitter'
-            }
+              strokeLinejoin: 'mitter',
+            },
           })
             .addCommand(new Command(COMMAND_TYPE.MOVE, [4, 4]))
             .addCommand(new Command(COMMAND_TYPE.LINE, [9, 4]))
