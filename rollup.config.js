@@ -26,20 +26,20 @@ const getBabelOptions = ({ useESModules }) => ({
       {
         loose: true,
         modules: false,
-        targets: useESModules ? esm_targets : undefined
-      }
+        targets: useESModules ? esm_targets : undefined,
+      },
     ],
     // react
     // ['@babel/preset-react', { useBuiltIns: true }],
-    '@babel/preset-typescript'
+    '@babel/preset-typescript',
   ],
   plugins: [
     // react
     // ['transform-react-remove-prop-types', { removeImport: true }],
     // TODO: optimize bundle size
     // 'babel-plugin-annotate-pure-calls',
-    ['@babel/plugin-transform-runtime', { regenerator: false, useESModules }]
-  ]
+    ['@babel/plugin-transform-runtime', { regenerator: false, useESModules }],
+  ],
 })
 const input = './src/index.ts'
 
@@ -55,7 +55,7 @@ export default [
       name: pkg.name,
       // globals,
       exports: 'named',
-      sourcemap: false
+      sourcemap: false,
     },
     // external,
     plugins: [
@@ -65,8 +65,8 @@ export default [
       sourceMaps(),
       replace({ 'process.env.NODE_ENV': JSON.stringify('production') }),
       terser({ output: { comments: /Copyright/i } }),
-      sizeSnapshot()
-    ]
+      sizeSnapshot(),
+    ],
   },
   /**
    * umd(development)
@@ -99,7 +99,7 @@ export default [
       file: pkg.main,
       format: 'cjs',
       exports: 'named',
-      sourcemap: true
+      sourcemap: true,
     },
     // external,
     plugins: [
@@ -107,8 +107,8 @@ export default [
       commonjs(),
       babel(getBabelOptions({ useESModules: false })),
       nodeResolve({ extensions }),
-      sizeSnapshot()
-    ]
+      sizeSnapshot(),
+    ],
   },
   /**
    * esm
@@ -121,11 +121,11 @@ export default [
       sourceMaps(),
       babel(
         getBabelOptions({
-          useESModules: true
+          useESModules: true,
         })
       ),
       nodeResolve({ extensions }),
-      sizeSnapshot()
-    ]
-  }
+      sizeSnapshot(),
+    ],
+  },
 ]

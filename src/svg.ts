@@ -4,7 +4,7 @@ import { kebab2camel } from './utils/kebab2camel'
 import { svg2base64 } from './utils/svg2base64'
 import {
   createSvgElement,
-  createSvgChildElement
+  createSvgChildElement,
 } from './utils/createSvgElement'
 
 const isNaN = (num: number) => num !== num
@@ -59,7 +59,7 @@ export const COMMAND_TYPE = {
   ARC_CURVE: 'A', // A 6 4 10 0 1 14 10
   ARC_CURVE_RELATIVE: 'a', // A 6 4 10 0 1 14 10
   QUADRATIC_CURVE: 'Q', // Q 10 60 10 30
-  QUADRATIC_CURVE_RELATIVE: 'q' // q 10 60 10 30
+  QUADRATIC_CURVE_RELATIVE: 'q', // q 10 60 10 30
 } as const
 
 type COMMAND = typeof COMMAND_TYPE[keyof typeof COMMAND_TYPE]
@@ -115,13 +115,13 @@ export class Command {
   }
 
   public toString(): string {
-    return `${this.type} ${this.value.map(v => roundUp(v)).join(' ')}`
+    return `${this.type} ${this.value.map((v) => roundUp(v)).join(' ')}`
   }
 
   public scale(r: number): Command {
     const upd = new Command(
       this.type,
-      this.value.map(p => p * r)
+      this.value.map((p) => p * r)
     )
     return upd
   }
@@ -168,7 +168,7 @@ export interface PathObject {
 
 const defaultAttrs: Attrs = {
   strokeLinecap: 'round', // 'mitter'
-  strokeLinejoin: 'round' // 'square'
+  strokeLinejoin: 'round', // 'square'
 }
 /**
  * TODO: refactor command.
@@ -188,7 +188,7 @@ export class Path {
     this.fill = fill ?? 'none'
     this.attrs = {
       ...defaultAttrs,
-      ...attrs
+      ...attrs,
     }
     this.commands = []
   }
@@ -269,7 +269,7 @@ export class Path {
       }
       this.attrs = {
         ...this.attrs,
-        [kebab2camel(attr.name)]: attr.value
+        [kebab2camel(attr.name)]: attr.value,
       }
     }
     return this
@@ -278,7 +278,7 @@ export class Path {
   public toJson(): PathObject {
     return {
       attrs: this.attrs,
-      d: this.getCommandString()
+      d: this.getCommandString(),
     }
   }
   public toElement(): SVGElement {
@@ -290,10 +290,10 @@ export class Path {
       ...Object.entries(this.attrs).reduce(
         (acc, [key, val], _i) => ({
           ...acc,
-          [camel2kebab(key)]: val
+          [camel2kebab(key)]: val,
         }),
         {}
-      )
+      ),
     })
   }
 
@@ -302,9 +302,9 @@ export class Path {
       strokeWidth: this.strokeWidth,
       fill: this.fill,
       stroke: this.stroke,
-      attrs: { ...this.attrs }
+      attrs: { ...this.attrs },
     })
-    this.commands.map(c => {
+    this.commands.map((c) => {
       path.commands.push(c.clone())
     })
     return path
@@ -345,7 +345,7 @@ export class Svg {
     return this
   }
   public clonePaths(): Path[] {
-    return this.paths.map(p => p.clone())
+    return this.paths.map((p) => p.clone())
   }
 
   public updatePath(pa: Path, i?: number): this {
@@ -359,7 +359,7 @@ export class Svg {
     return {
       width: this.width,
       height: this.height,
-      paths: this.paths.map(p => p.toJson())
+      paths: this.paths.map((p) => p.toJson()),
     }
   }
 
@@ -374,7 +374,7 @@ export class Svg {
   public toElement(): SVGSVGElement {
     return createSvgElement(
       { width: String(this.width), height: String(this.height) },
-      this.paths.map(p => p.toElement())
+      this.paths.map((p) => p.toElement())
     )
   }
   public toBase64(): string {
@@ -394,7 +394,7 @@ export class Svg {
 
   public parseSVGElement(svgEl: SVGSVGElement): this {
     const update: Path[] = []
-    svgEl.querySelectorAll('path').forEach(pEl => {
+    svgEl.querySelectorAll('path').forEach((pEl) => {
       const pa = new Path().parsePathElement(pEl)
       if (pa.commands.length !== 0) {
         update.push(pa)

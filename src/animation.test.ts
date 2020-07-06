@@ -17,7 +17,7 @@ describe('animation.ts', () => {
     })
     it('generateFrame', () => {
       const svg = generateAniamtion()
-      svg.setAnimation(paths => {
+      svg.setAnimation((paths) => {
         return [paths[0]]
       })
       expect(svg.generateFrame().length).toBe(1)
@@ -33,7 +33,7 @@ describe('animation.ts', () => {
           // Test Attribute
           if (count % 3 === 0)
             Object.assign(paths[i].attrs, {
-              strokeLinecap: 'mitter'
+              strokeLinecap: 'mitter',
             })
           if (count < paths[i].commands.length) {
             paths[i].commands = paths[i].commands.slice(0, count)
@@ -59,7 +59,7 @@ describe('animation.ts', () => {
         },
         {
           ms: 300,
-          frames: 3
+          frames: 3,
         }
       )
       svg.start()

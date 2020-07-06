@@ -58,22 +58,22 @@ export class SvgDrawing extends Renderer {
     this.on()
   }
 
-  public clear() {
+  public clear(): void {
     this.paths = []
     this.update()
   }
 
-  public undo() {
+  public undo(): void {
     this.paths.pop()
     this.update()
   }
 
-  public changeDelay(delay: number) {
+  public changeDelay(delay: number): void {
     this.delay = delay
     this.on()
   }
 
-  public on() {
+  public on(): void {
     this.off()
 
     if (window.PointerEvent) {
@@ -86,19 +86,19 @@ export class SvgDrawing extends Renderer {
     }
   }
 
-  public off() {
+  public off(): void {
     ;[
       this._clearPointListener,
       this._clearMouseListener,
-      this._clearTouchListener
-    ].map(clear => {
+      this._clearTouchListener,
+    ].map((clear) => {
       if (!clear) return
       clear()
       clear = null
     })
   }
 
-  public drawingStart() {
+  public drawingStart(): void {
     if (this._drawPath) return
     this._drawPath = this._createDrawPath()
     this.addPath(this._drawPath)
@@ -119,7 +119,7 @@ export class SvgDrawing extends Renderer {
     this.update()
   }
 
-  public drawingEnd() {
+  public drawingEnd(): void {
     if (this.close && this._drawPath) {
       this._drawPath.commands.push(new Command(COMMAND_TYPE.CLOSE))
     }
@@ -167,14 +167,14 @@ export class SvgDrawing extends Renderer {
       strokeWidth: this.penWidth,
       attrs: {
         strokeLinecap: this.curve ? 'round' : 'mitter',
-        strokeLinejoin: this.curve ? 'round' : 'square'
+        strokeLinejoin: this.curve ? 'round' : 'square',
       },
-      fill: this.fill
+      fill: this.fill,
     })
   }
   private _createDrawPoint({
     x,
-    y
+    y,
   }: {
     x: number
     y: number
@@ -191,8 +191,8 @@ export class SvgDrawing extends Renderer {
   /**
    * Drawing MouseEvent
    */
-  private _setupPointEventListener() {
-    const start = this._handleMouseOrPoint(param => {
+  private _setupPointEventListener(): void {
+    const start = this._handleMouseOrPoint((param) => {
       this.drawingStart()
       this.el.addEventListener('pointermove', draw, this._listenerOption)
       this.el.addEventListener('pointerup', end, this._listenerOption)
@@ -217,8 +217,8 @@ export class SvgDrawing extends Renderer {
   /**
    * Drawing MouseEvent
    */
-  private _setupMouseEventListener() {
-    const start = this._handleMouseOrPoint(_param => {
+  private _setupMouseEventListener(): void {
+    const start = this._handleMouseOrPoint((_param) => {
       this.drawingStart()
       this.el.addEventListener('mousemove', draw, this._listenerOption)
       this.el.addEventListener('mouseup', end, this._listenerOption)
@@ -228,7 +228,7 @@ export class SvgDrawing extends Renderer {
       this._handleMouseOrPoint(this.drawingMove),
       this.delay
     )
-    const end = this._handleMouseOrPoint(_param => {
+    const end = this._handleMouseOrPoint((_param) => {
       this.el.removeEventListener('mousemove', draw)
       this.el.removeEventListener('mouseup', end)
       this.el.removeEventListener('mouseleave', end)
@@ -242,7 +242,7 @@ export class SvgDrawing extends Renderer {
   /**
    * Drawing TouchEvent
    */
-  private _setupTouchEventListener() {
+  private _setupTouchEventListener(): void {
     const handleTouch = (cb: (param: { x: number; y: number }) => void) => (
       ev: TouchEvent
     ): void => {
@@ -250,13 +250,13 @@ export class SvgDrawing extends Renderer {
       const touch = ev.touches[0]
       cb({ x: touch.clientX, y: touch.clientY })
     }
-    const start = handleTouch(_param => {
+    const start = handleTouch((_param) => {
       this.drawingStart()
       this.el.addEventListener('touchmove', draw, this._listenerOption)
       this.el.addEventListener('touchend', end, this._listenerOption)
     })
     const draw = throttle(handleTouch(this.drawingMove), this.delay)
-    const end = handleTouch(_param => {
+    const end = handleTouch((_param) => {
       this.el.removeEventListener('touchmove', draw)
       this.el.removeEventListener('touchend', end)
       this.drawingEnd()

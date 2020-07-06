@@ -26,11 +26,11 @@ export class Renderer extends Svg {
    * render
    * TODO: XSS test
    */
-  public update() {
+  public update(): void {
     this.el.replaceChild(this.toElement(), this.el.childNodes[0])
   }
 
-  public resizeElement(param?: DOMRect) {
+  public resizeElement(param?: DOMRect): void {
     const { width, height, left, top } =
       param || this.el.getBoundingClientRect()
     // TODO: Resizing improve
@@ -41,7 +41,7 @@ export class Renderer extends Svg {
     this.top = top
   }
 
-  private _setupAdjustResize() {
+  private _setupAdjustResize(): void {
     if ((window as any).ResizeObserver) {
       const resizeObserver: any = new (window as any).ResizeObserver(
         (entries: any[]) => {
@@ -52,7 +52,7 @@ export class Renderer extends Svg {
       resizeObserver.observe(this.el)
     } else {
       // TODO: improve
-      window.addEventListener('resize', _ev => {
+      window.addEventListener('resize', (_ev) => {
         this.resizeElement(this.el.getBoundingClientRect())
         this.update()
       })
@@ -63,11 +63,11 @@ export class Renderer extends Svg {
   public download(
     ext: 'svg' | 'png' | 'jpg' = 'svg',
     cb: typeof download = download
-  ) {
+  ): void {
     if (ext === 'svg') {
       cb({
         data: this.toBase64(),
-        extension: 'svg'
+        extension: 'svg',
       })
       return
     }

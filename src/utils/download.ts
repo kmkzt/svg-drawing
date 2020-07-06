@@ -1,18 +1,18 @@
 const mimeTypeMap = {
   png: 'image/png',
   jpg: 'image/jpeg',
-  svg: 'image/svg+xml'
+  svg: 'image/svg+xml',
 } as const
 
 export const download = ({
   data,
   extension,
-  filename
+  filename,
 }: {
   data: string
   extension: keyof typeof mimeTypeMap
   filename?: string
-}) => {
+}): void => {
   const bin = atob(data.replace(/^.*,/, ''))
   const buffer = new Uint8Array(bin.length)
   for (let i = 0; i < bin.length; i += 1) {
@@ -20,7 +20,7 @@ export const download = ({
   }
   const fname = filename || `${Date.now()}.${extension}`
   const blob = new Blob([buffer.buffer], {
-    type: mimeTypeMap[extension]
+    type: mimeTypeMap[extension],
   })
   if (window.navigator.msSaveBlob) {
     // IE
