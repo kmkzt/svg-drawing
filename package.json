@@ -39,7 +39,8 @@
     "test": "npm-run-all test:*",
     "test:unit": "NODE_ENV=test jest --ci --passWithNoTests",
     "test:types": "tsc --noEmit",
-    "lint": "eslint ./src --ext .js,.ts,.tsx",
+    "lint": "eslint ./src --ext .js,.ts,.tsx;",
+    "fmt": "yarn lint --fix; yarn prettier --write ./src",
     "release": "release-it",
     "prepare": "yarn prod"
   },
