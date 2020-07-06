@@ -6,7 +6,7 @@ import { roundUp } from './utils/roundUp'
 import { svg2base64 } from './utils/svg2base64'
 import {
   createSvgElement,
-  createSvgChildElement
+  createSvgChildElement,
 } from './utils/createSvgElement'
 
 export interface AnimationOption extends RendererOption {
@@ -51,7 +51,7 @@ export class SvgAnimation extends Renderer {
     {
       frames,
       repeatCount,
-      ms
+      ms,
     }: { frames?: number; repeatCount?: number | string; ms?: number } = {}
   ): void {
     this._anim = fn
@@ -68,7 +68,7 @@ export class SvgAnimation extends Renderer {
     return false
   }
 
-  public restore() {
+  public restore(): void {
     this.paths = this._restorePaths
     this.update()
   }
@@ -76,7 +76,7 @@ export class SvgAnimation extends Renderer {
   public generateFrame(index?: number): Path[] {
     if (!this._anim) return this.paths
     return this._anim(
-      this._restorePaths.map(p => p.clone()),
+      this._restorePaths.map((p) => p.clone()),
       index
     )
   }
@@ -90,7 +90,7 @@ export class SvgAnimation extends Renderer {
     let start: number | undefined
     const ms = this.ms
     const loopCount: number = this._getFramesNumber()
-    const frame: FrameRequestCallback = timestamp => {
+    const frame: FrameRequestCallback = (timestamp) => {
       if (ms !== this.ms) {
         this.restore()
         this.start()
@@ -136,28 +136,28 @@ export class SvgAnimation extends Renderer {
       defaultValue: string,
       getValue: ({
         origin,
-        path
+        path,
       }: {
         origin: Path
         path?: Path
       }) => string | undefined
     ): SVGElement | null => {
-      const animValues = animPathsList.map(ap => {
-        const path = ap.find(p => p.attrs.id === origin.attrs.id)
+      const animValues = animPathsList.map((ap) => {
+        const path = ap.find((p) => p.attrs.id === origin.attrs.id)
         return getValue({ origin, path }) || defaultValue
       })
       // return null if value is same all.
-      if (animValues.every(v => v === defaultValue)) return null
+      if (animValues.every((v) => v === defaultValue)) return null
 
       return createSvgChildElement('animate', {
         dur,
         keyTimes,
         attributeName,
         repeatCount: this._repeatCount,
-        values: [defaultValue, ...animValues].join(';')
+        values: [defaultValue, ...animValues].join(';'),
       })
     }
-    const animEls = this._restorePaths.map(p => {
+    const animEls = this._restorePaths.map((p) => {
       const pEl = p.toElement()
       const dAnimEl = createAnimationElement(
         p,
@@ -173,7 +173,7 @@ export class SvgAnimation extends Renderer {
       Object.entries({
         fill: 'fill',
         stroke: 'stroke',
-        strokeWidth: 'stroke-width'
+        strokeWidth: 'stroke-width',
       }).map(([propertyName, attrName]) => {
         const aEl = createAnimationElement(
           p,
@@ -211,11 +211,11 @@ export class SvgAnimation extends Renderer {
    * @param filename
    * TODO: Support gif and apng
    */
-  public downloadAnimation(filename?: string) {
+  public downloadAnimation(filename?: string): void {
     download({
       data: svg2base64(this.toAnimationElement().outerHTML),
       extension: 'svg',
-      filename
+      filename,
     })
   }
 

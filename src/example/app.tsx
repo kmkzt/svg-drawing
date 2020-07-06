@@ -4,7 +4,7 @@ import React, {
   Fragment,
   useCallback,
   useState,
-  ChangeEvent
+  ChangeEvent,
 } from 'react'
 import { render } from 'react-dom'
 import { SvgDrawing, SvgAnimation, FrameAnimation, Command, Point } from '../'
@@ -32,7 +32,7 @@ const colorList = [
   '#ddd',
   '#9E9E9E',
   '#444',
-  'black'
+  'black',
 ]
 
 const getRandomInt = (max: number): number =>
@@ -44,7 +44,7 @@ const getRandomColor = (): string =>
 
 const CANVAS_SIZE = innerHeight > innerWidth ? '98vw' : '49vw'
 
-const shake: FrameAnimation = paths => {
+const shake: FrameAnimation = (paths) => {
   const range = 5
   const randomShaking = (): number => Math.random() * range - range / 2
   for (let i = 0; i < paths.length; i += 1) {
@@ -73,7 +73,7 @@ const colorfulList = [
   '#FFEB3B',
   '#FFC107',
   '#FF9800',
-  '#FF5722'
+  '#FF5722',
 ]
 
 const colorfulAnimation: FrameAnimation = (paths, fid) => {
@@ -151,7 +151,7 @@ const Example = () => {
   //   [thinner]
   // )
 
-  const handleChangeRainbowPen = useCallback(e => {
+  const handleChangeRainbowPen = useCallback((e) => {
     if (!drawingRef.current) return
     drawingRef.current.fill = 'none'
     drawingRef.current.close = false
@@ -261,7 +261,7 @@ const Example = () => {
       close,
       delay,
       penWidth,
-      fill
+      fill,
     })
   })
 
@@ -269,7 +269,7 @@ const Example = () => {
     if (animationRef.current) return
     if (!aniDivRef.current) return
     animationRef.current = new SvgAnimation(aniDivRef.current, {
-      ms: animMs
+      ms: animMs,
     })
   })
   useEffect(() => {
@@ -285,7 +285,7 @@ const Example = () => {
 
   const handleFiles = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader()
-    reader.onload = function(ev: ProgressEvent<FileReader>) {
+    reader.onload = function (ev: ProgressEvent<FileReader>) {
       if (typeof ev.target.result !== 'string') return
       const [type, data] = ev.target.result.split(',')
       if (type === 'data:image/svg+xml;base64') {
@@ -301,7 +301,7 @@ const Example = () => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
     animationRef.current.setAnimation(shake, {
-      frames: 3
+      frames: 3,
     })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
@@ -310,7 +310,7 @@ const Example = () => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
     animationRef.current.setAnimation(drawingAnimation, {
-      repeatCount: 1
+      repeatCount: 1,
     })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
@@ -319,7 +319,7 @@ const Example = () => {
     if (!animationRef.current) return
     if (!drawingRef.current) return
     animationRef.current.setAnimation(colorfulAnimation, {
-      frames: colorfulList.length
+      frames: colorfulList.length,
     })
     animationRef.current.copy(drawingRef.current)
     animationRef.current.start()
@@ -446,7 +446,8 @@ const Example = () => {
                       width: '15px',
                       height: '15px',
                       backgroundColor: col,
-                      border: col === fill ? '2px solid #000' : '2px solid #999'
+                      border:
+                        col === fill ? '2px solid #000' : '2px solid #999',
                     }}
                     onClick={handleClickFill(col)}
                   />
@@ -471,7 +472,7 @@ const Example = () => {
                       height: '15px',
                       backgroundColor: col,
                       border:
-                        col === penColor ? '2px solid #000' : '2px solid #999'
+                        col === penColor ? '2px solid #000' : '2px solid #999',
                     }}
                     onClick={handleClickPenColor(col)}
                   />
@@ -489,7 +490,7 @@ const Example = () => {
       <div
         style={{
           display: 'flex',
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
         }}
       >
         <div>
@@ -512,7 +513,7 @@ const Example = () => {
               border: '1px solid #333',
               width: CANVAS_SIZE,
               height: CANVAS_SIZE,
-              margin: 'auto'
+              margin: 'auto',
             }}
           />
         </div>
@@ -554,7 +555,7 @@ const Example = () => {
               border: '1px solid #333',
               width: CANVAS_SIZE,
               height: CANVAS_SIZE,
-              margin: 'auto'
+              margin: 'auto',
             }}
           />
         </div>

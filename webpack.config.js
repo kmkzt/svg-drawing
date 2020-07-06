@@ -12,7 +12,7 @@ module.exports = {
   entry: resolve(__dirname, 'src/example/app.tsx'),
   output: {
     filename: isDev ? '[name].js' : '[name].[hash].js',
-    path: resolve(__dirname, 'dist')
+    path: resolve(__dirname, 'dist'),
   },
   module: {
     rules: [
@@ -25,10 +25,10 @@ module.exports = {
             loader: 'eslint-loader',
             options: {
               fix: true,
-              failOnWarning: true
-            }
-          }
-        ]
+              failOnWarning: true,
+            },
+          },
+        ],
       },
       {
         enforce: 'pre',
@@ -38,22 +38,22 @@ module.exports = {
           {
             loader: 'ts-loader',
             options: {
-              transpileOnly: true
-            }
+              transpileOnly: true,
+            },
           },
           {
             loader: 'eslint-loader',
             options: {
               fix: true,
-              failOnWarning: true
-            }
-          }
-        ]
+              failOnWarning: true,
+            },
+          },
+        ],
       },
       {
         test: /\.[tj]sx$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -62,34 +62,32 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: '[name].[ext]?[hash]'
-            }
-          }
-        ]
+              name: '[name].[ext]?[hash]',
+            },
+          },
+        ],
       },
-      { test: /\.html$/, exclude: /node_modules/, use: 'html-loader' }
-    ]
+      { test: /\.html$/, exclude: /node_modules/, use: 'html-loader' },
+    ],
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     modules: ['node_modules', 'web_modules'],
-    plugins: [new TsconfigPathsPlugin()]
+    plugins: [new TsconfigPathsPlugin()],
   },
   plugins: [
     new CaseSensitivePathsPlugin(),
-    new ForkTsCheckerWebpackPlugin({
-      reportFiles: ['src/**/*.{ts,tsx}']
-    }),
+    new ForkTsCheckerWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: resolve(__dirname, 'src/example/index.html')
-    })
+      template: resolve(__dirname, 'src/example/index.html'),
+    }),
   ],
   optimization: {
-    minimize: !isDev
+    minimize: !isDev,
   },
   devServer: {
     contentBase: join(__dirname, 'docs'),
     compress: true,
-    port: 8888
-  }
+    port: 8888,
+  },
 }

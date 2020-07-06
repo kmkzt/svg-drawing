@@ -13,11 +13,7 @@ export class BezierCurve {
     start: Point,
     next: Point
   ): [number, number] {
-    const vector = next
-      .sub(prev)
-      .toVector()
-      .scale(this.ratio)
-      .toPoint()
+    const vector = next.sub(prev).toVector().scale(this.ratio).toPoint()
     const po = start.add(vector)
     return [po.x, po.y]
   }
@@ -27,7 +23,7 @@ export class BezierCurve {
       ...this._controlPoint(p1, p2, p3),
       ...this._controlPoint(p4, p3, p2),
       p3.x,
-      p3.y
+      p3.y,
     ]
     return new Command(COMMAND_TYPE.CURVE, value)
   }
