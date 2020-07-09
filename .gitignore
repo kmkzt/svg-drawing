@@ -1,4 +1,6 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
+# ignore
+*.DS_Store
+.cache
 
 # dependencies
 /node_modules
@@ -7,9 +9,9 @@
 /coverage
 
 # production,distfile
-/build
-/dist
-/lib
+build
+dist
+lib
 
 # log
 npm-debug.log*

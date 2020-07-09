@@ -1,50 +1,19 @@
 {
-  "name": "svg-drawing",
-  "version": "3.0.0",
-  "license": "MIT",
-  "description": "svg drawing library.",
-  "author": "kmkzt<info.pscreator@gmail.com>",
-  "keywords": [
-    "svg",
-    "drawing"
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
   ],
-  "type": "module",
-  "types": "lib/index.d.ts",
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "browser": "lib/index.min.js",
-  "files": [
-    "lib/**/*.{js,ts}"
-  ],
-  "directories": {
-    "lib": "lib",
-    "doc": "README.md",
-    "example": "src/example"
-  },
-  "repository": "github:kmkzt/svg-drawing",
-  "homepage": "https://github.com/kmkzt/svg-drawing",
-  "bugs": {
-    "url": "https://github.com/kmkzt/svg-drawing/issues",
-    "email": "info.pscreator@gmail.com"
-  },
   "scripts": {
-    "dev": "NODE_ENV=development webpack-dev-server",
-    "prod": "npm-run-all lib:*",
-    "lib:clear": "rimraf lib/*",
-    "lib:rollup": "NODE_ENV=production rollup -c",
-    "lib:tsc": "NODE_ENV=production tsc --emitDeclarationOnly",
-    "demo": "npm-run-all demo:*",
-    "demo:clear": "rimraf docs/*",
-    "demo:build": "NODE_ENV=production webpack -p",
-    "test": "npm-run-all test:*",
-    "test:unit": "NODE_ENV=test jest --ci --passWithNoTests",
-    "test:types": "tsc --noEmit",
-    "lint": "eslint ./src --ext .js,.ts,.tsx;",
-    "fmt": "yarn lint --fix; yarn prettier --write ./src",
-    "release": "release-it",
-    "prepare": "yarn prod"
+    "clean": "lerna run clean; rimraf ./dist ./coverage ./packages/**/lib",
+    "build": "lerna run build",
+    "test": "NODE_ENV=test jest --ci --passWithNoTests",
+    "lint": "lerna run lint",
+    "fmt": "lerna run fmt",
+    "typecheck": "lerna run typecheck",
+    "release": "lerna run publish",
+    "prepare": "yarn build"
   },
-  "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.10.4",
     "@babel/plugin-transform-runtime": "7.10.4",
@@ -86,6 +55,7 @@
     "html-loader": "1.1.0",
     "html-webpack-plugin": "4.3.0",
     "jest": "26.1.0",
+    "lerna": "3.22.1",
     "npm-run-all": "4.1.5",
     "prettier": "2.0.5",
     "react": "16.13.1",
@@ -108,8 +78,5 @@
   },
   "resolutions": {
     "http-proxy": "1.18.1"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
   }
 }
