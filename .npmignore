@@ -8,4 +8,3 @@ renovate.json
 src
 prettier.config.js
 rollup.config.js
-assets
