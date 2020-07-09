@@ -1,7 +1,7 @@
 {
   "name": "@svg-drawing/example-demo",
   "private": true,
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0-beta.0",
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
     "build": "npm-run-all demo:*",
@@ -10,8 +10,8 @@
     "prepare": "build"
   },
   "dependencies": {
-    "@svg-drawing/animation": "4.0.0-beta.1",
-    "@svg-drawing/core": "4.0.0-beta.1",
+    "@svg-drawing/animation": "4.0.0-beta.0",
+    "@svg-drawing/core": "4.0.0-beta.0",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   },
