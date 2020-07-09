@@ -2,6 +2,6 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "registry": "https://registry.npmjs.org",
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0-beta.0",
   "packages": ["packages/*", "examples/*"]
 }

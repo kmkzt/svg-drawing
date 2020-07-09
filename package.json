@@ -11,7 +11,7 @@
     "lint": "lerna run lint",
     "fmt": "lerna run fmt",
     "typecheck": "lerna run typecheck",
-    "release": "lerna run publish",
+    "release": "lerna publish",
     "prepare": "yarn build"
   },
   "devDependencies": {
