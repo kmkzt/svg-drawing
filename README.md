@@ -6,9 +6,9 @@
 
 `svg-drawing` is svg based drawing library.
 
-This is a **[demo](https://kmkzt.github.io/svg-drawing/)**.
+This is a **[demo](https://kmkzt.github.io/svg-drawing/)**. Code is [here](examples/demo).
 
-[Here](example/html) is an example for Html only.
+[Here](examples/html/index.html) is an example for Html only.
 
 ## Getting Started
 
@@ -38,5 +38,5 @@ new SvgDrawing(el)
 
 | packages                                     | version                                                                        |
 | -------------------------------------------- | ------------------------------------------------------------------------------ |
-| [@svg-drawing/core](packages/coer)           | ![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)      |
+| [@svg-drawing/core](packages/core)           | ![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)      |
 | [@svg-drawing/animation](packages/animation) | ![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg) |
