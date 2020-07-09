@@ -1,0 +1,36 @@
+{
+  "name": "@svg-drawing/core",
+  "version": "4.0.0-beta.1",
+  "license": "MIT",
+  "description": "svg drawing library.",
+  "author": "kmkzt<info.pscreator@gmail.com>",
+  "keywords": [
+    "svg",
+    "drawing"
+  ],
+  "type": "module",
+  "types": "lib/index.d.ts",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "browser": "lib/index.min.js",
+  "files": [
+    "lib/**/*"
+  ],
+  "repository": "github:kmkzt/svg-drawing",
+  "homepage": "https://github.com/kmkzt/svg-drawing",
+  "bugs": {
+    "url": "https://github.com/kmkzt/svg-drawing/issues",
+    "email": "info.pscreator@gmail.com"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development webpack-dev-server",
+    "build": "npm-run-all lib:*",
+    "lib:clear": "rimraf lib/*",
+    "lib:rollup": "NODE_ENV=production rollup -c",
+    "lib:tsc": "NODE_ENV=production tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ./src --ext .js,.ts,.tsx;",
+    "fmt": "yarn lint --fix",
+    "prepare": "yarn build"
+  }
+}

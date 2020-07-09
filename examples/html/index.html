@@ -1,0 +1,111 @@
+<html>
+  <body>
+    <div class="drawarea">
+      <div id="draw" class="box"></div>
+      <div id="anim" class="box"></div>
+    </div>
+    <button id="clear">Clear</button>
+    <button id="download">Download svg</button>
+    <button id="start">Start animation</button>
+    <button id="stop">Stop animation</button>
+    <button id="downloadAnim">Donwload animation svg</button>
+    <style>
+      .drawarea {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .box {
+        border: 1px solid #ddd;
+        width: 45vw;
+        height: 45vw;
+        margin: auto;
+      }
+    </style>
+    <div id="anim"></div>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://unpkg.com/svg-drawing@3.0.0/lib/index.min.js"></script>
+    <!-- For legacy browser.
+      <script src="https://unpkg.com/svg-drawing@3.0.0/lib/index.min.js"></script>
+      <script>
+      // var Mod = window['svg-drawing']
+      // Var SvgDrawing = Mod.SvgDrawing
+      // Var SvgAnimation = Mod.SvgAnimation
+      ...
+      </script>
+    -->
+    <script type="module">
+      import {
+        SvgDrawing,
+        SvgAnimation,
+      } from 'https://unpkg.com/svg-drawing@3.0.0/lib/index.esm.js'
+
+      // Render Drawing area
+      // Drawing area will be resized to fit the rendering area
+      const drawEl = document.getElementById('draw')
+      const draw = new SvgDrawing(drawEl)
+
+      const clear = document.getElementById('clear')
+      clear.onclick = () => draw.clear()
+
+      const download = document.getElementById('download')
+      download.onclick = () => draw.download()
+
+      // Render Animation Area
+      // It is resized to fit the rendering area as well as the SvgDrawing area.
+      const animEl = document.getElementById('anim')
+      const anim = new SvgAnimation(animEl)
+
+      const start = document.getElementById('start')
+      start.onclick = () => {
+        // Sets the animation callback function
+        anim.setAnimation(
+          // Example drawing animation.
+          // Since the Path Object before animation is passed as an argument, it is converted and returned.
+          (paths, fid) => {
+            let len = fid
+            const update = []
+            for (let i = 0; i < paths.length; i += 1) {
+              if (len < paths[i].commands.length) {
+                paths[i].commands = paths[i].commands.slice(0, len)
+                update.push(paths[i])
+                break
+              }
+              len -= paths[i].commands.length
+              update.push(paths[i])
+            }
+            return update
+          },
+          // setAnimation options. `repeatCount` is related to downloadAnimation methods.
+          {
+            repeatCount: 1,
+            ms: 20,
+          }
+        )
+        // Copy drawwing data
+        anim.copy(draw)
+        // Start animation
+        anim.start()
+      }
+
+      const stop = document.getElementById('stop')
+      stop.onclick = () => {
+        // Stop Animation
+        anim.stop()
+        // Restore svg before animation.
+        anim.restore()
+      }
+      const da = document.getElementById('downloadAnim')
+      da.onclick = () => {
+        // Download svg with animate element.
+        anim.downloadAnimation()
+      }
+    </script>
+  </body>
+</html>

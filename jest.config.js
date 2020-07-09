@@ -1,12 +1,10 @@
 module.exports = {
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
   testRegex: '(\\.|/)(test|spec)\\.(t|j)sx?$',
-  moduleNameMapper: {
-    '^@/(.*)': '<rootDir>/src/$1'
-  },
+  moduleNameMapper: {},
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.(t|j)s?(x)', '!src/example/**/**']
+  collectCoverageFrom: ['<rootDir>/packages/**/src/**/**.(t|j)s?(x)'],
 }

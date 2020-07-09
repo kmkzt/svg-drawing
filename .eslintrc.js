@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: true,
     commonjs: true,
-    es6: true
+    es6: true,
   },
   extends: [
     'eslint:recommended',
@@ -14,13 +14,13 @@ module.exports = {
     'plugin:jest/recommended',
     'prettier/babel',
     'prettier/react',
-    'prettier/@typescript-eslint'
+    'prettier/@typescript-eslint',
   ],
   parser: '@typescript-eslint/parser',
   settings: {
     react: {
-      version: 'detect'
-    }
+      version: 'detect',
+    },
   },
   rules: {
     strict: 'error',
@@ -44,6 +44,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-use-before-define': 'off'
-  }
+    '@typescript-eslint/no-use-before-define': 'off',
+  },
 }
