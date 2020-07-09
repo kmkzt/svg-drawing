@@ -2,8 +2,11 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "registry": "https://registry.npmjs.org",
-  "version": "4.0.0-beta.0",
-  "packages": ["packages/*", "examples/*"],
+  "version": "4.0.0-beta.1",
+  "packages": [
+    "packages/*",
+    "examples/*"
+  ],
   "publishConfig": {
     "access": "public"
   }
