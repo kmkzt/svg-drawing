@@ -34,9 +34,13 @@
     "prepare": "yarn build"
   },
   "peerDependencies": {
-    "@svg-drawing/core": "4.0.0-beta.0"
+    "@svg-drawing/core": "^4.0.0-beta.1"
   },
   "devDependencies": {
     "@svg-drawing/core": "^4.0.0-beta.1"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "6811d0236e51e0204ffbf64a6124ca5469079373"
 }

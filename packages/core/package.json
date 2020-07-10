@@ -32,5 +32,9 @@
     "lint": "eslint ./src --ext .js,.ts,.tsx;",
     "fmt": "yarn lint --fix",
     "prepare": "yarn build"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "6811d0236e51e0204ffbf64a6124ca5469079373"
 }
