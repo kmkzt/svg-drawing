@@ -23,7 +23,6 @@
     "email": "info.pscreator@gmail.com"
   },
   "scripts": {
-    "dev": "NODE_ENV=development webpack-dev-server",
     "build": "npm-run-all lib:*",
     "lib:clear": "rimraf lib/*",
     "lib:rollup": "NODE_ENV=production rollup -c",
