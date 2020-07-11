@@ -1,11 +1,9 @@
 # `@svg-drawing/react`
 
-`react-hooks-svgdrawing` is React drawing library.
-
 ## Get started
 
 ```shell
-yarn add react @svg-drawing/react
+yarn add react @svg-drawing/react @svg-drawing/core
 ```
 
 ## How to use
@@ -14,7 +12,7 @@ This is example.
 
 ```javascript
 import React from 'react'
-import { useSvgDrawing } from 'react-hooks-svgdrawing'
+import { useSvgDrawing } from '@svg-drawing/react'
 
 const Drawing = () => {
   const [renderRef, draw] = useSvgDrawing()
