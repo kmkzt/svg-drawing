@@ -1,3 +1,4 @@
+import { resolve } from 'path'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import commonjs from '@rollup/plugin-commonjs'
@@ -6,6 +7,8 @@ import babel from 'rollup-plugin-babel'
 import sourceMaps from 'rollup-plugin-sourcemaps'
 import { terser } from 'rollup-plugin-terser'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
+
+const IS_DEV = process.env.NODE_ENV === 'development'
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json']
 
@@ -37,10 +40,18 @@ const getBabelOptions = ({ useESModules } = { useESModules: undefined }) => ({
     ['@babel/plugin-transform-runtime', { regenerator: false, useESModules }],
   ],
 })
-const input = './src/index.ts'
 
 export default ({ input, pkg }) => {
   const external = Object.keys(pkg.peerDependencies || {})
+  // If development, output path base set project root.
+  // TODO: Refactor. Consider using LERNA_ROOT_PATH
+  const geFilePath = (file) => {
+    const filePath = IS_DEV
+      ? resolve(__dirname, '../../', 'node_modules', pkg.name, file)
+      : file
+    console.log(`${pkg.name}/${file} Rollup output: ${filePath}`)
+    return filePath
+  }
   return [
     /**
      * umd
@@ -48,7 +59,7 @@ export default ({ input, pkg }) => {
     {
       input,
       output: {
-        file: pkg.browser,
+        file: geFilePath(pkg.browser),
         format: 'umd',
         name: pkg.name,
         // globals,
@@ -94,7 +105,7 @@ export default ({ input, pkg }) => {
     {
       input,
       output: {
-        file: pkg.main,
+        file: geFilePath(pkg.main),
         format: 'cjs',
         exports: 'named',
         sourcemap: true,
@@ -113,7 +124,7 @@ export default ({ input, pkg }) => {
      */
     {
       input,
-      output: { file: pkg.module, format: 'esm', sourcemap: true },
+      output: { file: geFilePath(pkg.module), format: 'esm', sourcemap: true },
       external,
       plugins: [
         sourceMaps(),

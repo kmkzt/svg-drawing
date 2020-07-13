@@ -7,6 +7,7 @@
   "scripts": {
     "clean": "lerna run clean; rimraf ./dist ./coverage ./packages/**/lib",
     "build": "lerna run build",
+    "dev": "yarn lerna run dev --concurrency 1 --parallel --stream",
     "test": "NODE_ENV=test jest --ci --passWithNoTests",
     "lint": "lerna run lint",
     "fmt": "lerna run fmt",
@@ -38,8 +39,8 @@
     "eslint": "7.4.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-loader": "4.0.2",
-    "eslint-plugin-jsx-a11y": "6.3.1",
     "eslint-plugin-jest": "23.18.0",
+    "eslint-plugin-jsx-a11y": "6.3.1",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-react": "7.20.3",
     "eslint-plugin-react-hooks": "4.0.6",
