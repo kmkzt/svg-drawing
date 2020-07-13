@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
     "build": "NODE_ENV=production webpack -p",
-    "lint": "eslint ./src --ext .js,.ts,.tsx",
+    "lint": "eslint ./app.tsx --ext .js,.ts,.tsx",
     "fmt": "yarn lint --fix",
     "prepare": "yarn prod"
   },
