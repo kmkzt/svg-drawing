@@ -14,9 +14,11 @@ export default baseConfig(({ esm, extensions, targets }) => ({
         modules: false,
       },
     ],
+    ['@babel/preset-react', { useBuiltIns: true }],
     '@babel/preset-typescript',
   ],
   plugins: [
+    ['transform-react-remove-prop-types', { removeImport: true }],
     // TODO: optimize bundle size
     // 'babel-plugin-annotate-pure-calls',
     [
