@@ -2220,10 +2220,10 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-14.0.22.tgz#23ea4d88189cec7d58f9e6b66f786b215eb61bdc"
   integrity sha512-emeGcJvdiZ4Z3ohbmw93E/64jRzUHAItSHt8nF7M4TGgQTiWqFVGB8KNpLGFmUHmHLvjvBgFwVlqNcq+VuGv9g==
 
-"@types/node@12.12.48":
-  version "12.12.48"
-  resolved "https://registry.npmjs.org/@types/node/-/node-12.12.48.tgz#4135f064eeed9fcfb4756deea5ba2caa11603391"
-  integrity sha512-m3Nmo/YaDUfYzdCQlxjF5pIy7TNyDTAJhIa//xtHcF0dlgYIBKULKnmloCPtByDxtZXrWV8Pge1AKT6/lRvVWg==
+"@types/node@12.12.50":
+  version "12.12.50"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.50.tgz#e9b2e85fafc15f2a8aa8fdd41091b983da5fd6ee"
+  integrity sha512-5ImO01Fb8YsEOYpV+aeyGYztcYcjGsBvN4D7G5r1ef2cuQOpymjWNQi5V0rKHE6PC2ru3HkoUr/Br2/8GUA84w==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -2260,10 +2260,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@16.9.41":
-  version "16.9.41"
-  resolved "https://registry.npmjs.org/@types/react/-/react-16.9.41.tgz#925137ee4d2ff406a0ecf29e8e9237390844002e"
-  integrity sha512-6cFei7F7L4wwuM+IND/Q2cV1koQUvJ8iSV+Gwn0c3kvABZ691g7sp3hfEQHOUBJtccl1gPi+EyNjMIl9nGA0ug==
+"@types/react@16.9.43":
+  version "16.9.43"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.43.tgz#c287f23f6189666ee3bebc2eb8d0f84bcb6cdb6b"
+  integrity sha512-PxshAFcnJqIWYpJbLPriClH53Z2WlJcVZE+NP2etUtWQs2s7yIMj3/LDKZT/5CHJ/F62iyjVCDu2H3jHEXIxSg==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
