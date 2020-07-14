@@ -72,7 +72,6 @@ draw.parseSVGElement(document.getElementByID('loadSVG'))
 
 ```html
 <div id="draw-area" style="width: 100vw;height: 100vh;"></div>
-<!-- Common JS-->
 <script src="https://unpkg.com/@svg-drawing/core@4.0.0-beta.3/lib/index.umd.js"></script>
 <script>
   var draw = new SVGDCore.SvgDrawing(document.getElementById('draw-area'))
