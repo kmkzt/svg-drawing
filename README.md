@@ -9,6 +9,8 @@
 This is a **[demo](https://kmkzt.github.io/svg-drawing/)**.
 Code is [here](examples/demo).
 
+This project has moved to monorepo. If you want to use the previous version, please use [here](/tree/v3.0.0).
+
 ## Getting Started
 
 ### npm
