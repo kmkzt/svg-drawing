@@ -35,8 +35,8 @@
     "fmt": "yarn lint --fix",
     "prepare": "yarn build"
   },
-  "peerDependencies": {
-    "@svg-drawing/core": ">= 4.0.0-beta.1"
+  "optionalDependencies": {
+    "@svg-drawing/core": "^4.0.0-beta.3"
   },
   "devDependencies": {
     "@svg-drawing/core": "^4.0.0-beta.3"

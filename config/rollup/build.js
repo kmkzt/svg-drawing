@@ -6,18 +6,17 @@ import babel from 'rollup-plugin-babel'
 import sourceMaps from 'rollup-plugin-sourcemaps'
 import { terser } from 'rollup-plugin-terser'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
-
+import { packageGlobals } from './globals'
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json']
 const targets = '>1%, not dead, not ie 11, not op_mini all'
 
-export default ({ getBabelOptions, globals: customGlobal }) => ({
+export default ({ getBabelOptions, globals: injectGlobal }) => ({
   input,
   pkg,
 }) => {
   const globals = {
-    ...(customGlobal || {}),
-    '@svg-drawing/core': 'SVGDCore',
-    '@svg-drawing/animation': 'SVGDAnimation',
+    ...(injectGlobal || {}),
+    packageGlobals,
   }
   const external = Object.keys({
     ...globals,
