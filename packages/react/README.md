@@ -1,5 +1,7 @@
 # `@svg-drawing/react`
 
+[![npm version](https://img.shields.io/npm/v/@svg-drawing/react/latest.svg)](https://www.npmjs.com/package/@svg-drawing/react) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/react.svg)](https://www.npmjs.com/package/@svg-drawing/react)
+
 ## Get started
 
 ```shell

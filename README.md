@@ -34,9 +34,10 @@ document.body.appendChid(el)
 new SvgDrawing(el)
 ```
 
-## Project
+## Packages
 
-| packages                                     | version                                                                        |
-| -------------------------------------------- | ------------------------------------------------------------------------------ |
-| [@svg-drawing/core](packages/core)           | ![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)      |
-| [@svg-drawing/animation](packages/animation) | ![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg) |
+| packages                                     | Description                                                                |
+| -------------------------------------------- | -------------------------------------------------------------------------- |
+| [@svg-drawing/core](packages/core)           | Core Module                                                                |
+| [@svg-drawing/animation](packages/animation) | Animate the drawn Svg. Can be animations using `JavaScript` or `<animate>` |
+| [@svg-drawing/react](packages/react)         | For react.                                                                 |

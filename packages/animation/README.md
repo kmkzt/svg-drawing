@@ -1,5 +1,7 @@
 # SvgAnimation
 
+[![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg)](https://www.npmjs.com/package/@svg-drawing/animation) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/animation.svg)](https://www.npmjs.com/package/@svg-drawing/animation)
+
 ## Install
 
 ### npm

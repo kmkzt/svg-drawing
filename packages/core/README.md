@@ -1,5 +1,7 @@
 # @svg-drawing/core
 
+[![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](https://www.npmjs.com/package/@svg-drawing/core) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/core.svg)](https://www.npmjs.com/package/@svg-drawing/core)
+
 ## Install
 
 ### npm
