@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renderer.ts Renderer download svg 1`] = `
+Object {
+  "data": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIwIiBoZWlnaHQ9IjAiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxIiBkPSJNIDAgMCBDIDAuMiAwLjIgMC42IDAuOCAxIDEgQyAxLjQgMS4yIDEuNiAxLjIgMiAxIEMgMi40IDAuOCAyLjggMC4yIDMgMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48L3BhdGg+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEiIGQ9Ik0gNCA0IEwgOSA0IEwgOSA4IEwgMyAwIFoiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1saW5lam9pbj0ibWl0dGVyIj48L3BhdGg+PC9zdmc+",
+  "extension": "svg",
+}
+`;

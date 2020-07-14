@@ -5,6 +5,7 @@ template.html
 webpack.*.js
 renovate.json
 .travis.yml
-src/example
+src
 prettier.config.js
 rollup.config.js
+tsconfig.json
