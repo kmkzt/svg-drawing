@@ -2,9 +2,11 @@
 
 [![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](https://www.npmjs.com/package/@svg-drawing/core) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/core.svg)](https://www.npmjs.com/package/@svg-drawing/core)
 
-## Install
+## How to use
 
 ### npm
+
+Install
 
 ```shell
 yarn add @svg-drawing/core
@@ -13,26 +15,6 @@ yarn add @svg-drawing/core
 ```
 
 Example code is [here](src/example/)
-
-### CDN
-
-```html
-<!-- Common JS-->
-<script src="https://unpkg.com/svg-drawing@3.0.0/lib/index.min.js"></script>
-
-<!-- ES Modules -->
-<script type="module">
-  import {
-    SvgDrawing,
-    SvgAnimation
-  } from 'https://unpkg.com/svg-drawing@3.0.0/lib/index.esm.js'
-  ...
-</script>
-```
-
-[Here](/example/demo/) is an example for Html only.
-
-## How to use
 
 This example renders the drawing area.
 
@@ -85,3 +67,16 @@ draw.parseSVGString(
 )
 draw.parseSVGElement(document.getElementByID('loadSVG'))
 ```
+
+### CDN
+
+```html
+<div id="draw-area" style="width: 100vw;height: 100vh;"></div>
+<!-- Common JS-->
+<script src="https://unpkg.com/@svg-drawing/core@4.0.0-beta.3/lib/index.umd.js"></script>
+<script>
+  var draw = new SVGDCore.SvgDrawing(document.getElementById('draw-area'))
+</script>
+```
+
+[Here](/example/demo/) is an example for Html only.

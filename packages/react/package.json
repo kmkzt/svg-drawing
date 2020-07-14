@@ -8,7 +8,7 @@
   "types": "lib/index.d.ts",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
-  "browser": "lib/index.min.js",
+  "browser": "lib/index.umd.js",
   "files": [
     "lib/**/*"
   ],

@@ -1,18 +1,21 @@
 # svg-drawing
 
-[![npm version](https://img.shields.io/npm/v/svg-drawing/latest.svg)](https://www.npmjs.com/package/svg-drawing) [![npm download](https://img.shields.io/npm/dm/svg-drawing.svg)](https://www.npmjs.com/package/svg-drawing) [![codecov](https://codecov.io/gh/kmkzt/svg-drawing/branch/master/graph/badge.svg)](https://codecov.io/gh/kmkzt/svg-drawing)
+[![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](https://www.npmjs.com/package/svg-drawing) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/core.svg)](https://www.npmjs.com/package/svg-drawing) [![codecov](https://codecov.io/gh/kmkzt/svg-drawing/branch/master/graph/badge.svg)](https://codecov.io/gh/kmkzt/svg-drawing)
 
 ![svg animation image](./logo.svg)
 
 `svg-drawing` is svg based drawing library.
 
-This is a **[demo](https://kmkzt.github.io/svg-drawing/)**. Code is [here](examples/demo).
-
-[Here](examples/html/index.html) is an example for Html only.
+This is a **[demo](https://kmkzt.github.io/svg-drawing/)**.
+Code is [here](examples/demo).
 
 ## Getting Started
 
+### npm
+
 ```shell
+npm i @svg-drawing/core
+# or
 yarn add @svg-drawing/core
 ```
 
@@ -34,10 +37,23 @@ document.body.appendChid(el)
 new SvgDrawing(el)
 ```
 
+### CDN
+
+```html
+<div id="draw-area" style="width: 100vw;height: 100vh;"></div>
+<!-- Common JS-->
+<script src="https://unpkg.com/@svg-drawing/core@4.0.0-beta.3/lib/index.umd.js"></script>
+<script>
+  var draw = new SVGDCore.SvgDrawing(document.getElementById('draw-area'))
+</script>
+```
+
+[Here](/example/demo/) is an example for Html only.
+
 ## Packages
 
-| packages                                     | Description                                                                |
-| -------------------------------------------- | -------------------------------------------------------------------------- |
-| [@svg-drawing/core](packages/core)           | Core Module                                                                |
-| [@svg-drawing/animation](packages/animation) | Animate the drawn Svg. Can be animations using `JavaScript` or `<animate>` |
-| [@svg-drawing/react](packages/react)         | For react.                                                                 |
+| packages                                                                                                                   | Description                                                                |
+| -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [@svg-drawing/core![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](packages/core)                | Core Module                                                                |
+| [@svg-drawing/animation![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg)](packages/animation) | Animate the drawn Svg. Can be animations using `JavaScript` or `<animate>` |
+| [@svg-drawing/react![npm version](https://img.shields.io/npm/v/@svg-drawing/react/latest.svg)](packages/react)             | For react.                                                                 |

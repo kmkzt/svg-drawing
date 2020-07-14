@@ -18,7 +18,7 @@ Example code is [here](/example/demo)
 
 ```js
 import { SvgDrawing } from '@svg-drawing/core'
-import { SvgAnimation} from '@svg-drawing/animation'
+import { SvgAnimation } from '@svg-drawing/animation'
 // Render drawing area. omitted the description
 const draw = new SvgDrawing(el)
 

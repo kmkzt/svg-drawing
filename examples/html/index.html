@@ -22,30 +22,11 @@
       }
     </style>
     <div id="anim"></div>
-    <script
-      crossorigin
-      src="https://unpkg.com/react@16/umd/react.production.min.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
-    ></script>
-    <script src="https://unpkg.com/svg-drawing@3.0.0/lib/index.min.js"></script>
-    <!-- For legacy browser.
-      <script src="https://unpkg.com/svg-drawing@3.0.0/lib/index.min.js"></script>
-      <script>
-      // var Mod = window['svg-drawing']
-      // Var SvgDrawing = Mod.SvgDrawing
-      // Var SvgAnimation = Mod.SvgAnimation
-      ...
-      </script>
-    -->
-    <script type="module">
-      import {
-        SvgDrawing,
-        SvgAnimation,
-      } from 'https://unpkg.com/svg-drawing@3.0.0/lib/index.esm.js'
-
+    <script src="https://unpkg.com/@svg-drawing/core@4.0.0-beta.3/lib/index.umd.js"></script>
+    <script src="https://unpkg.com/@svg-drawing/animation@4.0.0-beta.3/lib/index.umd.js"></script>
+    <script>
+      const { SvgDrawing } = SVGDCore
+      const { SvgAnimation } = SVGAnimation
       // Render Drawing area
       // Drawing area will be resized to fit the rendering area
       const drawEl = document.getElementById('draw')

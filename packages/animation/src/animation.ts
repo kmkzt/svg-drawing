@@ -1,12 +1,14 @@
-import { Renderer, RendererOption, Path } from '@svg-drawing/core'
-import { camel2kebab } from '@svg-drawing/core/lib/shared/camel2kebab'
-import { download } from '@svg-drawing/core/lib/shared/download'
-import { roundUp } from '@svg-drawing/core/lib/shared/roundUp'
-import { svg2base64 } from '@svg-drawing/core/lib/shared/svg2base64'
 import {
+  Renderer,
+  RendererOption,
+  Path,
+  camel2kebab,
+  download,
+  roundUp,
+  svg2base64,
   createSvgElement,
   createSvgChildElement,
-} from '@svg-drawing/core/lib/shared/createSvgElement'
+} from '@svg-drawing/core'
 
 export interface AnimationOption extends RendererOption {
   ms: number

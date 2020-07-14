@@ -10,9 +10,17 @@ import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json']
 const targets = '>1%, not dead, not ie 11, not op_mini all'
 
-export default ({ getBabelOptions, globals }) => ({ input, pkg }) => {
+export default ({ getBabelOptions, globals: customGlobal }) => ({
+  input,
+  pkg,
+}) => {
+  const globals = {
+    ...(customGlobal || {}),
+    '@svg-drawing/core': 'SVGDCore',
+    '@svg-drawing/animation': 'SVGDAnimation',
+  }
   const external = Object.keys({
-    ...(globals || {}),
+    ...globals,
     ...(pkg.peerDependencies || {}),
   })
   return [

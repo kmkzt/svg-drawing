@@ -12,6 +12,7 @@ node_modules
 build
 dist
 lib
+.size-snapshot.json
 
 # log
 npm-debug.log*
