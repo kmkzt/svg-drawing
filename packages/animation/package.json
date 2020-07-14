@@ -25,6 +25,7 @@
   ],
   "scripts": {
     "dev": "NODE_ENV=development rollup -w -c",
+    "dev:tsc": "NODE_ENV=development tsc -w",
     "build": "npm-run-all lib:*",
     "lib:clear": "rimraf lib/*",
     "lib:rollup": "NODE_ENV=production rollup -c",

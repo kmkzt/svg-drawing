@@ -1,4 +1,3 @@
-import { resolve } from 'path'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import commonjs from '@rollup/plugin-commonjs'
@@ -8,30 +7,14 @@ import sourceMaps from 'rollup-plugin-sourcemaps'
 import { terser } from 'rollup-plugin-terser'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 
-const IS_DEV = process.env.NODE_ENV === 'development'
-
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json']
 const targets = '>1%, not dead, not ie 11, not op_mini all'
 
-export default (getBabelOptions) => ({ input, pkg, globals }) => {
+export default ({ getBabelOptions, globals }) => ({ input, pkg }) => {
   const external = Object.keys({
     ...(globals || {}),
     ...(pkg.peerDependencies || {}),
   })
-  // If development, output path base set project root.
-  // TODO: Refactor. Consider using LERNA_ROOT_PATH
-  const geFilePath = (file) => {
-    if (!IS_DEV) return file
-    const filePath = resolve(
-      __dirname,
-      '../../',
-      'node_modules',
-      pkg.name,
-      file
-    )
-    console.log(`${pkg.name}/${file} Rollup output: ${filePath}`)
-    return filePath
-  }
   return [
     /**
      * umd
@@ -39,7 +22,7 @@ export default (getBabelOptions) => ({ input, pkg, globals }) => {
     {
       input,
       output: {
-        file: geFilePath(pkg.browser),
+        file: pkg.browser,
         format: 'umd',
         name: pkg.name,
         globals,
@@ -85,7 +68,7 @@ export default (getBabelOptions) => ({ input, pkg, globals }) => {
     {
       input,
       output: {
-        file: geFilePath(pkg.main),
+        file: pkg.main,
         format: 'cjs',
         exports: 'named',
         sourcemap: true,
@@ -104,7 +87,7 @@ export default (getBabelOptions) => ({ input, pkg, globals }) => {
      */
     {
       input,
-      output: { file: geFilePath(pkg.module), format: 'esm', sourcemap: true },
+      output: { file: pkg.module, format: 'esm', sourcemap: true },
       external,
       plugins: [
         sourceMaps(),
