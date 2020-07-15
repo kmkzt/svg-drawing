@@ -21,6 +21,7 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
   const external = Object.keys({
     ...globals,
     ...(pkg.peerDependencies || {}),
+    ...(pkg.optionalDependencies || {}),
   })
   return [
     /**
@@ -98,6 +99,7 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
       external,
       plugins: [
         sourceMaps(),
+        commonjs(),
         babel(getBabelOptions({ esm: true, extensions, targets })),
         nodeResolve({ extensions }),
         sizeSnapshot(),
