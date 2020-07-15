@@ -17,7 +17,7 @@
     "lib/**/*"
   ],
   "repository": "github:kmkzt/svg-drawing",
-  "homepage": "https://github.com/kmkzt/svg-drawing",
+  "homepage": "https://github.com/kmkzt/svg-drawing#readme",
   "bugs": {
     "url": "https://github.com/kmkzt/svg-drawing/issues",
     "email": "info.pscreator@gmail.com"

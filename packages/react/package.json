@@ -3,7 +3,7 @@
   "version": "4.0.0-beta.3",
   "description": "React svg drawing library. This library is a React extension of svg-drawing.",
   "author": "kmkzt <info.pscreator@gmail.com>",
-  "homepage": "https://github.com/kmkzt/svg-drawing#readme",
+  "homepage": "https://github.com/kmkzt/svg-drawing/tree/master/packages/react#readme",
   "license": "MIT",
   "types": "lib/index.d.ts",
   "main": "lib/index.cjs.js",
