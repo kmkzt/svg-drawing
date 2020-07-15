@@ -5,7 +5,7 @@
 ## Get started
 
 ```shell
-yarn add react @svg-drawing/react @svg-drawing/core
+yarn add react @svg-drawing/react
 ```
 
 ## How to use

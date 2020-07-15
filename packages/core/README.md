@@ -19,7 +19,7 @@ Example code is [here](src/example/)
 This example renders the drawing area.
 
 ```javascript
-import { SvgDrawing } from 'svg-drawing'
+import { SvgDrawing } from '@svg-drawing/core'
 
 const drawel = document.createElement('div')
 
