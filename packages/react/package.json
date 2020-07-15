@@ -38,11 +38,10 @@
     "react": ">= 16.8.0"
   },
   "optionalDependencies": {
-    "@svg-drawing/core": "^4.0.0-beta.3"
+    "@svg-drawing/core": "^4.0.0-beta.3",
+    "@svg-drawing/animation": "^4.0.0-beta.3"
   },
   "devDependencies": {
-    "@svg-drawing/core": "^4.0.0-beta.3",
-    "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react": "16.13.1"
   }
 }
