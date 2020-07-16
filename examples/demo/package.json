@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
     "build": "npm-run-all demo:*",
-    "demo:clear": "rimraf docs/*",
+    "demo:clear": "rimraf dist/*",
     "demo:build": "NODE_ENV=production webpack -p",
     "lint": "eslint ./app.tsx --ext .js,.ts,.tsx",
     "prepare": "build"

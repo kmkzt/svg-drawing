@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
-    "build": "NODE_ENV=production webpack -p",
+    "build": "npm-run-all demo:*",
+    "demo:clear": "rimraf dist/*",
+    "demo:build": "NODE_ENV=production webpack -p",
     "lint": "eslint ./app.tsx --ext .js,.ts,.tsx",
     "fmt": "yarn lint --fix",
     "prepare": "yarn build"
