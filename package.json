@@ -1,4 +1,6 @@
 {
+  "name": "@svg-drawing/root",
+  "version": "4.0.0-beta.3",
   "private": true,
   "workspaces": [
     "packages/*",
