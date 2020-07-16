@@ -4,6 +4,7 @@ const SVG_XLINK = 'http://www.w3.org/1999/xlink'
 interface Attrs {
   [key: string]: string
 }
+
 export const createSvgElement = (
   attrs: Attrs,
   childs: SVGElement[]
@@ -20,6 +21,7 @@ export const createSvgElement = (
   childs.map((el: SVGElement) => {
     svg.appendChild(el)
   })
+
   return svg
 }
 

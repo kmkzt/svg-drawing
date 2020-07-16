@@ -98,6 +98,15 @@ describe('svg.ts', () => {
         .addCommand(new Command(COMMAND_TYPE.MOVE, [1, 1]))
         .addCommand(new Command(COMMAND_TYPE.LINE, [2, 2]))
     })
+    it('fromString', () => {
+      const testData = `<path fill="none" stroke="#f50057" stroke-width="5" d="M 0 0 L 1 1 C 2 2 2 4 6 0 Q 0 0 1 1 H 10 V 20 m 0 0 l 1 1 c 1 1 2 2 3 3 h 10 v 20 A 6 4 10 0 1 14 10 a 6 4 10 0 1 14 10" stroke-linecap="round" stroke-linejoin="round"></path>`
+      const testPath = Path.fromString(testData)
+      expect(testPath.attrs.fill).toBe('none')
+      expect(testPath.attrs.stroke).toBe('#f50057')
+      expect(testPath.attrs.strokeWidth).toBe('5')
+      expect(testPath.commands.length).toBe(13)
+      expect(testPath.attrs.class).toBe('importedElement')
+    })
     it('addCommand', () => {
       expect(path.commands.length).toBe(2)
       expect(path.commands[0].type).toBe(COMMAND_TYPE.MOVE)

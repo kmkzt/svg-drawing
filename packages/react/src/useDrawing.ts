@@ -13,36 +13,45 @@ interface UseSvgDrawing {
   changeCurve: (penwidth: DrawingOption['curve']) => void
   getSvgXML: () => string | null
   download: (ext: 'svg' | 'png' | 'jpg') => void
+  insertPath: (pathString: string) => void
 }
+
 export const useSvgDrawing = (
   option?: Partial<DrawingOption>
 ): [MutableRefObject<HTMLDivElement | null>, UseSvgDrawing] => {
   const renderRef = useRef<HTMLDivElement | null>(null)
   const drawingRef = useRef<SvgDrawing | null>(null)
+
   const getSvgXML = useCallback(() => {
     if (!drawingRef.current) return null
     return drawingRef.current.toElement().outerHTML
   }, [])
+
   const download = useCallback((ext: 'svg' | 'png' | 'jpg' = 'svg') => {
     if (!drawingRef.current) return
     drawingRef.current.download(ext)
   }, [])
+
   const changePenColor = useCallback((param: DrawingOption['penColor']) => {
     if (!drawingRef.current || !param) return
     drawingRef.current.penColor = param
   }, [])
+
   const changeFill = useCallback((param: DrawingOption['fill']) => {
     if (!drawingRef.current || !param) return
     drawingRef.current.fill = param
   }, [])
+
   const changeDelay = useCallback((param: DrawingOption['delay']) => {
     if (!drawingRef.current || !param) return
     drawingRef.current.changeDelay(param)
   }, [])
+
   const changePenWidth = useCallback((param: DrawingOption['penWidth']) => {
     if (!drawingRef.current) return
     drawingRef.current.penWidth = Number(param)
   }, [])
+
   const changeClose = useCallback((param: DrawingOption['close']) => {
     if (!drawingRef.current || !param) return
     drawingRef.current.close = param
@@ -51,14 +60,22 @@ export const useSvgDrawing = (
     if (!drawingRef.current || !param) return
     drawingRef.current.curve = param
   }, [])
+
   const clear = useCallback(() => {
     if (!drawingRef.current) return
     drawingRef.current.clear()
   }, [])
+
   const undo = useCallback(() => {
     if (!drawingRef.current) return
     drawingRef.current.undo()
   }, [])
+
+  const insertPath = useCallback((pathString: string) => {
+    if (!drawingRef.current) return
+    drawingRef.current.insertPath(pathString)
+  }, [])
+
   useEffect(() => {
     if (drawingRef.current) return
     if (!renderRef.current) return
@@ -81,6 +98,7 @@ export const useSvgDrawing = (
       undo,
       getSvgXML,
       download,
+      insertPath,
     },
   ]
 }

@@ -26,6 +26,7 @@ export class SvgDrawing extends Renderer {
   private _clearPointListener: (() => void) | null
   private _clearMouseListener: (() => void) | null
   private _clearTouchListener: (() => void) | null
+
   constructor(
     el: HTMLElement,
     {
@@ -64,7 +65,13 @@ export class SvgDrawing extends Renderer {
   }
 
   public undo(): void {
-    this.paths.pop()
+    this.paths = this.paths
+      .filter((path) => path.attrs.class === 'importedElement')
+      .concat(
+        this.paths
+          .filter(({ attrs }) => attrs.class === 'drawnElement')
+          .pop() || []
+      )
     this.update()
   }
 
@@ -81,6 +88,7 @@ export class SvgDrawing extends Renderer {
     } else {
       this._setupMouseEventListener()
     }
+
     if ('ontouchstart' in window) {
       this._setupTouchEventListener()
     }
@@ -98,16 +106,26 @@ export class SvgDrawing extends Renderer {
     })
   }
 
+  public insertPath(pathString: string): void {
+    this.importPath(pathString)
+    this.update()
+  }
+
   public drawingStart(): void {
     if (this._drawPath) return
+
     this._drawPath = this._createDrawPath()
     this.addPath(this._drawPath)
+
+    // TODO: throw event here
   }
 
   public drawingMove({ x, y }: { x: number; y: number }): void {
     if (!this._drawPath) return
+
     const po = this._createDrawPoint({ x, y })
     this._addDrawPoint(po)
+
     if (
       (this._drawPath.attrs.strokeWidth &&
         +this._drawPath.attrs.strokeWidth !== this.penWidth) ||
@@ -117,6 +135,7 @@ export class SvgDrawing extends Renderer {
       this._addDrawPoint(po)
       this.addPath(this._drawPath)
     }
+
     this.update()
   }
 
@@ -124,13 +143,18 @@ export class SvgDrawing extends Renderer {
     if (this.close && this._drawPath) {
       this._drawPath.commands.push(new Command(COMMAND_TYPE.CLOSE))
     }
+
     this._drawPath = null
     this.update()
+
+    // TODO: throw event here
   }
 
   private _addDrawPoint(po: number[]) {
     if (!this._drawPath) return
+
     const commands = this._drawPath.commands
+
     if (
       commands.length === 0 ||
       commands[commands.length - 1].type === COMMAND_TYPE.CLOSE
@@ -163,6 +187,7 @@ export class SvgDrawing extends Renderer {
 
   private _createDrawPath(): Path {
     this.resizeElement()
+
     return new Path({
       stroke: this.penColor,
       strokeWidth: String(this.penWidth),
@@ -171,6 +196,7 @@ export class SvgDrawing extends Renderer {
       strokeLinejoin: this.curve ? 'round' : 'square',
     })
   }
+
   private _createDrawPoint({
     x,
     y,
@@ -187,6 +213,7 @@ export class SvgDrawing extends Renderer {
       cb({ x: ev.clientX, y: ev.clientY })
     }
   }
+
   /**
    * Drawing MouseEvent
    */
@@ -198,10 +225,12 @@ export class SvgDrawing extends Renderer {
       this.el.addEventListener('pointerleave', end, this._listenerOption)
       this.el.addEventListener('pointercancel', end, this._listenerOption)
     })
+
     const draw = throttle(
       this._handleMouseOrPoint(this.drawingMove),
       this.delay
     )
+
     const end = this._handleMouseOrPoint((param: { x: number; y: number }) => {
       this.el.removeEventListener('pointermove', draw)
       this.el.removeEventListener('pointerup', end)
@@ -209,10 +238,12 @@ export class SvgDrawing extends Renderer {
       this.el.addEventListener('pointercancel', end)
       this.drawingEnd()
     })
+
     this.el.addEventListener('pointerdown', start, this._listenerOption)
     this._clearPointListener = () =>
       this.el.removeEventListener('pointerdown', start)
   }
+
   /**
    * Drawing MouseEvent
    */
@@ -223,16 +254,19 @@ export class SvgDrawing extends Renderer {
       this.el.addEventListener('mouseup', end, this._listenerOption)
       this.el.addEventListener('mouseleave', end, this._listenerOption)
     })
+
     const draw = throttle(
       this._handleMouseOrPoint(this.drawingMove),
       this.delay
     )
+
     const end = this._handleMouseOrPoint((_param) => {
       this.el.removeEventListener('mousemove', draw)
       this.el.removeEventListener('mouseup', end)
       this.el.removeEventListener('mouseleave', end)
       this.drawingEnd()
     })
+
     this.el.addEventListener('mousedown', start, this._listenerOption)
     this._clearMouseListener = () =>
       this.el.removeEventListener('mousedown', start)
@@ -249,17 +283,20 @@ export class SvgDrawing extends Renderer {
       const touch = ev.touches[0]
       cb({ x: touch.clientX, y: touch.clientY })
     }
+
     const start = handleTouch((_param) => {
       this.drawingStart()
       this.el.addEventListener('touchmove', draw, this._listenerOption)
       this.el.addEventListener('touchend', end, this._listenerOption)
     })
+
     const draw = throttle(handleTouch(this.drawingMove), this.delay)
     const end = handleTouch((_param) => {
       this.el.removeEventListener('touchmove', draw)
       this.el.removeEventListener('touchend', end)
       this.drawingEnd()
     })
+
     this.el.addEventListener('touchstart', start, this._listenerOption)
     this._clearTouchListener = () =>
       this.el.removeEventListener('touchstart', start)

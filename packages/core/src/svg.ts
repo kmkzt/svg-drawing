@@ -6,6 +6,7 @@ import {
   createSvgElement,
   createSvgChildElement,
 } from './shared/createSvgElement'
+import { uuid } from './shared/uuidv4'
 
 const isNaN = (num: number) => num !== num
 
@@ -166,10 +167,31 @@ export class Path {
   public attrs: PathObject
   public commands: Command[]
 
-  constructor({ d, ...attrs }: PathObject = {}) {
+  constructor({ d, id, type, ...attrs }: PathObject = {}) {
     this.attrs = attrs
     this.commands = []
+    this.attrs.id = id ?? uuid()
+    this.attrs.class = type ?? 'drawnElement'
+
     if (d) this.parseCommandString(d)
+  }
+
+  static fromString(pathString: string): Path {
+    const path = new Path({ type: 'importedElement' })
+
+    pathString.split(' ').forEach((attr) => {
+      const [key, value] = attr.split('=')
+
+      if (['fill', 'stroke', 'stroke-width', 'id'].includes(key)) {
+        path.attrs[key] = value.substring(1, value.length - 1)
+      }
+    })
+
+    const startIndex = pathString.indexOf(' d="') + 4
+    const endIndex = startIndex + pathString.substring(startIndex).indexOf('"')
+    path.parseCommandString(pathString.substring(startIndex, endIndex))
+
+    return path
   }
 
   public scale(r: number): this {
@@ -180,17 +202,20 @@ export class Path {
 
   public addCommand(param: Command): this {
     this.commands.push(param)
+
     return this
   }
+
   public getCommandString(): string {
     if (this.commands.length === 0) return ''
+
     return this.commands
       .map((com: Command, _i: number) => com.toString())
       .join(' ')
       .trim()
   }
 
-  // TODO: Valid Command type
+  // TODO: Validate Command type
   public parseCommandString(d: string): void {
     this.commands = []
     let type: COMMAND | null = null
@@ -198,22 +223,25 @@ export class Path {
     const c = d.split(' ')
     const checkType = (c: any): COMMAND | null =>
       Object.values(COMMAND_TYPE).includes(c) ? c : null
+
     for (let i = 0; i < c.length; i += 1) {
       const t = checkType(c[i])
+
       // COMMAND Parse
       if (t) {
         if (!type) {
           type = t
           continue
         }
+
         this.commands.push(new Command(type, value))
         type = t
         value = []
         continue
       }
-      if (isNaN(+c[i])) {
-        return
-      }
+
+      if (isNaN(+c[i])) return
+
       value.push(+c[i])
     }
 
@@ -235,6 +263,7 @@ export class Path {
         [kebab2camel(attr.name)]: attr.value,
       }
     }
+
     return this
   }
 
@@ -244,6 +273,7 @@ export class Path {
       d: this.getCommandString(),
     }
   }
+
   public toElement(): SVGElement {
     const attrs = Object.entries(this.attrs).reduce(
       (acc, [key, val], _i) =>
@@ -266,6 +296,7 @@ export class Path {
     this.commands.map((c) => {
       path.commands.push(c.clone())
     })
+
     return path
   }
 }
@@ -280,10 +311,12 @@ export interface SvgObject {
   height: number
   paths: PathObject[]
 }
+
 export class Svg {
   public paths: Path[]
   public width: number
   public height: number
+
   constructor({ width, height }: SvgOption) {
     this.paths = []
     this.width = width
@@ -296,21 +329,33 @@ export class Svg {
         this.paths[i].scale(r)
       }
     }
+
     return this
   }
 
   public addPath(pa: Path): this {
     this.paths.push(pa)
+
     return this
   }
+
+  public removePath(id: string): this {
+    this.paths = this.paths.filter(({ attrs }) => attrs.id !== id)
+
+    return this
+  }
+
   public clonePaths(): Path[] {
     return this.paths.map((p) => p.clone())
   }
 
   public updatePath(pa: Path, i?: number): this {
     const updateIndex = i || this.paths.length - 1
+
     if (updateIndex < 0) this.paths.push(pa)
+
     this.paths[updateIndex] = pa
+
     return this
   }
 
@@ -324,9 +369,11 @@ export class Svg {
 
   public copy(svg: any extends Svg ? Svg : never): this {
     this.paths = svg.clonePaths()
+
     if (svg.width && this.width) {
       this.scalePath(svg.width / this.width)
     }
+
     return this
   }
 
@@ -336,34 +383,53 @@ export class Svg {
       this.paths.map((p) => p.toElement())
     )
   }
+
   public toBase64(): string {
     return svg2base64(this.toElement().outerHTML)
+  }
+
+  public importPath(pathString: string): this {
+    const path = Path.fromString(pathString)
+
+    if (!path.attrs.id) return this
+
+    this.removePath(path.attrs.id)
+    this.addPath(path)
+
+    return this
   }
 
   public parseSVGString(svgStr: string): this {
     const svgEl: SVGSVGElement | null = new DOMParser()
       .parseFromString(svgStr, 'image/svg+xml')
       .querySelector('svg')
+
     if (!svgEl) {
       this.paths = []
       return this
     }
+
     return this.parseSVGElement(svgEl)
   }
 
   public parseSVGElement(svgEl: SVGSVGElement): this {
     const update: Path[] = []
+
     svgEl.querySelectorAll('path').forEach((pEl) => {
       const pa = new Path().parsePathElement(pEl)
+
       if (pa.commands.length !== 0) {
         update.push(pa)
       }
     })
+
     this.paths = update
     const width = Number(svgEl.getAttribute('width'))
+
     if (width && this.width) {
       this.scalePath(this.width / width)
     }
+
     return this
   }
 }
