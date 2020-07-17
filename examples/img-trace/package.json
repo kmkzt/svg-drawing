@@ -1,0 +1,19 @@
+{
+  "name": "@svg-drawing-example/img-trace",
+  "private": true,
+  "version": "4.0.0-beta.4",
+  "scripts": {
+    "dev": "NODE_ENV=development webpack-dev-server",
+    "build": "npm-run-all demo:*",
+    "demo:clear": "rimraf dist/*",
+    "demo:build": "NODE_ENV=production webpack -p",
+    "lint": "eslint ./app.tsx --ext .js,.ts,.tsx",
+    "prepare": "build"
+  },
+  "dependencies": {
+    "@svg-drawing/animation": "4.0.0-beta.4",
+    "@svg-drawing/core": "4.0.0-beta.4",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  }
+}

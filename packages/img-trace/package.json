@@ -1,0 +1,47 @@
+{
+  "name": "@svg-drawing/img-trace",
+  "version": "4.0.0-beta.4",
+  "license": "MIT",
+  "description": "svg drawing library.",
+  "author": "kmkzt<info.pscreator@gmail.com>",
+  "repository": "github:kmkzt/svg-drawing",
+  "homepage": "https://github.com/kmkzt/svg-drawing/tree/master/packages/img-trace#readme",
+  "bugs": {
+    "url": "https://github.com/kmkzt/svg-drawing/issues",
+    "email": "info.pscreator@gmail.com"
+  },
+  "keywords": [
+    "svg",
+    "jpg",
+    "png",
+    "tracer"
+  ],
+  "type": "module",
+  "types": "lib/index.d.ts",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "browser": "lib/index.umd.js",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "dev": "NODE_ENV=development rollup -w -c",
+    "dev:tsc": "NODE_ENV=development tsc -w",
+    "build": "npm-run-all lib:*",
+    "lib:clear": "rimraf lib/*",
+    "lib:rollup": "NODE_ENV=production rollup -c",
+    "lib:tsc": "NODE_ENV=production tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ./src --ext .js,.ts,.tsx;",
+    "fmt": "yarn lint --fix",
+    "prepare": "yarn build"
+  },
+  "optionalDependencies": {
+    "@svg-drawing/animation": "4.0.0-beta.4",
+    "@svg-drawing/core": "4.0.0-beta.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "6811d0236e51e0204ffbf64a6124ca5469079373"
+}
