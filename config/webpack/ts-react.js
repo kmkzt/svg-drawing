@@ -11,7 +11,14 @@ const eslintLoader = {
     failOnWarning: false,
   },
 }
-module.exports = ({ isDev, entry, outputPath, template, port }) => ({
+module.exports = ({
+  isDev,
+  entry,
+  outputPath,
+  template,
+  port,
+  contentBase,
+}) => ({
   mode: isDev ? 'development' : 'production',
   devtool: isDev ? 'eval-source-map' : false,
   entry,
@@ -89,7 +96,13 @@ module.exports = ({ isDev, entry, outputPath, template, port }) => ({
   },
   devServer: {
     port,
-    contentBase: outputPath,
+    contentBase: contentBase || outputPath,
     compress: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'X-Requested-With, content-type, Authorization',
+    },
   },
 })
