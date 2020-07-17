@@ -7,9 +7,9 @@
     "examples/*"
   ],
   "scripts": {
-    "clean": "lerna run clean; rimraf ./coverage ./{examples,packages}/**/{lib,dist,node_modules}; yarn cache clean",
+    "clean": "lerna clean; rimraf ./coverage ./{examples,packages}/**/{lib,dist,node_modules}; yarn cache clean",
     "build": "lerna run build",
-    "dev": "concurrently \"yarn dev:main\"  \"yarn dev:tsc\"",
+    "dev": "yarn build; concurrently \"yarn dev:main\"  \"yarn dev:tsc\"",
     "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",
     "dev:tsc": "yarn lerna run dev:tsc --concurrency 1 --parallel --stream",
     "test": "NODE_ENV=test jest --ci --passWithNoTests",
@@ -17,8 +17,7 @@
     "fmt": "lerna run fmt",
     "typecheck": "lerna run typecheck",
     "release": "lerna publish --exact",
-    "release:debug": "yarn release -- --npm-tag=debug --no-push",
-    "prepare": "yarn build"
+    "release:debug": "yarn release -- --npm-tag=debug --no-push"
   },
   "devDependencies": {
     "@babel/core": "7.10.5",

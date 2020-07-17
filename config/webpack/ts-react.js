@@ -11,7 +11,7 @@ const eslintLoader = {
     failOnWarning: false,
   },
 }
-module.exports = ({ isDev, entry, outputPath, template }) => ({
+module.exports = ({ isDev, entry, outputPath, template, port }) => ({
   mode: isDev ? 'development' : 'production',
   devtool: isDev ? 'eval-source-map' : false,
   entry,
@@ -88,6 +88,7 @@ module.exports = ({ isDev, entry, outputPath, template }) => ({
     minimize: !isDev,
   },
   devServer: {
+    port,
     contentBase: outputPath,
     compress: true,
   },

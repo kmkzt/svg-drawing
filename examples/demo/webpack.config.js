@@ -8,4 +8,5 @@ module.exports = tsReactBase({
   entry: resolve(__dirname, './app.tsx'),
   outputPath: resolve(__dirname, 'dist'),
   template: resolve(__dirname, './index.html'),
+  port: 9020,
 })
