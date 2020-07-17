@@ -1,6 +1,6 @@
 {
   "name": "@svg-drawing/example-react",
-  "version": "4.0.0-beta.3",
+  "version": "4.0.0-beta.4",
   "private": true,
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server",
@@ -12,7 +12,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@svg-drawing/react": "^4.0.0-beta.3",
+    "@svg-drawing/react": "4.0.0-beta.4",
     "pressure": "2.1.2",
     "react": "16.13.1",
     "react-dom": "16.13.1"

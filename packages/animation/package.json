@@ -1,6 +1,6 @@
 {
   "name": "@svg-drawing/animation",
-  "version": "4.0.0-beta.3",
+  "version": "4.0.0-beta.4",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": "kmkzt<info.pscreator@gmail.com>",
@@ -36,7 +36,7 @@
     "prepare": "yarn build"
   },
   "optionalDependencies": {
-    "@svg-drawing/core": "^4.0.0-beta.3"
+    "@svg-drawing/core": "4.0.0-beta.4"
   },
   "publishConfig": {
     "access": "public"
