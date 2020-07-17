@@ -1,6 +1,4 @@
 import tsLib from '../../config/rollup/ts-lib'
 import pkg from './package.json'
 
-const input = './src/index.ts'
-
-export default tsLib({ input, pkg })
+export default tsLib({ input: './src/index.ts', pkg })
