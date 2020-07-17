@@ -39,41 +39,51 @@ const [renderRef, draw] = useSvgDrawing({
 Drawing methods.
 
 ```javascript
+// svg-drawing hooks
 const [renderRef, draw] = useSvgDrawing()
 
 // Call the SvgDrawing. Access the current settings of penWidth, penColor etc
-// Details are https://github.com/kmkzt/svg-drawing.
-console.log(draw.instance.penColor) // #333
-console.log(draw.instance.penWidth) // 1
+// Details are https://github.com/kmkzt/svg-drawing/tree/master/packages/core.
+const loggerInstance = useCallback(() => {
+  if (!draw.instance) return
+  console.log(draw.instance.penColor) // #333
+  console.log(draw.instance.penWidth) // 1
+}, [draw.instance])
 
 // Erase all drawing.
-draw.clear()
+return <button onClick={draw.clear}>clear</button>
+// Undo drawing.
+return <button onClick={draw.undo}>undo</button>
 
 // Download image.
-draw.download() // default svg download
-draw.download('svg')
-draw.download('png')
-draw.download('jpg')
+const handleDownload = useCallback(() => {
+  draw.download() // default svg download
+  draw.download('svg')
+  draw.download('png')
+  draw.download('jpg')
+}, [draw.download])
 
-// Undo drawing.
-draw.undo()
-
-// Change pen config
-draw.changePenColor('#00b')
-// Change pen width
-draw.changePenWidth(10)
-// Change fill attribure of svg path element.
-draw.changFill('#00b')
-// Change throttle delay of  drawing
-draw.changeDelay(10)
-// Set whether to use curved comma for svg path element.
-draw.changCurve(false)
-// Set whether to use curved comma for svg path element.
-draw.changeClose(true)
+// Chage parameter
+const handleChangeParameter = useCallback(() => {
+  // Change pen config
+  draw.changePenColor('#00b')
+  // Change pen width
+  draw.changePenWidth(10)
+  // Change fill attribure of svg path element.
+  draw.changFill('#00b')
+  // Change throttle delay of  drawing
+  draw.changeDelay(10)
+  // Set whether to use curved comma for svg path element.
+  draw.changCurve(false)
+  // Set whether to use curved comma for svg path element.
+  draw.changeClose(true)
+}, [draw])
 
 // get svgXML
 // return SVGElement
-console.log(draw.getSvgXML()) // <svg width="502" height="502"><path stroke-width="3" stroke="#000" fill="none" stroke-linejoin="round" stroke-linecap="round" d="M 156.671875 284.7265625 C 156.671875 286.1465625 156.671875 287.89984375 156.671875 291.83984375  ...
+const loggerXML = useCallback(() => {
+  console.log(draw.getSvgXML()) // <svg width="502" height="502"><path stroke-width="3" stroke="#000" fill="none" stroke-linejoin="round" stroke-linecap="round" d="M 156.671875 284.7265625 C 156.671875 286.1465625 156.671875 287.89984375 156.671875 291.83984375 ...
+}, [draw.getSvgXML])
 ```
 
-[example code](src/example/)
+[example code](/example/react)
