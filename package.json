@@ -17,7 +17,8 @@
     "fmt": "lerna run fmt",
     "typecheck": "lerna run typecheck",
     "release": "lerna publish --exact",
-    "release:debug": "yarn release -- --npm-tag=debug --no-push"
+    "release:debug": "yarn release -- --npm-tag=debug --no-push",
+    "prepare": "yarn lerna bootstrap"
   },
   "devDependencies": {
     "@babel/core": "7.10.5",
