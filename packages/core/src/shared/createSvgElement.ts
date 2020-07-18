@@ -12,9 +12,11 @@ export const createSvgElement = (
   svg.setAttributeNS(null, 'version', VERSION)
   svg.setAttribute('xmlns', SVG_NS)
   svg.setAttribute('xmlns:xlink', SVG_XLINK)
-  Object.keys(attrs).map((key: string) => {
-    svg.setAttribute(key, attrs[key])
-  })
+  Object.keys(attrs)
+    .sort()
+    .map((key: string) => {
+      svg.setAttribute(key, attrs[key])
+    })
   childs.map((el: SVGElement) => {
     svg.appendChild(el)
   })
@@ -26,8 +28,10 @@ export const createSvgChildElement = (
   attrs: Attrs
 ): SVGElement => {
   const path = document.createElementNS(SVG_NS, elname)
-  Object.keys(attrs).map((key: string) => {
-    path.setAttribute(key, attrs[key])
-  })
+  Object.keys(attrs)
+    .sort()
+    .map((key: string) => {
+      path.setAttribute(key, attrs[key])
+    })
   return path
 }

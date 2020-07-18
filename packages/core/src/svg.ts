@@ -159,7 +159,7 @@ export interface PathOption {
 }
 
 interface Attrs {
-  [key: string]: string
+  [key: string]: string | undefined
 }
 export interface PathObject {
   attrs: Attrs
@@ -177,7 +177,7 @@ const defaultAttrs: Attrs = {
  */
 export class Path {
   public strokeWidth: number
-  public attrs: { [key: string]: string }
+  public attrs: Attrs
   public stroke: string
   public fill: string
   public commands: Command[]
@@ -250,7 +250,7 @@ export class Path {
     this.attrs = defaultAttrs
     for (let i = 0; i < pEl.attributes.length; i += 1) {
       const attr: Attr | null = pEl.attributes.item(i)
-      if (!attr) continue
+      if (!attr || !attr.value) continue
       if (attr.name === 'd') {
         this.parseCommandString(attr.value)
         continue
@@ -288,10 +288,13 @@ export class Path {
       ['stroke-width']: String(this.strokeWidth),
       d: this.getCommandString(),
       ...Object.entries(this.attrs).reduce(
-        (acc, [key, val], _i) => ({
-          ...acc,
-          [camel2kebab(key)]: val,
-        }),
+        (acc, [key, val], _i) =>
+          val
+            ? {
+                ...acc,
+                [camel2kebab(key)]: val,
+              }
+            : acc,
         {}
       ),
     })

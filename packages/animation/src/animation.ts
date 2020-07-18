@@ -188,16 +188,19 @@ export class SvgAnimation extends Renderer {
       // TODO: Validate attrs
       // exclude id
       const { id, ...attrs } = p.attrs
-      Object.keys(attrs).map((propertyName: string) => {
-        const attrName = camel2kebab(propertyName)
-        const aEl = createAnimationElement(
-          p,
-          attrName,
-          p.attrs[propertyName],
-          ({ path }) => path?.attrs[propertyName]
-        )
-        if (aEl) pEl.appendChild(aEl)
-      })
+      Object.entries(attrs).map(
+        ([propertyName, val]: [string, string | undefined]) => {
+          if (!val) return
+          const attrName = camel2kebab(propertyName)
+          const aEl = createAnimationElement(
+            p,
+            attrName,
+            val,
+            ({ path }) => path?.attrs[propertyName]
+          )
+          if (aEl) pEl.appendChild(aEl)
+        }
+      )
 
       return pEl
     })
