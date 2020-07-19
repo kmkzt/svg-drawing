@@ -25,8 +25,6 @@ SvgAnimation {
       "attrs": Object {
         "fill": "#f00",
         "stroke": "#00f",
-        "strokeLinecap": "round",
-        "strokeLinejoin": "round",
         "strokeWidth": "4",
       },
       "commands": Array [
@@ -65,8 +63,6 @@ SvgAnimation {
       "attrs": Object {
         "fill": "#ff0",
         "stroke": "#f0f",
-        "strokeLinecap": "round",
-        "strokeLinejoin": "round",
         "strokeWidth": "2",
       },
       "commands": Array [
@@ -120,8 +116,6 @@ exports[`animation.ts SvgAnimation toAnimationElement 1`] = `
     fill="#f00"
     id="t0"
     stroke="#00f"
-    stroke-linecap="round"
-    stroke-linejoin="round"
     stroke-width="4"
   >
     <animate
@@ -138,21 +132,12 @@ exports[`animation.ts SvgAnimation toAnimationElement 1`] = `
       repeatCount="indefinite"
       values="#00f;#0ff;#00f;#0ff;#00f;#0ff;#00f;#0ff;#00f"
     />
-    <animate
-      attributeName="stroke-linecap"
-      dur="480ms"
-      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
-      repeatCount="indefinite"
-      values="round;mitter;round;round;mitter;round;round;mitter;round"
-    />
   </path>
   <path
     d="M 2 2 L 4 4 C 6 6 10 6 14 6 Z"
     fill="#ff0"
     id="t1"
     stroke="#f0f"
-    stroke-linecap="round"
-    stroke-linejoin="round"
     stroke-width="2"
   >
     <animate
@@ -168,13 +153,6 @@ exports[`animation.ts SvgAnimation toAnimationElement 1`] = `
       keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
       repeatCount="indefinite"
       values="#f0f;#f0f;#f0f;#f0f;#f0f;#0ff;#f0f;#0ff;#f0f"
-    />
-    <animate
-      attributeName="stroke-linecap"
-      dur="480ms"
-      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
-      repeatCount="indefinite"
-      values="round;round;round;round;round;mitter;round;round;mitter"
     />
   </path>
 </svg>
