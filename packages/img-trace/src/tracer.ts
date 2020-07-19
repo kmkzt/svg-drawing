@@ -184,14 +184,7 @@ export class Tracer {
   }
 
   // Tracing imagedata, then returning the scaled svg string
-  public imageToSVG(imgd: ImageData): SVGSVGElement {
-    const traceData = this.imageToTrace(imgd)
-    // returning SVG string
-    return this.traceDataToSVGElement(traceData)
-  }
-
-  // Tracing imagedata, then returning tracedata (layers with paths, palette, image size)
-  public imageToTrace(argImgd: ImageData): TraceData {
+  public fromImgData(argImgd: ImageData): SVGSVGElement {
     // imgd.data must be RGBA, not just RGB
     const imgd = convertRGBAImage(argImgd)
 
@@ -216,12 +209,12 @@ export class Tracer {
       // adding traced layer
       layers.push(tracedlayer)
     }
-    return {
+    return this.traceDataToSVGElement({
       layers,
       palette: this.palette,
       width: layer[0].length - 2,
       height: layer.length - 2,
-    }
+    })
   }
 
   ////////////////////////////////////////////////////////////
@@ -845,12 +838,10 @@ export class Tracer {
             const path = new Path({
               stroke: color,
               fill: color,
-              strokeWidth: this.strokewidth,
-              attrs: {
-                strokeLinecap: undefined,
-                strokeLinejoin: undefined,
-                opacity: String(rgba.a / 255.0),
-              },
+              strokeWidth: this.strokewidth + '',
+              strokeLinecap: undefined,
+              strokeLinejoin: undefined,
+              opacity: String(rgba.a / 255.0),
             })
             path.parseCommandString(d)
             svg.addPath(path)

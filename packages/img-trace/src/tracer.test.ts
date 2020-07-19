@@ -168,7 +168,7 @@ describe('tracer.ts', () => {
                 sampling: colorsampling,
                 numberofcolors,
               }).generate(imgd)
-            const svg = new Tracer(palette, opt).imageToSVG(imgd)
+            const svg = new Tracer(palette, opt).fromImgData(imgd)
             // Palette
             expect(
               palette.map((c) => `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a / 255})`)
