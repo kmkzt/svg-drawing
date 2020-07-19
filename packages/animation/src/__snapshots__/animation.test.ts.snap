@@ -23,8 +23,11 @@ SvgAnimation {
   "paths": Array [
     Path {
       "attrs": Object {
+        "fill": "#f00",
+        "stroke": "#00f",
         "strokeLinecap": "round",
         "strokeLinejoin": "round",
+        "strokeWidth": "4",
       },
       "commands": Array [
         Command {
@@ -57,14 +60,14 @@ SvgAnimation {
           "value": Array [],
         },
       ],
-      "fill": "#f00",
-      "stroke": "#00f",
-      "strokeWidth": 4,
     },
     Path {
       "attrs": Object {
+        "fill": "#ff0",
+        "stroke": "#f0f",
         "strokeLinecap": "round",
         "strokeLinejoin": "round",
+        "strokeWidth": "2",
       },
       "commands": Array [
         Command {
@@ -97,9 +100,6 @@ SvgAnimation {
           "value": Array [],
         },
       ],
-      "fill": "#ff0",
-      "stroke": "#f0f",
-      "strokeWidth": 2,
     },
   ],
   "top": 0,

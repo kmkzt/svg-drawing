@@ -80,8 +80,8 @@ const colorfulList = [
 const colorfulAnimation: FrameAnimation = (paths, fid) => {
   if (!fid) return paths
   for (let i = 0; i < paths.length; i += 1) {
-    paths[i].stroke = colorfulList[fid % colorfulList.length]
-    paths[i].fill = colorfulList[(fid + 4) % colorfulList.length]
+    paths[i].attrs.stroke = colorfulList[fid % colorfulList.length]
+    paths[i].attrs.fill = colorfulList[(fid + 4) % colorfulList.length]
   }
   return paths
 }

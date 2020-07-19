@@ -151,22 +151,15 @@ export class Vector {
   }
 }
 
-export interface PathOption {
-  strokeWidth?: number
-  attrs?: Attrs
-  stroke?: string
-  fill?: string
-}
-
-interface Attrs {
+// TODO: improve key types
+export interface PathObject {
   [key: string]: string | undefined
 }
-export interface PathObject {
-  attrs: Attrs
-  d: string
-}
 
-const defaultAttrs: Attrs = {
+const defaultAttrs: PathObject = {
+  strokeWidth: '1',
+  stroke: '#000',
+  fill: 'none',
   strokeLinecap: 'round', // 'mitter'
   strokeLinejoin: 'round', // 'square'
 }
@@ -176,26 +169,21 @@ const defaultAttrs: Attrs = {
  * `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
  */
 export class Path {
-  public strokeWidth: number
-  public attrs: Attrs
-  public stroke: string
-  public fill: string
+  public attrs: PathObject
   public commands: Command[]
 
-  constructor({ strokeWidth, fill, stroke, attrs }: PathOption = {}) {
-    this.strokeWidth = strokeWidth ?? 1
-    this.stroke = stroke ?? '#000'
-    this.fill = fill ?? 'none'
+  constructor({ d, ...attrs }: PathObject = {}) {
     this.attrs = {
       ...defaultAttrs,
       ...attrs,
     }
     this.commands = []
+    if (d) this.parseCommandString(d)
   }
 
   public scale(r: number): this {
     this.commands = this.commands.map((c: Command) => c.scale(r))
-    this.strokeWidth *= r
+    this.attrs.strokeWidth = String(r * +(this.attrs.strokeWidth || 0))
     return this
   }
 
@@ -244,27 +232,12 @@ export class Path {
   }
 
   public parsePathElement(pEl: SVGPathElement): this {
-    this.strokeWidth = 1
-    this.stroke = '#000'
-    this.fill = 'none'
     this.attrs = defaultAttrs
     for (let i = 0; i < pEl.attributes.length; i += 1) {
       const attr: Attr | null = pEl.attributes.item(i)
       if (!attr || !attr.value) continue
       if (attr.name === 'd') {
         this.parseCommandString(attr.value)
-        continue
-      }
-      if (attr.name === 'stroke-width') {
-        this.strokeWidth = Number(attr.value)
-        continue
-      }
-      if (attr.name === 'fill') {
-        this.fill = attr.value
-        continue
-      }
-      if (attr.name === 'stroke') {
-        this.stroke = attr.value
         continue
       }
       this.attrs = {
@@ -277,36 +250,29 @@ export class Path {
 
   public toJson(): PathObject {
     return {
-      attrs: this.attrs,
+      ...this.attrs,
       d: this.getCommandString(),
     }
   }
   public toElement(): SVGElement {
+    const attrs = Object.entries(this.attrs).reduce(
+      (acc, [key, val], _i) =>
+        val
+          ? {
+              ...acc,
+              [camel2kebab(key)]: val,
+            }
+          : acc,
+      {}
+    )
     return createSvgChildElement('path', {
-      fill: this.fill,
-      stroke: this.stroke,
-      ['stroke-width']: String(this.strokeWidth),
+      ...attrs,
       d: this.getCommandString(),
-      ...Object.entries(this.attrs).reduce(
-        (acc, [key, val], _i) =>
-          val
-            ? {
-                ...acc,
-                [camel2kebab(key)]: val,
-              }
-            : acc,
-        {}
-      ),
     })
   }
 
   public clone(): Path {
-    const path = new Path({
-      strokeWidth: this.strokeWidth,
-      fill: this.fill,
-      stroke: this.stroke,
-      attrs: { ...this.attrs },
-    })
+    const path = new Path(this.attrs)
     this.commands.map((c) => {
       path.commands.push(c.clone())
     })

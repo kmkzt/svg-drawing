@@ -108,8 +108,11 @@ SvgDrawing {
   "paths": Array [
     Path {
       "attrs": Object {
+        "fill": "none",
+        "stroke": "#333",
         "strokeLinecap": "round",
         "strokeLinejoin": "round",
+        "strokeWidth": "NaN",
       },
       "commands": Array [
         Command {
@@ -120,9 +123,6 @@ SvgDrawing {
           ],
         },
       ],
-      "fill": "none",
-      "stroke": "#333",
-      "strokeWidth": NaN,
     },
   ],
   "penColor": "#333",

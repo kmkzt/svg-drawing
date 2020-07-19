@@ -22,10 +22,8 @@ describe('renderer.ts', () => {
         )
         .addPath(
           new Path({
-            attrs: {
-              strokeLinecap: 'square',
-              strokeLinejoin: 'mitter',
-            },
+            strokeLinecap: 'square',
+            strokeLinejoin: 'mitter',
           })
             .addCommand(new Command(COMMAND_TYPE.MOVE, [4, 4]))
             .addCommand(new Command(COMMAND_TYPE.LINE, [9, 4]))

@@ -29,7 +29,7 @@ describe('animation.ts', () => {
         const update = []
         for (let i = 0; i < paths.length; i += 1) {
           // Test property
-          if (count % 2 === 0) paths[i].stroke = '#0ff'
+          if (count % 2 === 0) paths[i].attrs.stroke = '#0ff'
           // Test Attribute
           if (count % 3 === 0)
             Object.assign(paths[i].attrs, {

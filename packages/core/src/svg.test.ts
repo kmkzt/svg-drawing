@@ -94,7 +94,7 @@ describe('svg.ts', () => {
   describe('Path', () => {
     let path: Path
     beforeEach(() => {
-      path = new Path({ strokeWidth: 1 })
+      path = new Path({ strokeWidth: '1' })
         .addCommand(new Command(COMMAND_TYPE.MOVE, [1, 1]))
         .addCommand(new Command(COMMAND_TYPE.LINE, [2, 2]))
     })
@@ -106,7 +106,7 @@ describe('svg.ts', () => {
     })
     it('scale', () => {
       path.scale(2)
-      expect(path.strokeWidth).toBe(2)
+      expect(path.attrs.strokeWidth).toBe('2')
       expect(path.commands[0].type).toBe(COMMAND_TYPE.MOVE)
       expect(path.commands[0].point.x).toBe(2)
       expect(path.commands[0].point.y).toBe(2)
@@ -135,7 +135,7 @@ describe('svg.ts', () => {
       })
     })
     it('clone', () => {
-      const origin = new Path({ strokeWidth: 1 }).addCommand(
+      const origin = new Path({ strokeWidth: '1' }).addCommand(
         new Command(COMMAND_TYPE.MOVE, [1, 1])
       )
       const clone = origin
@@ -191,10 +191,8 @@ describe('svg.ts', () => {
         )
         .addPath(
           new Path({
-            attrs: {
-              strokeLinecap: 'square',
-              strokeLinejoin: 'mitter',
-            },
+            strokeLinecap: 'square',
+            strokeLinejoin: 'mitter',
           })
             .addCommand(new Command(COMMAND_TYPE.MOVE, [4, 4]))
             .addCommand(new Command(COMMAND_TYPE.LINE, [9, 4]))

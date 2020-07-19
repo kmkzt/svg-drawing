@@ -41,11 +41,12 @@ exports[`svg.ts Path toJson and toElement toElement 1`] = `
 
 exports[`svg.ts Path toJson and toElement toJson 1`] = `
 Object {
-  "attrs": Object {
-    "strokeLinecap": "round",
-    "strokeLinejoin": "round",
-  },
   "d": "M 0 0 L 1 1 L 2 1 L 3 0",
+  "fill": "none",
+  "stroke": "#000",
+  "strokeLinecap": "round",
+  "strokeLinejoin": "round",
+  "strokeWidth": "1",
 }
 `;
 
@@ -55,8 +56,11 @@ Svg {
   "paths": Array [
     Path {
       "attrs": Object {
+        "fill": "#f00",
+        "stroke": "#00f",
         "strokeLinecap": "round",
         "strokeLinejoin": "round",
+        "strokeWidth": "8",
       },
       "commands": Array [
         Command {
@@ -89,9 +93,6 @@ Svg {
           "value": Array [],
         },
       ],
-      "fill": "#f00",
-      "stroke": "#00f",
-      "strokeWidth": 8,
     },
   ],
   "width": 400,
@@ -104,8 +105,11 @@ Svg {
   "paths": Array [
     Path {
       "attrs": Object {
+        "fill": "#f00",
+        "stroke": "#00f",
         "strokeLinecap": "round",
         "strokeLinejoin": "round",
+        "strokeWidth": "8",
       },
       "commands": Array [
         Command {
@@ -138,9 +142,6 @@ Svg {
           "value": Array [],
         },
       ],
-      "fill": "#f00",
-      "stroke": "#00f",
-      "strokeWidth": 8,
     },
   ],
   "width": 400,
@@ -181,18 +182,20 @@ Object {
   "height": 500,
   "paths": Array [
     Object {
-      "attrs": Object {
-        "strokeLinecap": "round",
-        "strokeLinejoin": "round",
-      },
       "d": "M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0",
+      "fill": "none",
+      "stroke": "#000",
+      "strokeLinecap": "round",
+      "strokeLinejoin": "round",
+      "strokeWidth": "1",
     },
     Object {
-      "attrs": Object {
-        "strokeLinecap": "square",
-        "strokeLinejoin": "mitter",
-      },
       "d": "M 4 4 L 9 4 L 9 8 L 3 0 Z",
+      "fill": "none",
+      "stroke": "#000",
+      "strokeLinecap": "square",
+      "strokeLinejoin": "mitter",
+      "strokeWidth": "1",
     },
   ],
   "width": 500,

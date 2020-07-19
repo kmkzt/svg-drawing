@@ -94,7 +94,7 @@ stop.onclick = () => {
 // Download animtaion svg.
 const download = document.getElementById('download')
 download.onclick = () => {
-  loadAnimation()
+  setupAnimation()
   anim.downloadAnimation()
 }
 ```
@@ -185,8 +185,8 @@ const colorfulList = [
 anim.setAnimation(
   (paths, fid) => {
     for (let i = 0; i < paths.length; i += 1) {
-      paths[i].stroke = colorfulList[fid % colorfulList.length]
-      paths[i].fill = colorfulList[(fid + 4) % colorfulList.length]
+      paths[i].attrs.stroke = colorfulList[fid % colorfulList.length]
+      paths[i].attrs.fill = colorfulList[(fid + 4) % colorfulList.length]
     }
     return paths
   }

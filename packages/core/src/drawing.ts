@@ -109,8 +109,9 @@ export class SvgDrawing extends Renderer {
     const po = this._createDrawPoint({ x, y })
     this._addDrawPoint(po)
     if (
-      this._drawPath.strokeWidth !== this.penWidth ||
-      this._drawPath.stroke !== this.penColor
+      (this._drawPath.attrs.strokeWidth &&
+        +this._drawPath.attrs.strokeWidth !== this.penWidth) ||
+      this._drawPath.attrs.stroke !== this.penColor
     ) {
       this._drawPath = this._createDrawPath()
       this._addDrawPoint(po)
@@ -164,12 +165,10 @@ export class SvgDrawing extends Renderer {
     this.resizeElement()
     return new Path({
       stroke: this.penColor,
-      strokeWidth: this.penWidth,
-      attrs: {
-        strokeLinecap: this.curve ? 'round' : 'mitter',
-        strokeLinejoin: this.curve ? 'round' : 'square',
-      },
+      strokeWidth: String(this.penWidth),
       fill: this.fill,
+      strokeLinecap: this.curve ? 'round' : 'mitter',
+      strokeLinejoin: this.curve ? 'round' : 'square',
     })
   }
   private _createDrawPoint({

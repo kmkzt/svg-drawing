@@ -171,23 +171,8 @@ export class SvgAnimation extends Renderer {
       )
       if (dAnimEl) pEl.appendChild(dAnimEl)
 
-      Object.entries({
-        fill: 'fill',
-        stroke: 'stroke',
-        strokeWidth: 'stroke-width',
-      }).map(([propertyName, attrName]) => {
-        const aEl = createAnimationElement(
-          p,
-          attrName,
-          p[propertyName],
-          ({ path }) => (path ? path[propertyName] : undefined)
-        )
-        if (aEl) pEl.appendChild(aEl)
-      })
-
-      // TODO: Validate attrs
-      // exclude id
-      const { id, ...attrs } = p.attrs
+      // TODO: Check attribute key and value.
+      const { id, ...attrs } = p.attrs // exclude id
       Object.entries(attrs).map(
         ([propertyName, val]: [string, string | undefined]) => {
           if (!val) return
