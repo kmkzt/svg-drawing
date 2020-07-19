@@ -5,7 +5,7 @@ import { PNGReader } from './PNGReader'
 import { readFile, writeFileSync } from 'fs'
 import { resolve } from 'path'
 
-export const testPattern: {
+const testPattern: {
   [key: string]: Partial<
     TracerOption & {
       palette: Rgba[]
