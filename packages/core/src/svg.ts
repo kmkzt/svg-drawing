@@ -157,13 +157,6 @@ export interface PathObject {
   [key: string]: string | undefined
 }
 
-const defaultAttrs: PathObject = {
-  strokeWidth: '1',
-  stroke: '#000',
-  fill: 'none',
-  strokeLinecap: 'round', // 'mitter'
-  strokeLinejoin: 'round', // 'square'
-}
 /**
  * TODO: refactor command.
  * The following commands are not supported. Cannot support commands that use `M` or` z` more than once
@@ -174,10 +167,7 @@ export class Path {
   public commands: Command[]
 
   constructor({ d, ...attrs }: PathObject = {}) {
-    this.attrs = {
-      ...defaultAttrs,
-      ...attrs,
-    }
+    this.attrs = attrs
     this.commands = []
     if (d) this.parseCommandString(d)
   }
@@ -233,7 +223,6 @@ export class Path {
   }
 
   public parsePathElement(pEl: SVGPathElement): this {
-    this.attrs = defaultAttrs
     for (let i = 0; i < pEl.attributes.length; i += 1) {
       const attr: Attr | null = pEl.attributes.item(i)
       if (!attr || !attr.value) continue

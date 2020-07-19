@@ -42,7 +42,7 @@ export class SvgDrawing extends Renderer {
     /**
      * Setup parameter
      */
-    this.penColor = penColor ?? '#333'
+    this.penColor = penColor ?? '#000'
     this.penWidth = penWidth ?? 1
     this.curve = curve ?? true
     this.close = close ?? false
