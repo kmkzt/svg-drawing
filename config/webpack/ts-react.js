@@ -25,7 +25,7 @@ module.exports = ({
   output: {
     filename: isDev ? '[name].bundle.js' : '[name].[hash].js',
     path: outputPath,
-    publicPath: '/',
+    // publicPath: '/', // TODO: improve publicPath for github-pages
   },
   module: {
     rules: [
