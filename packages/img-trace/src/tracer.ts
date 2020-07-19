@@ -839,8 +839,6 @@ export class Tracer {
               stroke: color,
               fill: color,
               strokeWidth: this.strokewidth + '',
-              strokeLinecap: undefined,
-              strokeLinejoin: undefined,
               opacity: String(rgba.a / 255.0),
             })
             path.parseCommandString(d)
