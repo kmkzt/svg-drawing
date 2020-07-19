@@ -115,6 +115,7 @@ export class Command {
   }
 
   public toString(): string {
+    if (this.type === COMMAND_TYPE.CLOSE) return COMMAND_TYPE.CLOSE
     return `${this.type} ${this.value.map((v) => roundUp(v)).join(' ')}`
   }
 
