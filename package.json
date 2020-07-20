@@ -9,9 +9,10 @@
   "scripts": {
     "clean": "lerna clean; rimraf ./coverage ./{examples,packages}/**/{lib,dist,node_modules}; yarn cache clean",
     "build": "lerna run build",
-    "dev": "yarn build; concurrently \"yarn dev:main\"  \"yarn dev:tsc\"",
+    "dev": "yarn build; concurrently yarn:dev:*",
     "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",
     "dev:tsc": "yarn lerna run dev:tsc --concurrency 1 --parallel --stream",
+    "dev:test": "yarn test --watchAll",
     "test": "NODE_ENV=test jest --ci --passWithNoTests",
     "lint": "lerna run lint",
     "fmt": "lerna run fmt",
