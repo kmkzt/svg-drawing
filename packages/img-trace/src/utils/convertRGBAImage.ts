@@ -12,6 +12,6 @@ export const convertRGBAImage = (imgd: ImageData): ImageData => {
   }
   return {
     ...imgd,
-    data: rgbaImgd
+    data: rgbaImgd,
   }
 }

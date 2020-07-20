@@ -8,7 +8,7 @@ export class ImageLoader {
   constructor(options: Partial<ImageLoaderOption>) {
     this.corsenabled = options.corsenabled ?? true
   }
-  public fromUrl(url: string, callback: (imgd: ImageData) => void) {
+  public fromUrl(url: string, callback: (imgd: ImageData) => void): void {
     // TODO: cors improve
     // const xhr = new XMLHttpRequest()
     // xhr.responseType = 'blob'

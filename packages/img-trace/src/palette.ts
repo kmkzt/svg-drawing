@@ -10,7 +10,7 @@ export interface Rgba {
 export enum Sampling {
   NUMBER_OF_COLORS = 0,
   PICKUP_RANDOM = 1,
-  DETERMINISTIC = 2
+  DETERMINISTIC = 2,
 }
 
 export interface PalleteOption {
@@ -19,14 +19,11 @@ export interface PalleteOption {
   colorquantcycles?: number
 }
 export class Palette {
-  // Color quantization
   public sampling: Sampling
   public numberofcolors: number
   public colorquantcycles: number
 
-  // creating options object, setting defaults for missing values
   constructor(opt: Partial<PalleteOption>) {
-    // Color quantization
     this.sampling = opt.sampling ?? 2
     this.numberofcolors = opt.numberofcolors ?? 16
     this.colorquantcycles = opt.colorquantcycles ?? 3
@@ -44,9 +41,7 @@ export class Palette {
     }[] = []
     // Using a form of k-means clustering repeatead options.colorquantcycles times. http://en.wikipedia.org/wiki/Color_quantization
     for (let cnt = 0; cnt < this.colorquantcycles; cnt++) {
-      // Average colors from the second iteration
       if (cnt > 0) {
-        // averaging paletteacc for palette
         for (let k = 0; k < palette.length; k++) {
           // averaging
           if (paletteacc[k].n > 0) {
@@ -54,18 +49,18 @@ export class Palette {
               r: Math.floor(paletteacc[k].r / paletteacc[k].n),
               g: Math.floor(paletteacc[k].g / paletteacc[k].n),
               b: Math.floor(paletteacc[k].b / paletteacc[k].n),
-              a: Math.floor(paletteacc[k].a / paletteacc[k].n)
+              a: Math.floor(paletteacc[k].a / paletteacc[k].n),
             }
           }
-        } // End of palette loop
-      } // End of Average colors from the second iteration
+        }
+      }
 
       paletteacc = Array.from({ length: palette.length }, () => ({
         r: 0,
         g: 0,
         b: 0,
         a: 0,
-        n: 0
+        n: 0,
       }))
 
       // loop through all pixels
@@ -120,7 +115,7 @@ export class Palette {
         r: imgd.data[idx],
         g: imgd.data[idx + 1],
         b: imgd.data[idx + 2],
-        a: imgd.data[idx + 3]
+        a: imgd.data[idx + 3],
       })
     }
     return palette
@@ -142,7 +137,7 @@ export class Palette {
           r: imgd.data[idx],
           g: imgd.data[idx + 1],
           b: imgd.data[idx + 2],
-          a: imgd.data[idx + 3]
+          a: imgd.data[idx + 3],
         })
       }
     }
@@ -154,14 +149,13 @@ export class Palette {
     const palette: Rgba[] = []
     const numberofcolors = this.numberofcolors
     if (numberofcolors < 8) {
-      // Grayscale
       const graystep = Math.floor(255 / (numberofcolors - 1))
       for (let i = 0; i < numberofcolors; i++) {
         palette.push({
           r: i * graystep,
           g: i * graystep,
           b: i * graystep,
-          a: 255
+          a: 255,
         })
       }
     } else {
@@ -177,22 +171,21 @@ export class Palette {
               r: r * colorstep,
               g: g * colorstep,
               b: b * colorstep,
-              a: 255
+              a: 255,
             })
-          } // End of blue loop
-        } // End of green loop
-      } // End of red loop
+          }
+        }
+      }
 
-      // Rest is random
       for (let rcnt = 0; rcnt < rest; rcnt++) {
         palette.push({
           r: Math.floor(Math.random() * 255),
           g: Math.floor(Math.random() * 255),
           b: Math.floor(Math.random() * 255),
-          a: Math.floor(Math.random() * 255)
+          a: Math.floor(Math.random() * 255),
         })
       }
-    } // End of numberofcolors check
+    }
 
     return palette
   }

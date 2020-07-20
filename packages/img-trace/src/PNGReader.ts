@@ -167,7 +167,7 @@ export class PNG {
           this.palette[pixels[i] * 3 + 0],
           this.palette[pixels[i] * 3 + 1],
           this.palette[pixels[i] * 3 + 2],
-          255
+          255,
         ]
       case 4:
         return [pixels[i], pixels[i], pixels[i], pixels[i + 1]]

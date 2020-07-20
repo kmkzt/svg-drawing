@@ -76,7 +76,7 @@ const App = () => {
     if (!imageData) return
     const trace = new Tracer(palettes, traceOption)
     const svg = trace.fromImgData(imageData)
-    if (trace.palette) setPalettes(trace.palette)
+    if (trace.palettes) setPalettes(trace.palettes)
     if (!renderRef.current) return
     renderRef.current.innerHTML = svg.outerHTML
   }, [imageData, palettes, traceOption])

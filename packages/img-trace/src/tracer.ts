@@ -23,11 +23,23 @@ interface TraceData {
   height: number
 }
 
+type DirectionValue = typeof DIRECTION_TYPE[keyof typeof DIRECTION_TYPE]
+const DIRECTION_TYPE = {
+  RIGHT: 0,
+  RIGHT_BOTTOM: 1,
+  BOTTOM: 2,
+  LEFT_BOTTOM: 3,
+  LEFT: 4,
+  LEFT_TOP: 5,
+  TOP: 6,
+  RIGHT_TOP: 7,
+  CENTER: 8,
+  EMPTY: -1,
+} as const
 interface Point {
   x: number
   y: number
-  t?: number
-  direction?: number
+  direction: DirectionValue
 }
 
 export interface TracerOption {
@@ -164,7 +176,7 @@ export class Tracer {
   public decimalPlace: number
 
   // pallets
-  public palette: Rgba[]
+  public palettes: Rgba[]
   // creating options object, setting defaults for missing values
   constructor(palette: Rgba[], opts: TracerOption = {}) {
     // Tracing
@@ -180,7 +192,7 @@ export class Tracer {
     this.decimalPlace = opts.decimalPlace ?? 1
 
     // Custom Palette
-    this.palette = palette
+    this.palettes = palette
   }
 
   // Tracing imagedata, then returning the scaled svg string
@@ -194,9 +206,9 @@ export class Tracer {
     // // create tracedata object
     const layers: SmartPath[][] = []
 
-    for (let colornum = 0; colornum < this.palette.length; colornum++) {
+    for (let paletteId = 0; paletteId < this.palettes.length; paletteId++) {
       // 2. Layer separation and edge detection
-      const edge = this.layeringstep(layer, colornum)
+      const edge = this.layeringstep(layer, paletteId)
 
       // 3. pathscan
       const path = this.pathscan(edge)
@@ -205,13 +217,13 @@ export class Tracer {
       const interporation = this.internodes(path)
 
       // 5. TracedPath
-      const tracedlayer = interporation.map((p) => this.tracepath(p))
+      const tracedpath = interporation.map((p) => this.tracepath(p))
       // adding traced layer
-      layers.push(tracedlayer)
+      layers.push(tracedpath)
     }
     return this.traceDataToSVGElement({
       layers,
-      palette: this.palette,
+      palette: this.palettes,
       width: layer[0].length - 2,
       height: layer.length - 2,
     })
@@ -252,7 +264,7 @@ export class Tracer {
 
   private _findPaletteIndex({ r, g, b, a }: Rgba): number {
     let cdl = 1024 // 4 * 256 is the maximum RGBA distance
-    return this.palette.reduce((findId, pal, id) => {
+    return this.palettes.reduce((findId, pal, id) => {
       const cd =
         Math.abs(pal.r - r) +
         Math.abs(pal.g - g) +
@@ -344,7 +356,7 @@ export class Tracer {
           paths[pacnt].points[pcnt] = {
             x: px - 1,
             y: py - 1,
-            t: layer[py][px],
+            direction: DIRECTION_TYPE.EMPTY,
           }
           // Bounding box
           if (px - 1 < paths[pacnt].boundingbox[0]) {
@@ -432,7 +444,7 @@ export class Tracer {
     )
   }
 
-  // 4. interpollating between path points for nodes with 8 directions ( East, SouthEast, S, SW, W, NW, N, NE )
+  // 4. interpollating between path points for nodes with 8 directions
   public internodes(paths: PointInfo[]): PointInfo[] {
     const ins: PointInfo[] = []
     let nextidx = 0,
@@ -500,12 +512,10 @@ export class Tracer {
           x: (paths[pacnt].points[pcnt].x + paths[pacnt].points[nextidx].x) / 2,
           y: (paths[pacnt].points[pcnt].y + paths[pacnt].points[nextidx].y) / 2,
           direction: this._getdirection(
-            (paths[pacnt].points[pcnt].x + paths[pacnt].points[nextidx].x) / 2,
-            (paths[pacnt].points[pcnt].y + paths[pacnt].points[nextidx].y) / 2,
-            (paths[pacnt].points[nextidx].x + paths[pacnt].points[nextidx2].x) /
-              2,
-            (paths[pacnt].points[nextidx].y + paths[pacnt].points[nextidx2].y) /
-              2
+            paths[pacnt].points[pcnt].x + paths[pacnt].points[nextidx].x,
+            paths[pacnt].points[pcnt].y + paths[pacnt].points[nextidx].y,
+            paths[pacnt].points[nextidx].x + paths[pacnt].points[nextidx2].x,
+            paths[pacnt].points[nextidx].y + paths[pacnt].points[nextidx2].y
           ),
         })
       }
@@ -534,40 +544,38 @@ export class Tracer {
     )
   }
 
-  private _getdirection(x1: number, y1: number, x2: number, y2: number) {
-    let val = 8
+  private _getdirection(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ): DirectionValue {
     if (x1 < x2) {
       if (y1 < y2) {
-        val = 1
-      } // SouthEast
-      else if (y1 > y2) {
-        val = 7
-      } // NE
-      else {
-        val = 0
-      } // E
-    } else if (x1 > x2) {
-      if (y1 < y2) {
-        val = 3
-      } // SW
-      else if (y1 > y2) {
-        val = 5
-      } // NW
-      else {
-        val = 4
-      } // W
-    } else {
-      if (y1 < y2) {
-        val = 2
-      } // S
-      else if (y1 > y2) {
-        val = 6
-      } // N
-      else {
-        val = 8
-      } // center, this should not happen
+        return DIRECTION_TYPE.RIGHT_BOTTOM
+      }
+      if (y1 > y2) {
+        return DIRECTION_TYPE.RIGHT_TOP
+      }
+      return DIRECTION_TYPE.RIGHT_TOP
     }
-    return val
+    if (x1 > x2) {
+      if (y1 < y2) {
+        return DIRECTION_TYPE.LEFT_BOTTOM
+      }
+      if (y1 > y2) {
+        return DIRECTION_TYPE.LEFT_TOP
+      }
+      return DIRECTION_TYPE.LEFT
+    }
+
+    if (y1 < y2) {
+      return DIRECTION_TYPE.BOTTOM
+    }
+    if (y1 > y2) {
+      return DIRECTION_TYPE.TOP
+    }
+    return DIRECTION_TYPE.CENTER
   }
 
   // 5. tracepath() : recursively trying to fit straight and quadratic spline segments on the 8 direction internode path
@@ -584,8 +592,8 @@ export class Tracer {
     const commands: Command[] = []
     while (pcnt < path.points.length) {
       // 5.1. Find sequences of points with only 2 segment types
-      const segtype1 = path.points[pcnt].direction
-      let segtype2 = -1
+      const segtype1: DirectionValue = path.points[pcnt].direction
+      let segtype2: DirectionValue = DIRECTION_TYPE.EMPTY
       let seqend = pcnt + 1
       while (
         (path.points[seqend].direction === segtype1 ||
@@ -593,21 +601,23 @@ export class Tracer {
           segtype2 === -1) &&
         seqend < path.points.length - 1
       ) {
-        if (path.points[seqend].direction !== segtype1 && segtype2 === -1) {
-          // TODO: fix type
-          segtype2 = path.points[seqend].direction || 0
+        if (
+          path.points[seqend].direction !== segtype1 &&
+          segtype2 === DIRECTION_TYPE.EMPTY
+        ) {
+          segtype2 = path.points[seqend].direction || DIRECTION_TYPE.RIGHT
         }
         seqend++
       }
       if (seqend === path.points.length - 1) {
-        seqend = 0
+        commands.push(...this.fitseq(path, pcnt, 0))
+        pcnt = path.points.length
+      } else {
+        commands.push(...this.fitseq(path, pcnt, seqend))
+        pcnt = seqend
       }
 
       // 5.2. - 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
-      commands.push(...this.fitseq(path, pcnt, seqend))
-
-      // forward pcnt;
-      pcnt = seqend > 0 ? seqend : path.points.length
     }
 
     return {
@@ -642,10 +652,9 @@ export class Tracer {
       vy = (path.points[seqend].y - path.points[seqstart].y) / tl
 
     // 5.2. Fit a straight line on the sequence
-    let pcnt = (seqstart + 1) % path.points.length,
-      pl
+    let pcnt = (seqstart + 1) % path.points.length
     while (pcnt != seqend) {
-      pl = pcnt - seqstart
+      let pl = pcnt - seqstart
       if (pl < 0) {
         pl += path.points.length
       }
@@ -742,12 +751,6 @@ export class Tracer {
     )
   }
 
-  ////////////////////////////////////////////////////////////
-  //
-  //  SVG Drawing functions
-  //
-  ////////////////////////////////////////////////////////////
-
   // Rounding to given decimals https://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
   private _toDecimal(val: number): number {
     if (this.decimalPlace < 0) return val
@@ -810,22 +813,25 @@ export class Tracer {
           .join(' ')} `
       }
 
-      str += 'Z ' // Close path
-    } // End of holepath check
+      str += 'Z '
+    }
     return str
   }
 
   // Converting tracedata to an SVG string
-  public traceDataToSVGElement(tracedata: TraceData): SVGSVGElement {
+  public traceDataToSVGElement({
+    width,
+    height,
+    layers,
+    palette,
+  }: TraceData): SVGSVGElement {
     const svg = new Svg({
-      width: tracedata.width * this.scale,
-      height: tracedata.height * this.scale,
+      width: width * this.scale,
+      height: height * this.scale,
     })
-    // Drawing: Layers and Paths loops
-    for (let lcnt = 0; lcnt < tracedata.layers.length; lcnt++) {
-      for (let pcnt = 0; pcnt < tracedata.layers[lcnt].length; pcnt++) {
-        // Adding SVG <path> string
-        const layer = tracedata.layers[lcnt]
+    for (let lcnt = 0; lcnt < layers.length; lcnt++) {
+      for (let pcnt = 0; pcnt < layers[lcnt].length; pcnt++) {
+        const layer = layers[lcnt]
         const smp = layer[pcnt]
         if (!smp.isholepath) {
           // Line filter
@@ -833,7 +839,7 @@ export class Tracer {
           let d = this.commandToString(smp.commands)
           if (d) {
             d += this.complementCommandToString(layer, pcnt)
-            const rgba = tracedata.palette[lcnt]
+            const rgba = palette[lcnt]
             const color = `rgb(${rgba.r}, ${rgba.g}, ${rgba.b})`
             const path = new Path({
               stroke: color,
@@ -845,8 +851,8 @@ export class Tracer {
             svg.addPath(path)
           }
         }
-      } // End of paths loop
-    } // End of layers loop
+      }
+    }
 
     return svg.toElement()
   }
