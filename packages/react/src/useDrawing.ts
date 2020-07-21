@@ -44,12 +44,12 @@ export const useSvgDrawing = (
     drawingRef.current.penWidth = Number(param)
   }, [])
   const changeClose = useCallback((param: DrawingOption['close']) => {
-    if (!drawingRef.current || !param) return
-    drawingRef.current.close = param
+    if (!drawingRef.current) return
+    drawingRef.current.close = param ?? false
   }, [])
-  const changeCurve = useCallback((param: DrawingOption['close']) => {
-    if (!drawingRef.current || !param) return
-    drawingRef.current.curve = param
+  const changeCurve = useCallback((param: DrawingOption['curve']) => {
+    if (!drawingRef.current) return
+    drawingRef.current.curve = param ?? true
   }, [])
   const clear = useCallback(() => {
     if (!drawingRef.current) return
