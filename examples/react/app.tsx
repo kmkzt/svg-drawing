@@ -12,25 +12,34 @@ const getRandomColor = (): string =>
   ).join('')}`
 
 const Example = () => {
+  const [xml, setXml] = useState('')
+  const [penMode, setPenMode] = useState<string>('normal')
+  const [penWidth, setPenWidth] = useState<number>(5)
+  const [delay, setDelay] = useState<number>(20)
+  const [penThinnerWidth, setPenThinnerWidth] = useState<number>(0)
+  const [curve, setCurve] = useState<boolean>(true)
+  const [close, setClose] = useState<boolean>(false)
   const [
     divRef,
     {
       instance,
       changePenColor,
       changePenWidth,
+      changeClose,
+      changeCurve,
+      changeDelay,
       getSvgXML,
       download,
       undo,
       clear,
     },
   ] = useSvgDrawing({
-    penWidth: 3,
+    penWidth,
+    curve,
+    close,
+    delay,
     penColor: '#000',
   })
-  const [xml, setXml] = useState('')
-  const [penMode, setPenMode] = useState<string>('normal')
-  const [penWidth, setPenWidth] = useState<number>(5)
-  const [penThinnerWidth, setPenThinnerWidth] = useState<number>(0)
   const handleColor = useCallback(() => {
     changePenColor(getRandomColor())
   }, [changePenColor])
@@ -41,6 +50,13 @@ const Example = () => {
       changePenWidth(Number(e.target.value))
     },
     [changePenWidth]
+  )
+  const handleDelay = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setDelay(Number(e.target.value))
+      changeDelay(Number(e.target.value))
+    },
+    [changeDelay]
   )
   const handleChangeXML = useCallback(() => {
     setXml(getSvgXML() || '')
@@ -63,6 +79,16 @@ const Example = () => {
     },
     [setPenThinnerWidth]
   )
+
+  const handleChangeClose = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setClose(e.target.checked)
+    changeClose(e.target.checked)
+  }
+
+  const handleChangeCurve = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurve(e.target.checked)
+    changeCurve(e.target.checked)
+  }
 
   useEffect(() => {
     if (penMode === 'normal') return
@@ -118,14 +144,34 @@ const Example = () => {
           />
           Pen becoming Random Width.
         </label>
+        {!close && (
+          <label>
+            <input
+              type="checkbox"
+              checked={penMode === 'rainbow'}
+              value="rainbow"
+              onChange={handleChangeMode}
+            />
+            Rainbow pen.
+          </label>
+        )}
         <label>
           <input
             type="checkbox"
-            checked={penMode === 'rainbow'}
-            value="rainbow"
-            onChange={handleChangeMode}
+            checked={close}
+            value="close"
+            onChange={handleChangeClose}
           />
-          Rainbow pen.
+          Close path element
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={curve}
+            value="curve"
+            onChange={handleChangeCurve}
+          />
+          Curve
         </label>
         {['normal', 'rainbow'].includes(penMode) && (
           <div>
@@ -139,6 +185,16 @@ const Example = () => {
             />
           </div>
         )}
+        <div>
+          Drawing throttle
+          <input
+            type="range"
+            value={delay}
+            min={1}
+            max={500}
+            onChange={handleDelay}
+          />
+        </div>
         {penMode !== 'rainbow' && (
           <button onClick={handleColor}>Change Color</button>
         )}
