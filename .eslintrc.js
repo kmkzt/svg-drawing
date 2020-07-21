@@ -24,6 +24,7 @@ module.exports = {
   },
   rules: {
     strict: 'error',
+    'one-var': ['error', 'never'],
     'check-constructor': 'off',
     'no-comma-dangle': 'off',
     'no-empty-interface': 'off',

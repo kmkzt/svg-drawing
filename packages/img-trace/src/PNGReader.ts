@@ -68,8 +68,8 @@ export class PNG {
     //   6       8,16        Each pixel is an R,G,B triple,
     //                       followed by an alpha sample.
 
-    let colors = 0,
-      alpha = false
+    let colors = 0
+    let alpha = false
 
     switch (colorType) {
       case 0:
