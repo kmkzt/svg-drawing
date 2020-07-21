@@ -178,8 +178,12 @@ export class Path {
     return this
   }
 
-  public addCommand(param: Command): this {
-    this.commands.push(param)
+  public addCommand(param: Command | Command[]): this {
+    if (Array.isArray(param)) {
+      this.commands.push(...param)
+    } else {
+      this.commands.push(param)
+    }
     return this
   }
   public getCommandString(): string {
