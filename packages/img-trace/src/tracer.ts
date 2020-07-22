@@ -76,8 +76,6 @@ export interface TracerOption {
   // SVG rendering
   strokewidth?: number
   linefilter?: boolean
-  lcpr?: number
-  qcpr?: number
 }
 
 const pathscanCombinedLookup: EdgeType[][][] = [
