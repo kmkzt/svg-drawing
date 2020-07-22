@@ -76,10 +76,6 @@ export interface TracerOption {
   // SVG rendering
   strokewidth?: number
   linefilter?: boolean
-  scale?: number
-  decimalPlace?: number
-  viewbox?: boolean
-  desc?: boolean
   lcpr?: number
   qcpr?: number
 }
@@ -196,8 +192,6 @@ export class Tracer {
   // SVG rendering
   public strokewidth: number
   public linefilter: boolean
-  public scale: number
-  public decimalPlace: number
 
   // pallets
   public palettes: Rgba[]
@@ -212,8 +206,6 @@ export class Tracer {
     // SVG rendering
     this.strokewidth = opts.strokewidth ?? 1
     this.linefilter = opts.linefilter ?? false
-    this.scale = opts.scale ?? 1
-    this.decimalPlace = opts.decimalPlace ?? 1
 
     // Custom Palette
     this.palettes = palette
@@ -245,6 +237,7 @@ export class Tracer {
       // adding traced layer
       layers.push(tracedpath)
     }
+
     return this.traceDataToSVGElement({
       layers,
       palette: this.palettes,
@@ -603,8 +596,8 @@ export class Tracer {
 
   public tracepath(path: PointInfo): SmartPath {
     let pcnt = 0
-    const commands: Command[] = []
-    const holeCommands: Command[] = []
+    const comms: Command[] = []
+    const holes: Command[] = []
     while (pcnt < path.points.length) {
       // 5.1. Find sequences of points with only 2 segment types
       const segtype1: DirectionValue = path.points[pcnt].direction
@@ -626,34 +619,32 @@ export class Tracer {
       }
 
       if (seqend === path.points.length - 1) {
-        commands.push(...this.fitseq(path, pcnt, 0))
-        holeCommands.push(...this.fitseq(path, pcnt, 0, true))
+        comms.push(...this.fitseq(path, pcnt, 0))
+        holes.push(...this.fitseq(path, pcnt, 0, true))
         pcnt = path.points.length
       } else {
-        commands.push(...this.fitseq(path, pcnt, seqend))
-        holeCommands.push(...this.fitseq(path, pcnt, seqend, true))
+        comms.push(...this.fitseq(path, pcnt, seqend))
+        holes.push(...this.fitseq(path, pcnt, seqend, true))
         pcnt = seqend
       }
 
       // 5.2. - 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
     }
 
-    holeCommands.reverse()
-
+    const commands = [
+      new Command('M', [path.points[0].x, path.points[0].y]),
+      ...comms,
+      new Command('Z'),
+    ]
+    holes.reverse()
+    const holeCommands = [
+      new Command('M', holes[holes.length - 1].value.slice(0, 2)),
+      ...holes,
+      new Command('Z'),
+    ]
     return {
-      commands: [
-        new Command('M', [path.points[0].x, path.points[0].y]),
-        ...commands,
-        new Command('Z'),
-      ],
-      holeCommands: [
-        new Command(
-          'M',
-          holeCommands[holeCommands.length - 1].value.slice(0, 2)
-        ),
-        ...holeCommands,
-        new Command('Z'),
-      ],
+      commands,
+      holeCommands,
       boundingbox: path.boundingbox,
       holechildren: path.holechildren,
       isholepath: path.isholepath,
@@ -661,7 +652,6 @@ export class Tracer {
   }
 
   // 5.2. - 5.6. recursively fitting a straight or quadratic line segment on this sequence of path nodes,
-  // called from tracepath()
   public fitseq(
     path: PointInfo,
     seqstart: number,
@@ -803,8 +793,8 @@ export class Tracer {
     palette,
   }: TraceData): SVGSVGElement {
     const svg = new Svg({
-      width: width * this.scale,
-      height: height * this.scale,
+      width: width,
+      height: height,
     })
     for (let lcnt = 0; lcnt < layers.length; lcnt++) {
       for (let pcnt = 0; pcnt < layers[lcnt].length; pcnt++) {
@@ -825,7 +815,6 @@ export class Tracer {
             ...smp.commands,
             ...this.complementCommand(layer, pcnt),
           ])
-          path.scale(this.scale)
           svg.addPath(path)
         }
       }

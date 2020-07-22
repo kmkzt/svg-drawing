@@ -23,7 +23,7 @@ export class Palette {
   public numberofcolors: number
   public colorquantcycles: number
 
-  constructor(opt: Partial<PalleteOption>) {
+  constructor(opt: Partial<PalleteOption> = {}) {
     this.sampling = opt.sampling ?? 2
     this.numberofcolors = opt.numberofcolors ?? 16
     this.colorquantcycles = opt.colorquantcycles ?? 3
