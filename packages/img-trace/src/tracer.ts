@@ -29,6 +29,7 @@ type EdgeLayer = EdgeType[][]
 
 interface SmartPath {
   commands: Command[]
+  holeCommands: Command[]
   boundingbox: [number, number, number, number]
   holechildren: number[]
   isholepath: boolean
@@ -603,6 +604,7 @@ export class Tracer {
   public tracepath(path: PointInfo): SmartPath {
     let pcnt = 0
     const commands: Command[] = []
+    const holeCommands: Command[] = []
     while (pcnt < path.points.length) {
       // 5.1. Find sequences of points with only 2 segment types
       const segtype1: DirectionValue = path.points[pcnt].direction
@@ -622,19 +624,36 @@ export class Tracer {
         }
         seqend++
       }
+
       if (seqend === path.points.length - 1) {
         commands.push(...this.fitseq(path, pcnt, 0))
+        holeCommands.push(...this.fitseq(path, pcnt, 0, true))
         pcnt = path.points.length
       } else {
         commands.push(...this.fitseq(path, pcnt, seqend))
+        holeCommands.push(...this.fitseq(path, pcnt, seqend, true))
         pcnt = seqend
       }
 
       // 5.2. - 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
     }
 
+    holeCommands.reverse()
+
     return {
-      commands,
+      commands: [
+        new Command('M', [path.points[0].x, path.points[0].y]),
+        ...commands,
+        new Command('Z'),
+      ],
+      holeCommands: [
+        new Command(
+          'M',
+          holeCommands[holeCommands.length - 1].value.slice(0, 2)
+        ),
+        ...holeCommands,
+        new Command('Z'),
+      ],
       boundingbox: path.boundingbox,
       holechildren: path.holechildren,
       isholepath: path.isholepath,
@@ -643,7 +662,12 @@ export class Tracer {
 
   // 5.2. - 5.6. recursively fitting a straight or quadratic line segment on this sequence of path nodes,
   // called from tracepath()
-  public fitseq(path: PointInfo, seqstart: number, seqend: number): Command[] {
+  public fitseq(
+    path: PointInfo,
+    seqstart: number,
+    seqend: number,
+    isHolePath?: boolean
+  ): Command[] {
     const ltres = this.ltres
     const qtres = this.qtres
     // return if invalid seqend
@@ -688,12 +712,12 @@ export class Tracer {
     // return straight line if fits
     if (curvepass) {
       return [
-        new Command('L', [
-          path.points[seqstart].x,
-          path.points[seqstart].y,
-          path.points[seqend].x,
-          path.points[seqend].y,
-        ]),
+        new Command(
+          'L',
+          isHolePath
+            ? [path.points[seqstart].x, path.points[seqstart].y]
+            : [path.points[seqend].x, path.points[seqend].y]
+        ),
       ]
     }
 
@@ -746,8 +770,6 @@ export class Tracer {
     if (curvepass) {
       return [
         new Command('Q', [
-          path.points[seqstart].x,
-          path.points[seqstart].y,
           cpx,
           cpy,
           path.points[seqend].x,
@@ -759,76 +781,18 @@ export class Tracer {
     const splitpoint = fitpoint // Earlier: Math.floor((fitpoint + errorpoint)/2);
 
     // 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
-    return this.fitseq(path, seqstart, splitpoint).concat(
-      this.fitseq(path, splitpoint, seqend)
+    return this.fitseq(path, seqstart, splitpoint, isHolePath).concat(
+      this.fitseq(path, splitpoint, seqend, isHolePath)
     )
   }
 
-  // Rounding to given decimals https://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
-  private _toDecimal(val: number): number {
-    if (this.decimalPlace < 0) return val
-    return +val.toFixed(this.decimalPlace)
-  }
-
-  // Getting SVG path element string from a traced path
-  public commandToString(commands: Command[]): string {
-    let str = ''
-
-    // Creating non-hole path string
-    str += `M ${commands[0].value
-      .slice(0, 2)
-      .map((p) => this._toDecimal(p * this.scale))
-      .join(' ')} `
-    for (let pcnt = 0; pcnt < commands.length; pcnt++) {
-      const segm = commands[pcnt]
-      str += `${segm.type} ${segm.value
-        .slice(2)
-        .map((p) => this._toDecimal(p * this.scale))
-        .join(' ')} `
-    }
-
-    str += 'Z '
-    return str
-  }
-
-  public complementCommandToString(
-    layer: SmartPath[],
-    layerIndex: number
-  ): string {
+  public complementCommand(layer: SmartPath[], layerIndex: number): Command[] {
     const smp = layer[layerIndex]
-    let str = ''
-
-    // Creating non-hole path string
-    // Hole children
+    const complement = []
     for (let hcnt = 0; hcnt < smp.holechildren.length; hcnt++) {
-      const commands = layer[smp.holechildren[hcnt]].commands
-      const startIndex = commands.length - 1
-      str += `M ${commands[startIndex].value
-        .slice(
-          commands[startIndex].value.length - 2,
-          commands[startIndex].value.length
-        )
-        .map((p) => this._toDecimal(p * this.scale))
-        .join(' ')} `
-
-      for (let pcnt = startIndex; pcnt >= 0; pcnt--) {
-        const segm = commands[pcnt]
-        str += `${segm.type} `
-        if (segm.value.length > 4) {
-          str += `${segm.value
-            .slice(2, 4)
-            .map((p) => this._toDecimal(p * this.scale))
-            .join(' ')} `
-        }
-        str += `${segm.value
-          .slice(0, 2)
-          .map((p) => this._toDecimal(p * this.scale))
-          .join(' ')} `
-      }
-
-      str += 'Z '
+      complement.push(...layer[smp.holechildren[hcnt]].holeCommands)
     }
-    return str
+    return complement
   }
 
   // Converting tracedata to an SVG string
@@ -849,20 +813,20 @@ export class Tracer {
         if (!smp.isholepath) {
           // Line filter
           if (this.linefilter && smp.commands.length < 3) continue
-          let d = this.commandToString(smp.commands)
-          if (d) {
-            d += this.complementCommandToString(layer, pcnt)
-            const rgba = palette[lcnt]
-            const color = `rgb(${rgba.r}, ${rgba.g}, ${rgba.b})`
-            const path = new Path({
-              stroke: color,
-              fill: color,
-              strokeWidth: this.strokewidth + '',
-              opacity: String(rgba.a / 255.0),
-            })
-            path.parseCommandString(d)
-            svg.addPath(path)
-          }
+          const rgba = palette[lcnt]
+          const color = `rgb(${rgba.r}, ${rgba.g}, ${rgba.b})`
+          const path = new Path({
+            stroke: color,
+            fill: color,
+            strokeWidth: this.strokewidth + '',
+            opacity: String(rgba.a / 255.0),
+          })
+          path.addCommand([
+            ...smp.commands,
+            ...this.complementCommand(layer, pcnt),
+          ])
+          path.scale(this.scale)
+          svg.addPath(path)
         }
       }
     }
