@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "lerna clean; rimraf ./coverage ./{examples,packages}/**/{lib,dist,node_modules}; yarn cache clean",
     "build": "lerna run build",
-    "dev": "yarn build; concurrently yarn:dev:*",
+    "dev": "yarn build; concurrently yarn:dev:{main,tsc}",
     "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",
     "dev:tsc": "yarn lerna run dev:tsc --concurrency 1 --parallel --stream",
     "dev:test": "yarn test --watchAll",
