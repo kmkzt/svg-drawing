@@ -64,12 +64,13 @@ describe('tracer.ts', () => {
     expect(testPattern).toMatchSnapshot()
   })
   describe('Tracer', () => {
-    Object.entries(testPattern).map(([testname, testdata]) => {
+    Object.entries(testPattern).map(([testname, testopts]) => {
       it(testname, (done) => {
         loadPngData(testimage, (png: PngData) => {
-          const { palettes: pal, ...opt } = testdata
-          const palette = pal || new Palette().generate(png)
-          const svg = new Tracer(palette, opt).fromImgData(png)
+          const svg = new Tracer({
+            palettes: new Palette().generate(png),
+            ...testopts,
+          }).fromImgData(png)
 
           /** DEBUG **/
           writeFileSync(

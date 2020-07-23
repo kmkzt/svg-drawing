@@ -40,10 +40,7 @@ const App = () => {
     colorquantcycles: 3,
   })
   const [blurOption] = useState({ radius: 20, delta: 0 })
-  const [traceOption] = useState({
-    // linefilter: false,
-    strokewidth: 1,
-  })
+  const [traceOption] = useState({})
   const [imageUrl, setImageUrl] = useState(IMAGE_LIST[0])
   const [inputUrl, setInputUrl] = useState('')
   const imgRef: RefObject<HTMLImageElement> = useRef(null)
@@ -74,7 +71,7 @@ const App = () => {
   )
   const traceImage = useCallback(() => {
     if (!imageData) return
-    const trace = new Tracer(palettes, traceOption)
+    const trace = new Tracer({ ...traceOption, palettes })
     const svg = trace.fromImgData(imageData)
     if (trace.palettes) setPalettes(trace.palettes)
     if (!renderRef.current) return

@@ -39,10 +39,6 @@ interface PointInfo {
   holechildren: number[]
   isholepath: boolean
 }
-interface TraceData {
-  pathLayer: PathInfo[][]
-  palette: Rgba[]
-}
 
 type DirectionValue = typeof DIRECTION_TYPE[keyof typeof DIRECTION_TYPE]
 const DIRECTION_TYPE = {
@@ -73,6 +69,7 @@ export interface TracerOption {
   commandOmit?: number
   // override path element attribute
   pathAttrs?: PathObject
+  palettes?: Rgba[]
 }
 
 const pathscanCombinedLookup: EdgeType[][][] = [
@@ -177,28 +174,35 @@ const pathscanCombinedLookup: EdgeType[][][] = [
   ], // arr[py][px]===15 is invalid
 ]
 
+const DEFAULT_PALETTES = [
+  { r: 0, g: 0, b: 0, a: 255 },
+  { r: 50, g: 50, b: 50, a: 255 },
+  { r: 100, g: 100, b: 100, a: 255 },
+  { r: 150, g: 150, b: 150, a: 255 },
+  { r: 200, g: 200, b: 200, a: 255 },
+]
+
 export class Tracer {
   // Tracing
   public ltres: number
   public qtres: number
+  public rightangleenhance: boolean
+  // Filter
   public pathOmit: number
   public commandOmit: number
-  public rightangleenhance: boolean
-
   // Path element attribute
   public pathAttrs: PathObject
-
   // Palettes
   public palettes: Rgba[]
 
   // creating options object, setting defaults for missing values
-  constructor(palette: Rgba[], opts: TracerOption = {}) {
+  constructor(opts: TracerOption = {}) {
     // Tracing
     this.ltres = opts.ltres ?? 1
     this.qtres = opts.qtres ?? 1
     this.rightangleenhance = opts.rightangleenhance ?? true
 
-    // filterring
+    // Filter
     this.pathOmit = opts.pathOmit ?? 8
     this.commandOmit = opts.commandOmit ?? 0
 
@@ -206,7 +210,7 @@ export class Tracer {
     this.pathAttrs = { strokeWidth: '1', ...(opts.pathAttrs || {}) }
 
     // Palette
-    this.palettes = palette
+    this.palettes = opts.palettes || DEFAULT_PALETTES
   }
 
   public fromImgData(argImgd: ImageData): SVGSVGElement {
@@ -224,12 +228,7 @@ export class Tracer {
     const svg = new Svg({
       width: cq[0].length - 2,
       height: cq.length - 2,
-    }).addPath(
-      this._traceDataToPath({
-        pathLayer,
-        palette: this.palettes,
-      })
-    )
+    }).addPath(this._createPaths(pathLayer))
 
     return svg.toElement()
   }
@@ -729,14 +728,14 @@ export class Tracer {
     return complement
   }
 
-  private _traceDataToPath({ pathLayer, palette }: TraceData): Path[] {
+  private _createPaths(pathLayer: PathInfo[][]): Path[] {
     const result: Path[] = []
     for (let lcnt = 0; lcnt < pathLayer.length; lcnt++) {
       for (let pcnt = 0; pcnt < pathLayer[lcnt].length; pcnt++) {
         const layer = pathLayer[lcnt]
         const smp = layer[pcnt]
         if (smp.isholepath || smp.commands.length < this.commandOmit) continue
-        const rgba = palette[lcnt]
+        const rgba = this.palettes[lcnt]
         const color = `rgb(${rgba.r}, ${rgba.g}, ${rgba.b})`
         const path = new Path({
           ...this.pathAttrs,
