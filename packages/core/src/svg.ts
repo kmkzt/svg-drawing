@@ -303,8 +303,12 @@ export class Svg {
     return this
   }
 
-  public addPath(pa: Path): this {
-    this.paths.push(pa)
+  public addPath(pa: Path | Path[]): this {
+    if (Array.isArray(pa)) {
+      this.paths.push(...pa)
+    } else {
+      this.paths.push(pa)
+    }
     return this
   }
   public clonePaths(): Path[] {

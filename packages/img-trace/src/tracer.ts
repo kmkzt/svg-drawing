@@ -1,8 +1,8 @@
 import { Rgba } from './palette'
 import { convertRGBAImage } from './utils/convertRGBAImage'
-import { Svg, Path, Command } from '@svg-drawing/core'
+import { Svg, Path, Command, PathObject } from '@svg-drawing/core'
 
-type Layer = number[][]
+type ColorQuantization = number[][]
 // Edge node types ( ▓: this layer or 1; ░: not this layer or 0 )
 // 12    ░░  ▓░  ░▓  ▓▓  ░░  ▓░  ░▓  ▓▓  ░░  ▓░  ░▓  ▓▓  ░░  ▓░  ░▓  ▓▓
 // 48    ░░  ░░  ░░  ░░  ░▓  ░▓  ░▓  ░▓  ▓░  ▓░  ▓░  ▓░  ▓▓  ▓▓  ▓▓  ▓▓
@@ -27,10 +27,9 @@ type EdgeType =
   | 15
 type EdgeLayer = EdgeType[][]
 
-interface SmartPath {
+interface PathInfo {
   commands: Command[]
   holeCommands: Command[]
-  boundingbox: [number, number, number, number]
   holechildren: number[]
   isholepath: boolean
 }
@@ -41,10 +40,8 @@ interface PointInfo {
   isholepath: boolean
 }
 interface TraceData {
-  layers: SmartPath[][]
+  pathLayer: PathInfo[][]
   palette: Rgba[]
-  width: number
-  height: number
 }
 
 type DirectionValue = typeof DIRECTION_TYPE[keyof typeof DIRECTION_TYPE]
@@ -70,12 +67,12 @@ export interface TracerOption {
   // Tracing
   ltres?: number
   qtres?: number
-  pathomit?: number
   rightangleenhance?: boolean
-
-  // SVG rendering
-  strokewidth?: number
-  linefilter?: boolean
+  // filter
+  pathOmit?: number
+  commandOmit?: number
+  // override path element attribute
+  pathAttrs?: PathObject
 }
 
 const pathscanCombinedLookup: EdgeType[][][] = [
@@ -184,68 +181,60 @@ export class Tracer {
   // Tracing
   public ltres: number
   public qtres: number
-  public pathomit: number
+  public pathOmit: number
+  public commandOmit: number
   public rightangleenhance: boolean
 
-  // SVG rendering
-  public strokewidth: number
-  public linefilter: boolean
+  // Path element attribute
+  public pathAttrs: PathObject
 
-  // pallets
+  // Palettes
   public palettes: Rgba[]
+
   // creating options object, setting defaults for missing values
   constructor(palette: Rgba[], opts: TracerOption = {}) {
     // Tracing
     this.ltres = opts.ltres ?? 1
     this.qtres = opts.qtres ?? 1
-    this.pathomit = opts.pathomit ?? 8
     this.rightangleenhance = opts.rightangleenhance ?? true
 
-    // SVG rendering
-    this.strokewidth = opts.strokewidth ?? 1
-    this.linefilter = opts.linefilter ?? false
+    // filterring
+    this.pathOmit = opts.pathOmit ?? 8
+    this.commandOmit = opts.commandOmit ?? 0
 
-    // Custom Palette
+    // SVG rendering
+    this.pathAttrs = { strokeWidth: '1', ...(opts.pathAttrs || {}) }
+
+    // Palette
     this.palettes = palette
   }
 
-  // Tracing imagedata, then returning the scaled svg string
   public fromImgData(argImgd: ImageData): SVGSVGElement {
-    // imgd.data must be RGBA, not just RGB
     const imgd = convertRGBAImage(argImgd)
-
-    // 1. Color quantization
-    const layer = this.colorQuantization(imgd)
-
-    // // create tracedata object
-    const layers: SmartPath[][] = []
-
+    const cq = this._colorQuantization(imgd)
+    const pathLayer: PathInfo[][] = []
     for (let paletteId = 0; paletteId < this.palettes.length; paletteId++) {
-      // 2. Layer separation and edge detection
-      const edge = this.layeringstep(layer, paletteId)
-
-      // 3. pathscan
-      const path = this.pathscan(edge)
-
-      // 4. interpollation
-      const interporation = this.internodes(path)
-
-      // 5. TracedPath
-      const tracedpath = interporation.map((p) => this.tracepath(p))
-      // adding traced layer
-      layers.push(tracedpath)
+      const edge = this._edgeDetection(cq, paletteId)
+      const path = this._pathScan(edge)
+      const interporation = this._interpolation(path)
+      const tracedpath = interporation.map(this._tracePath.bind(this))
+      pathLayer.push(tracedpath)
     }
 
-    return this.traceDataToSVGElement({
-      layers,
-      palette: this.palettes,
-      width: layer[0].length - 2,
-      height: layer.length - 2,
-    })
+    const svg = new Svg({
+      width: cq[0].length - 2,
+      height: cq.length - 2,
+    }).addPath(
+      this._traceDataToPath({
+        pathLayer,
+        palette: this.palettes,
+      })
+    )
+
+    return svg.toElement()
   }
 
-  // 1. Color quantization
-  public colorQuantization(imgd: ImageData): Layer {
+  private _colorQuantization(imgd: ImageData): ColorQuantization {
     return Array.from({ length: imgd.height + 2 }, (_h, j) =>
       Array.from({ length: imgd.width + 2 }, (_w, i) => {
         if (
@@ -260,7 +249,6 @@ export class Tracer {
         const h = j - 1
         const w = i - 1
         const idx = (h * imgd.width + w) * 4
-        // update the indexed color array
         return this._findPaletteIndex({
           r: imgd.data[idx],
           g: imgd.data[idx + 1],
@@ -291,31 +279,27 @@ export class Tracer {
     }, 0)
   }
 
-  // 2. Layer separation and edge detection
-  public layeringstep(layer: Layer, palId: number): EdgeLayer {
-    // Creating layers for each indexed color in arr
+  private _edgeDetection(cq: ColorQuantization, palId: number): EdgeLayer {
     const res: EdgeLayer = []
-    const ah = layer.length
-    const aw = layer[0].length
+    const ah = cq.length
+    const aw = cq[0].length
 
-    // Looping through all pixels and calculating edge node type
     for (let h = 0; h < ah; h++) {
       res[h] = []
       for (let w = 0; w < aw; w++) {
         res[h][w] =
           h === 0 || w === 0
             ? 0
-            : (((layer[h - 1][w - 1] === palId ? 1 : 0) +
-                (layer[h - 1][w] === palId ? 2 : 0) +
-                (layer[h][w - 1] === palId ? 8 : 0) +
-                (layer[h][w] === palId ? 4 : 0)) as EdgeType)
+            : (((cq[h - 1][w - 1] === palId ? 1 : 0) +
+                (cq[h - 1][w] === palId ? 2 : 0) +
+                (cq[h][w - 1] === palId ? 8 : 0) +
+                (cq[h][w] === palId ? 4 : 0)) as EdgeType)
       }
     }
 
     return res
   }
 
-  // Point in polygon test
   private _pointpoly(p: Point, pa: Point[]): boolean {
     let isin = false
 
@@ -332,22 +316,19 @@ export class Tracer {
     return isin
   }
 
-  // 3. Walking through an edge node layer, discarding edge node types 0 and 15 and creating paths from the rest.
-  // Walk directions (dir): 0 > ; 1 ^ ; 2 < ; 3 v
-  public pathscan(layer: EdgeLayer): PointInfo[] {
-    const width = layer[0].length
-    const height = layer.length
+  private _pathScan(edge: EdgeLayer): PointInfo[] {
+    const width = edge[0].length
+    const height = edge.length
     const paths: PointInfo[] = []
     let pacnt = 0
 
     for (let h = 0; h < height; h++) {
       for (let w = 0; w < width; w++) {
-        const edgeType = layer[h][w]
-        // Other values are not valid
+        const edgeType = edge[h][w]
         if (edgeType !== 4 && edgeType !== 11) {
+          // Related for edgeDetection methods
           continue
         }
-        // Init
         let px = w
         let py = h
         let dir = 1
@@ -360,15 +341,13 @@ export class Tracer {
           isholepath: false,
         }
 
-        // Path points loop
         while (!pathfinished) {
-          // New path point
           paths[pacnt].points[pcnt] = {
             x: px - 1,
             y: py - 1,
             direction: DIRECTION_TYPE.EMPTY,
           }
-          // Bounding box
+
           if (px - 1 < paths[pacnt].boundingbox[0]) {
             paths[pacnt].boundingbox[0] = px - 1
           }
@@ -382,9 +361,8 @@ export class Tracer {
             paths[pacnt].boundingbox[3] = py - 1
           }
 
-          // Next: look up the replacement, direction and coordinate changes = clear this cell, turn if required, walk forward
-          const lookuprow = pathscanCombinedLookup[layer[py][px]][dir]
-          layer[py][px] = lookuprow[0]
+          const lookuprow = pathscanCombinedLookup[edge[py][px]][dir]
+          edge[py][px] = lookuprow[0]
           dir = lookuprow[1]
           px += lookuprow[2]
           py += lookuprow[3]
@@ -396,8 +374,7 @@ export class Tracer {
           ) {
             pathfinished = true
 
-            // Discarding paths shorter than pathomit
-            if (paths[pacnt].points.length < this.pathomit) {
+            if (paths[pacnt].points.length < this.pathOmit) {
               paths.pop()
             } else {
               if (edgeType === 11) {
@@ -448,9 +425,7 @@ export class Tracer {
       parentbbox[3] > childbbox[3]
     )
   }
-
-  // 4. interpollating between path points for nodes with 8 directions
-  public internodes(paths: PointInfo[]): PointInfo[] {
+  private _interpolation(paths: PointInfo[]): PointInfo[] {
     const ins: PointInfo[] = []
     let nextidx = 0
     let nextidx2 = 0
@@ -466,15 +441,12 @@ export class Tracer {
       }
       const palen = paths[pacnt].points.length
 
-      // pathpoints loop
       for (let pcnt = 0; pcnt < palen; pcnt++) {
-        // next and previous point indexes
         nextidx = (pcnt + 1) % palen
         nextidx2 = (pcnt + 2) % palen
         previdx = (pcnt - 1 + palen) % palen
         previdx2 = (pcnt - 2 + palen) % palen
 
-        // right angle enhance
         if (
           this.rightangleenhance &&
           this._testrightangle(
@@ -486,7 +458,6 @@ export class Tracer {
             nextidx2
           )
         ) {
-          // Fix previous direction
           if (ins[pacnt].points.length > 0) {
             ins[pacnt].points[
               ins[pacnt].points.length - 1
@@ -498,7 +469,6 @@ export class Tracer {
             )
           }
 
-          // This corner point
           ins[pacnt].points.push({
             x: paths[pacnt].points[pcnt].x,
             y: paths[pacnt].points[pcnt].y,
@@ -512,7 +482,6 @@ export class Tracer {
           })
         }
 
-        // interpolate between two path points
         ins[pacnt].points.push({
           x: (paths[pacnt].points[pcnt].x + paths[pacnt].points[nextidx].x) / 2,
           y: (paths[pacnt].points[pcnt].y + paths[pacnt].points[nextidx].y) / 2,
@@ -583,16 +552,7 @@ export class Tracer {
     return DIRECTION_TYPE.CENTER
   }
 
-  // 5. tracepath() : recursively trying to fit straight and quadratic spline segments on the 8 direction internode path
-
-  // 5.1. Find sequences of points with only 2 segment types
-  // 5.2. Fit a straight line on the sequence
-  // 5.3. If the straight line fails (distance error > ltres), find the point with the biggest error
-  // 5.4. Fit a quadratic spline through errorpoint (project this to get controlpoint), then measure errors on every point in the sequence
-  // 5.5. If the spline fails (distance error > qtres), find the point with the biggest error, set splitpoint = fitting point
-  // 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
-
-  public tracepath(path: PointInfo): SmartPath {
+  private _tracePath(path: PointInfo): PathInfo {
     let pcnt = 0
     const comms: Command[] = []
     const holes: Command[] = []
@@ -617,16 +577,14 @@ export class Tracer {
       }
 
       if (seqend === path.points.length - 1) {
-        comms.push(...this.fitseq(path, pcnt, 0))
-        holes.push(...this.fitseq(path, pcnt, 0, true))
+        comms.push(...this._fitseq(path, pcnt, 0))
+        holes.push(...this._fitseq(path, pcnt, 0, true))
         pcnt = path.points.length
       } else {
-        comms.push(...this.fitseq(path, pcnt, seqend))
-        holes.push(...this.fitseq(path, pcnt, seqend, true))
+        comms.push(...this._fitseq(path, pcnt, seqend))
+        holes.push(...this._fitseq(path, pcnt, seqend, true))
         pcnt = seqend
       }
-
-      // 5.2. - 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
     }
 
     const commands = [
@@ -643,14 +601,12 @@ export class Tracer {
     return {
       commands,
       holeCommands,
-      boundingbox: path.boundingbox,
       holechildren: path.holechildren,
       isholepath: path.isholepath,
     }
   }
 
-  // 5.2. - 5.6. recursively fitting a straight or quadratic line segment on this sequence of path nodes,
-  public fitseq(
+  private _fitseq(
     path: PointInfo,
     seqstart: number,
     seqend: number,
@@ -658,11 +614,9 @@ export class Tracer {
   ): Command[] {
     const ltres = this.ltres
     const qtres = this.qtres
-    // return if invalid seqend
     if (seqend > path.points.length || seqend < 0) {
       return []
     }
-    // letiables
     let errorpoint = seqstart
     let errorval = 0
     let curvepass = true
@@ -676,7 +630,6 @@ export class Tracer {
     const vx = (path.points[seqend].x - path.points[seqstart].x) / tl
     const vy = (path.points[seqend].y - path.points[seqstart].y) / tl
 
-    // 5.2. Fit a straight line on the sequence
     let pcnt = (seqstart + 1) % path.points.length
     while (pcnt != seqend) {
       let pl = pcnt - seqstart
@@ -697,7 +650,7 @@ export class Tracer {
       }
       pcnt = (pcnt + 1) % path.points.length
     }
-    // return straight line if fits
+
     if (curvepass) {
       return [
         new Command(
@@ -709,13 +662,10 @@ export class Tracer {
       ]
     }
 
-    // 5.3. If the straight line fails (distance error>ltres), find the point with the biggest error
     const fitpoint = errorpoint
     curvepass = true
     errorval = 0
 
-    // 5.4. Fit a quadratic spline through this point, measure errors on every point in the sequence
-    // helpers and projecting to get control point
     let t = (fitpoint - seqstart) / tl
     let t1 = (1 - t) * (1 - t)
     let t2 = 2 * (1 - t) * t
@@ -731,7 +681,6 @@ export class Tracer {
         path.points[fitpoint].y) /
       -t2
 
-    // Check every point
     pcnt = seqstart + 1
     while (pcnt != seqend) {
       t = (pcnt - seqstart) / tl
@@ -754,7 +703,6 @@ export class Tracer {
       }
       pcnt = (pcnt + 1) % path.points.length
     }
-    // return spline if fits
     if (curvepass) {
       return [
         new Command('Q', [
@@ -765,59 +713,45 @@ export class Tracer {
         ]),
       ]
     }
-    // 5.5. If the spline fails (distance error>qtres), find the point with the biggest error
-    const splitpoint = fitpoint // Earlier: Math.floor((fitpoint + errorpoint)/2);
+    const splitpoint = fitpoint
 
-    // 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
-    return this.fitseq(path, seqstart, splitpoint, isHolePath).concat(
-      this.fitseq(path, splitpoint, seqend, isHolePath)
+    return this._fitseq(path, seqstart, splitpoint, isHolePath).concat(
+      this._fitseq(path, splitpoint, seqend, isHolePath)
     )
   }
 
-  public complementCommand(layer: SmartPath[], layerIndex: number): Command[] {
-    const smp = layer[layerIndex]
+  private _complementCommand(info: PathInfo[], layerIndex: number): Command[] {
+    const p = info[layerIndex]
     const complement = []
-    for (let hcnt = 0; hcnt < smp.holechildren.length; hcnt++) {
-      complement.push(...layer[smp.holechildren[hcnt]].holeCommands)
+    for (let hcnt = 0; hcnt < p.holechildren.length; hcnt++) {
+      complement.push(...info[p.holechildren[hcnt]].holeCommands)
     }
     return complement
   }
 
-  // Converting tracedata to an SVG string
-  public traceDataToSVGElement({
-    width,
-    height,
-    layers,
-    palette,
-  }: TraceData): SVGSVGElement {
-    const svg = new Svg({
-      width: width,
-      height: height,
-    })
-    for (let lcnt = 0; lcnt < layers.length; lcnt++) {
-      for (let pcnt = 0; pcnt < layers[lcnt].length; pcnt++) {
-        const layer = layers[lcnt]
+  private _traceDataToPath({ pathLayer, palette }: TraceData): Path[] {
+    const result: Path[] = []
+    for (let lcnt = 0; lcnt < pathLayer.length; lcnt++) {
+      for (let pcnt = 0; pcnt < pathLayer[lcnt].length; pcnt++) {
+        const layer = pathLayer[lcnt]
         const smp = layer[pcnt]
-        if (!smp.isholepath) {
-          // Line filter
-          if (this.linefilter && smp.commands.length < 3) continue
-          const rgba = palette[lcnt]
-          const color = `rgb(${rgba.r}, ${rgba.g}, ${rgba.b})`
-          const path = new Path({
-            stroke: color,
-            fill: color,
-            strokeWidth: this.strokewidth + '',
-            opacity: String(rgba.a / 255.0),
-          })
-          path.addCommand([
-            ...smp.commands,
-            ...this.complementCommand(layer, pcnt),
-          ])
-          svg.addPath(path)
-        }
+        if (smp.isholepath || smp.commands.length < this.commandOmit) continue
+        const rgba = palette[lcnt]
+        const color = `rgb(${rgba.r}, ${rgba.g}, ${rgba.b})`
+        const path = new Path({
+          ...this.pathAttrs,
+          stroke: color,
+          fill: color,
+          opacity: String(rgba.a / 255.0),
+        })
+        path.addCommand([
+          ...smp.commands,
+          ...this._complementCommand(layer, pcnt),
+        ])
+        result.push(path)
       }
     }
 
-    return svg.toElement()
+    return result
   }
 }

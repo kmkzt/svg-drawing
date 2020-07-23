@@ -12,8 +12,8 @@ const testPattern: {
   curvy: { rightangleenhance: false },
   ltres: { ltres: 0.01 },
   qtres: { qtres: 0.01 },
-  linefilter: { linefilter: true },
-  pathomit_20: { pathomit: 20 },
+  pathomit_20: { pathOmit: 20 },
+  commandOmit: { commandOmit: 3 },
   palettes_custom: {
     palettes: [
       { r: 0, g: 0, b: 100, a: 255 },
