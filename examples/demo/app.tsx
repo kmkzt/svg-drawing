@@ -273,6 +273,7 @@ const Example = () => {
     if (!aniDivRef.current) return
     animationRef.current = new SvgAnimation(aniDivRef.current, {
       ms: animMs,
+      background: '#fff',
     })
   })
   useEffect(() => {

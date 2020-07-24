@@ -7,7 +7,7 @@ SvgAnimation {
   "_restorePaths": Array [],
   "_stop": null,
   "_stopId": 0,
-  "background": "#fff",
+  "background": undefined,
   "el": <div>
     <svg
       height="0"

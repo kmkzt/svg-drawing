@@ -6,6 +6,7 @@ import {
   createSvgElement,
   createSvgChildElement,
 } from './shared/createSvgElement'
+import { download } from './shared/download'
 
 const isNaN = (num: number) => num !== num
 
@@ -128,8 +129,7 @@ export class Command {
   }
 
   public clone(): Command {
-    const copy = new Command(this.type, this.value.slice())
-    return copy
+    return new Command(this.type, this.value.slice())
   }
 }
 
@@ -277,21 +277,26 @@ export class Path {
 export interface SvgOption {
   width: number
   height: number
+  background?: string
 }
 
 export interface SvgObject {
   width: number
   height: number
+  background?: string
   paths: PathObject[]
 }
 export class Svg {
   public paths: Path[]
   public width: number
   public height: number
-  constructor({ width, height }: SvgOption) {
+  public background?: string
+
+  constructor({ width, height, background }: SvgOption) {
     this.paths = []
     this.width = width
     this.height = height
+    this.background = background
   }
 
   public scalePath(r: number): this {
@@ -326,6 +331,7 @@ export class Svg {
     return {
       width: this.width,
       height: this.height,
+      background: this.background,
       paths: this.paths.map((p) => p.toJson()),
     }
   }
@@ -333,15 +339,20 @@ export class Svg {
   public copy(svg: any extends Svg ? Svg : never): this {
     this.paths = svg.clonePaths()
     if (svg.width && this.width) {
-      this.scalePath(svg.width / this.width)
+      this.scalePath(this.width / svg.width)
     }
     return this
   }
 
   public toElement(): SVGSVGElement {
+    const size = { width: String(this.width), height: String(this.height) }
+    const bgEl = this.background
+      ? [createSvgChildElement('rect', { ...size, fill: this.background })]
+      : []
+
     return createSvgElement(
       { width: String(this.width), height: String(this.height) },
-      this.paths.map((p) => p.toElement())
+      bgEl.concat(this.paths.map((p) => p.toElement()))
     )
   }
   public toBase64(): string {
@@ -373,5 +384,40 @@ export class Svg {
       this.scalePath(this.width / width)
     }
     return this
+  }
+
+  // TODO: Add filename config
+  public download(
+    ext: 'svg' | 'png' | 'jpg' = 'svg',
+    cb: typeof download = download
+  ): void {
+    if (ext === 'svg') {
+      cb({
+        data: this.toBase64(),
+        extension: 'svg',
+      })
+      return
+    }
+
+    const img: any = new Image()
+    const renderCanvas = () => {
+      const canvas = document.createElement('canvas')
+      canvas.setAttribute('width', String(this.width))
+      canvas.setAttribute('height', String(this.height))
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      if (this.background || ext === 'jpg') {
+        ctx.fillStyle = this.background || '#fff'
+        ctx.fillRect(0, 0, this.width, this.height)
+      }
+      ctx.drawImage(img, 0, 0)
+      if (ext === 'png') {
+        cb({ data: canvas.toDataURL('image/png'), extension: 'png' })
+      } else {
+        cb({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
+      }
+    }
+    img.addEventListener('load', renderCanvas, false)
+    img.src = this.toBase64()
   }
 }
