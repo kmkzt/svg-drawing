@@ -59,7 +59,7 @@ interface Point {
   direction: DirectionValue
 }
 
-export interface TracerOption {
+export interface ImgTraceOption {
   // Tracing
   ltres?: number
   qtres?: number
@@ -182,7 +182,7 @@ const DEFAULT_PALETTES = [
   { r: 200, g: 200, b: 200, a: 255 },
 ]
 
-export class Tracer {
+export class ImgTrace {
   // Tracing
   public ltres: number
   public qtres: number
@@ -196,7 +196,7 @@ export class Tracer {
   public palettes: Rgba[]
 
   // creating options object, setting defaults for missing values
-  constructor(opts: TracerOption = {}) {
+  constructor(opts: ImgTraceOption = {}) {
     // Tracing
     this.ltres = opts.ltres ?? 1
     this.qtres = opts.qtres ?? 1
@@ -213,7 +213,7 @@ export class Tracer {
     this.palettes = opts.palettes || DEFAULT_PALETTES
   }
 
-  public fromImgData(argImgd: ImageData): SVGSVGElement {
+  public load(argImgd: ImageData): Svg {
     const imgd = convertRGBAImage(argImgd)
     const cq = this._colorQuantization(imgd)
     const pathLayer: PathInfo[][] = []
@@ -224,13 +224,11 @@ export class Tracer {
       const tracedpath = interporation.map(this._tracePath.bind(this))
       pathLayer.push(tracedpath)
     }
-
-    const svg = new Svg({
+    const paths = this._createPaths(pathLayer)
+    return new Svg({
       width: cq[0].length - 2,
       height: cq.length - 2,
-    }).addPath(this._createPaths(pathLayer))
-
-    return svg.toElement()
+    }).addPath(paths)
   }
 
   private _colorQuantization(imgd: ImageData): ColorQuantization {
@@ -323,9 +321,9 @@ export class Tracer {
 
     for (let h = 0; h < height; h++) {
       for (let w = 0; w < width; w++) {
+        // Related for edgeDetection methods
         const edgeType = edge[h][w]
         if (edgeType !== 4 && edgeType !== 11) {
-          // Related for edgeDetection methods
           continue
         }
         let px = w

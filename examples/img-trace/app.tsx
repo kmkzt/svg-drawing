@@ -7,12 +7,13 @@ import React, {
   useEffect,
 } from 'react'
 import { render } from 'react-dom'
+import { Renderer } from '@svg-drawing/core'
 import {
-  Tracer,
+  ImgTrace,
   Rgba,
   Palette,
   Blur,
-  ImageLoader,
+  ImgLoader,
 } from '@svg-drawing/img-trace'
 
 const IMAGE_LIST = [
@@ -71,11 +72,14 @@ const App = () => {
   )
   const traceImage = useCallback(() => {
     if (!imageData) return
-    const trace = new Tracer({ ...traceOption, palettes })
-    const svg = trace.fromImgData(imageData)
+    const trace = new ImgTrace({ ...traceOption, palettes })
+    const svg = trace.load(imageData)
     if (trace.palettes) setPalettes(trace.palettes)
     if (!renderRef.current) return
-    renderRef.current.innerHTML = svg.outerHTML
+    const render = new Renderer(renderRef.current)
+    render.copy(svg)
+    render.update()
+    // renderRef.current.innerHTML = svg.toElement().outerHTML
   }, [imageData, palettes, traceOption])
 
   const blurImage = useCallback(() => {
@@ -112,7 +116,7 @@ const App = () => {
     if (!imgRef.current) return
     imgRef.current.onload = () => {
       if (!imgRef.current) return
-      new ImageLoader({ corsenabled: true }).fromImageElement(
+      new ImgLoader({ corsenabled: true }).fromImageElement(
         imgRef.current,
         setImageData
       )
@@ -192,7 +196,7 @@ const App = () => {
       <div
         style={{ display: 'flex', justifyContent: 'start', flexWrap: 'wrap' }}
       >
-        <div style={{ maxWidth: '30vw' }}>
+        <div style={{ width: '30vw' }}>
           <img
             style={{ maxWidth: '100%' }}
             ref={imgRef}
@@ -201,10 +205,10 @@ const App = () => {
             alt=""
           />
         </div>
-        <div style={{ maxWidth: '30vw' }}>
+        <div style={{ width: '30vw' }}>
           <canvas style={{ width: '100%' }} ref={canvasRef} />
         </div>
-        <div style={{ maxWidth: '30vw' }} ref={renderRef}></div>
+        <div style={{ width: '30vw' }} ref={renderRef}></div>
       </div>
     </>
   )

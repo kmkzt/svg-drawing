@@ -1,4 +1,4 @@
 export * from './blur'
-export * from './imageLoader'
+export * from './imgloader'
 export * from './palette'
-export * from './tracer'
+export * from './trace'

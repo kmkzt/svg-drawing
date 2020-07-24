@@ -1,12 +1,11 @@
-import { Tracer, TracerOption } from './tracer'
-import { Sampling, Palette, Rgba } from './palette'
-import { Blur } from './blur'
+import { ImgTrace, ImgTraceOption } from './trace'
+import { Palette, Rgba } from './palette'
 import { PNGReader } from './PNGReader'
 import { readFile, writeFileSync } from 'fs'
 import { resolve } from 'path'
 
 const testPattern: {
-  [key: string]: Partial<TracerOption & { palettes?: Rgba[] }>
+  [key: string]: Partial<ImgTraceOption>
 } = {
   default: {},
   curvy: { rightangleenhance: false },
@@ -57,25 +56,26 @@ const loadPngData = (filepath: string, cb: (png: PngData) => void) => {
   )
 }
 
-describe('tracer.ts', () => {
+describe('trace.ts', () => {
   const testimage = resolve(__dirname, '__testdata__/panda.png')
   it('TestPattern', () => {
     // TestPattern
     expect(testPattern).toMatchSnapshot()
   })
-  describe('Tracer', () => {
+  describe('ImgTrace', () => {
     Object.entries(testPattern).map(([testname, testopts]) => {
       it(testname, (done) => {
         loadPngData(testimage, (png: PngData) => {
-          const svg = new Tracer({
+          const svg = new ImgTrace({
             palettes: new Palette().generate(png),
             ...testopts,
-          }).fromImgData(png)
+          }).load(png)
 
+          const data = svg.toElement().outerHTML
           /** DEBUG **/
           writeFileSync(
             resolve(__dirname, `__debug__/${testname}-${Date.now()}.svg`),
-            svg.outerHTML
+            data
           )
 
           // TODO: visual regression
@@ -85,7 +85,7 @@ describe('tracer.ts', () => {
           // expect(imgd).toMatchSnapshot()
 
           // SvgString
-          expect(svg.outerHTML).toMatchSnapshot()
+          expect(data).toMatchSnapshot()
           done()
         })
       })
