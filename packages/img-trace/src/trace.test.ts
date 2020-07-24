@@ -67,7 +67,7 @@ describe('trace.ts', () => {
       it(testname, (done) => {
         loadPngData(testimage, (png: PngData) => {
           const svg = new ImgTrace({
-            palettes: new Palette().generate(png),
+            palettes: Palette.imageData(png),
             ...testopts,
           }).load(png)
 

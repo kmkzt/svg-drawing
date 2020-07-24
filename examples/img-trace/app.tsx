@@ -37,8 +37,8 @@ const App = () => {
   const [palettes, setPalettes] = useState<Rgba[]>(GRAYSCALE_PALETTE)
   const [imageData, setImageData] = useState<ImageData>()
   const [paletteOption] = useState({
-    numberofcolors: 8,
-    colorquantcycles: 3,
+    numberOfColors: 8,
+    colorQuantCycles: 3,
   })
   const [blurOption] = useState({ radius: 20, delta: 0 })
   const [traceOption] = useState({})
@@ -56,7 +56,7 @@ const App = () => {
 
   const createPalette = useCallback(() => {
     if (!imageData) return
-    setPalettes(new Palette(paletteOption).generate(imageData))
+    setPalettes(Palette.imageData(imageData, paletteOption))
   }, [paletteOption, setPalettes, imageData])
 
   const resetPalette = useCallback(() => {
