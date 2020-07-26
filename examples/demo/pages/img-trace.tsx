@@ -6,7 +6,6 @@ import React, {
   RefObject,
   useEffect,
 } from 'react'
-import { render } from 'react-dom'
 import { Renderer } from '@svg-drawing/core'
 import {
   ImgTrace,
@@ -17,12 +16,12 @@ import {
 } from '@svg-drawing/img-trace'
 
 const IMAGE_LIST = [
-  './images/cat.jpg',
-  './images/harinezumi.jpg',
-  './images/kuma.jpg',
-  './images/panda.png',
-  './images/risu.jpg',
-  './images/tanuki.jpg',
+  '/img_trace/cat.jpg',
+  '/img_trace/harinezumi.jpg',
+  '/img_trace/kuma.jpg',
+  '/img_trace/panda.png',
+  '/img_trace/risu.jpg',
+  '/img_trace/tanuki.jpg',
 ]
 
 const GRAYSCALE_PALETTE = [
@@ -32,7 +31,7 @@ const GRAYSCALE_PALETTE = [
   { r: 150, g: 150, b: 150, a: 255 },
   { r: 200, g: 200, b: 200, a: 255 },
 ]
-const App = () => {
+export default () => {
   const [list, setList] = useState(IMAGE_LIST)
   const [palettes, setPalettes] = useState<Rgba[]>(GRAYSCALE_PALETTE)
   const [imageData, setImageData] = useState<ImageData>()
@@ -213,5 +212,3 @@ const App = () => {
     </>
   )
 }
-
-render(<App />, document.getElementById('app'))

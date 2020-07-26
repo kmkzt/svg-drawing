@@ -4,6 +4,8 @@
 
 # dependencies
 node_modules
+.pnp
+.pnp.js
 
 # testing
 /coverage
@@ -27,3 +29,10 @@ __debug__
 # npm lock files
 package-lock.json
 # yarn.lock
+
+
+# next.js
+!examples/**/lib
+.next
+out
+.vercel
