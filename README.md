@@ -54,8 +54,9 @@ new SvgDrawing(el)
 
 ## Packages
 
-| packages                                                                                                                   | Description                                                                |
-| -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [@svg-drawing/core![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](packages/core)                | Core Module                                                                |
-| [@svg-drawing/animation![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg)](packages/animation) | Animate the drawn Svg. Can be animations using `JavaScript` or `<animate>` |
-| [@svg-drawing/react![npm version](https://img.shields.io/npm/v/@svg-drawing/react/latest.svg)](packages/react)             | For react.                                                                 |
+| Packages                                                                                                                     | Description                                                                |
+| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [@svg-drawing/core![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](packages/core)                  | Core Module                                                                |
+| [@svg-drawing/animation![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg)](packages/animation)   | Animate the drawn Svg. Can be animations using `JavaScript` or `<animate>` |
+| [@svg-drawing/img-trace![npm version](https://img.shields.io/npm/v/@svg-drawing/img-trace/latest.svg)](packages/image-trace) | Image(png/jpg) convert Svg.                                                |
+| [@svg-drawing/react![npm version](https://img.shields.io/npm/v/@svg-drawing/react/latest.svg)](packages/react)               | For react.                                                                 |
