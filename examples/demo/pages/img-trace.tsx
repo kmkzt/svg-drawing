@@ -47,6 +47,7 @@ export default () => {
   const [traceOption] = useState({})
   const [imageUrl, setImageUrl] = useState(IMAGE_LIST[0])
   const [inputUrl, setInputUrl] = useState('')
+  const [svg, setSvg] = useState<Svg>()
   const imgRef: RefObject<HTMLImageElement> = useRef(null)
   const canvasRef: RefObject<HTMLCanvasElement> = useRef(null)
   const renderRef = useRef<HTMLDivElement>(null)
@@ -77,6 +78,7 @@ export default () => {
     if (!imageData) return
     const trace = new ImgTrace({ ...traceOption, palettes })
     const svg = trace.load(imageData)
+    setSvg(svg)
     if (trace.palettes) setPalettes(trace.palettes)
     if (!renderRef.current) return
     const render = new Renderer(renderRef.current)
@@ -114,6 +116,11 @@ export default () => {
     },
     [setImageUrl, list]
   )
+
+  const handleDownload = useCallback(() => {
+    if (!svg) return
+    svg.download()
+  }, [svg])
 
   useEffect(() => {
     if (!imgRef.current) return
@@ -196,6 +203,7 @@ export default () => {
       </div>
       <button onClick={blurImage}>Blur Image!</button>
       <button onClick={traceImage}>Image Trace!</button>
+      {svg && <button onClick={handleDownload}>Download</button>}
       <div
         style={{ display: 'flex', justifyContent: 'start', flexWrap: 'wrap' }}
       >
