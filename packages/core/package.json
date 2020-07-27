@@ -8,7 +8,6 @@
     "svg",
     "drawing"
   ],
-  "type": "module",
   "types": "lib/index.d.ts",
   "main": "lib/index.cjs.js",
   "module": "lib/index.esm.js",
