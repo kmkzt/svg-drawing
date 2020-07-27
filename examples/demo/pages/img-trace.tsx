@@ -6,7 +6,7 @@ import {
   RefObject,
   useEffect,
 } from 'react'
-import { Renderer } from '@svg-drawing/core'
+import { Renderer, Svg } from '@svg-drawing/core'
 import {
   ImgTrace,
   Rgba,
