@@ -10,6 +10,8 @@ yarn add react @svg-drawing/react
 
 ## How to use
 
+Example code is [here](/examples/demo/pages/react.tsx)
+
 This is example.
 
 ```javascript
@@ -85,5 +87,3 @@ const loggerXML = useCallback(() => {
   console.log(draw.getSvgXML()) // <svg width="502" height="502"><path stroke-width="3" stroke="#000" fill="none" stroke-linejoin="round" stroke-linecap="round" d="M 156.671875 284.7265625 C 156.671875 286.1465625 156.671875 287.89984375 156.671875 291.83984375 ...
 }, [draw.getSvgXML])
 ```
-
-[example code](/example/react)
