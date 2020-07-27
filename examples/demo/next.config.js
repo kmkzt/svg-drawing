@@ -1,4 +1,7 @@
+const isProd = process.env.NODE_ENV === 'production'
 module.exports = {
+  // For gh-pages
+  assetPrefix: isProd ? '/svg-drawing' : '',
   webpack(config, { dev }) {
     if (dev) {
       config.module.rules.push({

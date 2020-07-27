@@ -3,11 +3,10 @@
   "private": true,
   "version": "4.0.0-beta.5",
   "scripts": {
+    "clear": "rimraf .next out",
     "start": "next start",
     "dev": "next",
-    "build": "npm-run-all demo:*",
-    "demo:clear": "rimraf dist/*",
-    "demo:build": "next build",
+    "build": "next build; next export",
     "lint": "eslint ./app.tsx --ext .js,.ts,.tsx",
     "prepare": "build"
   },
