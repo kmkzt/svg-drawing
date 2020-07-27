@@ -35,13 +35,14 @@ module.exports = {
     'react/no-deprecated': 'error',
     'react/display-name': 'off',
     'react/prop-types': 'off',
-    'react/react-in-jsx-scope': 'off', // For next
+    'react/react-in-jsx-scope': 'off', // For Next.js
 
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
 
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/anchor-is-valid': 'off', // For Next.js
 
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',

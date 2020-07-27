@@ -1,7 +1,8 @@
-import React, { useEffect, Fragment, useCallback, useState } from 'react'
+import { useEffect, Fragment, useCallback, useState } from 'react'
 // @ts-ignore
 import Pressure from 'pressure'
 import { useSvgDrawing } from '@svg-drawing/react'
+import Layout from '../components/Layout'
 
 const getRandomInt = (max: number): number =>
   Math.floor(Math.random() * Math.floor(max))
@@ -114,7 +115,7 @@ export default () => {
     })
   }, [divRef, pressureChange])
   return (
-    <Fragment>
+    <Layout>
       <fieldset>
         <label>
           <input
@@ -230,6 +231,6 @@ export default () => {
           {xml}
         </div>
       </div>
-    </Fragment>
+    </Layout>
   )
 }

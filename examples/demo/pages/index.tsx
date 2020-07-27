@@ -1,4 +1,4 @@
-import React, {
+import {
   useEffect,
   useRef,
   Fragment,
@@ -8,7 +8,7 @@ import React, {
 } from 'react'
 import { SvgDrawing, Command, Point } from '@svg-drawing/core'
 import { SvgAnimation, FrameAnimation } from '@svg-drawing/animation'
-// import Pressure from 'pressure'
+import Layout from '../components/Layout'
 
 const size = 30
 const colorList = [
@@ -349,10 +349,8 @@ export default () => {
   //   })
   // })
   return (
-    <Fragment>
+    <Layout>
       <div>
-        <h1>svg-drawing</h1>
-        <a href="https://github.com/kmkzt/svg-drawing">src</a>
         <fieldset>
           <h3>PEN CONFIG</h3>
           <div>
@@ -565,6 +563,6 @@ export default () => {
           />
         </div>
       </div>
-    </Fragment>
+    </Layout>
   )
 }

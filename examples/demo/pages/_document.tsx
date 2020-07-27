@@ -1,9 +1,15 @@
-import Document, { Head, Main, NextScript } from 'next/document'
+import Head from 'next/head'
+import Document, {
+  Html,
+  Main,
+  NextScript,
+  DocumentContext,
+} from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 import { GA_TRACKING_ID } from '../lib/gtag'
 
 export default class MyDocument extends Document {
-  static async getInitialProps(ctx: any) {
+  static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
 
@@ -28,16 +34,11 @@ export default class MyDocument extends Document {
       sheet.seal()
     }
   }
+
   render() {
     return (
-      <html>
+      <Html lang="en-US">
         <Head>
-          <title>svg-drawing</title>
-          <meta charset="utf-8" />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0, user-scalable=no"
-          />
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script
             async
@@ -60,7 +61,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     )
   }
 }

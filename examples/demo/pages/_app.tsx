@@ -1,6 +1,4 @@
-import React, { Fragment } from 'react'
 import App from 'next/app'
-import Link from 'next/link'
 import { ThemeProvider } from 'styled-components'
 
 const theme = {

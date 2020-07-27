@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
   useCallback,
   ChangeEvent,
@@ -14,6 +14,7 @@ import {
   Blur,
   ImgLoader,
 } from '@svg-drawing/img-trace'
+import Layout from '../components/Layout'
 
 const IMAGE_LIST = [
   '/img_trace/cat.jpg',
@@ -122,7 +123,7 @@ export default () => {
     }
   }, [setImageData])
   return (
-    <>
+    <Layout>
       <div
         style={{ display: 'flex', justifyContent: 'start', flexWrap: 'wrap' }}
       >
@@ -209,6 +210,6 @@ export default () => {
         </div>
         <div style={{ width: '30vw' }} ref={renderRef}></div>
       </div>
-    </>
+    </Layout>
   )
 }
