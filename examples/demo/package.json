@@ -7,7 +7,7 @@
     "start": "next start",
     "dev": "next",
     "build": "next build; next export",
-    "lint": "eslint ./app.tsx --ext .js,.ts,.tsx",
+    "lint": "eslint . --ext .js,.ts,.tsx",
     "prepare": "build"
   },
   "dependencies": {
