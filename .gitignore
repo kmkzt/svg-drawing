@@ -15,6 +15,7 @@ build
 dist
 lib
 .size-snapshot.json
+.changelog
 
 # log
 npm-debug.log*
@@ -29,7 +30,6 @@ __debug__
 # npm lock files
 package-lock.json
 # yarn.lock
-
 
 # next.js
 !examples/**/lib
