@@ -360,7 +360,7 @@ export class PNGReader {
     let length = 0
     for (let l = this.dataChunks.length; l--; )
       length += this.dataChunks[l].length
-    const data: Buffer = new Buffer(length)
+    const data: Buffer = Buffer.alloc(length)
     for (let i = 0, k = 0, l = this.dataChunks.length; i < l; i++) {
       const chunk: Bytes = this.dataChunks[i]
       for (let j = 0; j < chunk.length; j++) data[k++] = chunk[j]
@@ -390,7 +390,7 @@ export class PNGReader {
     // color bytes per row
     const cpr = bpp * this.png.width
 
-    const pixels: Buffer = new Buffer(bpp * this.png.width * this.png.height)
+    const pixels: Buffer = Buffer.alloc(bpp * this.png.width * this.png.height)
     let offset = 0
 
     for (let i = 0; i < data.length; i += cpr + 1) {

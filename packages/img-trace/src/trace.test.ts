@@ -73,10 +73,12 @@ describe('trace.ts', () => {
 
           const data = svg.toElement().outerHTML
           /** DEBUG **/
-          writeFileSync(
-            resolve(__dirname, `__debug__/${testname}-${Date.now()}.svg`),
-            data
-          )
+          if (process.env.DEBUG === 'debug') {
+            writeFileSync(
+              resolve(__dirname, `__debug__/${testname}-${Date.now()}.svg`),
+              data
+            )
+          }
 
           // TODO: visual regression
 
