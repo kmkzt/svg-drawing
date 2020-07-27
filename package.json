@@ -6,7 +6,7 @@
     "examples/*"
   ],
   "scripts": {
-    "clean": "lerna clean; rimraf ./coverage ./{examples,packages}/**/{lib,dist,node_modules}; yarn cache clean",
+    "clean": "lerna clean; rimraf ./coverage ./packages/**/{lib,dist,node_modules}; yarn cache clean",
     "build": "lerna run build",
     "dev": "yarn build; concurrently yarn:dev:{main,tsc}",
     "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",

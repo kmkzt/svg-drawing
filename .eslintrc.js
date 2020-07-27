@@ -35,6 +35,7 @@ module.exports = {
     'react/no-deprecated': 'error',
     'react/display-name': 'off',
     'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off', // For next
 
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
@@ -44,6 +45,7 @@ module.exports = {
 
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
