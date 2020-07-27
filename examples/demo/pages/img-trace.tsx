@@ -23,7 +23,10 @@ const IMAGE_LIST = [
   '/img_trace/panda.png',
   '/img_trace/risu.jpg',
   '/img_trace/tanuki.jpg',
-]
+].map((url) =>
+  // For gh-pages
+  process.env.NODE_ENV === 'production' ? `/svg-drawing${url}` : url
+)
 
 const GRAYSCALE_PALETTE = [
   { r: 0, g: 0, b: 0, a: 255 },
