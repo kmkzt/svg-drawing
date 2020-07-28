@@ -50,7 +50,7 @@ new SvgDrawing(el)
 </script>
 ```
 
-[Here](/example/demo/) is an example for Html only.
+[Here](/examples/html/) is an example for Html only.
 
 ## Packages
 
