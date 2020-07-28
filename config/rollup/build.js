@@ -16,7 +16,7 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
 }) => {
   const globals = {
     ...(injectGlobal || {}),
-    packageGlobals,
+    ...packageGlobals,
   }
   const external = Object.keys({
     ...globals,
