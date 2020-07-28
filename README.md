@@ -44,7 +44,7 @@ new SvgDrawing(el)
 ```html
 <div id="draw-area" style="width: 100vw;height: 100vh;"></div>
 <!-- Common JS-->
-<script src="https://unpkg.com/@svg-drawing/core@4.0.0-beta.3/lib/index.umd.js"></script>
+<script src="https://unpkg.com/@svg-drawing/core@4.0.0-beta.6/lib/index.umd.js"></script>
 <script>
   var draw = new SVGDCore.SvgDrawing(document.getElementById('draw-area'))
 </script>
@@ -54,9 +54,9 @@ new SvgDrawing(el)
 
 ## Packages
 
-| Packages                                                                                                                     | Description                                                                |
-| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [@svg-drawing/core![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](packages/core)                  | Core Module                                                                |
-| [@svg-drawing/animation![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg)](packages/animation)   | Animate the drawn Svg. Can be animations using `JavaScript` or `<animate>` |
-| [@svg-drawing/img-trace![npm version](https://img.shields.io/npm/v/@svg-drawing/img-trace/latest.svg)](packages/image-trace) | Image(png/jpg) convert Svg.                                                |
-| [@svg-drawing/react![npm version](https://img.shields.io/npm/v/@svg-drawing/react/latest.svg)](packages/react)               | For react.                                                                 |
+| Packages                                                                                                                   | Description                                                                |
+| -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [@svg-drawing/core![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](packages/core)                | Core Module                                                                |
+| [@svg-drawing/animation![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg)](packages/animation) | Animate the drawn Svg. Can be animations using `JavaScript` or `<animate>` |
+| [@svg-drawing/img-trace![npm version](https://img.shields.io/npm/v/@svg-drawing/img-trace/latest.svg)](packages/img-trace) | Image(png/jpg) convert Svg.                                                |
+| [@svg-drawing/react![npm version](https://img.shields.io/npm/v/@svg-drawing/react/latest.svg)](packages/react)             | For react.                                                                 |
