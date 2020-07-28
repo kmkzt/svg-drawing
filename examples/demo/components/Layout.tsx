@@ -6,6 +6,7 @@ import styled, { createGlobalStyle } from 'styled-components'
 const GlobalStyle = createGlobalStyle`
  * {
    margin: 0;
+   box-sizing: border-box;
  }
 `
 const Header = styled.header``
@@ -22,8 +23,12 @@ const Layout: React.SFC<{
       <Header>
         <h1>svg-drawing</h1>
         <nav>
-          <Link href="/">
+          <Link href="/drawing">
             <a>drawing</a>
+          </Link>
+          |
+          <Link href="/animation">
+            <a>animation</a>
           </Link>
           |
           <Link href="/img-trace">
