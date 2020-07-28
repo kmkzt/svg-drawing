@@ -1,1 +1,0 @@
-self.__BUILD_MANIFEST = (function(a){return {"/":[a],"/img-trace":[a],"/index":[a],"/react":[a]}}("static\u002Fchunks\u002F69d1a1137388345e42582a0de26e5257b3c81f62.5cbef40319aff2ffd58a.js"));self.__BUILD_MANIFEST_CB && self.__BUILD_MANIFEST_CB()
