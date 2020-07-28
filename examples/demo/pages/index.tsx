@@ -1,11 +1,5 @@
-import {
-  useEffect,
-  useRef,
-  Fragment,
-  useCallback,
-  useState,
-  ChangeEvent,
-} from 'react'
+import { useEffect, useRef, useCallback, useState, ChangeEvent } from 'react'
+import { NextPage } from 'next'
 import { SvgDrawing, Command, Point } from '@svg-drawing/core'
 import { SvgAnimation, FrameAnimation } from '@svg-drawing/animation'
 import Layout from '../components/Layout'
@@ -41,9 +35,6 @@ const getRandomColor = (): string =>
   `#${Array.from({ length: 3 }, () =>
     String(getRandomInt(255).toString(16)).padStart(2, '0')
   ).join('')}`
-
-// const CANVAS_SIZE = innerHeight > innerWidth ? '98vw' : '49vw'
-const CANVAS_SIZE = '49vw'
 
 const shake: FrameAnimation = (paths) => {
   const range = 5
@@ -117,15 +108,16 @@ const lattice = (s: number) => `
     transparent ${String(s)}px
   )
 `
-
-export default () => {
+interface Props {
+  isSp: boolean
+}
+const Top: NextPage<Props> = ({ isSp }) => {
+  const [CANVAS_SIZE] = useState(isSp ? '98vw' : '49vw')
   const divRef = useRef<HTMLDivElement | null>(null)
   const drawingRef = useRef<SvgDrawing | null>(null)
   const aniDivRef = useRef<HTMLDivElement | null>(null)
   const animationRef = useRef<SvgAnimation | null>(null)
   const [rainbowPen, switchRainbowpen] = useState(false)
-  // TODO: fix
-  // const [thinner, switchThinner] = useState(true)
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
   const [fill, setFill] = useState('none')
@@ -566,3 +558,12 @@ export default () => {
     </Layout>
   )
 }
+
+Top.getInitialProps = ({ req }) => {
+  const ua = req ? req.headers['user-agent'] : navigator.userAgent
+  return {
+    isSp: ua ? /iPhone|Android.+Mobile/.test(ua) : true,
+  }
+}
+
+export default Top
