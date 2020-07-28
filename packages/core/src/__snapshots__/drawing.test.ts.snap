@@ -72,7 +72,12 @@ SvgDrawing {
   "_clearMouseListener": [Function],
   "_clearPointListener": null,
   "_clearTouchListener": null,
+  "_drawMoveThrottle": [Function],
   "_drawPath": null,
+  "_handleDraw": [Function],
+  "_handleDrawForTouch": [Function],
+  "_handleEnd": [Function],
+  "_handleStart": [Function],
   "_listenerOption": Object {
     "passive": false,
   },
@@ -83,7 +88,6 @@ SvgDrawing {
   "close": false,
   "curve": true,
   "delay": 20,
-  "drawingMove": [Function],
   "el": <div>
     <svg
       height="0"
