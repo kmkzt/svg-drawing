@@ -22,7 +22,7 @@ const testPattern: {
 }
 
 describe('trace.ts', () => {
-  const testimage = resolve(__dirname, '__testdata__/panda.png')
+  const testimage = resolve(__dirname, '__test__/panda.png')
   it('TestPattern', () => {
     // TestPattern
     expect(testPattern).toMatchSnapshot()

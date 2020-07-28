@@ -12,7 +12,7 @@ const getTestResult = (pal: Rgba[]) =>
   pal.map((c) => `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a / 255})`)
 
 describe('palette.ts', () => {
-  const testimage = resolve(__dirname, '__testdata__/panda.png')
+  const testimage = resolve(__dirname, '__test__/panda.png')
   describe('Palette', () => {
     describe('Palette.imageData', () => {
       TEST_COLOR_QUANT_CYCLES.map((colorQuantCycles: number | undefined) => {
