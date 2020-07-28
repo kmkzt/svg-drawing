@@ -190,9 +190,13 @@ export class SvgAnimation extends Renderer {
       return pEl
     })
 
+    const size = { width: String(this.width), height: String(this.height) }
+    const bgEl = this.background
+      ? [createSvgChildElement('rect', { ...size, fill: this.background })]
+      : []
     return createSvgElement(
       { width: String(this.width), height: String(this.height) },
-      animEls
+      bgEl.concat(animEls)
     )
   }
 

@@ -1,24 +1,19 @@
-import { Svg, Path } from './svg'
-import { download } from './shared/download'
+import { Svg, SvgOption } from './svg'
 
-export interface RendererOption {
-  background?: string
-}
+export type RendererOption = Omit<SvgOption, 'width' | 'height'>
 export class Renderer extends Svg {
   public el: HTMLElement
   public top: number
   public left: number
-  public background: string
-  constructor(el: HTMLElement, { background }: RendererOption = {}) {
+  constructor(el: HTMLElement, opt: RendererOption = {}) {
     const { width, height, left, top } = el.getBoundingClientRect()
-    super({ width, height })
+    super({ width, height, ...opt })
     /**
      * Setup parameter
      */
     this.el = el
     this.left = left
     this.top = top
-    this.background = background ?? '#fff'
     el.appendChild(this.toElement())
     this._setupAdjustResize()
   }
@@ -57,38 +52,5 @@ export class Renderer extends Svg {
         this.update()
       })
     }
-  }
-
-  // TODO: Add filename config
-  public download(
-    ext: 'svg' | 'png' | 'jpg' = 'svg',
-    cb: typeof download = download
-  ): void {
-    if (ext === 'svg') {
-      cb({
-        data: this.toBase64(),
-        extension: 'svg',
-      })
-      return
-    }
-
-    const img: any = new Image()
-    const renderCanvas = () => {
-      const canvas = document.createElement('canvas')
-      canvas.setAttribute('width', String(this.width))
-      canvas.setAttribute('height', String(this.height))
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-      ctx.fillStyle = this.background
-      ctx.fillRect(0, 0, this.width, this.height)
-      ctx.drawImage(img, 0, 0)
-      if (ext === 'png') {
-        cb({ data: canvas.toDataURL('image/png'), extension: 'png' })
-      } else {
-        cb({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
-      }
-    }
-    img.addEventListener('load', renderCanvas, false)
-    img.src = this.toBase64()
   }
 }

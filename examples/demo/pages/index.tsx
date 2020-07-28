@@ -1,4 +1,4 @@
-import React, {
+import {
   useEffect,
   useRef,
   Fragment,
@@ -6,10 +6,9 @@ import React, {
   useState,
   ChangeEvent,
 } from 'react'
-import { render } from 'react-dom'
 import { SvgDrawing, Command, Point } from '@svg-drawing/core'
 import { SvgAnimation, FrameAnimation } from '@svg-drawing/animation'
-// import Pressure from 'pressure'
+import Layout from '../components/Layout'
 
 const size = 30
 const colorList = [
@@ -43,7 +42,8 @@ const getRandomColor = (): string =>
     String(getRandomInt(255).toString(16)).padStart(2, '0')
   ).join('')}`
 
-const CANVAS_SIZE = innerHeight > innerWidth ? '98vw' : '49vw'
+// const CANVAS_SIZE = innerHeight > innerWidth ? '98vw' : '49vw'
+const CANVAS_SIZE = '49vw'
 
 const shake: FrameAnimation = (paths) => {
   const range = 5
@@ -118,7 +118,7 @@ const lattice = (s: number) => `
   )
 `
 
-const Example = () => {
+export default () => {
   const divRef = useRef<HTMLDivElement | null>(null)
   const drawingRef = useRef<SvgDrawing | null>(null)
   const aniDivRef = useRef<HTMLDivElement | null>(null)
@@ -273,6 +273,7 @@ const Example = () => {
     if (!aniDivRef.current) return
     animationRef.current = new SvgAnimation(aniDivRef.current, {
       ms: animMs,
+      background: '#fff',
     })
   })
   useEffect(() => {
@@ -348,10 +349,8 @@ const Example = () => {
   //   })
   // })
   return (
-    <Fragment>
+    <Layout>
       <div>
-        <h1>svg-drawing</h1>
-        <a href="https://github.com/kmkzt/svg-drawing">src</a>
         <fieldset>
           <h3>PEN CONFIG</h3>
           <div>
@@ -564,17 +563,6 @@ const Example = () => {
           />
         </div>
       </div>
-    </Fragment>
+    </Layout>
   )
 }
-
-const app = document.createElement('div')
-const style = document.createElement('style')
-style.innerHTML = `
-  * {
-    margin: 0;
-  }
-`
-document.body.appendChild(app)
-document.body.appendChild(style)
-render(<Example />, app)

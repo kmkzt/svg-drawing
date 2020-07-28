@@ -76,7 +76,7 @@ SvgDrawing {
   "_listenerOption": Object {
     "passive": false,
   },
-  "background": "#fff",
+  "background": undefined,
   "bezier": BezierCurve {
     "ratio": 0.2,
   },

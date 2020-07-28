@@ -40,8 +40,16 @@ Object {
 }
 `;
 
+exports[`svg.ts Svg download svg download 1`] = `
+Object {
+  "data": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PHBhdGggZD0iTSA0IDQgTCA5IDQgTCA5IDggTCAzIDAgWiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXR0ZXIiPjwvcGF0aD48L3N2Zz4=",
+  "extension": "svg",
+}
+`;
+
 exports[`svg.ts Svg parseSVGElement 1`] = `
 Svg {
+  "background": undefined,
   "height": 400,
   "paths": Array [
     Path {
@@ -89,6 +97,7 @@ Svg {
 
 exports[`svg.ts Svg parseSVGString 1`] = `
 Svg {
+  "background": undefined,
   "height": 400,
   "paths": Array [
     Path {
@@ -157,6 +166,7 @@ exports[`svg.ts Svg toElement 1`] = `
 
 exports[`svg.ts Svg toJson 1`] = `
 Object {
+  "background": undefined,
   "height": 500,
   "paths": Array [
     Object {

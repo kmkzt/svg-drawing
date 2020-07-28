@@ -14,7 +14,7 @@ yarn add @svg-drawing/core
 # npm i svg-drawing
 ```
 
-Example code is [here](src/example/)
+Example code is [here](/examples/demo/pages/index.tsx)
 
 This example renders the drawing area.
 

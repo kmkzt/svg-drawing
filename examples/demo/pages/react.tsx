@@ -1,8 +1,8 @@
-import React, { useEffect, Fragment, useCallback, useState } from 'react'
-import { render } from 'react-dom'
+import { useEffect, Fragment, useCallback, useState } from 'react'
 // @ts-ignore
 import Pressure from 'pressure'
 import { useSvgDrawing } from '@svg-drawing/react'
+import Layout from '../components/Layout'
 
 const getRandomInt = (max: number): number =>
   Math.floor(Math.random() * Math.floor(max))
@@ -11,7 +11,7 @@ const getRandomColor = (): string =>
     String(getRandomInt(255).toString(16)).padStart(2, '0')
   ).join('')}`
 
-const Example = () => {
+export default () => {
   const [xml, setXml] = useState('')
   const [penMode, setPenMode] = useState<string>('normal')
   const [penWidth, setPenWidth] = useState<number>(5)
@@ -115,7 +115,7 @@ const Example = () => {
     })
   }, [divRef, pressureChange])
   return (
-    <Fragment>
+    <Layout>
       <fieldset>
         <label>
           <input
@@ -231,10 +231,6 @@ const Example = () => {
           {xml}
         </div>
       </div>
-    </Fragment>
+    </Layout>
   )
 }
-
-const app = document.createElement('div')
-document.body.appendChild(app)
-render(<Example />, app)

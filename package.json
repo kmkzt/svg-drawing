@@ -1,17 +1,17 @@
 {
   "name": "@svg-drawing/root",
-  "version": "4.0.0-beta.3",
   "private": true,
   "workspaces": [
     "packages/*",
     "examples/*"
   ],
   "scripts": {
-    "clean": "lerna clean; rimraf ./coverage ./{examples,packages}/**/{lib,dist,node_modules}; yarn cache clean",
+    "clean": "lerna clean; rimraf ./coverage ./packages/**/{lib,dist,node_modules}; yarn cache clean",
     "build": "lerna run build",
-    "dev": "yarn build; concurrently \"yarn dev:main\"  \"yarn dev:tsc\"",
+    "dev": "yarn build; concurrently yarn:dev:{main,tsc}",
     "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",
     "dev:tsc": "yarn lerna run dev:tsc --concurrency 1 --parallel --stream",
+    "dev:test": "DEBUG=debug yarn test --watchAll",
     "test": "NODE_ENV=test jest --ci --passWithNoTests",
     "lint": "lerna run lint",
     "fmt": "lerna run fmt",
@@ -30,8 +30,8 @@
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "8.4.0",
     "@rollup/plugin-replace": "2.3.3",
-    "@types/node": "12.12.53",
     "@types/jest": "26.0.7",
+    "@types/node": "12.12.53",
     "@types/react": "16.9.43",
     "@types/react-dom": "16.9.8",
     "@typescript-eslint/eslint-plugin": "3.7.1",
@@ -56,7 +56,9 @@
     "html-webpack-plugin": "4.3.0",
     "jest": "26.1.0",
     "lerna": "3.22.1",
+    "lerna-changelog": "1.0.1",
     "npm-run-all": "4.1.5",
+    "png.js": "0.2.1",
     "prettier": "2.0.5",
     "resolve-url-loader": "3.1.1",
     "rimraf": "3.0.2",
@@ -75,5 +77,18 @@
   },
   "resolutions": {
     "http-proxy": "1.18.1"
+  },
+  "changelog": {
+    "repo": "kmkzt/svg-drawing",
+    "labels": {
+      "breaking": "Breaking Change",
+      "enhancement": "Enhancement",
+      "feature": "Feature",
+      "dependencies": "Dependencies",
+      "bug": "Bug Fix",
+      "documentation": "Documentation",
+      "internal": "Internal"
+    },
+    "cacheDir": ".changelog"
   }
 }
