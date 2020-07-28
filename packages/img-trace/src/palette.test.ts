@@ -1,46 +1,16 @@
-import { Palette, FromImageDataOptions, Rgba } from './palette'
-import { PNGReader } from './PNGReader'
-import { readFile } from 'fs'
 import { resolve } from 'path'
+import { Palette, Rgba } from './palette'
+import { loadPngData } from './__test__/loadPngData'
 interface PngData {
   width: number
   height: number
   data: any
 }
-const loadPngData = (filepath: string, cb: (png: PngData) => void) => {
-  readFile(
-    filepath, // Input file path
-    (err: any, bytes: any) => {
-      if (err) {
-        console.log(err)
-        throw err
-      }
-
-      const reader = new PNGReader(bytes)
-
-      reader.parse(
-        (err, png) => {
-          if (err) {
-            console.log(err)
-            throw err
-          }
-
-          // tracing to SVG string
-          cb({
-            width: png.width,
-            height: png.height,
-            data: png.pixels,
-          })
-        } // End of readFile callback()
-      ) // End of fs.readFile()
-    }
-  )
-}
-
 const TEST_NUMBER_OF_COLORS = [undefined, 2, 4, 7, 8, 27, 64]
 const TEST_COLOR_QUANT_CYCLES = [undefined, 1, 8]
 const getTestResult = (pal: Rgba[]) =>
   pal.map((c) => `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a / 255})`)
+
 describe('palette.ts', () => {
   const testimage = resolve(__dirname, '__testdata__/panda.png')
   describe('Palette', () => {
@@ -50,7 +20,7 @@ describe('palette.ts', () => {
           it(`colorQuantCycles: ${
             colorQuantCycles || 'default'
           } ;numberOfColors: ${numberOfColors || 'default'}`, (done) => {
-            loadPngData(testimage, (imgd: PngData) => {
+            loadPngData(testimage, (imgd) => {
               expect(
                 getTestResult(
                   Palette.imageData(imgd, { colorQuantCycles, numberOfColors })
