@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](https://www.npmjs.com/package/svg-drawing) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/core.svg)](https://www.npmjs.com/package/svg-drawing) [![codecov](https://codecov.io/gh/kmkzt/svg-drawing/branch/master/graph/badge.svg)](https://codecov.io/gh/kmkzt/svg-drawing)
 
-![svg animation image](./logo.svg)
+![svg animation image](https://raw.githubusercontent.com/kmkzt/svg-drawing/master/logo.svg)
 
 `svg-drawing` is svg based drawing library.
 

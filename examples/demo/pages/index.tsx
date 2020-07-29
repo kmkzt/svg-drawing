@@ -1,6 +1,7 @@
 import { NextPage } from 'next'
+import Head from 'next/head'
 import Layout from '../components/Layout'
-import markdownToHtml from '../lib/markdownToHtml'
+import { markdownToHtml } from '../lib/markdownToHtml'
 // @ts-ignore
 import readme from '!!raw-loader!../../../README.md'
 
@@ -10,6 +11,12 @@ interface Props {
 const Top: NextPage<Props> = ({ content }) => {
   return (
     <Layout>
+      <Head>
+        <link
+          rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/monokai.min.css"
+        />
+      </Head>
       <div
         // className={markdownStyles['markdown']}
         dangerouslySetInnerHTML={{ __html: content }}
