@@ -1,6 +1,8 @@
 import { useEffect, useCallback, useState, ChangeEvent } from 'react'
 import { NextPage } from 'next'
 import { useSvgDrawing } from '@svg-drawing/react'
+import { Box, Flex, Button, Text } from 'rebass/styled-components'
+import { Input, Checkbox, Label, Slider } from '@rebass/forms'
 import Layout from '../components/Layout'
 
 const size = 30
@@ -173,14 +175,16 @@ const Top: NextPage<Props> = ({ isSp }) => {
   const clickUndo = useCallback(() => {
     draw.undo()
   }, [draw])
-  const clickOff = useCallback(() => {
-    if (!draw.instance) return
-    draw.instance.off()
-  }, [draw])
-  const clickOn = useCallback(() => {
-    if (!draw.instance) return
-    draw.instance.on()
-  }, [draw])
+
+  // TODO: improve UI
+  // const clickOff = useCallback(() => {
+  //   if (!draw.instance) return
+  //   draw.instance.off()
+  // }, [draw])
+  // const clickOn = useCallback(() => {
+  //   if (!draw.instance) return
+  //   draw.instance.on()
+  // }, [draw])
 
   useEffect(() => {
     const stop = setInterval(() => {
@@ -212,99 +216,111 @@ const Top: NextPage<Props> = ({ isSp }) => {
   )
   return (
     <Layout>
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-        }}
-      >
-        <fieldset style={{ width: isSp ? '100%' : '49%' }}>
-          <h3>PEN CONFIG</h3>
-          <div>
-            STROKE WIDTH:
-            <input
-              type="number"
-              min="1"
-              max="20"
-              step="1"
-              value={penWidth}
-              onChange={handlePenWidth}
-            />
-            <input
-              type="range"
-              min="1"
-              max="20"
-              step="1"
-              value={penWidth}
-              onChange={handlePenWidth}
-            />
-          </div>
-          <div>
-            THROTTLE DELAY:
-            <input
-              type="number"
-              min="0"
-              max="300"
-              step="5"
-              value={delay}
-              onChange={handleChangeDelay}
-            />
-            <input
-              type="range"
-              min="0"
-              max="300"
-              step="5"
-              value={delay}
-              onChange={handleChangeDelay}
-            />
-          </div>
-          <label>
-            <input
-              type="checkbox"
-              checked={curve}
-              onChange={handleChangeCiruler}
-            />
-            Curve
-          </label>
-          {!rainbowPen && (
-            <label>
-              <input
-                type="checkbox"
-                checked={close}
-                onChange={handleChangeClose}
+      <Box as="fieldset">
+        <Flex flexWrap="wrap">
+          <Box width={[1, 1 / 2, 1 / 2]} pr={3}>
+            <Flex alignItems="center">
+              <Label fontSize={[2, 1, 1]} width={3 / 10} htmlFor="strokeWidth">
+                STROKE WIDTH:
+              </Label>
+              <Slider
+                width={5 / 10}
+                min="1"
+                max="20"
+                step="1"
+                value={penWidth}
+                onChange={handlePenWidth}
               />
-              Close
-            </label>
-          )}
-          <label>
-            <input
-              type="checkbox"
-              checked={rainbowPen}
-              onChange={handleChangeRainbowPen}
-            />
-            Rainbow pen
-          </label>
-
+              <Input
+                width="auto"
+                id="strokeWidth"
+                type="number"
+                min="1"
+                max="20"
+                step="1"
+                value={penWidth}
+                onChange={handlePenWidth}
+              />
+            </Flex>
+            <Flex alignItems="center">
+              <Label
+                width={3 / 10}
+                fontSize={[2, 1, 1]}
+                htmlFor="throttleDelay"
+              >
+                THROTTLE DELAY:
+              </Label>
+              <Slider
+                width={5 / 10}
+                type="range"
+                min="0"
+                max="300"
+                step="5"
+                value={delay}
+                onChange={handleChangeDelay}
+              />
+              <Input
+                width="auto"
+                id="throttleDelay"
+                type="number"
+                min="0"
+                max="300"
+                step="5"
+                value={delay}
+                onChange={handleChangeDelay}
+              />
+            </Flex>
+            <Flex pt={3} justifyContent="start">
+              <Label htmlFor="curve">
+                <Checkbox
+                  id="curve"
+                  checked={curve}
+                  onChange={handleChangeCiruler}
+                />
+                Curve
+              </Label>
+              {!rainbowPen && (
+                <Label htmlFor="close">
+                  <Checkbox
+                    id="close"
+                    checked={close}
+                    onChange={handleChangeClose}
+                  />
+                  Close
+                </Label>
+              )}
+              <Label htmlFor="rainbow">
+                <Checkbox
+                  id="rainbow"
+                  checked={rainbowPen}
+                  onChange={handleChangeRainbowPen}
+                />
+                Rainbow pen
+              </Label>
+            </Flex>
+          </Box>
           {!rainbowPen && (
-            <>
-              <h3>COLOR</h3>
-              <div>
+            <Box width={[1, 1 / 2, 1 / 2]}>
+              <Label fontSize={0} htmlFor="fill">
                 FILL:
-                <input
+                <Input
+                  p={1}
+                  fontSize={0}
+                  id="fill"
                   type="text"
                   placeholder="#000 or black or rgba(0,0,0,1)"
                   value={fill}
                   onChange={handleChangeFill}
                 />
-              </div>
-              <div>
+              </Label>
+              <Flex flexWrap="wrap">
                 {colorList.map((col: string) => (
-                  <div
+                  <Box
                     key={col}
+                    width={['35px', '35px', '20px']}
+                    height={['35px', '35px', '20px']}
                     style={{
                       display: 'inline-block',
-                      width: '20px',
-                      height: '20px',
                       backgroundColor: col,
                       border:
                         col === fill ? '2px solid #000' : '2px solid #999',
@@ -312,70 +328,105 @@ const Top: NextPage<Props> = ({ isSp }) => {
                     onClick={handleClickFill(col)}
                   />
                 ))}
-              </div>
-              <div>
+              </Flex>
+              <Label
+                fontSize={0}
+                htmlFor="penColor"
+                style={{ whiteSpace: 'nowrap' }}
+              >
                 PEN COLOR:
-                <input
+                <Input
+                  fontSize={0}
+                  p={1}
+                  id="penColor"
                   type="text"
                   placeholder="#000 or black or rgba(0,0,0,1)"
                   value={penColor}
                   onChange={handleChangePenColor}
                 />
-              </div>
-              <div>
+              </Label>
+              <Flex flexWrap="wrap">
                 {colorList.map((col: string) => (
-                  <div
+                  <Box
                     key={col}
+                    width={['35px', '35px', '20px']}
+                    height={['35px', '35px', '20px']}
+                    bg={col}
                     style={{
-                      display: 'inline-block',
-                      width: '15px',
-                      height: '15px',
-                      backgroundColor: col,
                       border:
                         col === penColor ? '2px solid #000' : '2px solid #999',
                     }}
                     onClick={handleClickPenColor(col)}
                   />
                 ))}
-              </div>
-            </>
+              </Flex>
+            </Box>
           )}
-        </fieldset>
-        <fieldset style={{ width: isSp ? '100%' : '49%' }}>
-          <h3>Drawing methods</h3>
-          <button onClick={clickClear}>Clear</button>
-          <button onClick={clickUndo}>Undo</button>
-          <button onClick={clickOff}>OFF</button>
-          <button onClick={clickOn}>ON</button>
-          <button onClick={clickDownload('png')}>Download PNG</button>
-          <button onClick={clickDownload('jpg')}>Download JPG</button>
-          {/* <button onClick={clickDownloadGIF}>Download GIF</button> */}
-          <button onClick={clickDownload('svg')}>Download SVG</button>
+        </Flex>
+      </Box>
+      <Box as="fieldset">
+        <Flex flexWrap="wrap" justifyContent="start">
+          <Box mr={2}>
+            <Button variant="secondary" mr={1} mb={1} onClick={clickClear}>
+              Clear
+            </Button>
+            <Button variant="secondary" mr={1} mb={1} onClick={clickUndo}>
+              Undo
+            </Button>
+            <Button
+              variant="secondary"
+              mr={1}
+              mb={1}
+              onClick={clickDownload('png')}
+            >
+              Download PNG
+            </Button>
+            <Button
+              variant="secondary"
+              mr={1}
+              mb={1}
+              onClick={clickDownload('jpg')}
+            >
+              Download JPG
+            </Button>
+            {/* <button onClick={clickDownloadGIF}>Download GIF</button> */}
+            <Button
+              variant="secondary"
+              mr={1}
+              mb={1}
+              onClick={clickDownload('svg')}
+            >
+              Download SVG
+            </Button>
+          </Box>
           {!isSp && (
-            <>
-              <h3>Load Svg files</h3>
-              <p>Svg exported by this library can be read.</p>
-              <input
+            <Box width="auto">
+              <Text fontSize={0}>
+                Svg exported by this library can be read.
+              </Text>
+              <Input
                 type="file"
                 onChange={handleFiles}
                 multiple
                 accept="image/*"
               />
-            </>
+            </Box>
           )}
-        </fieldset>
-      </div>
-      <div
-        ref={divRef}
-        style={{
-          backgroundImage: lattice(size),
-          backgroundSize: `${size}px ${size}px`,
-          border: '1px solid #333',
-          width: CANVAS_SIZE,
-          height: CANVAS_SIZE,
-          margin: '0 auto 0 0',
-        }}
-      />
+        </Flex>
+      </Box>
+      <Box width={['100%', '50%', '50%']}>
+        <div
+          ref={divRef}
+          style={{
+            backgroundImage: lattice(size),
+            backgroundSize: `${size}px ${size}px`,
+            border: '1px solid #333',
+            width: CANVAS_SIZE,
+            height: CANVAS_SIZE,
+            margin: '0 auto 0 0',
+          }}
+        />
+      </Box>
     </Layout>
   )
 }
