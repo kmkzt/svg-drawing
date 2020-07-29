@@ -22,6 +22,8 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "rebass": "4.0.7",
+    "remark": "12.0.1",
+    "remark-html": "12.0.0",
     "styled-components": "5.1.1",
     "styled-system": "5.1.5"
   },
@@ -30,6 +32,7 @@
     "@types/rebass__forms": "4.0.2",
     "@types/styled-components": "5.1.1",
     "@types/styled-system": "5.1.1",
-    "babel-plugin-styled-components": "1.10.7"
+    "babel-plugin-styled-components": "1.10.7",
+    "raw-loader": "4.0.1"
   }
 }

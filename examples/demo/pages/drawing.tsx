@@ -56,7 +56,7 @@ const lattice = (s: number) => `
 interface Props {
   isSp: boolean
 }
-const Top: NextPage<Props> = ({ isSp }) => {
+const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [CANVAS_SIZE] = useState(isSp ? '98vw' : '49vw')
   const [rainbowPen, switchRainbowpen] = useState(false)
   const [curve, switchCurve] = useState(true)
@@ -431,11 +431,11 @@ const Top: NextPage<Props> = ({ isSp }) => {
   )
 }
 
-Top.getInitialProps = ({ req }) => {
+DrawingDemo.getInitialProps = ({ req }) => {
   const ua = req ? req.headers['user-agent'] : navigator.userAgent
   return {
     isSp: ua ? /iPhone|Android.+Mobile/.test(ua) : true,
   }
 }
 
-export default Top
+export default DrawingDemo
