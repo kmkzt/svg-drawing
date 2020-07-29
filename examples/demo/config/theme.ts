@@ -110,13 +110,13 @@ export default {
   forms: {
     input: {
       p: 1,
-      color: 'primary',
     },
     select: {
       borderRadius: 9999,
     },
     textarea: {},
     label: {
+      width: 'auto',
       fontSize: 0,
     },
     radio: {},

@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, ChangeEvent } from 'react'
 import { NextPage } from 'next'
 import { useSvgDrawing } from '@svg-drawing/react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
-import { Input, Checkbox, Label, Slider } from '@rebass/forms'
+import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../components/Layout'
 
 const size = 30
@@ -317,8 +317,8 @@ const Top: NextPage<Props> = ({ isSp }) => {
                 {colorList.map((col: string) => (
                   <Box
                     key={col}
-                    width={['35px', '35px', '20px']}
-                    height={['35px', '35px', '20px']}
+                    width={['24px', '24px', '20px']}
+                    height={['24px', '24px', '20px']}
                     style={{
                       display: 'inline-block',
                       backgroundColor: col,
@@ -349,8 +349,8 @@ const Top: NextPage<Props> = ({ isSp }) => {
                 {colorList.map((col: string) => (
                   <Box
                     key={col}
-                    width={['35px', '35px', '20px']}
-                    height={['35px', '35px', '20px']}
+                    width={['24px', '24px', '20px']}
+                    height={['24px', '24px', '20px']}
                     bg={col}
                     style={{
                       border:

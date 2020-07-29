@@ -1,9 +1,11 @@
 import { useEffect, useRef, useCallback, useState, ChangeEvent } from 'react'
 import { NextPage } from 'next'
+import { Box, Flex, Button, Text } from 'rebass/styled-components'
+import { Slider, Input, Label } from '@rebass/forms/styled-components'
 import { Command, Point } from '@svg-drawing/core'
 import { SvgAnimation, FrameAnimation } from '@svg-drawing/animation'
 import Layout from '../components/Layout'
-
+import { example } from '../lib/example-svg'
 const size = 30
 const shake: FrameAnimation = (paths) => {
   const range = 5
@@ -85,6 +87,10 @@ const Top: NextPage<Props> = ({ isSp }) => {
       ms: animMs,
       background: '#fff',
     })
+
+    // SET EXAMPLE
+    animationRef.current.parseSVGString(example)
+    handleDrawingAnimation()
   })
 
   const handleFiles = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -102,32 +108,32 @@ const Top: NextPage<Props> = ({ isSp }) => {
     if (!e.target?.files) return
     reader.readAsDataURL(e.target.files[0])
   }, [])
-  const handleClickShake = useCallback(() => {
+  const handleShake = useCallback(() => {
     if (!animationRef.current) return
     animationRef.current.setAnimation(shake, {
       frames: 3,
     })
     animationRef.current.start()
   }, [])
-  const handleClickDrawingAnimation = useCallback(() => {
+  const handleDrawingAnimation = useCallback(() => {
     if (!animationRef.current) return
     animationRef.current.setAnimation(drawingAnimation, {
       repeatCount: 1,
     })
     animationRef.current.start()
   }, [])
-  const handleClickColorfulAnimation = useCallback(() => {
+  const handleColorfulAnimation = useCallback(() => {
     if (!animationRef.current) return
     animationRef.current.setAnimation(colorfulAnimation, {
       frames: colorfulList.length,
     })
     animationRef.current.start()
   }, [])
-  const handleClickStop = useCallback(() => {
+  const handleStop = useCallback(() => {
     if (!animationRef.current) return
     animationRef.current.stop()
   }, [])
-  const handleClickRestore = useCallback(() => {
+  const handleRestore = useCallback(() => {
     if (!animationRef.current) return
     animationRef.current.restore()
   }, [])
@@ -137,25 +143,13 @@ const Top: NextPage<Props> = ({ isSp }) => {
   }, [])
   return (
     <Layout>
-      <fieldset>
-        <h3>Animation methods</h3>
-        <button onClick={handleClickShake}>Shaking</button>
-        <button onClick={handleClickDrawingAnimation}>Drawing</button>
-        <button onClick={handleClickColorfulAnimation}>Colorful</button>
-        <button onClick={handleClickStop}>Stop</button>
-        <button onClick={handleClickRestore}>Restore</button>
-        <button onClick={handleDownloadAnimation}>Download Anmation SVG</button>
-        <div>
-          ANIMATION MS
-          <input
-            type="number"
-            min="0"
-            max="500"
-            step="5"
-            value={animMs}
-            onChange={handleChangeAnimMs}
-          />
-          <input
+      <Box as="fieldset">
+        <Flex justifyContent="start" mb={2}>
+          <Label width={3 / 10} style={{ whiteSpace: 'nowrap' }}>
+            ANIMATION MS:
+          </Label>
+          <Slider
+            width={6 / 10}
             type="range"
             min="0"
             max="500"
@@ -163,11 +157,58 @@ const Top: NextPage<Props> = ({ isSp }) => {
             value={animMs}
             onChange={handleChangeAnimMs}
           />
-        </div>
-        <h3>Load Svg files</h3>
-        <p>Svg exported by this library can be read.</p>
-        <input type="file" onChange={handleFiles} multiple accept="image/*" />
-      </fieldset>
+          <Input
+            width="auto"
+            type="number"
+            min="0"
+            max="500"
+            step="5"
+            value={animMs}
+            onChange={handleChangeAnimMs}
+          />
+        </Flex>
+        <Flex flexWrap="wrap" justifyContent="start" mb={2}>
+          <Box>
+            <Button variant="secondary" mr={1} mb={1} onClick={handleShake}>
+              Shaking
+            </Button>
+            <Button
+              variant="secondary"
+              mr={1}
+              mb={1}
+              onClick={handleDrawingAnimation}
+            >
+              Drawing
+            </Button>
+            <Button
+              variant="secondary"
+              mr={1}
+              mb={1}
+              onClick={handleColorfulAnimation}
+            >
+              Colorful
+            </Button>
+            <Button variant="secondary" mr={1} mb={1} onClick={handleStop}>
+              Stop
+            </Button>
+            <Button variant="secondary" mr={1} mb={1} onClick={handleRestore}>
+              Restore
+            </Button>
+            <Button
+              variant="secondary"
+              mr={1}
+              mb={1}
+              onClick={handleDownloadAnimation}
+            >
+              Download Anmation SVG
+            </Button>
+          </Box>
+        </Flex>
+        <Box>
+          <Text>Svg exported by this library can be read.</Text>
+          <Input type="file" onChange={handleFiles} multiple accept="image/*" />
+        </Box>
+      </Box>
       <div
         ref={aniDivRef}
         style={{
