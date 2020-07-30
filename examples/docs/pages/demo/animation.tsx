@@ -66,8 +66,7 @@ const drawingAnimation: FrameAnimation = (paths, fid) => {
 interface Props {
   isSp: boolean
 }
-const Top: NextPage<Props> = ({ isSp }) => {
-  const [CANVAS_SIZE] = useState(isSp ? '98vw' : '49vw')
+const Animation: NextPage<Props> = ({ isSp }) => {
   const aniDivRef = useRef<HTMLDivElement | null>(null)
   const animationRef = useRef<SvgAnimation | null>(null)
   const [animMs, setAnimMs] = useState(20)
@@ -209,25 +208,27 @@ const Top: NextPage<Props> = ({ isSp }) => {
           <Input type="file" onChange={handleFiles} multiple accept="image/*" />
         </Box>
       </Box>
-      <div
-        ref={aniDivRef}
-        style={{
-          backgroundSize: `${size}px ${size}px`,
-          border: '1px solid #333',
-          width: CANVAS_SIZE,
-          height: CANVAS_SIZE,
-          margin: '0 auto 0 0',
-        }}
-      />
+      <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
+        <div
+          ref={aniDivRef}
+          style={{
+            backgroundSize: `${size}px ${size}px`,
+            border: '1px solid #333',
+            width: '100%',
+            height: '100%',
+            margin: '0 auto 0 0',
+          }}
+        />
+      </Box>
     </Layout>
   )
 }
 
-Top.getInitialProps = ({ req }) => {
+Animation.getInitialProps = ({ req }) => {
   const ua = req ? req.headers['user-agent'] : navigator.userAgent
   return {
     isSp: ua ? /iPhone|Android.+Mobile/.test(ua) : true,
   }
 }
 
-export default Top
+export default Animation

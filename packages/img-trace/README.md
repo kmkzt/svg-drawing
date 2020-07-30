@@ -14,7 +14,7 @@ yarn add @svg-drawing/img-trace
 
 ## How to use
 
-Example code is [here](/examples/demo/pages/img-trace.tsx)
+Example code is [here](/examples/docs/pages/demo/img-trace.tsx)
 
 Example of downloading the image converted to Svg
 

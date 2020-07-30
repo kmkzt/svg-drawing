@@ -14,7 +14,7 @@ yarn add @svg-drawing/animation
 
 ## How to use
 
-Example code is [here](/examples/demo/pages/index.tsx)
+Example code is [here](/examples/docs/pages/demo/animation.tsx)
 
 ```js
 import { SvgDrawing } from '@svg-drawing/core'

@@ -14,7 +14,7 @@ yarn add @svg-drawing/core
 # npm i svg-drawing
 ```
 
-Example code is [here](/examples/demo/pages/index.tsx)
+Example code is [here](/examples/docs/pages/demo/drawing.tsx)
 
 This example renders the drawing area.
 
@@ -78,4 +78,4 @@ draw.parseSVGElement(document.getElementByID('loadSVG'))
 </script>
 ```
 
-[Here](/example/demo/) is an example for Html only.
+[Here](/example/html/) is an example for Html only.
