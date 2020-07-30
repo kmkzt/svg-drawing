@@ -11,18 +11,29 @@
     "prepare": "build"
   },
   "dependencies": {
+    "@styled-icons/octicons": "10.6.0",
     "@svg-drawing/animation": "4.0.0-beta.6",
     "@svg-drawing/core": "4.0.0-beta.6",
     "@svg-drawing/img-trace": "4.0.0-beta.6",
     "@svg-drawing/react": "4.0.0-beta.6",
+    "@rebass/forms": "4.0.6",
     "next": "latest",
     "pressure": "2.1.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "styled-components": "5.1.1"
+    "rebass": "4.0.7",
+    "remark": "12.0.1",
+    "remark-highlight.js": "6.0.0",
+    "remark-html": "12.0.0",
+    "styled-components": "5.1.1",
+    "styled-system": "5.1.5"
   },
   "devDependencies": {
+    "@types/rebass": "4.0.6",
+    "@types/rebass__forms": "4.0.2",
     "@types/styled-components": "5.1.1",
-    "babel-plugin-styled-components": "1.10.7"
+    "@types/styled-system": "5.1.1",
+    "babel-plugin-styled-components": "1.10.7",
+    "raw-loader": "4.0.1"
   }
 }

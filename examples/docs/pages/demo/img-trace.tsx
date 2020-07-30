@@ -6,6 +6,15 @@ import {
   RefObject,
   useEffect,
 } from 'react'
+import {
+  Box,
+  Flex,
+  Button,
+  Card,
+  Image,
+  Heading,
+} from 'rebass/styled-components'
+import { Input } from '@rebass/forms/styled-components'
 import { Renderer, Svg } from '@svg-drawing/core'
 import {
   ImgTrace,
@@ -14,7 +23,7 @@ import {
   Blur,
   ImgLoader,
 } from '@svg-drawing/img-trace'
-import Layout from '../components/Layout'
+import Layout from '../../components/Layout'
 
 const IMAGE_LIST = [
   '/img_trace/cat.jpg',
@@ -74,39 +83,58 @@ export default () => {
     },
     [setPalettes, palettes]
   )
-  const traceImage = useCallback(() => {
-    if (!imageData) return
-    const trace = new ImgTrace({ ...traceOption, palettes })
-    const svg = trace.load(imageData)
-    setSvg(svg)
-    if (trace.palettes) setPalettes(trace.palettes)
-    if (!renderRef.current) return
-    const render = new Renderer(renderRef.current)
-    render.copy(svg)
-    render.update()
-    // renderRef.current.innerHTML = svg.toElement().outerHTML
-  }, [imageData, palettes, traceOption])
-
-  const blurImage = useCallback(() => {
-    if (!imageData) return
-    const blurImage = new Blur(blurOption).apply(imageData)
-    setImageData(blurImage)
-    if (canvasRef.current) {
-      canvasRef.current.width = blurImage.width
-      canvasRef.current.height = blurImage.height
-
-      const ctx = canvasRef.current.getContext('2d')
-      ctx?.putImageData(
-        blurImage,
-        0,
-        0,
-        0,
-        0,
-        blurImage.width,
-        blurImage.height
-      )
+  const traceImage = useCallback(async () => {
+    try {
+      const imgd =
+        imageData ||
+        (await new ImgLoader({ corsenabled: true }).fromUrl(imageUrl))
+      if (!imageData && imgd) {
+        setImageData(imgd)
+      }
+      if (!imgd) return
+      const trace = new ImgTrace({ ...traceOption, palettes })
+      const svg = trace.load(imgd)
+      setSvg(svg)
+      if (trace.palettes) setPalettes(trace.palettes)
+      if (!renderRef.current) return
+      const render = new Renderer(renderRef.current)
+      render.copy(svg)
+      render.update()
+    } catch (err) {
+      // throw err
     }
-  }, [imageData, blurOption])
+  }, [imageUrl, imageData, palettes, traceOption])
+
+  const blurImage = useCallback(async () => {
+    try {
+      const imgd =
+        imageData ||
+        (await new ImgLoader({ corsenabled: true }).fromUrl(imageUrl))
+      if (!imageData && imgd) {
+        setImageData(imgd)
+      }
+      if (!imgd) return
+      const blurImage = new Blur(blurOption).apply(imgd)
+      setImageData(blurImage)
+      if (canvasRef.current) {
+        canvasRef.current.width = blurImage.width
+        canvasRef.current.height = blurImage.height
+
+        const ctx = canvasRef.current.getContext('2d')
+        ctx?.putImageData(
+          blurImage,
+          0,
+          0,
+          0,
+          0,
+          blurImage.width,
+          blurImage.height
+        )
+      }
+    } catch (err) {
+      // throw err
+    }
+  }, [imageData, blurOption, imageUrl])
   const handleSelect = useCallback(
     (url: string) => () => {
       setImageUrl(url)
@@ -134,35 +162,39 @@ export default () => {
   }, [setImageData])
   return (
     <Layout>
-      <div
-        style={{ display: 'flex', justifyContent: 'start', flexWrap: 'wrap' }}
-      >
-        <ul>
-          <li>
-            <input
-              type="text"
-              placeholder="input image url"
-              value={inputUrl}
-              onChange={handleInputUrl}
-            />
-            <button onClick={handleSelect(inputUrl)}>Load image url</button>
-          </li>
-          {list.map((l, i) => (
-            <li style={{ cursor: 'pointer' }} key={i}>
-              <div onClick={handleSelect(l)}>{l}</div>
-            </li>
-          ))}
-        </ul>
-        <div>
-          <button onClick={createPalette}>Load Image Palette!</button>
-          <button onClick={resetPalette}>GrayScale Palette!</button>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'start',
-              padding: '2px 0',
-            }}
+      <Flex justifyContent="start" flexWrap="wrap">
+        <Box>
+          <Button onClick={blurImage}>Blur Image!</Button>
+          <Button variant="primary" onClick={traceImage}>
+            Image Trace!
+          </Button>
+          {svg && <Button onClick={handleDownload}>Download</Button>}
+          <Flex
+            justifyContent="start"
+            flexWrap="wrap"
+            style={{ maxHeight: '100vh' }}
           >
+            <Box style={{ width: '256px', height: '256px' }}>
+              <img
+                style={{ maxWidth: '100%' }}
+                ref={imgRef}
+                crossOrigin="anonymous"
+                src={imageUrl}
+                alt=""
+              />
+            </Box>
+            <Box style={{ width: '256px', height: '256px' }}>
+              <canvas style={{ width: '100%' }} ref={canvasRef} />
+            </Box>
+            <div style={{ width: '256px', height: '256px' }} ref={renderRef} />
+          </Flex>
+        </Box>
+        <Box>
+          <Button mr={1} onClick={createPalette}>
+            Load Image Palette!
+          </Button>
+          <Button onClick={resetPalette}>GrayScale Palette!</Button>
+          <Flex justifyContent="start" py="2px" px="0">
             {palettes
               .sort((p1: Rgba, p2: Rgba) =>
                 p1.r + p1.g + p1.b > p2.r + p2.g + p2.b ? -1 : 1
@@ -198,29 +230,28 @@ export default () => {
                   </div>
                 </div>
               ))}
-          </div>
-        </div>
-      </div>
-      <button onClick={blurImage}>Blur Image!</button>
-      <button onClick={traceImage}>Image Trace!</button>
-      {svg && <button onClick={handleDownload}>Download</button>}
-      <div
-        style={{ display: 'flex', justifyContent: 'start', flexWrap: 'wrap' }}
-      >
-        <div style={{ width: '30vw' }}>
-          <img
-            style={{ maxWidth: '100%' }}
-            ref={imgRef}
-            crossOrigin="anonymous"
-            src={imageUrl}
-            alt=""
+          </Flex>
+        </Box>
+      </Flex>
+      <Box as="fieldset">
+        <Heading>Select Image</Heading>
+        <Box>
+          <Input
+            type="text"
+            placeholder="input image url"
+            value={inputUrl}
+            onChange={handleInputUrl}
           />
-        </div>
-        <div style={{ width: '30vw' }}>
-          <canvas style={{ width: '100%' }} ref={canvasRef} />
-        </div>
-        <div style={{ width: '30vw' }} ref={renderRef}></div>
-      </div>
+          <Button onClick={handleSelect(inputUrl)}>Load image url</Button>
+        </Box>
+        <Flex flexWrap="wrap">
+          {list.map((l, i) => (
+            <Card key={i} width="256px">
+              <Image src={l} alt={l} onClick={handleSelect(l)} />
+            </Card>
+          ))}
+        </Flex>
+      </Box>
     </Layout>
   )
 }

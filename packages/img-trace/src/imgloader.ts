@@ -8,6 +8,9 @@ export class ImgLoader {
   constructor(options: Partial<ImgLoaderOption>) {
     this.corsenabled = options.corsenabled ?? true
   }
+
+  // TODO: improve types.
+  // if exists callback, return void. if not existed callback, return Promise<ImageData>.
   public fromUrl(
     url: string,
     callback?: (imgd: ImageData) => void
@@ -57,6 +60,8 @@ export class ImgLoader {
     }
   }
 
+  // TODO: improve types.
+  // if exists callback, return void. if not existed callback, return Promise<ImageData>.
   public fromImageElement(
     img: HTMLImageElement,
     callback?: (imgd: ImageData) => void
@@ -89,7 +94,7 @@ export class ImgLoader {
     if (callback) {
       load(callback)
     } else {
-      new Promise(load)
+      return new Promise(load)
     }
   }
 }
