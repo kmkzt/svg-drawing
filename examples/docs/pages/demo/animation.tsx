@@ -4,8 +4,8 @@ import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Slider, Input, Label } from '@rebass/forms/styled-components'
 import { Command, Point } from '@svg-drawing/core'
 import { SvgAnimation, FrameAnimation } from '@svg-drawing/animation'
-import Layout from '../components/Layout'
-import { example } from '../lib/example-svg'
+import Layout from '../../components/Layout'
+import { example } from '../../lib/example-svg'
 const size = 30
 const shake: FrameAnimation = (paths) => {
   const range = 5

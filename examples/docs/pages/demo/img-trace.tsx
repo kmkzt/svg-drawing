@@ -14,7 +14,7 @@ import {
   Blur,
   ImgLoader,
 } from '@svg-drawing/img-trace'
-import Layout from '../components/Layout'
+import Layout from '../../components/Layout'
 
 const IMAGE_LIST = [
   '/img_trace/cat.jpg',

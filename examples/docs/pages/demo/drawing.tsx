@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { useSvgDrawing } from '@svg-drawing/react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
-import Layout from '../components/Layout'
+import Layout from '../../components/Layout'
 
 const size = 30
 const colorList = [
