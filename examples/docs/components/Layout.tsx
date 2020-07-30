@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 const GlobalHeader = () => (
-  <Box bg="#fafafa" p="5px">
+  <Box bg="#fafafa" py="8px" px="16px">
     <Flex justifyContent="space-between">
       <Box width={3 / 10}>
         <Link href="/">
@@ -59,7 +59,9 @@ const GlobalHeader = () => (
     </Flex>
   </Box>
 )
-const Wrap = styled.div``
+const Wrap = styled.div`
+  padding: 12px 24px;
+`
 const Layout: React.SFC<{
   title?: string
 }> = ({ children, title = '' }) => {

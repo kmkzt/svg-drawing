@@ -50,7 +50,7 @@ new SvgDrawing(el)
 </script>
 ```
 
-[Here](https://github.com/kmkzt/svg-drawing/tree/master/examples/html) is an example for Html only.
+**[Here](https://github.com/kmkzt/svg-drawing/tree/master/examples/html)** is an example for Html only.
 
 ## Packages
 
