@@ -45,7 +45,8 @@ const MarkdownWrap = styled.div`
     padding: 4px 8px;
   }
 
-  a:link, a:visited {
+  a:link,
+  a:visited {
     color: #16f;
   }
   img {
