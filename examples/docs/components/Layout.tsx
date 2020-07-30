@@ -59,9 +59,7 @@ const GlobalHeader = () => (
     </Flex>
   </Box>
 )
-const Wrap = styled.div`
-  padding: 12px 24px;
-`
+
 const Layout: React.SFC<{
   title?: string
 }> = ({ children, title = '' }) => {
@@ -72,7 +70,9 @@ const Layout: React.SFC<{
       </Head>
       <GlobalStyle />
       <GlobalHeader />
-      <Wrap>{children}</Wrap>
+      <Box py="12px" px={['2vw', '2vw', '5vw']}>
+        {children}
+      </Box>
     </Fragment>
   )
 }

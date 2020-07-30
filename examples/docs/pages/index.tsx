@@ -48,6 +48,9 @@ const MarkdownWrap = styled.div`
   a:link {
     color: #16f;
   }
+  img {
+    max-width: 100%;
+  }
 `
 interface Props {
   content: any

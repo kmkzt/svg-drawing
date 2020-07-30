@@ -57,7 +57,6 @@ interface Props {
   isSp: boolean
 }
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
-  const [CANVAS_SIZE] = useState(isSp ? '98vw' : '49vw')
   const [rainbowPen, switchRainbowpen] = useState(false)
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
@@ -414,16 +413,16 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           )}
         </Flex>
       </Box>
-      <Box width={['100%', '50%', '50%']}>
+      <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
           ref={divRef}
           style={{
             backgroundImage: lattice(size),
             backgroundSize: `${size}px ${size}px`,
             border: '1px solid #333',
-            width: CANVAS_SIZE,
-            height: CANVAS_SIZE,
             margin: '0 auto 0 0',
+            width: '100%',
+            height: '100%',
           }}
         />
       </Box>

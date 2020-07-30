@@ -52,7 +52,7 @@ export default () => {
     numberOfColors: 8,
     colorQuantCycles: 3,
   })
-  const [blurOption] = useState({ radius: 20, delta: 0 })
+  // const [blurOption] = useState({ radius: 20, delta: 0 })
   const [traceOption] = useState({})
   const [imageUrl, setImageUrl] = useState(IMAGE_LIST[0])
   const [inputUrl, setInputUrl] = useState('')
@@ -105,36 +105,36 @@ export default () => {
     }
   }, [imageUrl, imageData, palettes, traceOption])
 
-  const blurImage = useCallback(async () => {
-    try {
-      const imgd =
-        imageData ||
-        (await new ImgLoader({ corsenabled: true }).fromUrl(imageUrl))
-      if (!imageData && imgd) {
-        setImageData(imgd)
-      }
-      if (!imgd) return
-      const blurImage = new Blur(blurOption).apply(imgd)
-      setImageData(blurImage)
-      if (canvasRef.current) {
-        canvasRef.current.width = blurImage.width
-        canvasRef.current.height = blurImage.height
+  // const blurImage = useCallback(async () => {
+  //   try {
+  //     const imgd =
+  //       imageData ||
+  //       (await new ImgLoader({ corsenabled: true }).fromUrl(imageUrl))
+  //     if (!imageData && imgd) {
+  //       setImageData(imgd)
+  //     }
+  //     if (!imgd) return
+  //     const blurImage = new Blur(blurOption).apply(imgd)
+  //     setImageData(blurImage)
+  //     if (canvasRef.current) {
+  //       canvasRef.current.width = blurImage.width
+  //       canvasRef.current.height = blurImage.height
 
-        const ctx = canvasRef.current.getContext('2d')
-        ctx?.putImageData(
-          blurImage,
-          0,
-          0,
-          0,
-          0,
-          blurImage.width,
-          blurImage.height
-        )
-      }
-    } catch (err) {
-      // throw err
-    }
-  }, [imageData, blurOption, imageUrl])
+  //       const ctx = canvasRef.current.getContext('2d')
+  //       ctx?.putImageData(
+  //         blurImage,
+  //         0,
+  //         0,
+  //         0,
+  //         0,
+  //         blurImage.width,
+  //         blurImage.height
+  //       )
+  //     }
+  //   } catch (err) {
+  //     // throw err
+  //   }
+  // }, [imageData, blurOption, imageUrl])
   const handleSelect = useCallback(
     (url: string) => () => {
       setImageUrl(url)
@@ -163,37 +163,13 @@ export default () => {
   return (
     <Layout>
       <Flex justifyContent="start" flexWrap="wrap">
-        <Box>
-          <Button onClick={blurImage}>Blur Image!</Button>
-          <Button variant="primary" onClick={traceImage}>
-            Image Trace!
-          </Button>
-          {svg && <Button onClick={handleDownload}>Download</Button>}
-          <Flex
-            justifyContent="start"
-            flexWrap="wrap"
-            style={{ maxHeight: '100vh' }}
-          >
-            <Box style={{ width: '256px', height: '256px' }}>
-              <img
-                style={{ maxWidth: '100%' }}
-                ref={imgRef}
-                crossOrigin="anonymous"
-                src={imageUrl}
-                alt=""
-              />
-            </Box>
-            <Box style={{ width: '256px', height: '256px' }}>
-              <canvas style={{ width: '100%' }} ref={canvasRef} />
-            </Box>
-            <div style={{ width: '256px', height: '256px' }} ref={renderRef} />
-          </Flex>
-        </Box>
-        <Box>
-          <Button mr={1} onClick={createPalette}>
+        <Box mb={3}>
+          <Button mr={2} mb={2} onClick={createPalette}>
             Load Image Palette!
           </Button>
-          <Button onClick={resetPalette}>GrayScale Palette!</Button>
+          <Button mr={2} mb={2} onClick={resetPalette}>
+            GrayScale Palette!
+          </Button>
           <Flex justifyContent="start" py="2px" px="0">
             {palettes
               .sort((p1: Rgba, p2: Rgba) =>
@@ -230,6 +206,40 @@ export default () => {
                   </div>
                 </div>
               ))}
+          </Flex>
+        </Box>
+        <Box mb={3}>
+          {/* <Button onClick={blurImage}>Blur Image!</Button> */}
+          <Button mr={2} mb={2} variant="secondary" onClick={traceImage}>
+            Image Trace!
+          </Button>
+          {svg && (
+            <Button mr={2} mb={2} onClick={handleDownload}>
+              Download
+            </Button>
+          )}
+          <Flex justifyContent="start" flexWrap="wrap">
+            <Box
+              width={['80vw', '80vw', '30vw']}
+              height={['80vw', '80vw', '30vw']}
+            >
+              <Image
+                width="100%"
+                ref={imgRef}
+                crossOrigin="anonymous"
+                src={imageUrl}
+                alt=""
+              />
+            </Box>
+            {/* <Box style={{ width: '256px', height: '256px' }}>
+              <canvas style={{ width: '100%' }} ref={canvasRef} />
+            </Box> */}
+            <Box
+              width={['80vw', '80vw', '30vw']}
+              height={['80vw', '80vw', '30vw']}
+            >
+              <div style={{ width: '100%', height: '100%' }} ref={renderRef} />
+            </Box>
           </Flex>
         </Box>
       </Flex>

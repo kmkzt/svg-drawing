@@ -80,11 +80,11 @@ export default {
     },
   },
   buttons: {
-    default: {
+    primary: {
       fontSize: 1,
       fontWeight: 'bold',
       color: 'background',
-      bg: 'secondary',
+      bg: 'primary',
       borderRadius: 'default',
     },
     outline: {
@@ -93,10 +93,10 @@ export default {
       bg: 'transparent',
       boxShadow: 'inset 0 0 2px',
     },
-    primary: {
+    secondary: {
       variant: 'buttons.default',
       color: 'background',
-      bg: 'primary',
+      bg: 'secondary',
     },
   },
   styles: {
