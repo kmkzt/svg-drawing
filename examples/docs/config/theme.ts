@@ -80,23 +80,23 @@ export default {
     },
   },
   buttons: {
-    primary: {
+    default: {
       fontSize: 1,
       fontWeight: 'bold',
       color: 'background',
-      bg: 'primary',
+      bg: 'secondary',
       borderRadius: 'default',
     },
     outline: {
-      variant: 'buttons.primary',
+      variant: 'buttons.default',
       color: 'primary',
       bg: 'transparent',
       boxShadow: 'inset 0 0 2px',
     },
-    secondary: {
-      variant: 'buttons.primary',
+    primary: {
+      variant: 'buttons.default',
       color: 'background',
-      bg: 'secondary',
+      bg: 'primary',
     },
   },
   styles: {

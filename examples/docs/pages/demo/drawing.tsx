@@ -367,10 +367,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       <Box as="fieldset">
         <Flex flexWrap="wrap" justifyContent="start">
           <Box mr={2}>
-            <Button variant="secondary" mr={1} mb={1} onClick={clickClear}>
+            <Button mr={1} mb={1} onClick={clickClear}>
               Clear
             </Button>
-            <Button variant="secondary" mr={1} mb={1} onClick={clickUndo}>
+            <Button mr={1} mb={1} onClick={clickUndo}>
               Undo
             </Button>
             <Button

@@ -169,7 +169,7 @@ const Top: NextPage<Props> = ({ isSp }) => {
         </Flex>
         <Flex flexWrap="wrap" justifyContent="start" mb={2}>
           <Box>
-            <Button variant="secondary" mr={1} mb={1} onClick={handleShake}>
+            <Button mr={1} mb={1} onClick={handleShake}>
               Shaking
             </Button>
             <Button
@@ -188,10 +188,10 @@ const Top: NextPage<Props> = ({ isSp }) => {
             >
               Colorful
             </Button>
-            <Button variant="secondary" mr={1} mb={1} onClick={handleStop}>
+            <Button mr={1} mb={1} onClick={handleStop}>
               Stop
             </Button>
-            <Button variant="secondary" mr={1} mb={1} onClick={handleRestore}>
+            <Button mr={1} mb={1} onClick={handleRestore}>
               Restore
             </Button>
             <Button
