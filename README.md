@@ -24,7 +24,7 @@ yarn add @svg-drawing/core
 ```javascript
 import { SvgDrawing } from '@svg-drawing/core'
 
-const drawel = document.createElement('div')
+const el = document.createElement('div')
 
 // Drawing area will be resized to fit the rendering area
 el.setAttribute(
