@@ -1,4 +1,5 @@
 import App from 'next/app'
+import { StrictMode } from 'react'
 import { ThemeProvider } from 'styled-components'
 import theme from '../config/theme'
 export default class MyApp extends App {
@@ -6,9 +7,11 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props
 
     return (
-      <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <StrictMode>
+        <ThemeProvider theme={theme}>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </StrictMode>
     )
   }
 }
