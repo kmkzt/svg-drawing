@@ -56,7 +56,7 @@
     "png.js": "0.2.1",
     "prettier": "2.0.5",
     "rimraf": "3.0.2",
-    "rollup": "2.23.0",
+    "rollup": "2.23.1",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-size-snapshot": "0.12.0",
     "rollup-plugin-sourcemaps": "0.6.2",
