@@ -2,12 +2,12 @@
 
 [![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](https://www.npmjs.com/package/svg-drawing) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/core.svg)](https://www.npmjs.com/package/svg-drawing) [![codecov](https://codecov.io/gh/kmkzt/svg-drawing/branch/master/graph/badge.svg)](https://codecov.io/gh/kmkzt/svg-drawing)
 
-![svg animation image](https://raw.githubusercontent.com/kmkzt/svg-drawing/master/logo.svg)
+![svg animation image](./logo.svg)
 
 `svg-drawing` is svg based drawing library.
 
 This is a **[demo](https://kmkzt.github.io/svg-drawing/demo/drawing)**.
-Code is [here](https://github.com/kmkzt/svg-drawing/tree/master/examples/docs/pages/demo).
+Code is [here](./examples/docs/pages/demo).
 
 This project has moved to monorepo. If you want to use the previous version, please use [here](https://github.com/kmkzt/svg-drawing/tree/v3.0.0).
 
@@ -50,13 +50,13 @@ new SvgDrawing(el)
 </script>
 ```
 
-**[Here](https://github.com/kmkzt/svg-drawing/tree/master/examples/html)** is an example for Html only.
+**[Here](./examples/html)** is an example for Html only.
 
 ## Packages
 
-| Packages                                                                                                                   | Description                                                                |
-| -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [@svg-drawing/core![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](https://github.com/kmkzt/svg-drawing/tree/master/packages/core)                | Core Module                                                                |
-| [@svg-drawing/animation![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg)](https://github.com/kmkzt/svg-drawing/tree/master/packages/animation) | Animate the drawn Svg. Can be animations using `JavaScript` or `<animate>` |
-| [@svg-drawing/img-trace![npm version](https://img.shields.io/npm/v/@svg-drawing/img-trace/latest.svg)](https://github.com/kmkzt/svg-drawing/tree/master/packages/img-trace) | Image(png/jpg) convert Svg.                                                |
-| [@svg-drawing/react![npm version](https://img.shields.io/npm/v/@svg-drawing/react/latest.svg)](https://github.com/kmkzt/svg-drawing/tree/master/packages/react)             | For React.                                                                 |
+| Packages                                                                                                                     | Description                                                                |
+| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [@svg-drawing/core![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](./packages/core)                | Core Module                                                                |
+| [@svg-drawing/animation![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg)](./packages/animation) | Animate the drawn Svg. Can be animations using `JavaScript` or `<animate>` |
+| [@svg-drawing/img-trace![npm version](https://img.shields.io/npm/v/@svg-drawing/img-trace/latest.svg)](./packages/img-trace) | Image(png/jpg) convert Svg.                                                |
+| [@svg-drawing/react![npm version](https://img.shields.io/npm/v/@svg-drawing/react/latest.svg)](./packages/react)             | For React.                                                                 |

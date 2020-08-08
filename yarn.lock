@@ -10847,6 +10847,13 @@ regjsparser@^0.6.4:
   dependencies:
     jsesc "~0.5.0"
 
+remark-basepath@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/remark-basepath/-/remark-basepath-1.0.1.tgz#aaa6b72822151d9b9df9d204cc7a0769aada107f"
+  integrity sha512-qqkefFDtSnL8wZt5VtRk1cMkaM3WYgjToGvN0O98kceEtzAx98FNepM7rxN2N6AXGuyYXL7ThvdBiDiTikVkwg==
+  dependencies:
+    unist-util-visit-parents "3.1.0"
+
 remark-highlight.js@6.0.0:
   version "6.0.0"
   resolved "https://registry.npmjs.org/remark-highlight.js/-/remark-highlight.js-6.0.0.tgz#cb05387ddddeb078f0b61ce6299f6323f05098fc"
@@ -12602,7 +12609,7 @@ unist-util-stringify-position@^2.0.0:
   dependencies:
     "@types/unist" "^2.0.2"
 
-unist-util-visit-parents@^3.0.0:
+unist-util-visit-parents@3.1.0, unist-util-visit-parents@^3.0.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/unist-util-visit-parents/-/unist-util-visit-parents-3.1.0.tgz#4dd262fb9dcfe44f297d53e882fc6ff3421173d5"
   integrity sha512-0g4wbluTF93npyPrp/ymd3tCDTMnP0yo2akFD2FIBAYXq/Sga3lwaU1D8OYKbtpioaI6CkDcQ6fsMnmtzt7htw==
