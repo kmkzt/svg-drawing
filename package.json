@@ -48,7 +48,7 @@
     "eslint-plugin-jsx-a11y": "6.3.1",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-react": "7.20.6",
-    "eslint-plugin-react-hooks": "4.1.1",
+    "eslint-plugin-react-hooks": "4.1.2",
     "jest": "26.4.2",
     "lerna": "3.22.1",
     "lerna-changelog": "1.0.1",
