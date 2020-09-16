@@ -30,7 +30,7 @@
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "9.0.0",
     "@rollup/plugin-replace": "2.3.3",
-    "@types/jest": "26.0.13",
+    "@types/jest": "26.0.14",
     "@types/node": "12.12.59",
     "@types/react": "16.9.49",
     "@types/react-dom": "16.9.8",
