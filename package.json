@@ -31,7 +31,7 @@
     "@rollup/plugin-node-resolve": "9.0.0",
     "@rollup/plugin-replace": "2.3.3",
     "@types/jest": "26.0.15",
-    "@types/node": "12.12.69",
+    "@types/node": "12.12.70",
     "@types/react": "16.9.53",
     "@types/react-dom": "16.9.8",
     "@typescript-eslint/eslint-plugin": "4.1.1",
