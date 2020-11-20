@@ -33,7 +33,7 @@
     "@types/jest": "26.0.15",
     "@types/node": "12.12.70",
     "@types/react": "16.9.56",
-    "@types/react-dom": "16.9.9",
+    "@types/react-dom": "16.9.10",
     "@typescript-eslint/eslint-plugin": "4.1.1",
     "@typescript-eslint/parser": "4.1.1",
     "@typescript-eslint/typescript-estree": "4.1.1",
