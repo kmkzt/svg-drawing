@@ -67,14 +67,17 @@ export class SvgDrawing extends Renderer {
     this.on()
   }
 
-  public clear(): void {
+  public clear(): Path[] {
+    const paths = this.paths
     this.paths = []
     this.update()
+    return paths
   }
 
-  public undo(): void {
-    this.paths.pop()
+  public undo(): Path | undefined {
+    const path = this.paths.pop()
     this.update()
+    return path
   }
 
   public changeDelay(delay: number): void {
