@@ -138,7 +138,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   }, [])
   const handleDownloadAnimation = useCallback(() => {
     if (!animationRef.current) return
-    animationRef.current.downloadAnimation()
+    animationRef.current.download()
   }, [])
   return (
     <Layout>
