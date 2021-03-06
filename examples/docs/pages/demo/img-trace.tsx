@@ -34,7 +34,7 @@ const IMAGE_LIST = [
   '/img_trace/tanuki.jpg',
 ].map((url) =>
   // For gh-pages
-  process.env.NODE_ENV === 'production' ? `/svg-drawing${url}` : url
+  process.env.IS_GH_PAGE === 'true' ? `/svg-drawing${url}` : url
 )
 
 const GRAYSCALE_PALETTE = [
