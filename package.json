@@ -8,6 +8,7 @@
   "scripts": {
     "clean": "lerna clean; rimraf ./coverage ./packages/**/{lib,dist,node_modules}; yarn cache clean",
     "build": "lerna run build",
+    "build:gh-page": "IS_GH_PAGE=true yarn workspace @svg-drawing-example/docs build",
     "dev": "yarn build; concurrently yarn:dev:{main,tsc}",
     "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",
     "dev:tsc": "yarn lerna run dev:tsc --concurrency 1 --parallel --stream",
@@ -41,6 +42,7 @@
     "babel-plugin-annotate-pure-calls": "0.4.0",
     "babel-plugin-transform-react-remove-prop-types": "0.4.24",
     "concurrently": "5.3.0",
+    "cross-env": "7.0.3",
     "eslint": "7.21.0",
     "eslint-config-prettier": "6.15.0",
     "eslint-loader": "4.0.2",
