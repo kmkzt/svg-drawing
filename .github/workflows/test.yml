@@ -34,6 +34,7 @@ jobs:
         run: |
           yarn install --frozen-lockfile
           yarn build
+          yarn build:gh-page
           yarn lint
           yarn typecheck
           yarn test

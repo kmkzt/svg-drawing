@@ -1,8 +1,10 @@
 const isProd = process.env.NODE_ENV === 'production'
+const isGhPages = process.env.IS_GH_PAGE === 'true'
+
 module.exports = {
   // For gh-pages
-  basePath: isProd ? '/svg-drawing' : '',
-  assetPrefix: isProd ? '/svg-drawing' : '',
+  basePath: isGhPages ? '/svg-drawing' : '',
+  assetPrefix: isGhPages ? '/svg-drawing' : '',
   webpack(config, { dev }) {
     if (dev) {
       config.module.rules.push({
