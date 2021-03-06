@@ -113,7 +113,7 @@ export class SvgAnimation {
     }
   }
 
-  public toAnimationElement(): SVGSVGElement {
+  public toElement(): SVGSVGElement {
     // If the animation is stopped, read the currently displayed Svg data.
     // If stopped in the middle, SVG in that state is displayed
     if (!this._stop) {
@@ -216,9 +216,9 @@ export class SvgAnimation {
    * @param filename
    * TODO: Support gif and apng
    */
-  public downloadAnimation(filename?: string): void {
+  public download(filename?: string): void {
     download({
-      data: svg2base64(this.toAnimationElement().outerHTML),
+      data: svg2base64(this.toElement().outerHTML),
       extension: 'svg',
       filename,
     })

@@ -47,7 +47,7 @@ describe('animation.ts', () => {
         return update
       }
       svg.setAnimation(testAnimation)
-      expect(svg.toAnimationElement()).toMatchSnapshot()
+      expect(svg.toElement()).toMatchSnapshot()
     })
 
     it('setAnimation, start, stop', async () => {
