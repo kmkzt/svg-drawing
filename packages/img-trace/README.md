@@ -64,7 +64,7 @@ import {
 const renderer = new Renderer(document.getElementById('render-area'))
 const handleImage = (imgd) => {
   const svg = new ImgTrace().load(imgd)
-  renderer.copy(svg)
+  renderer.svg.copy(svg)
   renderer.update()
 }
 

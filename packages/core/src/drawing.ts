@@ -13,7 +13,7 @@ export interface DrawingOption extends RendererOption {
   fill?: string
 }
 
-export class SvgDrawing extends Renderer {
+export class SvgDrawing {
   public penColor: string
   public penWidth: number
   public fill: string
@@ -21,6 +21,7 @@ export class SvgDrawing extends Renderer {
   public close: boolean
   public delay: number
   public bezier: BezierCurve
+  public renderer: Renderer
   private _drawPath: Path | null
   private _drawMoveThrottle: this['drawMove']
   private _listenerOption: ReturnType<typeof getPassiveOptions>
@@ -39,15 +40,15 @@ export class SvgDrawing extends Renderer {
       ...rendOpt
     }: DrawingOption = {}
   ) {
-    super(el, { ...rendOpt })
     /**
      * Setup parameter
      */
+    this.renderer = new Renderer(el, { ...rendOpt })
     this.penColor = penColor ?? '#000'
     this.penWidth = penWidth ?? 1
     this.curve = curve ?? true
     this.close = close ?? false
-    this.delay = delay ?? 20
+    this.delay = delay ?? 0
     this.fill = fill ?? 'none'
     this.bezier = new BezierCurve()
     this._drawPath = null
@@ -68,15 +69,15 @@ export class SvgDrawing extends Renderer {
   }
 
   public clear(): Path[] {
-    const paths = this.paths
-    this.paths = []
-    this.update()
+    const paths = this.renderer.svg.paths
+    this.renderer.svg.paths = []
+    this.renderer.update()
     return paths
   }
 
   public undo(): Path | undefined {
-    const path = this.paths.pop()
-    this.update()
+    const path = this.renderer.svg.paths.pop()
+    this.renderer.update()
     return path
   }
 
@@ -113,12 +114,12 @@ export class SvgDrawing extends Renderer {
   public drawStart(): void {
     if (this._drawPath) return
     this._drawPath = this._createDrawPath()
-    this.addPath(this._drawPath)
+    this.renderer.svg.addPath(this._drawPath)
   }
 
   public drawMove(x: number, y: number): void {
     if (!this._drawPath) return
-    const po: [number, number] = [x - this.left, y - this.top]
+    const po: [number, number] = [x - this.renderer.left, y - this.renderer.top]
     this._addDrawPoint(po)
     if (
       (this._drawPath.attrs.strokeWidth &&
@@ -127,9 +128,9 @@ export class SvgDrawing extends Renderer {
     ) {
       this._drawPath = this._createDrawPath()
       this._addDrawPoint(po)
-      this.addPath(this._drawPath)
+      this.renderer.svg.addPath(this._drawPath)
     }
-    this.update()
+    this.renderer.update()
   }
 
   public drawEnd(): void {
@@ -137,9 +138,12 @@ export class SvgDrawing extends Renderer {
       this._drawPath.commands.push(new Command(COMMAND_TYPE.CLOSE))
     }
     this._drawPath = null
-    this.update()
+    this.renderer.update()
   }
 
+  private get _el(): HTMLElement {
+    return this.renderer.el
+  }
   private _addDrawPoint(po: [number, number]) {
     if (!this._drawPath) return
     const commands = this._drawPath.commands
@@ -174,7 +178,7 @@ export class SvgDrawing extends Renderer {
   }
 
   private _createDrawPath(): Path {
-    this.resizeElement()
+    this.renderer.resizeElement()
     return new Path({
       stroke: this.penColor,
       strokeWidth: String(this.penWidth),
@@ -209,22 +213,22 @@ export class SvgDrawing extends Renderer {
    * Drawing PointerEvent
    */
   private _setupPointEventListener(): void {
-    this.el.addEventListener(
+    this._el.addEventListener(
       'pointerdown',
       this._handleStart,
       this._listenerOption
     )
-    this.el.addEventListener(
+    this._el.addEventListener(
       'pointermove',
       this._handleDraw,
       this._listenerOption
     )
-    this.el.addEventListener(
+    this._el.addEventListener(
       'pointerleave',
       this._handleEnd,
       this._listenerOption
     )
-    this.el.addEventListener(
+    this._el.addEventListener(
       'pointercancel',
       this._handleEnd,
       this._listenerOption
@@ -232,10 +236,10 @@ export class SvgDrawing extends Renderer {
     window.addEventListener('pointerup', this._handleEnd, this._listenerOption)
 
     this._clearPointListener = () => {
-      this.el.removeEventListener('pointerdown', this._handleStart)
-      this.el.removeEventListener('pointermove', this._handleDraw)
-      this.el.removeEventListener('pointerleave', this._handleEnd)
-      this.el.addEventListener('pointercancel', this._handleEnd)
+      this._el.removeEventListener('pointerdown', this._handleStart)
+      this._el.removeEventListener('pointermove', this._handleDraw)
+      this._el.removeEventListener('pointerleave', this._handleEnd)
+      this._el.addEventListener('pointercancel', this._handleEnd)
       window.removeEventListener('pointerup', this._handleEnd)
     }
   }
@@ -243,29 +247,29 @@ export class SvgDrawing extends Renderer {
    * Drawing MouseEvent
    */
   private _setupMouseEventListener(): void {
-    this.el.addEventListener(
+    this._el.addEventListener(
       'mousedown',
       this._handleStart,
       this._listenerOption
     )
-    this.el.addEventListener(
+    this._el.addEventListener(
       'mousemove',
       this._handleDraw,
       this._listenerOption
     )
-    this.el.addEventListener(
+    this._el.addEventListener(
       'mouseleave',
       this._handleEnd,
       this._listenerOption
     )
-    this.el.addEventListener('mouseout', this._handleEnd, this._listenerOption)
+    this._el.addEventListener('mouseout', this._handleEnd, this._listenerOption)
     window.addEventListener('mouseup', this._handleEnd, this._listenerOption)
 
     this._clearMouseListener = () => {
-      this.el.removeEventListener('mousedown', this._handleStart)
-      this.el.removeEventListener('mousemove', this._handleDraw)
-      this.el.removeEventListener('mouseleave', this._handleEnd)
-      this.el.removeEventListener('mouseout', this._handleEnd)
+      this._el.removeEventListener('mousedown', this._handleStart)
+      this._el.removeEventListener('mousemove', this._handleDraw)
+      this._el.removeEventListener('mouseleave', this._handleEnd)
+      this._el.removeEventListener('mouseout', this._handleEnd)
       window.removeEventListener('mouseup', this._handleEnd)
     }
   }
@@ -274,26 +278,26 @@ export class SvgDrawing extends Renderer {
    * Drawing TouchEvent
    */
   private _setupTouchEventListener(): void {
-    this.el.addEventListener(
+    this._el.addEventListener(
       'touchstart',
       this._handleStart,
       this._listenerOption
     )
-    this.el.addEventListener(
+    this._el.addEventListener(
       'touchmove',
       this._handleDrawForTouch,
       this._listenerOption
     )
-    this.el.addEventListener('touchend', this._handleEnd, this._listenerOption)
+    this._el.addEventListener('touchend', this._handleEnd, this._listenerOption)
     window.addEventListener(
       'touchcancel',
       this._handleEnd,
       this._listenerOption
     )
     this._clearTouchListener = () => {
-      this.el.removeEventListener('touchstart', this._handleStart)
-      this.el.removeEventListener('touchmove', this._handleDrawForTouch)
-      this.el.removeEventListener('touchend', this._handleEnd)
+      this._el.removeEventListener('touchstart', this._handleStart)
+      this._el.removeEventListener('touchmove', this._handleDrawForTouch)
+      this._el.removeEventListener('touchend', this._handleEnd)
       window.removeEventListener('touchcancel', this._handleEnd)
     }
   }

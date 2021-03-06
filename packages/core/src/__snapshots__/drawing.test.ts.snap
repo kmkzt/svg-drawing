@@ -68,70 +68,20 @@ exports[`drawing.ts SvgDrawing default 1`] = `
 `;
 
 exports[`drawing.ts SvgDrawing undo() 1`] = `
-SvgDrawing {
-  "_clearMouseListener": [Function],
-  "_clearPointListener": null,
-  "_clearTouchListener": null,
-  "_drawMoveThrottle": [Function],
-  "_drawPath": null,
-  "_handleDraw": [Function],
-  "_handleDrawForTouch": [Function],
-  "_handleEnd": [Function],
-  "_handleStart": [Function],
-  "_listenerOption": Object {
-    "passive": false,
-  },
-  "background": undefined,
-  "bezier": BezierCurve {
-    "ratio": 0.2,
-  },
-  "close": false,
-  "curve": true,
-  "delay": 20,
-  "el": <div>
-    <svg
-      height="0"
-      version="1.1"
-      width="0"
-      xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-    >
-      <path
-        d="M NaN NaN"
-        fill="none"
-        stroke="#000"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="NaN"
-      />
-    </svg>
-  </div>,
-  "fill": "none",
-  "height": 0,
-  "left": 0,
-  "paths": Array [
-    Path {
-      "attrs": Object {
-        "fill": "none",
-        "stroke": "#000",
-        "strokeLinecap": "round",
-        "strokeLinejoin": "round",
-        "strokeWidth": "NaN",
-      },
-      "commands": Array [
-        Command {
-          "type": "M",
-          "value": Array [
-            NaN,
-            NaN,
-          ],
-        },
-      ],
-    },
-  ],
-  "penColor": "#000",
-  "penWidth": 1,
-  "top": 0,
-  "width": 0,
-}
+<svg
+  height="0"
+  version="1.1"
+  width="0"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <path
+    d="M NaN NaN"
+    fill="none"
+    stroke="#000"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="NaN"
+  />
+</svg>
 `;

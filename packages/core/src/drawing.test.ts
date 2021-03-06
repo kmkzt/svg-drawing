@@ -10,7 +10,7 @@ describe('drawing.ts', () => {
       draw.drawMove(2, 1)
       draw.drawMove(3, 0)
       draw.drawEnd()
-      expect(draw.toElement()).toMatchSnapshot()
+      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
     })
     it('close', () => {
       const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
@@ -21,7 +21,7 @@ describe('drawing.ts', () => {
       draw.drawMove(2, 1)
       draw.drawMove(3, 0)
       draw.drawEnd()
-      expect(draw.toElement()).toMatchSnapshot()
+      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
     })
     it('curve = false', () => {
       const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
@@ -32,7 +32,7 @@ describe('drawing.ts', () => {
       draw.drawMove(2, 1)
       draw.drawMove(3, 0)
       draw.drawEnd()
-      expect(draw.toElement()).toMatchSnapshot()
+      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
     })
     it('clear()', () => {
       const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
@@ -41,7 +41,7 @@ describe('drawing.ts', () => {
       draw.drawMove(0, 0)
       draw.drawEnd()
       draw.clear()
-      expect(draw.toElement()).toMatchSnapshot()
+      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
     })
 
     /**
@@ -56,7 +56,7 @@ describe('drawing.ts', () => {
       draw.drawMove(0, 0)
       draw.drawEnd()
       draw.undo()
-      expect(draw).toMatchSnapshot()
+      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
     })
   })
 })

@@ -1,3 +1,4 @@
+import { assert } from 'console'
 import { SvgAnimation, FrameAnimation } from './animation'
 
 const defaultTestData = `<svg width="200" height="200">
@@ -8,9 +9,9 @@ const defaultTestData = `<svg width="200" height="200">
 describe('animation.ts', () => {
   describe('SvgAnimation', () => {
     const generateAniamtion = (svgStr = defaultTestData) => {
-      const svg = new SvgAnimation(document.createElement('div'))
-      svg.parseSVGString(svgStr)
-      return svg
+      const anim = new SvgAnimation(document.createElement('div'))
+      anim.renderer.svg.parseSVGString(svgStr)
+      return anim
     }
     it('init', () => {
       expect(generateAniamtion()).toMatchSnapshot()
@@ -49,7 +50,7 @@ describe('animation.ts', () => {
       expect(svg.toAnimationElement()).toMatchSnapshot()
     })
 
-    it('setAnimation, start, stop', () => {
+    it('setAnimation, start, stop', async () => {
       const svg = generateAniamtion()
       let loop = 0
       svg.setAnimation(
