@@ -1,0 +1,15 @@
+{
+  "extends": ["@kmkzt"],
+  "packageRules": [
+    // For monorepo config
+    {
+      "matchPaths": [
+        "examples/**/package.json",
+        "packages/**/package.json"
+      ],
+      "extends": [
+        "@kmkzt"
+      ]
+    }
+  ]
+}
