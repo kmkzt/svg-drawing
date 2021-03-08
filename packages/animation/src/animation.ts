@@ -10,12 +10,13 @@ import {
   createSvgChildElement,
 } from '@svg-drawing/core'
 
-export interface AnimationOption extends RendererOption {
+export type AnimationOption = RendererOption & {
   ms: number
 }
 export type FrameAnimation = (origin: Path[], loopIndex?: number) => Path[]
 
-export class SvgAnimation extends Renderer {
+export class SvgAnimation {
+  public renderer: Renderer
   public ms: number
   private _stopId: number
   private _stop: (() => void) | null
@@ -32,7 +33,7 @@ export class SvgAnimation extends Renderer {
     el: HTMLElement,
     { background, ms }: AnimationOption = { ms: 60 }
   ) {
-    super(el, { background })
+    this.renderer = new Renderer(el, { background })
     this.ms = ms
     this._stop = null
     this._anim = null
@@ -70,12 +71,12 @@ export class SvgAnimation extends Renderer {
   }
 
   public restore(): void {
-    this.paths = this._restorePaths
-    this.update()
+    this.renderer.svg.paths = this._restorePaths
+    this.renderer.update()
   }
 
   public generateFrame(index?: number): Path[] {
-    if (!this._anim) return this.paths
+    if (!this._anim) return this.renderer.svg.paths
     return this._anim(
       this._restorePaths.map((p) => p.clone()),
       index
@@ -99,8 +100,8 @@ export class SvgAnimation extends Renderer {
       }
       if (!start || timestamp - start > ms) {
         start = timestamp
-        this.paths = this.generateFrame(index)
-        this.update()
+        this.renderer.svg.paths = this.generateFrame(index)
+        this.renderer.update()
         index = index > loopCount ? 0 : index + 1
       }
       this._stopId = requestAnimationFrame(frame)
@@ -112,7 +113,7 @@ export class SvgAnimation extends Renderer {
     }
   }
 
-  public toAnimationElement(): SVGSVGElement {
+  public toElement(): SVGSVGElement {
     // If the animation is stopped, read the currently displayed Svg data.
     // If stopped in the middle, SVG in that state is displayed
     if (!this._stop) {
@@ -190,12 +191,23 @@ export class SvgAnimation extends Renderer {
       return pEl
     })
 
-    const size = { width: String(this.width), height: String(this.height) }
-    const bgEl = this.background
-      ? [createSvgChildElement('rect', { ...size, fill: this.background })]
+    const size = {
+      width: String(this.renderer.svg.width),
+      height: String(this.renderer.svg.height),
+    }
+    const bgEl = this.renderer.svg.background
+      ? [
+          createSvgChildElement('rect', {
+            ...size,
+            fill: this.renderer.svg.background,
+          }),
+        ]
       : []
     return createSvgElement(
-      { width: String(this.width), height: String(this.height) },
+      {
+        width: String(this.renderer.svg.width),
+        height: String(this.renderer.svg.height),
+      },
       bgEl.concat(animEls)
     )
   }
@@ -204,9 +216,9 @@ export class SvgAnimation extends Renderer {
    * @param filename
    * TODO: Support gif and apng
    */
-  public downloadAnimation(filename?: string): void {
+  public download(filename?: string): void {
     download({
-      data: svg2base64(this.toAnimationElement().outerHTML),
+      data: svg2base64(this.toElement().outerHTML),
       extension: 'svg',
       filename,
     })
@@ -223,7 +235,7 @@ export class SvgAnimation extends Renderer {
   }
 
   private _registerRestorePaths() {
-    this._restorePaths = this.clonePaths().map((p, i) => {
+    this._restorePaths = this.renderer.svg.clonePaths().map((p, i) => {
       p.attrs.id = `t${i}`
       return p
     })

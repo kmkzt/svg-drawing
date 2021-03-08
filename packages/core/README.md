@@ -56,16 +56,16 @@ draw.clear()
 draw.undo()
 
 // Download image. Also available in SvgAnimation, Renderer
-draw.download('svg')
-draw.download('jpg')
-draw.download('png')
+draw.renderer.svg.download('svg')
+draw.renderer.svg.download('jpg')
+draw.renderer.svg.download('png')
 
 // Load svg data. Only the path element.
 // SVG exported by this library can be read.
-draw.parseSVGString(
+draw.renderer.svg.parseSVGString(
   '<svg width="200" height="200"><path fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path></svg>'
 )
-draw.parseSVGElement(document.getElementByID('loadSVG'))
+draw.renderer.svg.parseSVGElement(document.getElementByID('loadSVG'))
 ```
 
 ### CDN

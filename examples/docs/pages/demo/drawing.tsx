@@ -204,8 +204,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         if (type === 'data:image/svg+xml;base64') {
           const svgxml = atob(data)
           if (!draw.instance) return
-          draw.instance.parseSVGString(svgxml)
-          draw.instance.update()
+          draw.instance.renderer.svg.parseSVGString(svgxml)
+          draw.instance.renderer.update()
         }
       }
       if (!e.target?.files) return

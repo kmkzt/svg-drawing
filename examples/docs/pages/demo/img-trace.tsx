@@ -20,7 +20,7 @@ import {
   ImgTrace,
   Rgba,
   Palette,
-  Blur,
+  // Blur,
   ImgLoader,
 } from '@svg-drawing/img-trace'
 import Layout from '../../components/Layout'
@@ -98,7 +98,7 @@ export default () => {
       if (trace.palettes) setPalettes(trace.palettes)
       if (!renderRef.current) return
       const render = new Renderer(renderRef.current)
-      render.copy(svg)
+      render.svg.copy(svg)
       render.update()
     } catch (err) {
       // throw err

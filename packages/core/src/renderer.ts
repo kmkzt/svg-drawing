@@ -1,20 +1,21 @@
 import { Svg, SvgOption } from './svg'
 
 export type RendererOption = Omit<SvgOption, 'width' | 'height'>
-export class Renderer extends Svg {
+export class Renderer {
   public el: HTMLElement
   public top: number
   public left: number
+  public svg: Svg
   constructor(el: HTMLElement, opt: RendererOption = {}) {
     const { width, height, left, top } = el.getBoundingClientRect()
-    super({ width, height, ...opt })
     /**
      * Setup parameter
      */
     this.el = el
     this.left = left
     this.top = top
-    el.appendChild(this.toElement())
+    this.svg = new Svg({ width, height, ...opt })
+    el.appendChild(this.svg.toElement())
     this._setupAdjustResize()
   }
   /**
@@ -22,16 +23,16 @@ export class Renderer extends Svg {
    * TODO: XSS test
    */
   public update(): void {
-    this.el.replaceChild(this.toElement(), this.el.childNodes[0])
+    this.el.replaceChild(this.svg.toElement(), this.el.childNodes[0])
   }
 
   public resizeElement(param?: DOMRect): void {
     const { width, height, left, top } =
       param || this.el.getBoundingClientRect()
     // TODO: Resizing improve
-    this.scalePath(width / this.width)
-    this.width = width
-    this.height = height
+    this.svg.scalePath(width / this.svg.width)
+    this.svg.width = width
+    this.svg.height = height
     this.left = left
     this.top = top
   }
