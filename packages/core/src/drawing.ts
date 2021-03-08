@@ -4,7 +4,7 @@ import { BezierCurve } from './bezier'
 import { throttle } from './throttle'
 import { getPassiveOptions } from './shared/getPassiveOptions'
 
-export interface DrawingOption extends RendererOption {
+export type DrawingOption = RendererOption & {
   penColor?: string
   penWidth?: number
   close?: boolean

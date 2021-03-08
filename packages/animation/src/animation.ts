@@ -10,7 +10,7 @@ import {
   createSvgChildElement,
 } from '@svg-drawing/core'
 
-export interface AnimationOption extends RendererOption {
+export type AnimationOption = RendererOption & {
   ms: number
 }
 export type FrameAnimation = (origin: Path[], loopIndex?: number) => Path[]
