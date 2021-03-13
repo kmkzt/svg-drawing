@@ -98,8 +98,7 @@ export default () => {
       if (trace.palettes) setPalettes(trace.palettes)
       if (!renderRef.current) return
       const render = new Renderer(renderRef.current)
-      render.svg.copy(svg)
-      render.update()
+      render.update(svg.toJson())
     } catch (err) {
       // throw err
     }

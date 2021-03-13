@@ -150,6 +150,7 @@ export class ResizeHandler {
 
   public off() {
     this._clearEventList.map((fn) => fn())
+    this._clearEventList = []
   }
   public on() {
     this.off()

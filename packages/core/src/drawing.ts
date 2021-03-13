@@ -1,9 +1,10 @@
 import { Renderer } from './renderer'
-import { Path, Point, Command, COMMAND_TYPE } from './svg'
+import { Path, Point, Command, COMMAND_TYPE, Svg } from './svg'
 import { BezierCurve } from './bezier'
 import { throttle } from './throttle'
 import { DrawHandler, ResizeHandler } from './handler'
 import { DrawingOption, ResizeHandlerCallback } from './types'
+import { isAlmostSameNumber } from './shared/isAlmostSame'
 
 export class SvgDrawing {
   /**
@@ -18,6 +19,7 @@ export class SvgDrawing {
   /**
    * Module
    */
+  public svg: Svg
   public bezier: BezierCurve
   public renderer: Renderer
   public drawHandler: DrawHandler
@@ -25,6 +27,8 @@ export class SvgDrawing {
   /**
    * Private property
    */
+  private _left: number
+  private _top: number
   private _drawPath: Path | null
   private _drawMoveThrottle: this['drawMove']
   constructor(
@@ -36,7 +40,7 @@ export class SvgDrawing {
       close,
       delay,
       fill,
-      ...rendOpt
+      background,
     }: DrawingOption = {}
   ) {
     /**
@@ -51,11 +55,18 @@ export class SvgDrawing {
     /**
      * Setup property
      */
+    const { width, height, left, top } = el.getBoundingClientRect()
     this._drawPath = null
+    this._left = left
+    this._top = top
+    /**
+     * Setup Svg
+     */
+    this.svg = new Svg({ width, height, background })
     /**
      * Setup Renderer
      */
-    this.renderer = new Renderer(el, { ...rendOpt })
+    this.renderer = new Renderer(el, { background })
     /**
      * Setup BezierCurve
      */
@@ -85,16 +96,19 @@ export class SvgDrawing {
     this.on()
   }
 
+  public update() {
+    this.renderer.update(this.svg.toJson())
+  }
   public clear(): Path[] {
-    const paths = this.renderer.svg.paths
-    this.renderer.svg.paths = []
-    this.renderer.update()
+    const paths = this.svg.paths
+    this.svg.paths = []
+    this.update()
     return paths
   }
 
   public undo(): Path | undefined {
-    const path = this.renderer.svg.paths.pop()
-    this.renderer.update()
+    const path = this.svg.paths.pop()
+    this.update()
     return path
   }
 
@@ -117,12 +131,12 @@ export class SvgDrawing {
   public drawStart(): void {
     if (this._drawPath) return
     this._drawPath = this._createDrawPath()
-    this.renderer.svg.addPath(this._drawPath)
+    this.svg.addPath(this._drawPath)
   }
 
   public drawMove(x: number, y: number): void {
     if (!this._drawPath) return
-    const po: [number, number] = [x - this.renderer.left, y - this.renderer.top]
+    const po: [number, number] = [x - this._left, y - this._top]
     this._addDrawPoint(po)
     if (
       (this._drawPath.attrs.strokeWidth &&
@@ -131,9 +145,9 @@ export class SvgDrawing {
     ) {
       this._drawPath = this._createDrawPath()
       this._addDrawPoint(po)
-      this.renderer.svg.addPath(this._drawPath)
+      this.svg.addPath(this._drawPath)
     }
-    this.renderer.update()
+    this.update()
   }
 
   public drawEnd(): void {
@@ -141,7 +155,7 @@ export class SvgDrawing {
       this._drawPath.commands.push(new Command(COMMAND_TYPE.CLOSE))
     }
     this._drawPath = null
-    this.renderer.update()
+    this.update()
   }
 
   private _addDrawPoint(po: [number, number]) {
@@ -178,7 +192,7 @@ export class SvgDrawing {
   }
 
   private _createDrawPath(): Path {
-    this.renderer.resizeElement()
+    this._resize(this.el.getBoundingClientRect())
     return new Path({
       stroke: this.penColor,
       strokeWidth: String(this.penWidth),
@@ -188,8 +202,22 @@ export class SvgDrawing {
     })
   }
 
-  private _resize(rect: Parameters<ResizeHandlerCallback['resize']>[0]) {
-    this.renderer.resizeElement(rect)
-    this.renderer.update()
+  /**
+   * TODO: improve check scale path
+   */
+  private _resize({
+    top,
+    left,
+    width,
+    height,
+  }: Parameters<ResizeHandlerCallback['resize']>[0]) {
+    if (!isAlmostSameNumber(this._left, left)) this._left = left
+    if (!isAlmostSameNumber(this._top, top)) this._top = top
+    if (!isAlmostSameNumber(this.svg.height, height)) this.svg.height = height
+    if (!isAlmostSameNumber(this.svg.width, width)) {
+      this.svg.scalePath(width / this.svg.width)
+      this.svg.width = width
+      this.update()
+    }
   }
 }

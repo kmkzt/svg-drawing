@@ -5,7 +5,7 @@ import React, {
   MutableRefObject,
   RefObject,
 } from 'react'
-import { SvgDrawing, DrawingOption, Svg } from '@svg-drawing/core'
+import { SvgDrawing, DrawingOption, Svg, Renderer } from '@svg-drawing/core'
 
 interface UseSvgDrawing {
   instance: RefObject<SvgDrawing | null>
@@ -27,11 +27,12 @@ export const useSvgDrawing = (
   const drawingRef = useRef<SvgDrawing | null>(null)
   const getSvgXML = useCallback(() => {
     if (!drawingRef.current) return null
-    return drawingRef.current.renderer.svg.toElement().outerHTML
+    return Renderer.svgObjectToElement(drawingRef.current.svg.toJson())
+      .outerHTML
   }, [])
   const download = useCallback((...[ext, opt]: Parameters<Svg['download']>) => {
     if (!drawingRef.current) return
-    drawingRef.current.renderer.svg.download(ext ?? 'svg', opt)
+    Renderer.download(drawingRef.current.svg.toJson(), ext ?? 'svg', opt)
   }, [])
   const changePenColor = useCallback((param: DrawingOption['penColor']) => {
     if (!drawingRef.current || !param) return

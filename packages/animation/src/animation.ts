@@ -8,6 +8,7 @@ import {
   svg2base64,
   createSvgElement,
   createSvgChildElement,
+  Svg,
 } from '@svg-drawing/core'
 
 export type AnimationOption = RendererOption & {
@@ -16,14 +17,23 @@ export type AnimationOption = RendererOption & {
 export type FrameAnimation = (origin: Path[], loopIndex?: number) => Path[]
 
 export class SvgAnimation {
-  public renderer: Renderer
+  /**
+   * Options
+   */
   public ms: number
+  /**
+   * Private prorperty
+   */
   private _stopId: number
   private _stop: (() => void) | null
   private _anim: FrameAnimation | null
   private _restorePaths: Path[]
   private _framesNumber: number | undefined
-
+  /**
+   * Modules
+   */
+  public svg: Svg
+  public renderer: Renderer
   /**d
    * Releation animate element
    * TODO: add easing option
@@ -33,6 +43,8 @@ export class SvgAnimation {
     el: HTMLElement,
     { background, ms }: AnimationOption = { ms: 60 }
   ) {
+    const { width, height } = el.getBoundingClientRect()
+    this.svg = new Svg({ width, height, background })
     this.renderer = new Renderer(el, { background })
     this.ms = ms
     this._stop = null
@@ -71,12 +83,12 @@ export class SvgAnimation {
   }
 
   public restore(): void {
-    this.renderer.svg.paths = this._restorePaths
-    this.renderer.update()
+    this.svg.paths = this._restorePaths
+    this.renderer.update(this.svg.toJson())
   }
 
   public generateFrame(index?: number): Path[] {
-    if (!this._anim) return this.renderer.svg.paths
+    if (!this._anim) return this.svg.paths
     return this._anim(
       this._restorePaths.map((p) => p.clone()),
       index
@@ -100,8 +112,8 @@ export class SvgAnimation {
       }
       if (!start || timestamp - start > ms) {
         start = timestamp
-        this.renderer.svg.paths = this.generateFrame(index)
-        this.renderer.update()
+        this.svg.paths = this.generateFrame(index)
+        this.update()
         index = index > loopCount ? 0 : index + 1
       }
       this._stopId = requestAnimationFrame(frame)
@@ -111,6 +123,10 @@ export class SvgAnimation {
       cancelAnimationFrame(this._stopId)
       this._stop = null
     }
+  }
+
+  public update() {
+    this.renderer.update(this.svg.toJson())
   }
 
   public toElement(): SVGSVGElement {
@@ -192,21 +208,21 @@ export class SvgAnimation {
     })
 
     const size = {
-      width: String(this.renderer.svg.width),
-      height: String(this.renderer.svg.height),
+      width: String(this.svg.width),
+      height: String(this.svg.height),
     }
-    const bgEl = this.renderer.svg.background
+    const bgEl = this.svg.background
       ? [
           createSvgChildElement('rect', {
             ...size,
-            fill: this.renderer.svg.background,
+            fill: this.svg.background,
           }),
         ]
       : []
     return createSvgElement(
       {
-        width: String(this.renderer.svg.width),
-        height: String(this.renderer.svg.height),
+        width: String(this.svg.width),
+        height: String(this.svg.height),
       },
       bgEl.concat(animEls)
     )
@@ -235,7 +251,7 @@ export class SvgAnimation {
   }
 
   private _registerRestorePaths() {
-    this._restorePaths = this.renderer.svg.clonePaths().map((p, i) => {
+    this._restorePaths = this.svg.clonePaths().map((p, i) => {
       p.attrs.id = `t${i}`
       return p
     })

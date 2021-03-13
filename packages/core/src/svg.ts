@@ -1,12 +1,5 @@
 import { roundUp } from './shared/roundUp'
-import { camel2kebab } from './shared/camel2kebab'
 import { kebab2camel } from './shared/kebab2camel'
-import { svg2base64 } from './shared/svg2base64'
-import {
-  createSvgElement,
-  createSvgChildElement,
-} from './shared/createSvgElement'
-import { download } from './shared/download'
 import { PathObject, SvgObject, SvgOption } from './types'
 
 const isNaN = (num: number) => num !== num
@@ -244,22 +237,6 @@ export class Path {
       d: this.getCommandString(),
     }
   }
-  public toElement(): SVGElement {
-    const attrs = Object.entries(this.attrs).reduce(
-      (acc, [key, val], _i) =>
-        val
-          ? {
-              ...acc,
-              [camel2kebab(key)]: val,
-            }
-          : acc,
-      {}
-    )
-    return createSvgChildElement('path', {
-      ...attrs,
-      d: this.getCommandString(),
-    })
-  }
 
   public clone(): Path {
     const path = new Path(this.attrs)
@@ -327,21 +304,6 @@ export class Svg {
     return this
   }
 
-  public toElement(): SVGSVGElement {
-    const size = { width: String(this.width), height: String(this.height) }
-    const bgEl = this.background
-      ? [createSvgChildElement('rect', { ...size, fill: this.background })]
-      : []
-
-    return createSvgElement(
-      { width: String(this.width), height: String(this.height) },
-      bgEl.concat(this.paths.map((p) => p.toElement()))
-    )
-  }
-  public toBase64(): string {
-    return svg2base64(this.toElement().outerHTML)
-  }
-
   public parseSVGString(svgStr: string): this {
     const svgEl: SVGSVGElement | null = new DOMParser()
       .parseFromString(svgStr, 'image/svg+xml')
@@ -367,40 +329,5 @@ export class Svg {
       this.scalePath(this.width / width)
     }
     return this
-  }
-
-  // TODO: Add filename config
-  public download(
-    ext: 'svg' | 'png' | 'jpg' = 'svg',
-    cb: typeof download = download
-  ): void {
-    if (ext === 'svg') {
-      cb({
-        data: this.toBase64(),
-        extension: 'svg',
-      })
-      return
-    }
-
-    const img: any = new Image()
-    const renderCanvas = () => {
-      const canvas = document.createElement('canvas')
-      canvas.setAttribute('width', String(this.width))
-      canvas.setAttribute('height', String(this.height))
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-      if (this.background || ext === 'jpg') {
-        ctx.fillStyle = this.background || '#fff'
-        ctx.fillRect(0, 0, this.width, this.height)
-      }
-      ctx.drawImage(img, 0, 0)
-      if (ext === 'png') {
-        cb({ data: canvas.toDataURL('image/png'), extension: 'png' })
-      } else {
-        cb({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
-      }
-    }
-    img.addEventListener('load', renderCanvas, false)
-    img.src = this.toBase64()
   }
 }

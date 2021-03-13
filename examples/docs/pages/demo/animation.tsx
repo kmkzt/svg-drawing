@@ -88,7 +88,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
     })
 
     // SET EXAMPLE
-    animationRef.current.renderer.svg.parseSVGString(example)
+    animationRef.current.svg.parseSVGString(example)
     handleDrawingAnimation()
   })
 
@@ -100,8 +100,8 @@ const Animation: NextPage<Props> = ({ isSp }) => {
       if (type === 'data:image/svg+xml;base64') {
         const svgxml = atob(data)
         if (!animationRef.current) return
-        animationRef.current.renderer.svg.parseSVGString(svgxml)
-        animationRef.current.renderer.update()
+        animationRef.current.svg.parseSVGString(svgxml)
+        animationRef.current.update()
       }
     }
     if (!e.target?.files) return
