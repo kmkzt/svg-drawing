@@ -1,7 +1,7 @@
-import { DrawingEventHandler } from './types'
+import { DrawHandlerCallback, ResizeHandlerCallback } from './types'
 import { getPassiveOptions } from './shared/getPassiveOptions'
 
-export class Handler {
+export class DrawHandler {
   /**
    * Remove EventList
    */
@@ -13,19 +13,17 @@ export class Handler {
   /**
    * EventHandler
    */
-  private _el: HTMLElement
-  public end: DrawingEventHandler['end']
-  public start: DrawingEventHandler['start']
-  public move: DrawingEventHandler['move']
-  public resize: DrawingEventHandler['resize']
+  public end: DrawHandlerCallback['end']
+  public start: DrawHandlerCallback['start']
+  public move: DrawHandlerCallback['move']
+  public resize: DrawHandlerCallback['resize']
   constructor(
-    el: HTMLElement,
-    { end, start, move, resize }: DrawingEventHandler
+    private _el: HTMLElement,
+    { end, start, move, resize }: DrawHandlerCallback
   ) {
     /**
      * Bind property from arguments.
      */
-    this._el = el
     this.end = end
     this.start = start
     this.move = move
@@ -177,5 +175,45 @@ export class Handler {
       this._el.removeEventListener('touchend', this._handleEnd)
       window.removeEventListener('touchcancel', this._handleEnd)
     })
+  }
+}
+
+export class ResizeHandler {
+  /**
+   * Remove EventList
+   */
+  private _clearEventList: Array<() => void>
+  public resize: ResizeHandlerCallback['resize']
+  constructor(private _el: HTMLElement, { resize }: ResizeHandlerCallback) {
+    this.resize = resize
+    this._clearEventList = []
+  }
+
+  public off() {
+    this._clearEventList.map((fn) => fn())
+  }
+  public on() {
+    this.off()
+    this._setupListerner()
+  }
+
+  private _setupListerner(): void {
+    if ((window as any).ResizeObserver) {
+      const resizeObserver: any = new (window as any).ResizeObserver(
+        ([entry]: any[]) => {
+          this.resize(entry.contentRect)
+        }
+      )
+      resizeObserver.observe(this._el)
+      this._clearEventList.push(() => resizeObserver.disconnect())
+    } else {
+      const handleResizeEvent = () => {
+        this.resize(this._el.getBoundingClientRect())
+      }
+      window.addEventListener('resize', handleResizeEvent)
+      this._clearEventList.push(() =>
+        window.removeEventListener('resize', handleResizeEvent)
+      )
+    }
   }
 }

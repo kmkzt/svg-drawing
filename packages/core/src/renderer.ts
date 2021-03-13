@@ -16,7 +16,6 @@ export class Renderer {
     this.top = top
     this.svg = new Svg({ width, height, ...opt })
     el.appendChild(this.svg.toElement())
-    this._setupAdjustResize()
   }
   /**
    * render
@@ -26,7 +25,11 @@ export class Renderer {
     this.el.replaceChild(this.svg.toElement(), this.el.childNodes[0])
   }
 
-  public resizeElement(param?: DOMRect): void {
+  public resizeElement(
+    param?:
+      | DOMRect
+      | { width: number; height: number; top: number; left: number }
+  ): void {
     const { width, height, left, top } =
       param || this.el.getBoundingClientRect()
     // TODO: Resizing improve
@@ -35,23 +38,5 @@ export class Renderer {
     this.svg.height = height
     this.left = left
     this.top = top
-  }
-
-  private _setupAdjustResize(): void {
-    if ((window as any).ResizeObserver) {
-      const resizeObserver: any = new (window as any).ResizeObserver(
-        (entries: any[]) => {
-          this.resizeElement(entries[0].contentRect)
-          this.update()
-        }
-      )
-      resizeObserver.observe(this.el)
-    } else {
-      // TODO: improve
-      window.addEventListener('resize', (_ev) => {
-        this.resizeElement(this.el.getBoundingClientRect())
-        this.update()
-      })
-    }
   }
 }

@@ -2,7 +2,8 @@ import { Renderer, RendererOption } from './renderer'
 import { Path, Point, Command, COMMAND_TYPE } from './svg'
 import { BezierCurve } from './bezier'
 import { throttle } from './throttle'
-import { Handler } from './handler'
+import { DrawHandler, ResizeHandler } from './handler'
+import { ResizeHandlerCallback } from './types'
 
 export type DrawingOption = RendererOption & {
   penColor?: string
@@ -14,15 +15,25 @@ export type DrawingOption = RendererOption & {
 }
 
 export class SvgDrawing {
+  /**
+   * Draw Option
+   */
   public penColor: string
   public penWidth: number
   public fill: string
   public curve: boolean
   public close: boolean
   public delay: number
+  /**
+   * Module
+   */
   public bezier: BezierCurve
   public renderer: Renderer
-  public handler: Handler
+  public drawHandler: DrawHandler
+  public resizeHandler: ResizeHandler
+  /**
+   * Private property
+   */
   private _drawPath: Path | null
   private _drawMoveThrottle: this['drawMove']
   constructor(
@@ -51,18 +62,6 @@ export class SvgDrawing {
      */
     this._drawPath = null
     /**
-     * Setup EventHandler
-     */
-    this.drawStart = this.drawStart.bind(this)
-    this.drawMove = this.drawMove.bind(this)
-    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
-    this.drawEnd = this.drawEnd.bind(this)
-    this.handler = new Handler(el, {
-      start: this.drawStart,
-      move: this._drawMoveThrottle,
-      end: this.drawEnd,
-    })
-    /**
      * Setup Renderer
      */
     this.renderer = new Renderer(el, { ...rendOpt })
@@ -70,6 +69,25 @@ export class SvgDrawing {
      * Setup BezierCurve
      */
     this.bezier = new BezierCurve()
+    /**
+     * Setup ResizeHandler
+     */
+    this._resize = this._resize.bind(this)
+    this.resizeHandler = new ResizeHandler(el, {
+      resize: this._resize,
+    })
+    /**
+     * Setup EventDrawHandler
+     */
+    this.drawStart = this.drawStart.bind(this)
+    this.drawMove = this.drawMove.bind(this)
+    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
+    this.drawEnd = this.drawEnd.bind(this)
+    this.drawHandler = new DrawHandler(el, {
+      start: this.drawStart,
+      move: this._drawMoveThrottle,
+      end: this.drawEnd,
+    })
     /**
      * Start exec
      */
@@ -91,16 +109,18 @@ export class SvgDrawing {
 
   public changeDelay(delay: number): void {
     this.delay = delay
-    this.handler.move = throttle(this.drawMove, this.delay)
-    this.handler.on()
+    this.drawHandler.move = throttle(this.drawMove, this.delay)
+    this.drawHandler.on()
   }
 
   public on(): void {
-    this.handler.on()
+    this.drawHandler.on()
+    this.resizeHandler.on()
   }
 
   public off(): void {
-    this.handler.off()
+    this.drawHandler.off()
+    this.resizeHandler.off()
   }
 
   public drawStart(): void {
@@ -178,5 +198,10 @@ export class SvgDrawing {
       strokeLinecap: this.curve ? 'round' : 'mitter',
       strokeLinejoin: this.curve ? 'round' : 'square',
     })
+  }
+
+  private _resize(rect: Parameters<ResizeHandlerCallback['resize']>[0]) {
+    this.renderer.resizeElement(rect)
+    this.renderer.update()
   }
 }
