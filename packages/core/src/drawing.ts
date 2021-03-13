@@ -2,7 +2,7 @@ import { Renderer, RendererOption } from './renderer'
 import { Path, Point, Command, COMMAND_TYPE } from './svg'
 import { BezierCurve } from './bezier'
 import { throttle } from './throttle'
-import { getPassiveOptions } from './shared/getPassiveOptions'
+import { Handler } from './handler'
 
 export type DrawingOption = RendererOption & {
   penColor?: string
@@ -22,12 +22,9 @@ export class SvgDrawing {
   public delay: number
   public bezier: BezierCurve
   public renderer: Renderer
+  public handler: Handler
   private _drawPath: Path | null
   private _drawMoveThrottle: this['drawMove']
-  private _listenerOption: ReturnType<typeof getPassiveOptions>
-  private _clearPointListener: (() => void) | null
-  private _clearMouseListener: (() => void) | null
-  private _clearTouchListener: (() => void) | null
   constructor(
     el: HTMLElement,
     {
@@ -41,30 +38,41 @@ export class SvgDrawing {
     }: DrawingOption = {}
   ) {
     /**
-     * Setup parameter
+     * Setup Config
      */
-    this.renderer = new Renderer(el, { ...rendOpt })
     this.penColor = penColor ?? '#000'
     this.penWidth = penWidth ?? 1
     this.curve = curve ?? true
     this.close = close ?? false
     this.delay = delay ?? 0
     this.fill = fill ?? 'none'
-    this.bezier = new BezierCurve()
-    this._drawPath = null
-    this._listenerOption = getPassiveOptions(false)
-    this._clearPointListener = null
-    this._clearMouseListener = null
-    this._clearTouchListener = null
-
     /**
-     * Setup listener
+     * Setup property
      */
-    this._handleStart = this._handleStart.bind(this)
-    this._handleDraw = this._handleDraw.bind(this)
-    this._handleDrawForTouch = this._handleDrawForTouch.bind(this)
-    this._handleEnd = this._handleEnd.bind(this)
+    this._drawPath = null
+    /**
+     * Setup EventHandler
+     */
+    this.drawStart = this.drawStart.bind(this)
+    this.drawMove = this.drawMove.bind(this)
     this._drawMoveThrottle = throttle(this.drawMove, this.delay)
+    this.drawEnd = this.drawEnd.bind(this)
+    this.handler = new Handler(el, {
+      start: this.drawStart,
+      move: this._drawMoveThrottle,
+      end: this.drawEnd,
+    })
+    /**
+     * Setup Renderer
+     */
+    this.renderer = new Renderer(el, { ...rendOpt })
+    /**
+     * Setup BezierCurve
+     */
+    this.bezier = new BezierCurve()
+    /**
+     * Start exec
+     */
     this.on()
   }
 
@@ -83,32 +91,16 @@ export class SvgDrawing {
 
   public changeDelay(delay: number): void {
     this.delay = delay
-    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
+    this.handler.move = throttle(this.drawMove, this.delay)
+    this.handler.on()
   }
 
   public on(): void {
-    this.off()
-
-    if (window.PointerEvent) {
-      this._setupPointEventListener()
-    } else {
-      this._setupMouseEventListener()
-    }
-    if ('ontouchstart' in window) {
-      this._setupTouchEventListener()
-    }
+    this.handler.on()
   }
 
   public off(): void {
-    ;[
-      this._clearPointListener,
-      this._clearMouseListener,
-      this._clearTouchListener,
-    ].map((clear) => {
-      if (!clear) return
-      clear()
-      clear = null
-    })
+    this.handler.off()
   }
 
   public drawStart(): void {
@@ -186,119 +178,5 @@ export class SvgDrawing {
       strokeLinecap: this.curve ? 'round' : 'mitter',
       strokeLinejoin: this.curve ? 'round' : 'square',
     })
-  }
-
-  private _handleStart(ev: TouchEvent | MouseEvent | PointerEvent) {
-    ev.preventDefault()
-    this.drawStart()
-  }
-
-  private _handleEnd(ev: TouchEvent | MouseEvent | PointerEvent) {
-    ev.preventDefault()
-    this.drawEnd()
-  }
-
-  private _handleDrawForTouch(ev: TouchEvent) {
-    ev.preventDefault()
-    const touch = ev.touches[0]
-    this._drawMoveThrottle(touch.clientX, touch.clientY)
-  }
-
-  private _handleDraw(ev: MouseEvent | PointerEvent) {
-    ev.preventDefault()
-    this._drawMoveThrottle(ev.clientX, ev.clientY)
-  }
-
-  /**
-   * Drawing PointerEvent
-   */
-  private _setupPointEventListener(): void {
-    this._el.addEventListener(
-      'pointerdown',
-      this._handleStart,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'pointermove',
-      this._handleDraw,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'pointerleave',
-      this._handleEnd,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'pointercancel',
-      this._handleEnd,
-      this._listenerOption
-    )
-    window.addEventListener('pointerup', this._handleEnd, this._listenerOption)
-
-    this._clearPointListener = () => {
-      this._el.removeEventListener('pointerdown', this._handleStart)
-      this._el.removeEventListener('pointermove', this._handleDraw)
-      this._el.removeEventListener('pointerleave', this._handleEnd)
-      this._el.addEventListener('pointercancel', this._handleEnd)
-      window.removeEventListener('pointerup', this._handleEnd)
-    }
-  }
-  /**
-   * Drawing MouseEvent
-   */
-  private _setupMouseEventListener(): void {
-    this._el.addEventListener(
-      'mousedown',
-      this._handleStart,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'mousemove',
-      this._handleDraw,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'mouseleave',
-      this._handleEnd,
-      this._listenerOption
-    )
-    this._el.addEventListener('mouseout', this._handleEnd, this._listenerOption)
-    window.addEventListener('mouseup', this._handleEnd, this._listenerOption)
-
-    this._clearMouseListener = () => {
-      this._el.removeEventListener('mousedown', this._handleStart)
-      this._el.removeEventListener('mousemove', this._handleDraw)
-      this._el.removeEventListener('mouseleave', this._handleEnd)
-      this._el.removeEventListener('mouseout', this._handleEnd)
-      window.removeEventListener('mouseup', this._handleEnd)
-    }
-  }
-
-  /**
-   * Drawing TouchEvent
-   */
-  private _setupTouchEventListener(): void {
-    this._el.addEventListener(
-      'touchstart',
-      this._handleStart,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'touchmove',
-      this._handleDrawForTouch,
-      this._listenerOption
-    )
-    this._el.addEventListener('touchend', this._handleEnd, this._listenerOption)
-    window.addEventListener(
-      'touchcancel',
-      this._handleEnd,
-      this._listenerOption
-    )
-    this._clearTouchListener = () => {
-      this._el.removeEventListener('touchstart', this._handleStart)
-      this._el.removeEventListener('touchmove', this._handleDrawForTouch)
-      this._el.removeEventListener('touchend', this._handleEnd)
-      window.removeEventListener('touchcancel', this._handleEnd)
-    }
   }
 }
