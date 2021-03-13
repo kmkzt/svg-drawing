@@ -1,5 +1,31 @@
-import { DrawHandlerCallback, ResizeHandlerCallback } from './types'
+import {
+  DrawHandlerCallback,
+  ResizeHandlerCallback,
+  ListenerMaps,
+  DrawType,
+} from './types'
 import { getPassiveOptions } from './shared/getPassiveOptions'
+
+const listenerMaps: ListenerMaps = {
+  pointer: {
+    start: ['pointerdown'],
+    move: ['pointermove'],
+    end: ['pointerleave', 'pointercancel'],
+    frameout: ['pointerup'],
+  },
+  touch: {
+    start: ['touchstart'],
+    move: ['touchmove'],
+    end: ['touchend'],
+    frameout: ['touchcancel'],
+  },
+  mouse: {
+    start: ['mousedown'],
+    move: ['mousemove'],
+    end: ['mouseleave', 'mouseout'],
+    frameout: ['mouseup'],
+  },
+}
 
 export class DrawHandler {
   /**
@@ -16,10 +42,9 @@ export class DrawHandler {
   public end: DrawHandlerCallback['end']
   public start: DrawHandlerCallback['start']
   public move: DrawHandlerCallback['move']
-  public resize: DrawHandlerCallback['resize']
   constructor(
     private _el: HTMLElement,
-    { end, start, move, resize }: DrawHandlerCallback
+    { end, start, move }: DrawHandlerCallback
   ) {
     /**
      * Bind property from arguments.
@@ -27,14 +52,13 @@ export class DrawHandler {
     this.end = end
     this.start = start
     this.move = move
-    this.resize = resize
     /**
      * Setup property.
      */
     this._clearEventList = []
     this._listenerOption = getPassiveOptions(false)
     /**
-     * Setup methods
+     * Bind mthods
      */
     this._handleStart = this._handleStart.bind(this)
     this._handleMove = this._handleMove.bind(this)
@@ -56,14 +80,15 @@ export class DrawHandler {
     this.off()
 
     if (window.PointerEvent) {
-      this._setupPointEventListener()
+      this._setupListener('pointer')
     } else {
-      this._setupMouseEventListener()
+      this._setupListener('mouse')
     }
     if ('ontouchstart' in window) {
-      this._setupTouchEventListener()
+      this._setupListener('touch')
     }
   }
+
   private _handleStart(ev: TouchEvent | MouseEvent | PointerEvent) {
     ev.preventDefault()
     this.start()
@@ -84,97 +109,31 @@ export class DrawHandler {
     }
   }
 
-  /**
-   * Drawing PointerEvent
-   */
-  private _setupPointEventListener(): void {
-    this._el.addEventListener(
-      'pointerdown',
-      this._handleStart,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'pointermove',
-      this._handleMove,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'pointerleave',
-      this._handleEnd,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'pointercancel',
-      this._handleEnd,
-      this._listenerOption
-    )
-    window.addEventListener('pointerup', this._handleEnd, this._listenerOption)
-
-    this._clearEventList.push(() => {
-      this._el.removeEventListener('pointerdown', this._handleStart)
-      this._el.removeEventListener('pointermove', this._handleMove)
-      this._el.removeEventListener('pointerleave', this._handleEnd)
-      this._el.addEventListener('pointercancel', this._handleEnd)
-      window.removeEventListener('pointerup', this._handleEnd)
+  private _setupListener(type: DrawType): void {
+    const { start, move, end, frameout } = listenerMaps[type]
+    const startClear = start.map((evname): (() => void) => {
+      this._el.addEventListener(evname, this._handleStart, this._listenerOption)
+      return () => this._el.removeEventListener(evname, this._handleStart)
     })
-  }
-  /**
-   * Drawing MouseEvent
-   */
-  private _setupMouseEventListener(): void {
-    this._el.addEventListener(
-      'mousedown',
-      this._handleStart,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'mousemove',
-      this._handleMove,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'mouseleave',
-      this._handleEnd,
-      this._listenerOption
-    )
-    this._el.addEventListener('mouseout', this._handleEnd, this._listenerOption)
-    window.addEventListener('mouseup', this._handleEnd, this._listenerOption)
-
-    this._clearEventList.push(() => {
-      this._el.removeEventListener('mousedown', this._handleStart)
-      this._el.removeEventListener('mousemove', this._handleMove)
-      this._el.removeEventListener('mouseleave', this._handleEnd)
-      this._el.removeEventListener('mouseout', this._handleEnd)
-      window.removeEventListener('mouseup', this._handleEnd)
+    const moveClear = move.map((evname): (() => void) => {
+      this._el.addEventListener(evname, this._handleMove, this._listenerOption)
+      return () => this._el.removeEventListener(evname, this._handleMove)
     })
-  }
-
-  /**
-   * Drawing TouchEvent
-   */
-  private _setupTouchEventListener(): void {
-    this._el.addEventListener(
-      'touchstart',
-      this._handleStart,
-      this._listenerOption
-    )
-    this._el.addEventListener(
-      'touchmove',
-      this._handleMove,
-      this._listenerOption
-    )
-    this._el.addEventListener('touchend', this._handleEnd, this._listenerOption)
-    window.addEventListener(
-      'touchcancel',
-      this._handleEnd,
-      this._listenerOption
-    )
-    this._clearEventList.push(() => {
-      this._el.removeEventListener('touchstart', this._handleStart)
-      this._el.removeEventListener('touchmove', this._handleMove)
-      this._el.removeEventListener('touchend', this._handleEnd)
-      window.removeEventListener('touchcancel', this._handleEnd)
+    const endClear = end.map((evname): (() => void) => {
+      this._el.addEventListener(evname, this._handleEnd, this._listenerOption)
+      return () => this._el.removeEventListener(evname, this._handleEnd)
     })
+    const frameoutClear = frameout.map((evname): (() => void) => {
+      window.addEventListener(evname, this._handleEnd, this._listenerOption)
+      return () => window.removeEventListener(evname, this._handleEnd)
+    })
+    this._clearEventList = [
+      ...this._clearEventList,
+      ...startClear,
+      ...moveClear,
+      ...endClear,
+      ...frameoutClear,
+    ]
   }
 }
 
