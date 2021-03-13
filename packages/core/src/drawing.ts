@@ -37,7 +37,7 @@ export class SvgDrawing {
   private _drawPath: Path | null
   private _drawMoveThrottle: this['drawMove']
   constructor(
-    el: HTMLElement,
+    public el: HTMLElement,
     {
       penColor,
       penWidth,
@@ -153,9 +153,6 @@ export class SvgDrawing {
     this.renderer.update()
   }
 
-  private get _el(): HTMLElement {
-    return this.renderer.el
-  }
   private _addDrawPoint(po: [number, number]) {
     if (!this._drawPath) return
     const commands = this._drawPath.commands
