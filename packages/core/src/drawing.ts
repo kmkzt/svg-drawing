@@ -1,18 +1,9 @@
-import { Renderer, RendererOption } from './renderer'
+import { Renderer } from './renderer'
 import { Path, Point, Command, COMMAND_TYPE } from './svg'
 import { BezierCurve } from './bezier'
 import { throttle } from './throttle'
 import { DrawHandler, ResizeHandler } from './handler'
-import { ResizeHandlerCallback } from './types'
-
-export type DrawingOption = RendererOption & {
-  penColor?: string
-  penWidth?: number
-  close?: boolean
-  curve?: boolean
-  delay?: number
-  fill?: string
-}
+import { DrawingOption, ResizeHandlerCallback } from './types'
 
 export class SvgDrawing {
   /**

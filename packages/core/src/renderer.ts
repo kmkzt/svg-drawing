@@ -1,6 +1,6 @@
-import { Svg, SvgOption } from './svg'
+import { Svg } from './svg'
+import { RendererOption } from './types'
 
-export type RendererOption = Omit<SvgOption, 'width' | 'height'>
 export class Renderer {
   public el: HTMLElement
   public top: number

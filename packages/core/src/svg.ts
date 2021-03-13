@@ -7,6 +7,7 @@ import {
   createSvgChildElement,
 } from './shared/createSvgElement'
 import { download } from './shared/download'
+import { PathObject, SvgObject, SvgOption } from './types'
 
 const isNaN = (num: number) => num !== num
 
@@ -63,13 +64,13 @@ export const COMMAND_TYPE = {
   QUADRATIC_CURVE_RELATIVE: 'q', // q 10 60 10 30
 } as const
 
-type COMMAND = typeof COMMAND_TYPE[keyof typeof COMMAND_TYPE]
+type CommandType = typeof COMMAND_TYPE[keyof typeof COMMAND_TYPE]
 // TODO: compatible COMMAND_TYPE
 export class Command {
-  public type: COMMAND
+  public type: CommandType
   public value: number[]
   // TODO: Convert data format to number array.
-  constructor(type: COMMAND, value: number[] = []) {
+  constructor(type: CommandType, value: number[] = []) {
     this.value = value
     this.type = type
   }
@@ -152,11 +153,6 @@ export class Vector {
   }
 }
 
-// TODO: improve key types
-export interface PathObject {
-  [key: string]: string | undefined
-}
-
 /**
  * TODO: refactor command.
  * The following commands are not supported. Cannot support commands that use `M` or` z` more than once
@@ -197,10 +193,10 @@ export class Path {
   // TODO: Valid Command type
   public parseCommandString(d: string): void {
     this.commands = []
-    let type: COMMAND | null = null
+    let type: CommandType | null = null
     let value: number[] = []
     const c = d.split(' ')
-    const checkType = (c: any): COMMAND | null =>
+    const checkType = (c: any): CommandType | null =>
       Object.values(COMMAND_TYPE).includes(c) ? c : null
     for (let i = 0; i < c.length; i += 1) {
       const t = checkType(c[i])
@@ -272,19 +268,6 @@ export class Path {
     })
     return path
   }
-}
-
-export interface SvgOption {
-  width: number
-  height: number
-  background?: string
-}
-
-export interface SvgObject {
-  width: number
-  height: number
-  background?: string
-  paths: PathObject[]
 }
 export class Svg {
   public paths: Path[]

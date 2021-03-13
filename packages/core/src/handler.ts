@@ -2,7 +2,7 @@ import {
   DrawHandlerCallback,
   ResizeHandlerCallback,
   ListenerMaps,
-  DrawType,
+  DrawListenerType,
 } from './types'
 import { getPassiveOptions } from './shared/getPassiveOptions'
 
@@ -109,7 +109,7 @@ export class DrawHandler {
     }
   }
 
-  private _setupListener(type: DrawType): void {
+  private _setupListener(type: DrawListenerType): void {
     const { start, move, end, frameout } = listenerMaps[type]
     const startClear = start.map((evname): (() => void) => {
       this._el.addEventListener(evname, this._handleStart, this._listenerOption)
