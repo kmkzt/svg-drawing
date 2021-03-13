@@ -1,8 +1,14 @@
-import React, { useRef, useEffect, useCallback, MutableRefObject } from 'react'
+import React, {
+  useRef,
+  useEffect,
+  useCallback,
+  MutableRefObject,
+  RefObject,
+} from 'react'
 import { SvgDrawing, DrawingOption, Svg } from '@svg-drawing/core'
 
 interface UseSvgDrawing {
-  instance: SvgDrawing | null
+  instance: RefObject<SvgDrawing | null>
   clear: () => void
   undo: () => void
   changePenColor: (penColor: DrawingOption['penColor']) => void
@@ -70,7 +76,7 @@ export const useSvgDrawing = (
   return [
     renderRef,
     {
-      instance: drawingRef.current,
+      instance: drawingRef,
       changePenWidth,
       changePenColor,
       changeFill,
