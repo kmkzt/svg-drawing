@@ -6,6 +6,7 @@ import { DrawHandler, ResizeHandler } from './handler'
 import { DrawingOption, ResizeHandlerCallback } from './types'
 import { isAlmostSameNumber } from './shared/isAlmostSame'
 
+type PointTuple = [number, number]
 export class SvgDrawing {
   /**
    * Draw Option
@@ -28,6 +29,7 @@ export class SvgDrawing {
    * Private property
    */
   private _drawPath: Path | null
+  private _drawPoints: PointTuple[]
   private _drawMoveThrottle: this['drawMove']
   constructor(
     public el: HTMLElement,
@@ -55,6 +57,7 @@ export class SvgDrawing {
      */
     const { width, height } = el.getBoundingClientRect()
     this._drawPath = null
+    this._drawPoints = []
     /**
      * Setup Svg
      */
@@ -154,41 +157,56 @@ export class SvgDrawing {
     this.update()
   }
 
-  private _addDrawPoint(po: [number, number]) {
+  private _addDrawPoint(p4: PointTuple) {
     if (!this._drawPath) return
+    const points = this._drawPoints
     const commands = this._drawPath.commands
-    if (
-      commands.length === 0 ||
-      commands[commands.length - 1].type === COMMAND_TYPE.CLOSE
-    ) {
-      commands.push(new Command(COMMAND_TYPE.MOVE, po))
+    this._drawPoints.push(p4)
+    /**
+     * commands.length < 2 -> Line
+     */
+    if (!this.curve || points.length < 3) {
+      commands.push(
+        new Command(
+          commands.length === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE,
+          p4
+        )
+      )
       return
     }
 
-    if (!this.curve || commands.length < 2) {
-      commands.push(new Command(COMMAND_TYPE.LINE, po))
-      return
-    }
+    const p1: PointTuple | undefined = points[points.length - 4]
+    const p2 = points[points.length - 3]
+    const p3 = points[points.length - 2]
 
-    const p1 =
-      commands.length === 2
-        ? commands[commands.length - 2].point
-        : commands[commands.length - 3].point
-    const p2 = commands[commands.length - 2].point
-    const p3 = commands[commands.length - 1].point
+    /**
+     * commands.length < 2 is not arrow
+     * commands.length === 3 -> [P2, P2, P3, P4]
+     * commands.length > 3 -> [P1, P2, P3, P4]
+     */
+    commands[commands.length - 1] = this.bezier.createCommand(
+      new Point(...(p1 ?? p2)),
+      new Point(...p2),
+      new Point(...p3),
+      new Point(...p4)
+    )
 
-    if (!p1 || !p2 || !p3) {
-      commands.push(new Command(COMMAND_TYPE.LINE, po))
-      return
-    }
-
-    const p4 = new Point(po[0], po[1])
-    commands[commands.length - 1] = this.bezier.createCommand(p1, p2, p3, p4)
-    commands.push(this.bezier.createCommand(p2, p3, p4, p4))
+    /**
+     * [P2, P3, P4, P4]
+     */
+    commands.push(
+      this.bezier.createCommand(
+        new Point(...p2),
+        new Point(...p3),
+        new Point(...p4),
+        new Point(...p4)
+      )
+    )
   }
 
   private _createDrawPath(): Path {
     this._resize(this.el.getBoundingClientRect())
+    this._drawPoints = []
     return new Path({
       stroke: this.penColor,
       strokeWidth: String(this.penWidth),
