@@ -157,51 +157,40 @@ export class SvgDrawing {
     this.update()
   }
 
-  private _addDrawPoint(p4: PointTuple) {
+  /**
+   * @TODO Pass the conversion part from the outside
+   */
+  private _convertCommandFromPoint() {
     if (!this._drawPath) return
     const points = this._drawPoints
-    const commands = this._drawPath.commands
-    this._drawPoints.push(p4)
-    /**
-     * commands.length < 2 -> Line
-     */
-    if (!this.curve || points.length < 3) {
-      commands.push(
-        new Command(
-          commands.length === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE,
-          p4
-        )
+    const commands: Command[] = []
+    // FIX: Adjust Points and Commands length
+    for (let i = 0; i < points.length - 2; i += 1) {
+      if (i === 0) {
+        commands.push(new Command(COMMAND_TYPE.MOVE, points[0]))
+        continue
+      }
+      if (!this.curve || points.length < 3) {
+        commands.push(new Command(COMMAND_TYPE.LINE, points[i]))
+        continue
+      }
+      const p = points.slice(i - 1, i + 3)
+      commands[i] = this.bezier.createCommand(
+        new Point(...(p[0] ?? p[1])),
+        new Point(...p[1]),
+        new Point(...p[2]),
+        new Point(...p[3])
       )
-      return
     }
+    // FIX: Adjust Points and Commands length
+    console.log(commands, commands.length, points, points.length)
+    this._drawPath.commands = commands
+  }
 
-    const p1: PointTuple | undefined = points[points.length - 4]
-    const p2 = points[points.length - 3]
-    const p3 = points[points.length - 2]
+  private _addDrawPoint(p4: PointTuple) {
+    this._drawPoints.push(p4)
 
-    /**
-     * commands.length < 2 is not arrow
-     * commands.length === 3 -> [P2, P2, P3, P4]
-     * commands.length > 3 -> [P1, P2, P3, P4]
-     */
-    commands[commands.length - 1] = this.bezier.createCommand(
-      new Point(...(p1 ?? p2)),
-      new Point(...p2),
-      new Point(...p3),
-      new Point(...p4)
-    )
-
-    /**
-     * [P2, P3, P4, P4]
-     */
-    commands.push(
-      this.bezier.createCommand(
-        new Point(...p2),
-        new Point(...p3),
-        new Point(...p4),
-        new Point(...p4)
-      )
-    )
+    this._convertCommandFromPoint()
   }
 
   private _createDrawPath(): Path {
