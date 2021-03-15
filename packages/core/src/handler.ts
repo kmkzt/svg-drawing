@@ -37,6 +37,11 @@ export class DrawHandler {
    */
   private _listenerOption: ReturnType<typeof getPassiveOptions>
   /**
+   * Offset coordinates
+   */
+  private _left: number
+  private _top: number
+  /**
    * EventHandler
    */
   public end: DrawHandlerCallback['end']
@@ -57,6 +62,12 @@ export class DrawHandler {
      */
     this._clearEventList = []
     this._listenerOption = getPassiveOptions(false)
+    /**
+     * Set offset coordinates
+     */
+    const { left, top } = _el.getBoundingClientRect()
+    this._left = left
+    this._top = top
     /**
      * Bind mthods
      */
@@ -79,13 +90,17 @@ export class DrawHandler {
   public on(): void {
     this.off()
 
+    // Setup coordinates listener
+    this._setupCoordinatesListener()
+
+    // Setup Draw listener
     if (window.PointerEvent) {
-      this._setupListener('pointer')
+      this._setupDrawListener('pointer')
     } else {
-      this._setupListener('mouse')
+      this._setupDrawListener('mouse')
     }
     if ('ontouchstart' in window) {
-      this._setupListener('touch')
+      this._setupDrawListener('touch')
     }
   }
 
@@ -103,13 +118,13 @@ export class DrawHandler {
     ev.preventDefault()
     if (ev instanceof TouchEvent) {
       const touch = ev.touches[0]
-      this.move(touch.clientX, touch.clientY)
+      this.move(touch.clientX - this._left, touch.clientY - this._top)
     } else {
-      this.move(ev.clientX, ev.clientY)
+      this.move(ev.clientX - this._left, ev.clientY - this._top)
     }
   }
 
-  private _setupListener(type: DrawListenerType): void {
+  private _setupDrawListener(type: DrawListenerType): void {
     const { start, move, end, frameout } = listenerMaps[type]
     const startClear = start.map((evname): (() => void) => {
       this._el.addEventListener(evname, this._handleStart, this._listenerOption)
@@ -127,13 +142,26 @@ export class DrawHandler {
       window.addEventListener(evname, this._handleEnd, this._listenerOption)
       return () => window.removeEventListener(evname, this._handleEnd)
     })
-    this._clearEventList = [
-      ...this._clearEventList,
+    this._clearEventList.push(
       ...startClear,
       ...moveClear,
       ...endClear,
-      ...frameoutClear,
-    ]
+      ...frameoutClear
+    )
+  }
+
+  private _setupCoordinatesListener() {
+    const handleEvent = (_ev: Event) => {
+      const { left, top } = this._el.getBoundingClientRect()
+      this._left = left
+      this._top = top
+    }
+    window.addEventListener('scroll', handleEvent)
+    this._el.addEventListener('resize', handleEvent)
+    this._clearEventList.push(() => {
+      window.removeEventListener('scroll', handleEvent)
+      this._el.removeEventListener('resize', handleEvent)
+    })
   }
 }
 

@@ -27,8 +27,6 @@ export class SvgDrawing {
   /**
    * Private property
    */
-  private _left: number
-  private _top: number
   private _drawPath: Path | null
   private _drawMoveThrottle: this['drawMove']
   constructor(
@@ -55,10 +53,8 @@ export class SvgDrawing {
     /**
      * Setup property
      */
-    const { width, height, left, top } = el.getBoundingClientRect()
+    const { width, height } = el.getBoundingClientRect()
     this._drawPath = null
-    this._left = left
-    this._top = top
     /**
      * Setup Svg
      */
@@ -136,7 +132,7 @@ export class SvgDrawing {
 
   public drawMove(x: number, y: number): void {
     if (!this._drawPath) return
-    const po: [number, number] = [x - this._left, y - this._top]
+    const po: [number, number] = [x, y]
     this._addDrawPoint(po)
     if (
       (this._drawPath.attrs.strokeWidth &&
@@ -206,13 +202,9 @@ export class SvgDrawing {
    * TODO: improve check scale path
    */
   private _resize({
-    top,
-    left,
     width,
     height,
   }: Parameters<ResizeHandlerCallback['resize']>[0]) {
-    if (!isAlmostSameNumber(this._left, left)) this._left = left
-    if (!isAlmostSameNumber(this._top, top)) this._top = top
     if (!isAlmostSameNumber(this.svg.height, height)) this.svg.height = height
     if (!isAlmostSameNumber(this.svg.width, width)) {
       this.svg.scalePath(width / this.svg.width)
