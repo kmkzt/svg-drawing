@@ -16,6 +16,37 @@ export type SvgObject = {
 }
 
 /**
+ * Path Object
+ */
+export type PointObject = {
+  x: number
+  y: number
+  pressure?: number
+}
+/**
+ * Command Object
+ */
+export type CommandType =
+  | 'M'
+  | 'm'
+  | 'L'
+  | 'l'
+  | 'C'
+  | 'c'
+  | 'Z'
+  | 'H'
+  | 'h'
+  | 'V'
+  | 'v'
+  | 'A'
+  | 'a'
+  | 'Q'
+  | 'q'
+export type CommandObject = {
+  type: CommandType
+  value: number[]
+}
+/**
  * Svg options
  */
 export type SvgOption = {

@@ -1,6 +1,6 @@
 import { roundUp } from './shared/roundUp'
 import { kebab2camel } from './shared/kebab2camel'
-import { PathObject, SvgObject, SvgOption } from './types'
+import { PathObject, SvgObject, SvgOption, CommandType } from './types'
 
 const isNaN = (num: number) => num !== num
 
@@ -39,7 +39,7 @@ export class Point {
   }
 }
 
-export const COMMAND_TYPE = {
+export const COMMAND_TYPE: { [name: string]: CommandType } = {
   MOVE: 'M', // M 0 0
   MOVE_RELATIVE: 'm', // m 0 0
   LINE: 'L', // L 1 1
@@ -57,7 +57,6 @@ export const COMMAND_TYPE = {
   QUADRATIC_CURVE_RELATIVE: 'q', // q 10 60 10 30
 } as const
 
-type CommandType = typeof COMMAND_TYPE[keyof typeof COMMAND_TYPE]
 // TODO: compatible COMMAND_TYPE
 export class Command {
   public type: CommandType
