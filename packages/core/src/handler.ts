@@ -118,9 +118,28 @@ export class DrawHandler {
     ev.preventDefault()
     if (ev instanceof TouchEvent) {
       const touch = ev.touches[0]
-      this.move(touch.clientX - this._left, touch.clientY - this._top)
-    } else {
-      this.move(ev.clientX - this._left, ev.clientY - this._top)
+      this.move({
+        x: touch.clientX - this._left,
+        y: touch.clientY - this._top,
+        pressure: touch.force,
+      })
+      return
+    }
+    if (ev instanceof PointerEvent) {
+      this.move({
+        x: ev.clientX - this._left,
+        y: ev.clientY - this._top,
+        pressure: ev.pressure,
+      })
+      return
+    }
+    if (ev instanceof MouseEvent) {
+      this.move({
+        x: ev.clientX - this._left,
+        y: ev.clientY - this._top,
+        pressure: (ev as any)?.pressure,
+      })
+      return
     }
   }
 

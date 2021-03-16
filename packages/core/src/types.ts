@@ -23,6 +23,7 @@ export type PointObject = {
   y: number
   pressure?: number
 }
+
 /**
  * Command Object
  */
@@ -78,7 +79,7 @@ export type DrawingOption = RendererOption & {
 export type DrawHandlerCallback = {
   start: () => void
   end: () => void
-  move: (x: number, y: number) => void
+  move: (po: PointObject) => void
 }
 /**
  * ResizeHandler callback

@@ -1,12 +1,11 @@
 import { Renderer } from './renderer'
-import { Path, Point, Command, COMMAND_TYPE, Svg } from './svg'
+import { Path, Command, COMMAND_TYPE, Svg } from './svg'
 import { BezierCurve } from './bezier'
 import { throttle } from './throttle'
 import { DrawHandler, ResizeHandler } from './handler'
-import { DrawingOption, ResizeHandlerCallback } from './types'
+import { DrawingOption, PointObject, ResizeHandlerCallback } from './types'
 import { isAlmostSameNumber } from './shared/isAlmostSame'
 
-type PointTuple = [number, number]
 export class SvgDrawing {
   /**
    * Draw Option
@@ -29,7 +28,7 @@ export class SvgDrawing {
    * Private property
    */
   private _drawPath: Path | null
-  private _drawPoints: PointTuple[]
+  private _drawPoints: PointObject[]
   private _drawMoveThrottle: this['drawMove']
   constructor(
     public el: HTMLElement,
@@ -133,9 +132,8 @@ export class SvgDrawing {
     this.svg.addPath(this._drawPath)
   }
 
-  public drawMove(x: number, y: number): void {
+  public drawMove(po: PointObject): void {
     if (!this._drawPath) return
-    const po: [number, number] = [x, y]
     this._addDrawPoint(po)
     if (
       (this._drawPath.attrs.strokeWidth &&
@@ -160,37 +158,27 @@ export class SvgDrawing {
   /**
    * @TODO Pass the conversion part from the outside
    */
-  private _convertCommandFromPoint() {
+  private _createCommand() {
     if (!this._drawPath) return
-    const points = this._drawPoints
-    const commands: Command[] = []
-    // FIX: Adjust Points and Commands length
-    for (let i = 0; i < points.length - 2; i += 1) {
-      if (i === 0) {
-        commands.push(new Command(COMMAND_TYPE.MOVE, points[0]))
-        continue
-      }
-      if (!this.curve || points.length < 3) {
-        commands.push(new Command(COMMAND_TYPE.LINE, points[i]))
-        continue
-      }
-      const p = points.slice(i - 1, i + 3)
-      commands[i] = this.bezier.createCommand(
-        new Point(...(p[0] ?? p[1])),
-        new Point(...p[1]),
-        new Point(...p[2]),
-        new Point(...p[3])
+
+    if (this.curve) {
+      this._drawPath.commands = this.bezier.convertCommandFromPoint(
+        this._drawPoints
+      )
+    } else {
+      this._drawPath.commands = this._drawPoints.map(
+        (po, i) =>
+          new Command(i === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE, [
+            po.x,
+            po.y,
+          ])
       )
     }
-    // FIX: Adjust Points and Commands length
-    console.log(commands, commands.length, points, points.length)
-    this._drawPath.commands = commands
   }
 
-  private _addDrawPoint(p4: PointTuple) {
+  private _addDrawPoint(p4: PointObject) {
     this._drawPoints.push(p4)
-
-    this._convertCommandFromPoint()
+    this._createCommand()
   }
 
   private _createDrawPath(): Path {
