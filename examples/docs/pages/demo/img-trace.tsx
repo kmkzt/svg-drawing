@@ -146,7 +146,7 @@ export default () => {
 
   const handleDownload = useCallback(() => {
     if (!svg) return
-    svg.download()
+    Renderer.download(svg.toJson())
   }, [svg])
 
   useEffect(() => {
