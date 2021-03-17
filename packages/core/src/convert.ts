@@ -1,12 +1,9 @@
 import { Point, Command, COMMAND_TYPE } from './svg'
-import { PointObject } from './types'
+import { PointObject, ConvertOption } from './types'
 
-interface BezierCurveOption {
-  ratio?: number
-}
-export class BezierCurve {
+export class Convert {
   public ratio: number
-  constructor({ ratio }: BezierCurveOption = {}) {
+  constructor({ ratio }: ConvertOption = {}) {
     this.ratio = ratio ?? 0.2
   }
   private _controlPoint(
@@ -22,7 +19,7 @@ export class BezierCurve {
     return [po.x, po.y]
   }
 
-  public createCommand(
+  public bezierCurve(
     p1: PointObject,
     p2: PointObject,
     p3: PointObject,
@@ -37,19 +34,25 @@ export class BezierCurve {
     return new Command(COMMAND_TYPE.CURVE, value)
   }
 
-  public convertCommandFromPoint(p: PointObject[]): Command[] {
+  public lineCommands(points: PointObject[]): Command[] {
+    return points.map(
+      (p, i) =>
+        new Command(i === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE, [p.x, p.y])
+    )
+  }
+
+  public bezierCurveCommands(p: PointObject[]): Command[] {
     const commands: Command[] = []
+    if (p.length < 3) {
+      return this.lineCommands(p)
+    }
     for (let i = 0; i < p.length; i += 1) {
       if (i === 0) {
         commands.push(new Command(COMMAND_TYPE.MOVE, [p[i].x, p[i].y]))
         continue
       }
-      if (p.length < 3) {
-        commands.push(new Command(COMMAND_TYPE.LINE, [p[i].x, p[i].y]))
-        continue
-      }
       commands.push(
-        this.createCommand(
+        this.bezierCurve(
           p[i - 2 < 0 ? 0 : i - 2],
           p[i - 1],
           p[i],

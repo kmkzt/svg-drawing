@@ -1,6 +1,6 @@
 import { Renderer } from './renderer'
 import { Path, Command, COMMAND_TYPE, Svg } from './svg'
-import { BezierCurve } from './bezier'
+import { Convert } from './convert'
 import { throttle } from './throttle'
 import { DrawHandler, ResizeHandler } from './handler'
 import { DrawingOption, PointObject, ResizeHandlerCallback } from './types'
@@ -20,7 +20,7 @@ export class SvgDrawing {
    * Module
    */
   public svg: Svg
-  public bezier: BezierCurve
+  public convert: Convert
   public renderer: Renderer
   public drawHandler: DrawHandler
   public resizeHandler: ResizeHandler
@@ -68,7 +68,7 @@ export class SvgDrawing {
     /**
      * Setup BezierCurve
      */
-    this.bezier = new BezierCurve()
+    this.convert = new Convert()
     /**
      * Setup ResizeHandler
      */
@@ -148,31 +148,23 @@ export class SvgDrawing {
   }
 
   public drawEnd(): void {
-    if (this.close && this._drawPath) {
-      this._drawPath.commands.push(new Command(COMMAND_TYPE.CLOSE))
-    }
     this._drawPath = null
     this.update()
   }
 
-  /**
-   * @TODO Pass the conversion part from the outside
-   */
   private _createCommand() {
     if (!this._drawPath) return
 
     if (this.curve) {
-      this._drawPath.commands = this.bezier.convertCommandFromPoint(
+      this._drawPath.commands = this.convert.bezierCurveCommands(
         this._drawPoints
       )
     } else {
-      this._drawPath.commands = this._drawPoints.map(
-        (po, i) =>
-          new Command(i === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE, [
-            po.x,
-            po.y,
-          ])
-      )
+      this._drawPath.commands = this.convert.lineCommands(this._drawPoints)
+    }
+
+    if (this.close) {
+      this._drawPath.commands.push(new Command(COMMAND_TYPE.CLOSE))
     }
   }
 

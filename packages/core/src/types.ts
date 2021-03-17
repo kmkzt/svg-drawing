@@ -55,7 +55,12 @@ export type SvgOption = {
   height: number
   background?: string
 }
-
+/**
+ * Convert options
+ */
+export interface ConvertOption {
+  ratio?: number
+}
 /**
  * Renderer options
  */
@@ -67,8 +72,8 @@ export type RendererOption = Pick<SvgOption, 'background'>
 export type DrawingOption = RendererOption & {
   penColor?: string
   penWidth?: number
-  close?: boolean
   curve?: boolean
+  close?: boolean
   delay?: number
   fill?: string
 }
