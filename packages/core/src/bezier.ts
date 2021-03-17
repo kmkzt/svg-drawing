@@ -37,39 +37,26 @@ export class BezierCurve {
     return new Command(COMMAND_TYPE.CURVE, value)
   }
 
-  public convertCommandFromPoint(points: PointObject[]): Command[] {
+  public convertCommandFromPoint(p: PointObject[]): Command[] {
     const commands: Command[] = []
-    // Debugger
-    // const debug: any = []
-    for (let i = 0; i < points.length; i += 1) {
-      const po = points[i]
+    for (let i = 0; i < p.length; i += 1) {
       if (i === 0) {
-        commands.push(new Command(COMMAND_TYPE.MOVE, [po.x, po.y]))
+        commands.push(new Command(COMMAND_TYPE.MOVE, [p[i].x, p[i].y]))
         continue
       }
-      const prev = i - 2
-      const next = i + 2
-      const sliceArg = [prev > 0 ? prev : 0, next]
-      const p = points.slice(...sliceArg)
-      // Debugger
-      // debug.push({
-      //   i,
-      //   sliceArg,
-      //   slicePoints: p,
-      //   points,
-      // })
-      if (p.length === 4) {
-        commands.push(this.createCommand(p[0], p[1], p[2], p[3]))
+      if (p.length < 3) {
+        commands.push(new Command(COMMAND_TYPE.LINE, [p[i].x, p[i].y]))
         continue
       }
-      if (p.length === 3) {
-        commands.push(this.createCommand(p[0], p[1], p[2], p[2]))
-        continue
-      }
-      commands.push(new Command(COMMAND_TYPE.LINE, [po.x, po.y]))
+      commands.push(
+        this.createCommand(
+          p[i - 2 < 0 ? 0 : i - 2],
+          p[i - 1],
+          p[i],
+          i < p.length - 1 ? p[i + 1] : p[i]
+        )
+      )
     }
-    // Debugger
-    // console.log({ commands, points, debug })
     return commands
   }
 }
