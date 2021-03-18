@@ -3,12 +3,13 @@ import {
   RendererOption,
   Path,
   camel2kebab,
-  download,
+  downloadBlob,
   roundUp,
   svg2base64,
   createSvgElement,
   createSvgChildElement,
   Svg,
+  pathObjectToElement,
 } from '@svg-drawing/core'
 
 export type AnimationOption = RendererOption & {
@@ -176,7 +177,7 @@ export class SvgAnimation {
       })
     }
     const animEls = this._restorePaths.map((p) => {
-      const pEl = p.toElement()
+      const pEl = pathObjectToElement(p.toJson())
       const dAnimEl = createAnimationElement(
         p,
         'd',
@@ -233,7 +234,7 @@ export class SvgAnimation {
    * TODO: Support gif and apng
    */
   public download(filename?: string): void {
-    download({
+    downloadBlob({
       data: svg2base64(this.toElement().outerHTML),
       extension: 'svg',
       filename,
