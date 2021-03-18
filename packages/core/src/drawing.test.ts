@@ -11,7 +11,7 @@ describe('drawing.ts', () => {
       draw.drawMove({ x: 2, y: 1 })
       draw.drawMove({ x: 3, y: 0 })
       draw.drawEnd()
-      expect(svgObjectToElement( draw.svg.toJson())).toMatchSnapshot()
+      expect(svgObjectToElement(draw.svg.toJson())).toMatchSnapshot()
     })
     it('close', () => {
       const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
