@@ -1,30 +1,10 @@
-import React, {
-  useRef,
-  useEffect,
-  useCallback,
-  MutableRefObject,
-  RefObject,
-} from 'react'
+import React, { useRef, useEffect, useCallback, MutableRefObject } from 'react'
 import type { DrawingOption } from '@svg-drawing/core/lib/types'
-import {
-  SvgDrawing,
-  download as svgDownload,
-  svgObjectToElement,
-} from '@svg-drawing/core'
+import { download as svgDownload } from '@svg-drawing/core/lib/download'
+import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
+import { SvgDrawing } from '@svg-drawing/core/lib/drawing'
+import { UseSvgDrawing } from './types'
 
-interface UseSvgDrawing {
-  instance: RefObject<SvgDrawing | null>
-  clear: () => void
-  undo: () => void
-  changePenColor: (penColor: DrawingOption['penColor']) => void
-  changePenWidth: (penwidth: DrawingOption['penWidth']) => void
-  changeFill: (penColor: DrawingOption['fill']) => void
-  changeClose: (penwidth: DrawingOption['close']) => void
-  changeDelay: (penColor: DrawingOption['delay']) => void
-  changeCurve: (penwidth: DrawingOption['curve']) => void
-  getSvgXML: () => string | null
-  download: (ext: 'svg' | 'png' | 'jpg') => void
-}
 export const useSvgDrawing = (
   option?: Partial<DrawingOption>
 ): [MutableRefObject<HTMLDivElement | null>, UseSvgDrawing] => {
@@ -34,7 +14,7 @@ export const useSvgDrawing = (
     if (!drawingRef.current) return null
     return svgObjectToElement(drawingRef.current.svg.toJson()).outerHTML
   }, [])
-  const download = useCallback((opt: Parameters<typeof svgDownload>[1]) => {
+  const download = useCallback<UseSvgDrawing['download']>((opt) => {
     if (!drawingRef.current) return
     svgDownload(drawingRef.current.svg, opt)
   }, [])
