@@ -203,7 +203,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         const [type, data] = ev.target.result.split(',')
         if (type === 'data:image/svg+xml;base64') {
           const svgxml = atob(data)
-          if (!draw.instance) return
+          if (!draw.instance.current) return
           draw.instance.current.svg.parseSVGString(svgxml)
           draw.instance.current.update()
         }
