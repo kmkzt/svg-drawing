@@ -280,7 +280,7 @@ describe('svg.ts', () => {
         const testDownload = (param: any): void => {
           expect(param).toMatchSnapshot()
         }
-        download(svg, { extension: 'svg'}, testDownload)
+        download(svg, { extension: 'svg' }, testDownload)
       })
       // TODO: Fix download test
       it.skip('jpg download', (done) => {
@@ -288,14 +288,14 @@ describe('svg.ts', () => {
         const testDownload = (param: any): void => {
           expect(param).toMatchSnapshot()
         }
-        download(svg, { extension: 'jpg'}, testDownload)
+        download(svg, { extension: 'jpg' }, testDownload)
       }, 30000)
       it.skip('png download', (done) => {
         expect.assertions(1)
         const testDownload = (param: any): void => {
           expect(param).toMatchSnapshot()
         }
-        download(svg, { extension: 'png'}, testDownload)
+        download(svg, { extension: 'png' }, testDownload)
       }, 30000)
     })
   })
