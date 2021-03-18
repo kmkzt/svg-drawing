@@ -4,6 +4,7 @@ import { useSvgDrawing } from '@svg-drawing/react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
+import {download} from '@svg-drawing/core'
 
 const size = 30
 const colorList = [
@@ -72,10 +73,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     fill,
   })
   const clickDownload = useCallback(
-    (extention: 'png' | 'jpg' | 'svg') => (
+    (extension: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
     ) => {
-      draw.download(extention)
+      draw.download({ extension })
     },
     [draw]
   )
