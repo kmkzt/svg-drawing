@@ -15,7 +15,7 @@ import {
   Heading,
 } from 'rebass/styled-components'
 import { Input } from '@rebass/forms/styled-components'
-import { Renderer, Svg } from '@svg-drawing/core'
+import { Renderer, Svg, download } from '@svg-drawing/core'
 import {
   ImgTrace,
   Rgba,
@@ -146,7 +146,7 @@ export default () => {
 
   const handleDownload = useCallback(() => {
     if (!svg) return
-    Renderer.download(svg.toJson())
+    download(svg)
   }, [svg])
 
   useEffect(() => {
