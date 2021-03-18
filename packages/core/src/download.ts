@@ -15,7 +15,7 @@ export const mimeTypeMap: { [key in DownloadOption['extension']]: string } = {
   svg: 'image/svg+xml',
 } as const
 
-const _download = ({
+export const downloadBlob = ({
   data,
   extension,
   filename,
@@ -54,11 +54,11 @@ const defaultOpts: DownloadOption = {
   extension: 'svg',
 }
 // TODO: Add filename config
-export const download = (svg: Svg, opt: DownloadOption): void => {
+export const download = (svg: Svg, opt: DownloadOption = defaultOpts): void => {
   const { filename, extension: ext } = { ...defaultOpts, ...opt }
   const base64 = toBase64(svg.toJson())
   if (ext === 'svg') {
-    _download({
+    downloadBlob({
       data: base64,
       extension: 'svg',
       filename,
@@ -80,9 +80,9 @@ export const download = (svg: Svg, opt: DownloadOption): void => {
     }
     ctx.drawImage(img, 0, 0)
     if (ext === 'png') {
-      _download({ data: canvas.toDataURL('image/png'), extension: 'png' })
+      downloadBlob({ data: canvas.toDataURL('image/png'), extension: 'png' })
     } else {
-      _download({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
+      downloadBlob({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
     }
   }
   img.addEventListener('load', renderCanvas, false)
