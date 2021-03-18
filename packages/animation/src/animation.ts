@@ -1,21 +1,13 @@
 import {
   Renderer,
-  RendererOption,
-  Path,
-  camel2kebab,
-  downloadBlob,
-  roundUp,
-  svg2base64,
   createSvgElement,
   createSvgChildElement,
-  Svg,
   pathObjectToElement,
-} from '@svg-drawing/core'
-
-export type AnimationOption = RendererOption & {
-  ms: number
-}
-export type FrameAnimation = (origin: Path[], loopIndex?: number) => Path[]
+} from '@svg-drawing/core/lib/renderer'
+import { camel2kebab, roundUp } from '@svg-drawing/core/lib/utils'
+import { downloadBlob, svg2base64 } from '@svg-drawing/core/lib/download'
+import { Path, Svg } from '@svg-drawing/core/lib/svg'
+import { AnimationOption, FrameAnimation } from './types'
 
 export class SvgAnimation {
   /**
