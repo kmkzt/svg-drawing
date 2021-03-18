@@ -77,7 +77,13 @@ export type DrawingOption = RendererOption & {
   delay?: number
   fill?: string
 }
-
+/**
+ * Download options
+ */
+export type DownloadOption = {
+  extension: 'svg' | 'png' | 'jpg'
+  filename?: string
+}
 /**
  * DrawHandler callback
  */

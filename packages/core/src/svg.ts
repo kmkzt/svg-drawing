@@ -1,8 +1,5 @@
-import { roundUp } from './shared/roundUp'
-import { kebab2camel } from './shared/kebab2camel'
+import { kebab2camel, roundUp, isNaN } from './utils'
 import { PathObject, SvgObject, SvgOption, CommandType } from './types'
-
-const isNaN = (num: number) => num !== num
 
 export class Point {
   public x: number

@@ -4,7 +4,7 @@ import { Convert } from './convert'
 import { throttle } from './throttle'
 import { DrawHandler, ResizeHandler } from './handler'
 import { DrawingOption, PointObject, ResizeHandlerCallback } from './types'
-import { isAlmostSameNumber } from './shared/isAlmostSame'
+import { isAlmostSameNumber } from './utils'
 
 export class SvgDrawing {
   /**
