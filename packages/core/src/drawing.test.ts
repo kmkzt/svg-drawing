@@ -1,47 +1,51 @@
 import { SvgDrawing } from './drawing'
+import { svgObjectToElement } from './renderer'
 
 describe('drawing.ts', () => {
   describe('SvgDrawing', () => {
     it('default', () => {
       const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
       draw.drawStart()
-      draw.drawMove(0, 0)
-      draw.drawMove(1, 1)
-      draw.drawMove(2, 1)
-      draw.drawMove(3, 0)
+      draw.drawMove({ x: 0, y: 0 })
+      draw.drawMove({x: 1, y: 1})
+      draw.drawMove({x:2, y:1})
+      draw.drawMove({x:3, y:0})
       draw.drawEnd()
-      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
+      expect(svgObjectToElement( draw.svg.toJson())).toMatchSnapshot()
     })
     it('close', () => {
       const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
       draw.close = true
       draw.drawStart()
-      draw.drawMove(0, 0)
-      draw.drawMove(1, 1)
-      draw.drawMove(2, 1)
-      draw.drawMove(3, 0)
+      draw.drawMove({ x: 0, y: 0 })
+      draw.drawMove({x: 1, y: 1})
+      draw.drawMove({x:2, y:1})
+      draw.drawMove({x:3, y:0})
       draw.drawEnd()
-      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
+      const el = svgObjectToElement(draw.svg.toJson())
+      expect(el).toMatchSnapshot()
     })
     it('curve = false', () => {
       const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
       draw.curve = false
       draw.drawStart()
-      draw.drawMove(0, 0)
-      draw.drawMove(1, 1)
-      draw.drawMove(2, 1)
-      draw.drawMove(3, 0)
+      draw.drawMove({ x: 0, y: 0 })
+      draw.drawMove({x: 1, y: 1})
+      draw.drawMove({x:2, y:1})
+      draw.drawMove({x:3, y:0})
       draw.drawEnd()
-      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
+      const el = svgObjectToElement(draw.svg.toJson())
+      expect(el).toMatchSnapshot()
     })
     it('clear()', () => {
       const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
       draw.curve = false
       draw.drawStart()
-      draw.drawMove(0, 0)
+      draw.drawMove({x: 0, y: 0})
       draw.drawEnd()
       draw.clear()
-      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
+      const el = svgObjectToElement(draw.svg.toJson())
+      expect(el).toMatchSnapshot()
     })
 
     /**
@@ -50,13 +54,14 @@ describe('drawing.ts', () => {
     it('undo()', () => {
       const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
       draw.drawStart()
-      draw.drawMove(0, 0)
+      draw.drawMove({x: 0, y: 0})
       draw.drawEnd()
       draw.drawStart()
-      draw.drawMove(0, 0)
+      draw.drawMove({x: 0, y: 0})
       draw.drawEnd()
       draw.undo()
-      expect(draw.renderer.svg.toElement()).toMatchSnapshot()
+      const el = svgObjectToElement(draw.svg.toJson())
+      expect(el).toMatchSnapshot()
     })
   })
 })

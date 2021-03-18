@@ -54,11 +54,15 @@ const defaultOpts: DownloadOption = {
   extension: 'svg',
 }
 // TODO: Add filename config
-export const download = (svg: Svg, opt: DownloadOption = defaultOpts): void => {
+export const download = (
+  svg: Svg,
+  opt: DownloadOption = defaultOpts,
+  dlb: typeof downloadBlob = downloadBlob
+): void => {
   const { filename, extension: ext } = { ...defaultOpts, ...opt }
   const base64 = toBase64(svg.toJson())
   if (ext === 'svg') {
-    downloadBlob({
+    dlb({
       data: base64,
       extension: 'svg',
       filename,
@@ -80,9 +84,9 @@ export const download = (svg: Svg, opt: DownloadOption = defaultOpts): void => {
     }
     ctx.drawImage(img, 0, 0)
     if (ext === 'png') {
-      downloadBlob({ data: canvas.toDataURL('image/png'), extension: 'png' })
+      dlb({ data: canvas.toDataURL('image/png'), extension: 'png' })
     } else {
-      downloadBlob({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
+      dlb({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
     }
   }
   img.addEventListener('load', renderCanvas, false)

@@ -3,6 +3,7 @@ import { resolve } from 'path'
 import { ImgTrace, ImgTraceOption } from './trace'
 import { Palette } from './palette'
 import { loadPngData } from './__test__/loadPngData'
+import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
 
 const testPattern: {
   [key: string]: Partial<ImgTraceOption>
@@ -36,7 +37,7 @@ describe('trace.ts', () => {
             ...testopts,
           }).load(png)
 
-          const data = svg.toElement().outerHTML
+          const data = svgObjectToElement(svg.toJson()).outerHTML
           /** DEBUG **/
           if (process.env.DEBUG === 'debug') {
             writeFileSync(

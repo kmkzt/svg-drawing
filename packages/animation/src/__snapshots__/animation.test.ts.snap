@@ -18,91 +18,89 @@ SvgAnimation {
         xmlns:xlink="http://www.w3.org/1999/xlink"
       />
     </div>,
-    "left": 0,
-    "svg": Svg {
-      "background": undefined,
-      "height": 0,
-      "paths": Array [
-        Path {
-          "attrs": Object {
-            "fill": "#f00",
-            "stroke": "#00f",
-            "strokeWidth": "4",
-          },
-          "commands": Array [
-            Command {
-              "type": "M",
-              "value": Array [
-                1,
-                1,
-              ],
-            },
-            Command {
-              "type": "L",
-              "value": Array [
-                2,
-                2,
-              ],
-            },
-            Command {
-              "type": "C",
-              "value": Array [
-                3,
-                3,
-                5,
-                3,
-                7,
-                3,
-              ],
-            },
-            Command {
-              "type": "Z",
-              "value": Array [],
-            },
-          ],
+  },
+  "svg": Svg {
+    "background": undefined,
+    "height": 0,
+    "paths": Array [
+      Path {
+        "attrs": Object {
+          "fill": "#f00",
+          "stroke": "#00f",
+          "strokeWidth": "4",
         },
-        Path {
-          "attrs": Object {
-            "fill": "#ff0",
-            "stroke": "#f0f",
-            "strokeWidth": "2",
+        "commands": Array [
+          Command {
+            "type": "M",
+            "value": Array [
+              1,
+              1,
+            ],
           },
-          "commands": Array [
-            Command {
-              "type": "M",
-              "value": Array [
-                2,
-                2,
-              ],
-            },
-            Command {
-              "type": "L",
-              "value": Array [
-                4,
-                4,
-              ],
-            },
-            Command {
-              "type": "C",
-              "value": Array [
-                6,
-                6,
-                10,
-                6,
-                14,
-                6,
-              ],
-            },
-            Command {
-              "type": "Z",
-              "value": Array [],
-            },
-          ],
+          Command {
+            "type": "L",
+            "value": Array [
+              2,
+              2,
+            ],
+          },
+          Command {
+            "type": "C",
+            "value": Array [
+              3,
+              3,
+              5,
+              3,
+              7,
+              3,
+            ],
+          },
+          Command {
+            "type": "Z",
+            "value": Array [],
+          },
+        ],
+      },
+      Path {
+        "attrs": Object {
+          "fill": "#ff0",
+          "stroke": "#f0f",
+          "strokeWidth": "2",
         },
-      ],
-      "width": 0,
-    },
-    "top": 0,
+        "commands": Array [
+          Command {
+            "type": "M",
+            "value": Array [
+              2,
+              2,
+            ],
+          },
+          Command {
+            "type": "L",
+            "value": Array [
+              4,
+              4,
+            ],
+          },
+          Command {
+            "type": "C",
+            "value": Array [
+              6,
+              6,
+              10,
+              6,
+              14,
+              6,
+            ],
+          },
+          Command {
+            "type": "Z",
+            "value": Array [],
+          },
+        ],
+      },
+    ],
+    "width": 0,
   },
 }
 `;
