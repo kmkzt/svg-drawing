@@ -27,8 +27,8 @@ export class SvgAnimation {
    */
   public svg: Svg
   public renderer: Renderer
-  /**d
-   * Releation animate element
+  /**
+   * Relation animate element
    * TODO: add easing option
    */
   private _repeatCount: string
@@ -51,7 +51,7 @@ export class SvgAnimation {
    * @param {FramaAnimation} fn
    * @param {{ frame?: number; repeat?: number }} opts
    * `frame` is the number of frames to animate
-   * `repeat` is related for rapeatCount of animate element attribute.
+   * `repeat` is related for repeatCount of animate element attribute.
    */
   public setAnimation(
     fn: FrameAnimation,
