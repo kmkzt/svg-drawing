@@ -3,8 +3,14 @@ import { Path, Command, COMMAND_TYPE, Svg } from './svg'
 import { Convert } from './convert'
 import { throttle } from './throttle'
 import { DrawHandler, ResizeHandler } from './handler'
-import { DrawingOption, PointObject, ResizeHandlerCallback } from './types'
+import {
+  DownloadOption,
+  DrawingOption,
+  PointObject,
+  ResizeHandlerCallback,
+} from './types'
 import { isAlmostSameNumber } from './utils'
+import { download } from './download'
 
 export class SvgDrawing {
   /**
@@ -198,5 +204,9 @@ export class SvgDrawing {
       this.svg.width = width
       this.update()
     }
+  }
+
+  public download(opt?: DownloadOption): void {
+    download(this.svg, opt)
   }
 }

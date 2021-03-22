@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useCallback, MutableRefObject } from 'react'
 import type { DrawingOption } from '@svg-drawing/core/lib/types'
-import { download as svgDownload } from '@svg-drawing/core/lib/download'
 import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
 import { SvgDrawing } from '@svg-drawing/core/lib/drawing'
 import { UseSvgDrawing } from './types'
@@ -16,7 +15,7 @@ export const useSvgDrawing = (
   }, [])
   const download = useCallback<UseSvgDrawing['download']>((opt) => {
     if (!drawingRef.current) return
-    svgDownload(drawingRef.current.svg, opt)
+    drawingRef.current.download(opt)
   }, [])
   const changePenColor = useCallback((param: DrawingOption['penColor']) => {
     if (!drawingRef.current || !param) return
@@ -61,7 +60,7 @@ export const useSvgDrawing = (
   return [
     renderRef,
     {
-      instance: drawingRef,
+      ref: drawingRef,
       changePenWidth,
       changePenColor,
       changeFill,

@@ -4,7 +4,6 @@ import { useSvgDrawing } from '@svg-drawing/react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
-import { download } from '@svg-drawing/core'
 
 const size = 30
 const colorList = [
@@ -199,20 +198,20 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const handleFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const reader = new FileReader()
-      reader.onload = function (ev: ProgressEvent<FileReader>) {
+      reader.onload = (ev: ProgressEvent<FileReader>) => {
         if (!ev.target || typeof ev.target.result !== 'string') return
         const [type, data] = ev.target.result.split(',')
         if (type === 'data:image/svg+xml;base64') {
           const svgxml = atob(data)
-          if (!draw.instance.current) return
-          draw.instance.current.svg.parseSVGString(svgxml)
-          draw.instance.current.update()
+          if (!draw.ref.current) return
+          draw.ref.current.svg.parseSVGString(svgxml)
+          draw.ref.current.update()
         }
       }
       if (!e.target?.files) return
       reader.readAsDataURL(e.target.files[0])
     },
-    [draw]
+    [draw.ref]
   )
   return (
     <Layout>
@@ -424,6 +423,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             margin: '0 auto 0 0',
             width: '100%',
             height: '100%',
+            touchAction: 'none',
           }}
         />
       </Box>

@@ -4,7 +4,7 @@ import type { DrawingOption } from '@svg-drawing/core/lib/types'
 import type { download } from '@svg-drawing/core/lib/download'
 
 export type UseSvgDrawing = {
-  instance: RefObject<SvgDrawing | null>
+  ref: RefObject<SvgDrawing | null>
   clear: () => void
   undo: () => void
   changePenColor: (penColor: DrawingOption['penColor']) => void
