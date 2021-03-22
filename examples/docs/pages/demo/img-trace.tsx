@@ -58,7 +58,7 @@ export default () => {
   const [inputUrl, setInputUrl] = useState('')
   const [svg, setSvg] = useState<Svg>()
   const imgRef: RefObject<HTMLImageElement> = useRef(null)
-  const canvasRef: RefObject<HTMLCanvasElement> = useRef(null)
+  // const canvasRef: RefObject<HTMLCanvasElement> = useRef(null)
   const renderRef = useRef<HTMLDivElement>(null)
   const handleInputUrl = useCallback(
     (e: ChangeEvent<any>) => {
@@ -96,13 +96,27 @@ export default () => {
       const svg = trace.load(imgd)
       setSvg(svg)
       if (trace.palettes) setPalettes(trace.palettes)
-      if (!renderRef.current) return
-      const render = new Renderer(renderRef.current)
-      render.update(svg.toJson())
     } catch (err) {
       // throw err
     }
   }, [imageUrl, imageData, palettes, traceOption])
+
+  /**
+   * Update Svg Render
+   */
+  useEffect(() => {
+    if (!renderRef.current) return
+    const renderSvg = () => {
+      if (!renderRef.current || !svg) return
+      const renderer = new Renderer(renderRef.current)
+      const { width, height } = renderRef.current.getBoundingClientRect()
+      svg.resize({ width, height })
+      renderer.update(svg.toJson())
+    }
+    renderSvg()
+    window.addEventListener('resize', renderSvg)
+    return () => window.removeEventListener('resize', renderSvg)
+  }, [svg])
 
   // const blurImage = useCallback(async () => {
   //   try {
