@@ -1,14 +1,5 @@
-import { roundUp } from './shared/roundUp'
-import { camel2kebab } from './shared/camel2kebab'
-import { kebab2camel } from './shared/kebab2camel'
-import { svg2base64 } from './shared/svg2base64'
-import {
-  createSvgElement,
-  createSvgChildElement,
-} from './shared/createSvgElement'
-import { download } from './shared/download'
-
-const isNaN = (num: number) => num !== num
+import { kebab2camel, roundUp, isNaN } from './utils'
+import { PathObject, SvgObject, SvgOption, CommandType } from './types'
 
 export class Point {
   public x: number
@@ -45,7 +36,7 @@ export class Point {
   }
 }
 
-export const COMMAND_TYPE = {
+export const COMMAND_TYPE: { [name: string]: CommandType } = {
   MOVE: 'M', // M 0 0
   MOVE_RELATIVE: 'm', // m 0 0
   LINE: 'L', // L 1 1
@@ -63,13 +54,12 @@ export const COMMAND_TYPE = {
   QUADRATIC_CURVE_RELATIVE: 'q', // q 10 60 10 30
 } as const
 
-type COMMAND = typeof COMMAND_TYPE[keyof typeof COMMAND_TYPE]
 // TODO: compatible COMMAND_TYPE
 export class Command {
-  public type: COMMAND
+  public type: CommandType
   public value: number[]
   // TODO: Convert data format to number array.
-  constructor(type: COMMAND, value: number[] = []) {
+  constructor(type: CommandType, value: number[] = []) {
     this.value = value
     this.type = type
   }
@@ -152,11 +142,6 @@ export class Vector {
   }
 }
 
-// TODO: improve key types
-export interface PathObject {
-  [key: string]: string | undefined
-}
-
 /**
  * TODO: refactor command.
  * The following commands are not supported. Cannot support commands that use `M` or` z` more than once
@@ -197,10 +182,10 @@ export class Path {
   // TODO: Valid Command type
   public parseCommandString(d: string): void {
     this.commands = []
-    let type: COMMAND | null = null
+    let type: CommandType | null = null
     let value: number[] = []
     const c = d.split(' ')
-    const checkType = (c: any): COMMAND | null =>
+    const checkType = (c: any): CommandType | null =>
       Object.values(COMMAND_TYPE).includes(c) ? c : null
     for (let i = 0; i < c.length; i += 1) {
       const t = checkType(c[i])
@@ -248,22 +233,6 @@ export class Path {
       d: this.getCommandString(),
     }
   }
-  public toElement(): SVGElement {
-    const attrs = Object.entries(this.attrs).reduce(
-      (acc, [key, val], _i) =>
-        val
-          ? {
-              ...acc,
-              [camel2kebab(key)]: val,
-            }
-          : acc,
-      {}
-    )
-    return createSvgChildElement('path', {
-      ...attrs,
-      d: this.getCommandString(),
-    })
-  }
 
   public clone(): Path {
     const path = new Path(this.attrs)
@@ -272,19 +241,6 @@ export class Path {
     })
     return path
   }
-}
-
-export interface SvgOption {
-  width: number
-  height: number
-  background?: string
-}
-
-export interface SvgObject {
-  width: number
-  height: number
-  background?: string
-  paths: PathObject[]
 }
 export class Svg {
   public paths: Path[]
@@ -297,6 +253,15 @@ export class Svg {
     this.width = width
     this.height = height
     this.background = background
+  }
+
+  /**
+   * @todo check height
+   */
+  public resize({ width, height }: { width: number; height: number }) {
+    this.scalePath(width / this.width)
+    this.width = width
+    this.height = height
   }
 
   public scalePath(r: number): this {
@@ -316,6 +281,7 @@ export class Svg {
     }
     return this
   }
+
   public clonePaths(): Path[] {
     return this.paths.map((p) => p.clone())
   }
@@ -344,21 +310,6 @@ export class Svg {
     return this
   }
 
-  public toElement(): SVGSVGElement {
-    const size = { width: String(this.width), height: String(this.height) }
-    const bgEl = this.background
-      ? [createSvgChildElement('rect', { ...size, fill: this.background })]
-      : []
-
-    return createSvgElement(
-      { width: String(this.width), height: String(this.height) },
-      bgEl.concat(this.paths.map((p) => p.toElement()))
-    )
-  }
-  public toBase64(): string {
-    return svg2base64(this.toElement().outerHTML)
-  }
-
   public parseSVGString(svgStr: string): this {
     const svgEl: SVGSVGElement | null = new DOMParser()
       .parseFromString(svgStr, 'image/svg+xml')
@@ -384,40 +335,5 @@ export class Svg {
       this.scalePath(this.width / width)
     }
     return this
-  }
-
-  // TODO: Add filename config
-  public download(
-    ext: 'svg' | 'png' | 'jpg' = 'svg',
-    cb: typeof download = download
-  ): void {
-    if (ext === 'svg') {
-      cb({
-        data: this.toBase64(),
-        extension: 'svg',
-      })
-      return
-    }
-
-    const img: any = new Image()
-    const renderCanvas = () => {
-      const canvas = document.createElement('canvas')
-      canvas.setAttribute('width', String(this.width))
-      canvas.setAttribute('height', String(this.height))
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-      if (this.background || ext === 'jpg') {
-        ctx.fillStyle = this.background || '#fff'
-        ctx.fillRect(0, 0, this.width, this.height)
-      }
-      ctx.drawImage(img, 0, 0)
-      if (ext === 'png') {
-        cb({ data: canvas.toDataURL('image/png'), extension: 'png' })
-      } else {
-        cb({ data: canvas.toDataURL('image/jpeg'), extension: 'jpg' })
-      }
-    }
-    img.addEventListener('load', renderCanvas, false)
-    img.src = this.toBase64()
   }
 }

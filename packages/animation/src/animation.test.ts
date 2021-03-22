@@ -1,5 +1,5 @@
-import { assert } from 'console'
-import { SvgAnimation, FrameAnimation } from './animation'
+import { SvgAnimation } from './animation'
+import { FrameAnimation } from './types'
 
 const defaultTestData = `<svg width="200" height="200">
   <path fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>
@@ -10,7 +10,7 @@ describe('animation.ts', () => {
   describe('SvgAnimation', () => {
     const generateAniamtion = (svgStr = defaultTestData) => {
       const anim = new SvgAnimation(document.createElement('div'))
-      anim.renderer.svg.parseSVGString(svgStr)
+      anim.svg.parseSVGString(svgStr)
       return anim
     }
     it('init', () => {

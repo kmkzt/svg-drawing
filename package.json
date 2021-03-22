@@ -16,6 +16,7 @@
     "test": "NODE_ENV=test jest --ci --passWithNoTests",
     "lint": "lerna run lint",
     "fmt": "lerna run fmt",
+    "lint-fix": "eslint . --ext ts,tsx,js,jsx --fix",
     "typecheck": "lerna run typecheck",
     "release": "lerna publish --exact",
     "release:debug": "yarn release -- --npm-tag=debug --no-push",

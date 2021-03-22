@@ -37,7 +37,7 @@ const setupAnimation = () => {
   // You can also use `parseSVGElement` or `parseSVGString`.
   // anim.renderer.svg.parseSVGElement(document.getElementByID('targetSvg'))
   // draw.renderer.svg.parseSVGString('<svg width="100" height="100"><path fill="#f00" stroke="#00f"stroke-width="4" d="M 10 10 L 20 20 C 30 30 50 30 70 30 Z"></path></svg>')
-  anim.renderer.svg.copy(draw.renderer.svg)
+  anim.svg.copy(draw.svg)
 
   // Sets the animation callback function. `fid` is number of frame index.
   // It repeat times number of total commands. You can change the number of repeats as an option.
@@ -88,7 +88,7 @@ stop.onclick = () => {
   // Stop Animation.
   anim.stop()
   // Restore Svg before animation.
-  anim.resotre()
+  anim.restore()
 }
 
 // Download animtaion svg.

@@ -1,31 +1,37 @@
 import {
   Renderer,
-  RendererOption,
-  Path,
-  camel2kebab,
-  download,
-  roundUp,
-  svg2base64,
   createSvgElement,
   createSvgChildElement,
-} from '@svg-drawing/core'
-
-export type AnimationOption = RendererOption & {
-  ms: number
-}
-export type FrameAnimation = (origin: Path[], loopIndex?: number) => Path[]
+  pathObjectToElement,
+} from '@svg-drawing/core/lib/renderer'
+import { camel2kebab, roundUp } from '@svg-drawing/core/lib/utils'
+import { downloadBlob, svg2base64 } from '@svg-drawing/core/lib/download'
+import { Path, Svg } from '@svg-drawing/core/lib/svg'
+import { AnimationOption, FrameAnimation } from './types'
+import { ResizeHandler } from '@svg-drawing/core/lib/handler'
+import type { ResizeHandlerCallback } from '@svg-drawing/core/lib/types'
 
 export class SvgAnimation {
-  public renderer: Renderer
+  /**
+   * Options
+   */
   public ms: number
+  /**
+   * Private prorperty
+   */
   private _stopId: number
-  private _stop: (() => void) | null
+  private _stopAnimation: (() => void) | null
   private _anim: FrameAnimation | null
   private _restorePaths: Path[]
   private _framesNumber: number | undefined
-
-  /**d
-   * Releation animate element
+  /**
+   * Modules
+   */
+  public svg: Svg
+  public renderer: Renderer
+  public resizeHandler: ResizeHandler
+  /**
+   * Relation animate element
    * TODO: add easing option
    */
   private _repeatCount: string
@@ -33,20 +39,36 @@ export class SvgAnimation {
     el: HTMLElement,
     { background, ms }: AnimationOption = { ms: 60 }
   ) {
-    this.renderer = new Renderer(el, { background })
     this.ms = ms
-    this._stop = null
+    this._stopAnimation = null
     this._anim = null
     this._restorePaths = []
     this._stopId = 0
     this._repeatCount = 'indefinite'
+    /**
+     * Setup Svg
+     */
+    const { width, height } = el.getBoundingClientRect()
+    this.svg = new Svg({ width, height, background })
+    /**
+     * Setup renderer
+     */
+    this.renderer = new Renderer(el, { background })
+    /**
+     * Setup resize handler
+     */
+    this._resize = this._resize.bind(this)
+    this.resizeHandler = new ResizeHandler(el, {
+      resize: this._resize,
+    })
+    this.resizeHandler.on()
   }
 
   /**
    * @param {FramaAnimation} fn
    * @param {{ frame?: number; repeat?: number }} opts
    * `frame` is the number of frames to animate
-   * `repeat` is related for rapeatCount of animate element attribute.
+   * `repeat` is related for repeatCount of animate element attribute.
    */
   public setAnimation(
     fn: FrameAnimation,
@@ -63,20 +85,21 @@ export class SvgAnimation {
   }
 
   public stop(): boolean {
-    if (this._stop) {
-      this._stop()
+    if (this._stopAnimation) {
+      this._stopAnimation()
+      this.restore()
       return true
     }
     return false
   }
 
   public restore(): void {
-    this.renderer.svg.paths = this._restorePaths
-    this.renderer.update()
+    this.svg.paths = this._restorePaths
+    this.update()
   }
 
   public generateFrame(index?: number): Path[] {
-    if (!this._anim) return this.renderer.svg.paths
+    if (!this._anim) return this.svg.paths
     return this._anim(
       this._restorePaths.map((p) => p.clone()),
       index
@@ -87,7 +110,10 @@ export class SvgAnimation {
     // If do not this first, this cannot get the number of frames well.
     this.stop()
     this._registerRestorePaths()
+    this._startAnimation()
+  }
 
+  private _startAnimation(): void {
     let index = 0
     let start: number | undefined
     const ms = this.ms
@@ -100,23 +126,27 @@ export class SvgAnimation {
       }
       if (!start || timestamp - start > ms) {
         start = timestamp
-        this.renderer.svg.paths = this.generateFrame(index)
-        this.renderer.update()
+        this.svg.paths = this.generateFrame(index)
+        this.update()
         index = index > loopCount ? 0 : index + 1
       }
       this._stopId = requestAnimationFrame(frame)
     }
     this._stopId = requestAnimationFrame(frame)
-    this._stop = () => {
+    this._stopAnimation = () => {
       cancelAnimationFrame(this._stopId)
-      this._stop = null
+      this._stopAnimation = null
     }
+  }
+
+  public update() {
+    this.renderer.update(this.svg.toJson())
   }
 
   public toElement(): SVGSVGElement {
     // If the animation is stopped, read the currently displayed Svg data.
     // If stopped in the middle, SVG in that state is displayed
-    if (!this._stop) {
+    if (!this._stopAnimation) {
       this._registerRestorePaths()
     }
 
@@ -160,7 +190,7 @@ export class SvgAnimation {
       })
     }
     const animEls = this._restorePaths.map((p) => {
-      const pEl = p.toElement()
+      const pEl = pathObjectToElement(p.toJson())
       const dAnimEl = createAnimationElement(
         p,
         'd',
@@ -192,21 +222,21 @@ export class SvgAnimation {
     })
 
     const size = {
-      width: String(this.renderer.svg.width),
-      height: String(this.renderer.svg.height),
+      width: String(this.svg.width),
+      height: String(this.svg.height),
     }
-    const bgEl = this.renderer.svg.background
+    const bgEl = this.svg.background
       ? [
           createSvgChildElement('rect', {
             ...size,
-            fill: this.renderer.svg.background,
+            fill: this.svg.background,
           }),
         ]
       : []
     return createSvgElement(
       {
-        width: String(this.renderer.svg.width),
-        height: String(this.renderer.svg.height),
+        width: String(this.svg.width),
+        height: String(this.svg.height),
       },
       bgEl.concat(animEls)
     )
@@ -217,7 +247,7 @@ export class SvgAnimation {
    * TODO: Support gif and apng
    */
   public download(filename?: string): void {
-    download({
+    downloadBlob({
       data: svg2base64(this.toElement().outerHTML),
       extension: 'svg',
       filename,
@@ -235,9 +265,18 @@ export class SvgAnimation {
   }
 
   private _registerRestorePaths() {
-    this._restorePaths = this.renderer.svg.clonePaths().map((p, i) => {
+    this._restorePaths = this.svg.clonePaths().map((p, i) => {
       p.attrs.id = `t${i}`
       return p
     })
+  }
+
+  private _resize({
+    width,
+    height,
+  }: Parameters<ResizeHandlerCallback['resize']>[0]): void {
+    this.stop()
+    this.svg.resize({ width, height })
+    this.start()
   }
 }

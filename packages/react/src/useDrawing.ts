@@ -1,19 +1,9 @@
 import React, { useRef, useEffect, useCallback, MutableRefObject } from 'react'
-import { SvgDrawing, DrawingOption, Svg } from '@svg-drawing/core'
+import type { DrawingOption } from '@svg-drawing/core/lib/types'
+import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
+import { SvgDrawing } from '@svg-drawing/core/lib/drawing'
+import { UseSvgDrawing } from './types'
 
-interface UseSvgDrawing {
-  instance: SvgDrawing | null
-  clear: () => void
-  undo: () => void
-  changePenColor: (penColor: DrawingOption['penColor']) => void
-  changePenWidth: (penwidth: DrawingOption['penWidth']) => void
-  changeFill: (penColor: DrawingOption['fill']) => void
-  changeClose: (penwidth: DrawingOption['close']) => void
-  changeDelay: (penColor: DrawingOption['delay']) => void
-  changeCurve: (penwidth: DrawingOption['curve']) => void
-  getSvgXML: () => string | null
-  download: (ext: 'svg' | 'png' | 'jpg') => void
-}
 export const useSvgDrawing = (
   option?: Partial<DrawingOption>
 ): [MutableRefObject<HTMLDivElement | null>, UseSvgDrawing] => {
@@ -21,11 +11,11 @@ export const useSvgDrawing = (
   const drawingRef = useRef<SvgDrawing | null>(null)
   const getSvgXML = useCallback(() => {
     if (!drawingRef.current) return null
-    return drawingRef.current.renderer.svg.toElement().outerHTML
+    return svgObjectToElement(drawingRef.current.svg.toJson()).outerHTML
   }, [])
-  const download = useCallback((...[ext, opt]: Parameters<Svg['download']>) => {
+  const download = useCallback<UseSvgDrawing['download']>((opt) => {
     if (!drawingRef.current) return
-    drawingRef.current.renderer.svg.download(ext ?? 'svg', opt)
+    drawingRef.current.download(opt)
   }, [])
   const changePenColor = useCallback((param: DrawingOption['penColor']) => {
     if (!drawingRef.current || !param) return
@@ -70,7 +60,7 @@ export const useSvgDrawing = (
   return [
     renderRef,
     {
-      instance: drawingRef.current,
+      ref: drawingRef,
       changePenWidth,
       changePenColor,
       changeFill,

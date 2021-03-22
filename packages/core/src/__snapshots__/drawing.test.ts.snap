@@ -76,12 +76,12 @@ exports[`drawing.ts SvgDrawing undo() 1`] = `
   xmlns:xlink="http://www.w3.org/1999/xlink"
 >
   <path
-    d="M NaN NaN"
+    d="M 0 0"
     fill="none"
     stroke="#000"
     stroke-linecap="round"
     stroke-linejoin="round"
-    stroke-width="NaN"
+    stroke-width="1"
   />
 </svg>
 `;

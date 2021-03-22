@@ -46,11 +46,11 @@ const [renderRef, draw] = useSvgDrawing()
 
 // Call the SvgDrawing. Access the current settings of penWidth, penColor etc
 // Details are https://github.com/kmkzt/svg-drawing/tree/master/packages/core.
-const loggerInstance = useCallback(() => {
-  if (!draw.instance) return
-  console.log(draw.instance.penColor) // #333
-  console.log(draw.instance.penWidth) // 1
-}, [draw.instance])
+const logger = useCallback(() => {
+  if (!draw.ref.current) return
+  console.log(draw.ref.current.penColor) // #333
+  console.log(draw.ref.current.penWidth) // 1
+}, [])
 
 // Erase all drawing.
 return <button onClick={draw.clear}>clear</button>
@@ -60,9 +60,9 @@ return <button onClick={draw.undo}>undo</button>
 // Download image.
 const handleDownload = useCallback(() => {
   draw.download() // default svg download
-  draw.download('svg')
-  draw.download('png')
-  draw.download('jpg')
+  draw.download({ extension: 'svg', filename: 'a.svg'})
+  draw.download({ extension: 'png', filename: 'b.png'})
+  draw.download({ extension: 'jpg', filename: 'c.jpg'})
 }, [draw.download])
 
 // Chage parameter

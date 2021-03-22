@@ -1,57 +1,89 @@
-import { Svg, SvgOption } from './svg'
+import { PathObject, RendererOption, SvgObject } from './types'
+import { camel2kebab } from './utils'
 
-export type RendererOption = Omit<SvgOption, 'width' | 'height'>
+const VERSION = '1.1'
+const SVG_NS = 'http://www.w3.org/2000/svg'
+const SVG_XLINK = 'http://www.w3.org/1999/xlink'
+interface Attrs {
+  [key: string]: string
+}
+export const createSvgElement = (
+  attrs: Attrs,
+  childs: SVGElement[]
+): SVGSVGElement => {
+  const svg = document.createElementNS(SVG_NS, 'svg')
+  svg.setAttributeNS(null, 'version', VERSION)
+  svg.setAttribute('xmlns', SVG_NS)
+  svg.setAttribute('xmlns:xlink', SVG_XLINK)
+  Object.keys(attrs)
+    .sort()
+    .map((key: string) => {
+      svg.setAttribute(key, attrs[key])
+    })
+  childs.map((el: SVGElement) => {
+    svg.appendChild(el)
+  })
+  return svg
+}
+
+export const createSvgChildElement = (
+  elname: string,
+  attrs: Attrs
+): SVGElement => {
+  const path = document.createElementNS(SVG_NS, elname)
+  Object.keys(attrs)
+    .sort()
+    .map((key: string) => {
+      path.setAttribute(key, attrs[key])
+    })
+  return path
+}
+
+export const pathObjectToElement = (path: PathObject): SVGElement => {
+  const kebabAttrs = Object.entries(path).reduce(
+    (acc, [key, val], _i) =>
+      val
+        ? {
+            ...acc,
+            [camel2kebab(key)]: val,
+          }
+        : acc,
+    {}
+  )
+  return createSvgChildElement('path', kebabAttrs)
+}
+
+export const svgObjectToElement = ({
+  width,
+  height,
+  background,
+  paths,
+}: SvgObject): SVGSVGElement => {
+  const size = { width: String(width), height: String(height) }
+  const bgEl = background
+    ? [createSvgChildElement('rect', { ...size, fill: background })]
+    : []
+  const updateEl = createSvgElement(size, [
+    ...bgEl,
+    ...paths.map(pathObjectToElement),
+  ])
+  return updateEl
+}
+
 export class Renderer {
-  public el: HTMLElement
-  public top: number
-  public left: number
-  public svg: Svg
-  constructor(el: HTMLElement, opt: RendererOption = {}) {
-    const { width, height, left, top } = el.getBoundingClientRect()
+  constructor(public el: HTMLElement, { background }: RendererOption = {}) {
     /**
      * Setup parameter
      */
-    this.el = el
-    this.left = left
-    this.top = top
-    this.svg = new Svg({ width, height, ...opt })
-    el.appendChild(this.svg.toElement())
-    this._setupAdjustResize()
+    const { width, height } = el.getBoundingClientRect()
+    el.appendChild(svgObjectToElement({ background, width, height, paths: [] }))
   }
   /**
    * render
    * TODO: XSS test
+   * TODO: Partially renderable
    */
-  public update(): void {
-    this.el.replaceChild(this.svg.toElement(), this.el.childNodes[0])
-  }
-
-  public resizeElement(param?: DOMRect): void {
-    const { width, height, left, top } =
-      param || this.el.getBoundingClientRect()
-    // TODO: Resizing improve
-    this.svg.scalePath(width / this.svg.width)
-    this.svg.width = width
-    this.svg.height = height
-    this.left = left
-    this.top = top
-  }
-
-  private _setupAdjustResize(): void {
-    if ((window as any).ResizeObserver) {
-      const resizeObserver: any = new (window as any).ResizeObserver(
-        (entries: any[]) => {
-          this.resizeElement(entries[0].contentRect)
-          this.update()
-        }
-      )
-      resizeObserver.observe(this.el)
-    } else {
-      // TODO: improve
-      window.addEventListener('resize', (_ev) => {
-        this.resizeElement(this.el.getBoundingClientRect())
-        this.update()
-      })
-    }
+  public update(svgObj: SvgObject): void {
+    this.el.replaceChild(svgObjectToElement(svgObj), this.el.childNodes[0])
   }
 }

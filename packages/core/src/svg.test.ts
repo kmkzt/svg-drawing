@@ -1,4 +1,6 @@
 import { Point, Vector, Path, Svg, Command, COMMAND_TYPE } from './svg'
+import { download, toBase64 } from './download'
+import { pathObjectToElement, svgObjectToElement } from './renderer'
 
 describe('svg.ts', () => {
   describe('Point', () => {
@@ -157,7 +159,7 @@ describe('svg.ts', () => {
         expect(path.toJson()).toMatchSnapshot()
       })
       it('toElement', () => {
-        expect(path.toElement()).toMatchSnapshot()
+        expect(pathObjectToElement(path.toJson())).toMatchSnapshot()
       })
     })
     describe('commands parameter and getCommandString', () => {
@@ -231,15 +233,16 @@ describe('svg.ts', () => {
       ).toMatchSnapshot()
     })
     // TODO: Fix width, height
-    it('toElement', () => {
-      expect(svg.toElement()).toMatchSnapshot()
-    })
     it('toJson', () => {
       expect(svg.toJson()).toMatchSnapshot()
     })
+    it('toElement', () => {
+      const el = svgObjectToElement(svg.toJson())
+      expect(el).toMatchSnapshot()
+    })
     // TODO: replace image snapshot
     it('toBase64', () => {
-      expect(svg.toBase64()).toMatchSnapshot()
+      expect(toBase64(svg.toJson())).toMatchSnapshot()
     })
 
     describe('download', () => {
@@ -273,25 +276,26 @@ describe('svg.ts', () => {
       })
 
       it('svg download', () => {
+        expect.assertions(1)
         const testDownload = (param: any): void => {
           expect(param).toMatchSnapshot()
         }
-        svg.download('svg', testDownload)
+        download(svg, { extension: 'svg' }, testDownload)
       })
       // TODO: Fix download test
       it.skip('jpg download', (done) => {
+        expect.assertions(1)
         const testDownload = (param: any): void => {
           expect(param).toMatchSnapshot()
-          done()
         }
-        svg.download('jpg', testDownload)
+        download(svg, { extension: 'jpg' }, testDownload)
       }, 30000)
       it.skip('png download', (done) => {
+        expect.assertions(1)
         const testDownload = (param: any): void => {
           expect(param).toMatchSnapshot()
-          done()
         }
-        svg.download('png', testDownload)
+        download(svg, { extension: 'png' }, testDownload)
       }, 30000)
     })
   })
