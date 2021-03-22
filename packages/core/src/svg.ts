@@ -255,6 +255,15 @@ export class Svg {
     this.background = background
   }
 
+  /**
+   * @todo check height
+   */
+  public resize({ width, height }: { width: number; height: number }) {
+    this.scalePath(width / this.width)
+    this.width = width
+    this.height = height
+  }
+
   public scalePath(r: number): this {
     if (r !== 1) {
       for (let i = 0; i < this.paths.length; i += 1) {
@@ -272,6 +281,7 @@ export class Svg {
     }
     return this
   }
+
   public clonePaths(): Path[] {
     return this.paths.map((p) => p.clone())
   }

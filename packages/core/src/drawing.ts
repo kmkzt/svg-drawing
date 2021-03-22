@@ -192,16 +192,13 @@ export class SvgDrawing {
   }
 
   /**
-   * TODO: improve check scale path
    */
   private _resize({
     width,
     height,
   }: Parameters<ResizeHandlerCallback['resize']>[0]) {
-    if (!isAlmostSameNumber(this.svg.height, height)) this.svg.height = height
     if (!isAlmostSameNumber(this.svg.width, width)) {
-      this.svg.scalePath(width / this.svg.width)
-      this.svg.width = width
+      this.svg.resize({ width, height })
       this.update()
     }
   }

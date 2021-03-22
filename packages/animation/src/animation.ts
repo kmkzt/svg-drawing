@@ -8,6 +8,8 @@ import { camel2kebab, roundUp } from '@svg-drawing/core/lib/utils'
 import { downloadBlob, svg2base64 } from '@svg-drawing/core/lib/download'
 import { Path, Svg } from '@svg-drawing/core/lib/svg'
 import { AnimationOption, FrameAnimation } from './types'
+import { ResizeHandler } from '@svg-drawing/core/lib/handler'
+import type { ResizeHandlerCallback } from '@svg-drawing/core/lib/types'
 
 export class SvgAnimation {
   /**
@@ -18,7 +20,7 @@ export class SvgAnimation {
    * Private prorperty
    */
   private _stopId: number
-  private _stop: (() => void) | null
+  private _stopAnimation: (() => void) | null
   private _anim: FrameAnimation | null
   private _restorePaths: Path[]
   private _framesNumber: number | undefined
@@ -27,6 +29,7 @@ export class SvgAnimation {
    */
   public svg: Svg
   public renderer: Renderer
+  public resizeHandler: ResizeHandler
   /**
    * Relation animate element
    * TODO: add easing option
@@ -36,15 +39,29 @@ export class SvgAnimation {
     el: HTMLElement,
     { background, ms }: AnimationOption = { ms: 60 }
   ) {
-    const { width, height } = el.getBoundingClientRect()
-    this.svg = new Svg({ width, height, background })
-    this.renderer = new Renderer(el, { background })
     this.ms = ms
-    this._stop = null
+    this._stopAnimation = null
     this._anim = null
     this._restorePaths = []
     this._stopId = 0
     this._repeatCount = 'indefinite'
+    /**
+     * Setup Svg
+     */
+    const { width, height } = el.getBoundingClientRect()
+    this.svg = new Svg({ width, height, background })
+    /**
+     * Setup renderer
+     */
+    this.renderer = new Renderer(el, { background })
+    /**
+     * Setup resize handler
+     */
+    this._resize = this._resize.bind(this)
+    this.resizeHandler = new ResizeHandler(el, {
+      resize: this._resize,
+    })
+    this.resizeHandler.on()
   }
 
   /**
@@ -68,8 +85,9 @@ export class SvgAnimation {
   }
 
   public stop(): boolean {
-    if (this._stop) {
-      this._stop()
+    if (this._stopAnimation) {
+      this._stopAnimation()
+      this.restore()
       return true
     }
     return false
@@ -77,7 +95,7 @@ export class SvgAnimation {
 
   public restore(): void {
     this.svg.paths = this._restorePaths
-    this.renderer.update(this.svg.toJson())
+    this.update()
   }
 
   public generateFrame(index?: number): Path[] {
@@ -92,7 +110,10 @@ export class SvgAnimation {
     // If do not this first, this cannot get the number of frames well.
     this.stop()
     this._registerRestorePaths()
+    this._startAnimation()
+  }
 
+  private _startAnimation(): void {
     let index = 0
     let start: number | undefined
     const ms = this.ms
@@ -112,9 +133,9 @@ export class SvgAnimation {
       this._stopId = requestAnimationFrame(frame)
     }
     this._stopId = requestAnimationFrame(frame)
-    this._stop = () => {
+    this._stopAnimation = () => {
       cancelAnimationFrame(this._stopId)
-      this._stop = null
+      this._stopAnimation = null
     }
   }
 
@@ -125,7 +146,7 @@ export class SvgAnimation {
   public toElement(): SVGSVGElement {
     // If the animation is stopped, read the currently displayed Svg data.
     // If stopped in the middle, SVG in that state is displayed
-    if (!this._stop) {
+    if (!this._stopAnimation) {
       this._registerRestorePaths()
     }
 
@@ -248,5 +269,14 @@ export class SvgAnimation {
       p.attrs.id = `t${i}`
       return p
     })
+  }
+
+  private _resize({
+    width,
+    height,
+  }: Parameters<ResizeHandlerCallback['resize']>[0]): void {
+    this.stop()
+    this.svg.resize({ width, height })
+    this.start()
   }
 }
