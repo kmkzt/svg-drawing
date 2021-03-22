@@ -1,4 +1,5 @@
-import { readFile, writeFileSync } from 'fs'
+/* eslint-disable jest/no-test-callback */
+import { writeFileSync } from 'fs'
 import { resolve } from 'path'
 import { ImgTrace, ImgTraceOption } from './trace'
 import { Palette } from './palette'

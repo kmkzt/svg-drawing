@@ -1,11 +1,8 @@
+/* eslint-disable jest/no-test-callback */
 import { resolve } from 'path'
 import { Palette, Rgba } from './palette'
 import { loadPngData } from './__test__/loadPngData'
-interface PngData {
-  width: number
-  height: number
-  data: any
-}
+
 const TEST_NUMBER_OF_COLORS = [undefined, 2, 4, 7, 8, 27, 64]
 const TEST_COLOR_QUANT_CYCLES = [undefined, 1, 8]
 const getTestResult = (pal: Rgba[]) =>
