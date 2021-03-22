@@ -10,8 +10,8 @@ export const getPassiveOptions = (
 ): boolean | { passive: boolean } => {
   try {
     const check = () => null
-    window.addEventListener('testPassive', check, { passive })
-    window.removeEventListener('testPassive', check)
+    addEventListener('testPassive', check, { passive })
+    removeEventListener('testPassive', check)
     return { passive }
   } catch (e) {
     return false
@@ -170,8 +170,8 @@ export class DrawHandler {
       return () => this._el.removeEventListener(evname, this._handleEnd)
     })
     const frameoutClear = frameout.map((evname): (() => void) => {
-      window.addEventListener(evname, this._handleEnd, this._listenerOption)
-      return () => window.removeEventListener(evname, this._handleEnd)
+      addEventListener(evname, this._handleEnd, this._listenerOption)
+      return () => removeEventListener(evname, this._handleEnd)
     })
     this._clearEventList.push(
       ...startClear,
@@ -187,10 +187,10 @@ export class DrawHandler {
       this._left = left
       this._top = top
     }
-    window.addEventListener('scroll', handleEvent)
+    addEventListener('scroll', handleEvent)
     this._el.addEventListener('resize', handleEvent)
     this._clearEventList.push(() => {
-      window.removeEventListener('scroll', handleEvent)
+      removeEventListener('scroll', handleEvent)
       this._el.removeEventListener('resize', handleEvent)
     })
   }
@@ -229,9 +229,9 @@ export class ResizeHandler {
       const handleResizeEvent = () => {
         this.resize(this._el.getBoundingClientRect())
       }
-      window.addEventListener('resize', handleResizeEvent)
+      addEventListener('resize', handleResizeEvent)
       this._clearEventList.push(() =>
-        window.removeEventListener('resize', handleResizeEvent)
+        removeEventListener('resize', handleResizeEvent)
       )
     }
   }
