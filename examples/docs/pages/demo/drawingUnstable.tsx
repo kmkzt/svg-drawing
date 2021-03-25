@@ -1,6 +1,10 @@
 import { useEffect, useCallback, useState, ChangeEvent } from 'react'
 import { NextPage } from 'next'
-import { useDrawingUnstable, RenderSvg } from '@svg-drawing/react'
+import {
+  useSvgDrawing,
+  useDrawingUnstable,
+  RenderSvg,
+} from '@svg-drawing/react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
@@ -30,6 +34,7 @@ const colorList = [
   'black',
 ]
 
+console.log(useDrawingUnstable)
 const getRandomInt = (max: number): number =>
   Math.floor(Math.random() * Math.floor(max))
 const getRandomColor = (): string =>
@@ -64,18 +69,27 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [penColor, setPenColor] = useState('black')
   const [delay, setDelay] = useState(20)
   const [penWidth, setPenWidth] = useState(5)
-  const [divRef, draw] = useDrawingUnstable({
+  const [drawElRef, svgObj, drawMethod] = useDrawingUnstable({
     curve,
     close,
     delay,
     penWidth,
+    penColor,
+    fill,
+  })
+  const [divRef, draw] = useSvgDrawing({
+    curve,
+    close,
+    delay,
+    penWidth,
+    penColor,
     fill,
   })
   const clickDownload = useCallback(
-    (extention: 'png' | 'jpg' | 'svg') => (
+    (extension: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
     ) => {
-      draw.download(extention)
+      draw.download({ extension })
     },
     [draw]
   )
@@ -198,20 +212,20 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const handleFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const reader = new FileReader()
-      reader.onload = function (ev: ProgressEvent<FileReader>) {
+      reader.onload = (ev: ProgressEvent<FileReader>) => {
         if (!ev.target || typeof ev.target.result !== 'string') return
         const [type, data] = ev.target.result.split(',')
         if (type === 'data:image/svg+xml;base64') {
           const svgxml = atob(data)
-          if (!draw.instance) return
-          draw.instance.renderer.svg.parseSVGString(svgxml)
-          draw.instance.renderer.update()
+          if (!draw.ref.current) return
+          draw.ref.current.svg.parseSVGString(svgxml)
+          draw.ref.current.update()
         }
       }
       if (!e.target?.files) return
       reader.readAsDataURL(e.target.files[0])
     },
-    [draw]
+    [draw.ref]
   )
   return (
     <Layout>
@@ -423,9 +437,24 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             margin: '0 auto 0 0',
             width: '100%',
             height: '100%',
+            touchAction: 'none',
+          }}
+        />
+      </Box>
+      <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
+        <div
+          ref={drawElRef}
+          style={{
+            backgroundImage: lattice(size),
+            backgroundSize: `${size}px ${size}px`,
+            border: '1px solid #333',
+            margin: '0 auto 0 0',
+            width: '100%',
+            height: '100%',
+            touchAction: 'none',
           }}
         >
-          <RenderSvg {...draw} />
+          <RenderSvg {...svgObj} />
         </div>
       </Box>
     </Layout>
