@@ -77,6 +77,11 @@ export const useDrawingUnstable = <T extends HTMLElement>({
     () => throttle(handleDrawMove, delay ?? 0),
     [delay]
   )
+
+  useEffect(() => {
+    if (!drawHandlerRef.current) return
+    drawHandlerRef.current.move = handleThrottleDrawMove
+  }, [handleThrottleDrawMove])
   const update = useCallback(() => {
     if (!drawPathRef.current) return
     if (curve) {
