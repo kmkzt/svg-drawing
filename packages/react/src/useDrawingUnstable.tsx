@@ -45,7 +45,6 @@ export const useDrawingUnstable = <T extends HTMLElement>({
   const svg = useMemo(() => new Svg({ width: 0, height: 0 }), [])
   const convert = useMemo(() => new Convert(), [])
   const [svgObj, setSvgObj] = useState(svg.toJson())
-  const [paths, setPaths] = useState<SvgObject['paths'][]>([])
 
   const createDrawPath = useCallback((): Path => {
     drawPointsRef.current = []
@@ -58,31 +57,7 @@ export const useDrawingUnstable = <T extends HTMLElement>({
     })
   }, [penColor, penWidth, fill, curve])
 
-  const handleDrawStart = useCallback<DrawHandlerCallback['start']>(() => {
-    // console.log('start')
-    if (drawPathRef.current) return
-    drawPathRef.current = createDrawPath()
-    svg.addPath(drawPathRef.current)
-  }, [svg, createDrawPath])
-
-  const handleDrawMove = useCallback<DrawHandlerCallback['move']>((po) => {
-    drawPointsRef.current = [...drawPointsRef.current, po]
-    update()
-  }, [])
-  const handleDrawEnd = useCallback<DrawHandlerCallback['end']>(() => {
-    // console.log('end')
-    drawPathRef.current = null
-  }, [])
-  const handleThrottleDrawMove = useMemo(
-    () => throttle(handleDrawMove, delay ?? 0),
-    [delay]
-  )
-
-  useEffect(() => {
-    if (!drawHandlerRef.current) return
-    drawHandlerRef.current.move = handleThrottleDrawMove
-  }, [handleThrottleDrawMove])
-  const update = useCallback(() => {
+  const updateCommands = useCallback(() => {
     if (!drawPathRef.current) return
     if (curve) {
       drawPathRef.current.commands = convert.bezierCurveCommands(
@@ -92,12 +67,38 @@ export const useDrawingUnstable = <T extends HTMLElement>({
       drawPathRef.current.commands = convert.lineCommands(drawPointsRef.current)
     }
 
+    console.log('close', close)
     if (close) {
       drawPathRef.current.commands.push(new Command(COMMAND_TYPE.CLOSE))
     }
 
     setSvgObj(svg.toJson())
   }, [curve, close, svg, convert])
+  const handleDrawStart = useCallback<DrawHandlerCallback['start']>(() => {
+    if (drawPathRef.current) return
+    drawPathRef.current = createDrawPath()
+    svg.addPath(drawPathRef.current)
+  }, [svg, createDrawPath])
+
+  const handleDrawMove = useCallback<DrawHandlerCallback['move']>(
+    (po) => {
+      drawPointsRef.current.push(po)
+      updateCommands()
+    },
+    [updateCommands]
+  )
+  const handleDrawEnd = useCallback<DrawHandlerCallback['end']>(() => {
+    drawPathRef.current = null
+  }, [])
+  const handleThrottleDrawMove = useMemo(
+    () => throttle(handleDrawMove, delay ?? 0),
+    [delay, handleDrawMove]
+  )
+
+  useEffect(() => {
+    if (!drawHandlerRef.current) return
+    drawHandlerRef.current.move = handleThrottleDrawMove
+  }, [handleThrottleDrawMove])
 
   // useEffect(() => {
   //   if (!drawPathRef.current) return
@@ -122,21 +123,21 @@ export const useDrawingUnstable = <T extends HTMLElement>({
   }, [handleDrawStart])
   useEffect(() => {
     if (!drawElRef.current) return
-    if (!drawHandlerRef.current) {
-      const { width, height } = drawElRef.current.getBoundingClientRect()
-      svg.resize({ width, height })
-      drawHandlerRef.current = new DrawHandler(drawElRef.current, {
-        start: handleDrawStart,
-        move: handleThrottleDrawMove,
-        end: handleDrawEnd,
-      })
-      drawHandlerRef.current.on()
-    }
+    if (drawHandlerRef.current) return
+
+    const { width, height } = drawElRef.current.getBoundingClientRect()
+    svg.resize({ width, height })
+    drawHandlerRef.current = new DrawHandler(drawElRef.current, {
+      start: handleDrawStart,
+      move: handleThrottleDrawMove,
+      end: handleDrawEnd,
+    })
+    drawHandlerRef.current.on()
     // return () => {
     //   if (drawHandlerRef.current) drawHandlerRef.current.off()
     // }
   })
-  return [drawElRef, svgObj, {}]
+  return [drawElRef, { ...svgObj, background }, {}]
 }
 
 export const RenderSvg = ({ background, paths, ...size }: SvgObject) => (
