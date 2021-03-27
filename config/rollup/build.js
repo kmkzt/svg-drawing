@@ -43,7 +43,10 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
         babel(getBabelOptions({ esm: false, extensions })),
         nodeResolve({ extensions }),
         sourceMaps(),
-        replace({ 'process.env.NODE_ENV': JSON.stringify('production') }),
+        replace({
+          'process.env.NODE_ENV': JSON.stringify('production'),
+          preventAssignment: true,
+        }),
         terser({ output: { comments: /Copyright/i } }),
         sizeSnapshot(),
       ],
