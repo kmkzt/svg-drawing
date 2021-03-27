@@ -60,7 +60,7 @@ export const useDrawingUnstable = <T extends HTMLElement>({
     })
   }, [penColor, penWidth, fill, curve])
 
-  const updateSvg = useCallback(() => {
+  const updateCommands = useCallback(() => {
     if (!drawPathRef.current) return
     if (curve) {
       drawPathRef.current.commands = convert.bezierCurveCommands(
@@ -75,6 +75,7 @@ export const useDrawingUnstable = <T extends HTMLElement>({
 
     shouldUpdateRef.current = true
   }, [curve, close, convert])
+
   const handleDrawStart = useCallback<DrawHandlerCallback['start']>(() => {
     if (drawPathRef.current) return
     drawPathRef.current = createDrawPath()
@@ -85,10 +86,10 @@ export const useDrawingUnstable = <T extends HTMLElement>({
     const move: DrawHandlerCallback['move'] = (po) => {
       if (!drawPathRef.current) return
       drawPointsRef.current = [...drawPointsRef.current, po]
-      updateSvg()
+      updateCommands()
     }
     return throttle(move, delay ?? 0)
-  }, [delay, updateSvg])
+  }, [delay, updateCommands])
 
   const handleDrawEnd = useCallback<DrawHandlerCallback['end']>(() => {
     drawPathRef.current = null
@@ -109,8 +110,8 @@ export const useDrawingUnstable = <T extends HTMLElement>({
   //   drawPathRef.current = createDrawPath()
   //   drawPointsRef.current = [po]
   //   svgRef.current.addPath(drawPathRef.current)
-  //   updateSvg()
-  // }, [updateSvg, penWidth, penColor, createDrawPath])
+  //   updateCommands()
+  // }, [updateCommands, penWidth, penColor, createDrawPath])
 
   /**
    * Setup DrawHandler
