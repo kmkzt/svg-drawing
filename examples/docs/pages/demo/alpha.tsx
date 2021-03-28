@@ -1,11 +1,12 @@
 import { useEffect, useCallback, useState, ChangeEvent, useMemo } from 'react'
 import { NextPage } from 'next'
-import { useSvgDrawing, useDrawing, RenderSvg } from '@svg-drawing/react'
+import { useDrawing, RenderSvg } from '@svg-drawing/react'
 import {
   BezierCurve,
   convertLineCommands,
   CommandsConverter,
   closeCommands,
+  download,
 } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
@@ -75,7 +76,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     const converter = curve ? new BezierCurve().convert : convertLineCommands
     return (po) => (close ? closeCommands(converter(po)) : converter(po))
   }, [close, curve])
-  const [drawElRef, svgObj] = useDrawing<HTMLDivElement>({
+  const [drawElRef, svgObj, draw] = useDrawing<HTMLDivElement>({
     pathOptions: {
       fill,
       stroke: penColor,
@@ -83,28 +84,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     },
     commandsConverter,
   })
-  const [divRef, draw] = useSvgDrawing({
-    curve,
-    close,
-    delay,
-    penWidth,
-    penColor,
-    fill,
-  })
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
     ) => {
-      draw.download({ extension })
-    },
-    [draw]
-  )
-
-  const handleChangeRainbowPen = useCallback(
-    (e) => {
-      draw.changeFill('none')
-      draw.changeClose(false)
-      switchRainbowpen(e.target.checked)
+      download(draw.ref.current)
     },
     [draw]
   )
@@ -115,42 +99,21 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   //   switchThinner(e.target.checked)
   // }, [])
   const handleChangeCiruler = useCallback(() => {
-    draw.changeCurve(!curve)
     switchCurve(!curve)
-  }, [curve, draw])
+  }, [curve])
 
   const handleChangeClose = useCallback(() => {
-    draw.changeClose(!close)
     switchClose(!close)
-  }, [close, draw])
+  }, [close])
 
-  const handlePenWidth = useCallback(
-    (e: ChangeEvent<any>) => {
-      const num = Number(e.target.value)
-      if (Number.isNaN(num)) return
-      draw.changePenWidth(num)
-      setPenWidth(num)
-    },
-    [draw]
-  )
-
-  const handleChangeDelay = useCallback(
-    (e: ChangeEvent<any>) => {
-      const num = Number(e.target.value)
-      if (Number.isNaN(num)) return
-      draw.changeDelay(num)
-      setDelay(num)
-    },
-    [draw]
-  )
-
-  const updatePenColor = useCallback(
-    (color: string) => {
-      draw.changePenColor(color)
-      setPenColor(color)
-    },
-    [draw]
-  )
+  const handlePenWidth = useCallback((e: ChangeEvent<any>) => {
+    const num = Number(e.target.value)
+    if (Number.isNaN(num)) return
+    setPenWidth(num)
+  }, [])
+  const updatePenColor = useCallback((color: string) => {
+    setPenColor(color)
+  }, [])
 
   const handleChangePenColor = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -166,13 +129,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [updatePenColor]
   )
 
-  const updateFill = useCallback(
-    (color: string) => {
-      draw.changeFill(color)
-      setFill(color)
-    },
-    [draw]
-  )
+  const updateFill = useCallback((color: string) => {
+    setFill(color)
+  }, [])
 
   const handleChangeFill = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -188,28 +147,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [updateFill]
   )
 
-  const clickClear = useCallback(() => {
-    draw.clear()
-  }, [draw])
-  const clickUndo = useCallback(() => {
-    draw.undo()
-  }, [draw])
-
-  // TODO: improve UI
-  // const clickOff = useCallback(() => {
-  //   if (!draw.instance) return
-  //   draw.instance.off()
-  // }, [draw])
-  // const clickOn = useCallback(() => {
-  //   if (!draw.instance) return
-  //   draw.instance.on()
-  // }, [draw])
-
   useEffect(() => {
     const stop = setInterval(() => {
       if (!rainbowPen) return
       const color = getRandomColor()
-      draw.changePenColor(color)
       setPenColor(color)
     }, delay * 4)
     return () => clearInterval(stop)
@@ -223,16 +164,16 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         const [type, data] = ev.target.result.split(',')
         if (type === 'data:image/svg+xml;base64') {
           const svgxml = atob(data)
-          if (!draw.ref.current) return
-          draw.ref.current.svg.parseSVGString(svgxml)
-          draw.ref.current.update()
+          draw.ref.current.parseSVGString(svgxml)
+          draw.update()
         }
       }
       if (!e.target?.files) return
       reader.readAsDataURL(e.target.files[0])
     },
-    [draw.ref]
+    [draw]
   )
+
   return (
     <Layout>
       <Box as="fieldset">
@@ -261,34 +202,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 onChange={handlePenWidth}
               />
             </Flex>
-            <Flex alignItems="center">
-              <Label
-                width={3 / 10}
-                fontSize={[2, 1, 1]}
-                htmlFor="throttleDelay"
-              >
-                THROTTLE DELAY:
-              </Label>
-              <Slider
-                width={5 / 10}
-                type="range"
-                min="0"
-                max="300"
-                step="5"
-                value={delay}
-                onChange={handleChangeDelay}
-              />
-              <Input
-                width="auto"
-                id="throttleDelay"
-                type="number"
-                min="0"
-                max="300"
-                step="5"
-                value={delay}
-                onChange={handleChangeDelay}
-              />
-            </Flex>
             <Flex pt={3} justifyContent="start">
               <Label htmlFor="curve">
                 <Checkbox
@@ -308,14 +221,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                   Close
                 </Label>
               )}
-              <Label htmlFor="rainbow">
-                <Checkbox
-                  id="rainbow"
-                  checked={rainbowPen}
-                  onChange={handleChangeRainbowPen}
-                />
-                Rainbow pen
-              </Label>
             </Flex>
           </Box>
           {!rainbowPen && (
@@ -386,10 +291,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       <Box as="fieldset">
         <Flex flexWrap="wrap" justifyContent="start">
           <Box mr={2}>
-            <Button mr={1} mb={1} onClick={clickClear}>
+            <Button mr={1} mb={1} onClick={draw.clear}>
               Clear
             </Button>
-            <Button mr={1} mb={1} onClick={clickUndo}>
+            <Button mr={1} mb={1} onClick={draw.undo}>
               Undo
             </Button>
             <Button
@@ -432,20 +337,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             </Box>
           )}
         </Flex>
-      </Box>
-      <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
-        <div
-          ref={divRef}
-          style={{
-            backgroundImage: lattice(size),
-            backgroundSize: `${size}px ${size}px`,
-            border: '1px solid #333',
-            margin: '0 auto 0 0',
-            width: '100%',
-            height: '100%',
-            touchAction: 'none',
-          }}
-        />
       </Box>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div

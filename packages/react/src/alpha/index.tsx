@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  MutableRefObject,
 } from 'react'
 import { Svg, Path, Command, COMMAND_TYPE } from '@svg-drawing/core/lib/svg'
 import { DrawHandler, ResizeHandler } from '@svg-drawing/core/lib/handler'
@@ -21,11 +22,18 @@ import type {
 type UseDrawing<T extends HTMLElement> = [
   RefObject<T>,
   SvgObject,
-  DrawingMethods
+  UseDrawingMethods
 ]
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type DrawingMethods = {}
+type UseDrawingMethods = {
+  ref: MutableRefObject<Svg>
+  on: () => void
+  off: () => void
+  update: () => void
+  clear: () => void
+  undo: () => void
+}
 
 const RENDER_INTERVAL = 0
 const DRAW_DELAY = 20
@@ -51,9 +59,27 @@ export const useDrawing = <T extends HTMLElement>({
     [commandsConverter]
   )
 
-  const shouldUpdateRef = useRef<boolean>(false)
   const [svgObj, setSvgObj] = useState(svgRef.current.toJson())
 
+  /**
+   * A variable called shouldUpdateRef manages whether to update to reduce the number of times setState is executed.
+   */
+  const shouldUpdateRef = useRef<boolean>(false)
+  const update = useCallback(() => {
+    shouldUpdateRef.current = true
+  }, [])
+  useEffect(() => {
+    const stopId = setInterval(() => {
+      if (!shouldUpdateRef.current) return
+      shouldUpdateRef.current = false
+      setSvgObj(svgRef.current.toJson())
+    }, RENDER_INTERVAL)
+    return () => clearInterval(stopId)
+  }, [])
+
+  /**
+   * Draw methods
+   */
   const createDrawPath = useCallback((): Path => {
     drawPointsRef.current = []
     return new Path({
@@ -65,8 +91,8 @@ export const useDrawing = <T extends HTMLElement>({
   const updateCommands = useCallback(() => {
     if (!drawPathRef.current) return
     drawPathRef.current.commands = converter(drawPointsRef.current)
-    shouldUpdateRef.current = true
-  }, [converter])
+    update()
+  }, [converter, update])
 
   const handleDrawStart = useCallback<DrawHandlerCallback['start']>(() => {
     if (drawPathRef.current) return
@@ -130,18 +156,40 @@ export const useDrawing = <T extends HTMLElement>({
   })
 
   /**
-   * A variable called shouldUpdateRef manages whether to update to reduce the number of times setState is executed.
+   * Methods
    */
-  useEffect(() => {
-    const stopId = setInterval(() => {
-      if (!shouldUpdateRef.current) return
-      shouldUpdateRef.current = false
-      setSvgObj(svgRef.current.toJson())
-    }, RENDER_INTERVAL)
-    return () => clearInterval(stopId)
+  const on = useCallback(() => {
+    if (resizeHandlerRef.current) resizeHandlerRef.current.on()
+    if (drawHandlerRef.current) drawHandlerRef.current.on()
   }, [])
 
-  return [drawElRef, svgObj, {}]
+  const off = useCallback(() => {
+    if (resizeHandlerRef.current) resizeHandlerRef.current.off()
+    if (drawHandlerRef.current) drawHandlerRef.current.off()
+  }, [])
+
+  const clear = useCallback(() => {
+    svgRef.current.paths = []
+    update()
+  }, [update])
+
+  const undo = useCallback(() => {
+    svgRef.current.paths.pop()
+    update()
+  }, [update])
+
+  return [
+    drawElRef,
+    svgObj,
+    {
+      ref: svgRef,
+      update,
+      undo,
+      clear,
+      on,
+      off,
+    },
+  ]
 }
 
 export const RenderSvg = ({ background, paths, ...size }: SvgObject) => (
