@@ -1,6 +1,12 @@
-import { useEffect, useCallback, useState, ChangeEvent } from 'react'
+import { useEffect, useCallback, useState, ChangeEvent, useMemo } from 'react'
 import { NextPage } from 'next'
 import { useSvgDrawing, useDrawing, RenderSvg } from '@svg-drawing/react'
+import {
+  BezierCurve,
+  convertLineCommands,
+  CommandsConverter,
+  closeCommands,
+} from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
@@ -65,13 +71,17 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [penColor, setPenColor] = useState('black')
   const [delay, setDelay] = useState(20)
   const [penWidth, setPenWidth] = useState(5)
+  const commandsConverter = useMemo<CommandsConverter>(() => {
+    const converter = curve ? new BezierCurve().convert : convertLineCommands
+    return (po) => (close ? closeCommands(converter(po)) : converter(po))
+  }, [close, curve])
   const [drawElRef, svgObj] = useDrawing({
-    curve,
-    close,
-    delay,
-    penWidth,
-    penColor,
-    fill,
+    pathOptions: {
+      fill,
+      stroke: penColor,
+      strokeWidth: penWidth,
+    },
+    commandsConverter,
   })
   const [divRef, draw] = useSvgDrawing({
     curve,

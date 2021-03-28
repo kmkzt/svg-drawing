@@ -8,21 +8,19 @@ import React, {
 } from 'react'
 import { Svg, Path, Command, COMMAND_TYPE } from '@svg-drawing/core/lib/svg'
 import { DrawHandler, ResizeHandler } from '@svg-drawing/core/lib/handler'
-import { Convert } from '@svg-drawing/core/lib/convert'
+import { BezierCurve, CommandsConverter } from '@svg-drawing/core/lib/convert'
 import { throttle } from '@svg-drawing/core/lib/throttle'
 import { isAlmostSameNumber } from '@svg-drawing/core/lib/utils'
 import type {
   DrawHandlerCallback,
-  DrawingOption,
+  PathObject,
   PointObject,
-  ResizeHandlerCallback,
   SvgObject,
-  SvgOption,
 } from '@svg-drawing/core/lib/types'
 
 type UseDrawing<T extends HTMLElement = any> = [
-  RefObject<T | null>,
-  SvgObject | null,
+  RefObject<T>,
+  SvgObject,
   DrawingMethods
 ]
 
@@ -30,21 +28,28 @@ type UseDrawing<T extends HTMLElement = any> = [
 type DrawingMethods = {}
 
 const RENDER_INTERVAL = 0
+const DRAW_DELAY = 20
+const defaultPathOptions: PathObject = {
+  fill: 'none',
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+}
 
 export const useDrawing = <T extends HTMLElement>({
-  penColor,
-  penWidth,
-  close,
-  curve,
-  delay,
-  fill,
-  background,
-}: DrawingOption & Pick<SvgOption, 'background'>): UseDrawing<T> => {
+  pathOptions,
+  commandsConverter,
+}: {
+  pathOptions: PathObject
+  commandsConverter?: CommandsConverter
+}): UseDrawing<T> => {
   const drawElRef = useRef<T>(null)
   const svgRef = useRef(new Svg({ width: 0, height: 0 }))
   const drawPathRef = useRef<Path | null>(null)
   const drawPointsRef = useRef<PointObject[]>([])
-  const convert = useMemo(() => new Convert(), [])
+  const converter = useMemo<CommandsConverter>(
+    () => commandsConverter ?? new BezierCurve().convert,
+    [commandsConverter]
+  )
 
   const shouldUpdateRef = useRef<boolean>(false)
   const [svgObj, setSvgObj] = useState(svgRef.current.toJson())
@@ -52,29 +57,16 @@ export const useDrawing = <T extends HTMLElement>({
   const createDrawPath = useCallback((): Path => {
     drawPointsRef.current = []
     return new Path({
-      stroke: penColor,
-      strokeWidth: String(penWidth),
-      fill: fill,
-      strokeLinecap: curve ? 'round' : 'mitter',
-      strokeLinejoin: curve ? 'round' : 'square',
+      ...defaultPathOptions,
+      ...pathOptions,
     })
-  }, [penColor, penWidth, fill, curve])
+  }, [pathOptions])
 
   const updateCommands = useCallback(() => {
     if (!drawPathRef.current) return
-    if (curve) {
-      drawPathRef.current.commands = convert.bezierCurveCommands(
-        drawPointsRef.current
-      )
-    } else {
-      drawPathRef.current.commands = convert.lineCommands(drawPointsRef.current)
-    }
-    if (close) {
-      drawPathRef.current.commands.push(new Command(COMMAND_TYPE.CLOSE))
-    }
-
+    drawPathRef.current.commands = converter(drawPointsRef.current)
     shouldUpdateRef.current = true
-  }, [curve, close, convert])
+  }, [converter])
 
   const handleDrawStart = useCallback<DrawHandlerCallback['start']>(() => {
     if (drawPathRef.current) return
@@ -88,30 +80,12 @@ export const useDrawing = <T extends HTMLElement>({
       drawPointsRef.current = [...drawPointsRef.current, po]
       updateCommands()
     }
-    return throttle(move, delay ?? 0)
-  }, [delay, updateCommands])
+    return throttle(move, DRAW_DELAY)
+  }, [updateCommands])
 
   const handleDrawEnd = useCallback<DrawHandlerCallback['end']>(() => {
     drawPathRef.current = null
   }, [])
-
-  // FIX: Create path while drawing
-  // useEffect(() => {
-  //   if (!drawPathRef.current) return
-  //   if (
-  //     drawPathRef.current.attrs.strokeWidth &&
-  //     +drawPathRef.current.attrs.strokeWidth === penWidth &&
-  //     drawPathRef.current.attrs.stroke === penColor
-  //   )
-  //     return
-
-  //   const po = drawPointsRef.current[drawPointsRef.current.length - 1]
-  //   if (!po) return
-  //   drawPathRef.current = createDrawPath()
-  //   drawPointsRef.current = [po]
-  //   svgRef.current.addPath(drawPathRef.current)
-  //   updateCommands()
-  // }, [updateCommands, penWidth, penColor, createDrawPath])
 
   /**
    * Setup DrawHandler
