@@ -1,5 +1,5 @@
 import { kebab2camel, roundUp, isNaN } from './utils'
-import { PathObject, SvgObject, SvgOption, CommandType } from './types'
+import { PathObject, SvgObject, SvgOption, CommandType, PointObject } from './types'
 
 export class Point {
   public x: number
@@ -33,6 +33,13 @@ export class Point {
 
   public clone(): Point {
     return new Point(this.x, this.y)
+  }
+
+  public toJson(): PointObject {
+    return {
+      x: this.x,
+      y: this.y,
+    }
   }
 }
 

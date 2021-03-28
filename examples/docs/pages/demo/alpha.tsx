@@ -70,10 +70,13 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
   const [penWidth, setPenWidth] = useState(5)
+  const [editPathIndex, setEditPathIndex] = useState(0)
+
   const commandsConverter = useMemo<CommandsConverter>(() => {
     const converter = curve ? new BezierCurve().convert : convertLineCommands
     return (po) => (close ? closeCommands(converter(po)) : converter(po))
   }, [close, curve])
+
   const [drawElRef, svgObj, draw] = useDrawing<HTMLDivElement>({
     pathOptions: {
       fill,
@@ -82,20 +85,18 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     },
     commandsConverter,
   })
+
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
     ) => {
-      download(draw.ref.current)
+      download(draw.ref.current, {
+        extension,
+      })
     },
     [draw]
   )
 
-  // TODO: fix
-  // const handleChangeThinner = useCallback(e => {
-  //   if (!drawingRef.current) return
-  //   switchThinner(e.target.checked)
-  // }, [])
   const handleChangeCiruler = useCallback(() => {
     switchCurve(!curve)
   }, [curve])
@@ -144,6 +145,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     },
     [updateFill]
   )
+
+  const handleSelectPath = useCallback((i: number) => {
+    setEditPathIndex(i)
+  }, [])
 
   const handleFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -335,7 +340,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             touchAction: 'none',
           }}
         >
-          <RenderSvg {...svgObj} />
+          <RenderSvg
+            {...svgObj}
+            editPathIndex={editPathIndex}
+            onSelectPath={handleSelectPath}
+          />
         </div>
       </Box>
     </Layout>

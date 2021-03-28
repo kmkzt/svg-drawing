@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useMemo,
   MutableRefObject,
+  MouseEventHandler,
 } from 'react'
 import { Svg, Path, Command, COMMAND_TYPE } from '@svg-drawing/core/lib/svg'
 import { DrawHandler, ResizeHandler } from '@svg-drawing/core/lib/handler'
@@ -192,11 +193,70 @@ export const useDrawing = <T extends HTMLElement>({
   ]
 }
 
-export const RenderSvg = ({ background, paths, ...size }: SvgObject) => (
-  <svg {...size}>
-    {background && <rect {...size} fill={background} />}
-    {paths.map((pathAttr, i) => (
-      <path key={i} {...pathAttr} />
-    ))}
-  </svg>
-)
+export const RenderSvg = ({
+  background,
+  paths,
+  onSelectPath: handleSelectPath,
+  editPathIndex,
+  ...size
+}: SvgObject & {
+  editPathIndex?: number
+  onSelectPath: (i: number) => void
+}) => {
+  const handleClick = useCallback(
+    (i): MouseEventHandler => (ev) => {
+      ev.preventDefault()
+      handleSelectPath(i)
+    },
+    [handleSelectPath]
+  )
+  return (
+    <svg {...size}>
+      {background && <rect {...size} fill={background} />}
+      {paths.map((pathAttr, i) =>
+        i !== editPathIndex ? (
+          <path key={i} {...pathAttr} onClick={handleClick(i)} />
+        ) : (
+          <g key={i}>
+            <EditPath {...pathAttr} />
+          </g>
+        )
+      )}
+    </svg>
+  )
+}
+
+const EDIT_COLOR = '#09f';
+const EDIT_PATH_CONFIG = {
+  strokeWidth: 1,
+  stroke: EDIT_COLOR,
+  fill: 'none',
+} as const
+
+const EDIT_POINT_CONFIG = {
+  r: 5,
+  style: {
+    fill: EDIT_COLOR
+  }
+} as const
+
+export const EditPath = ({ d, ...attrs }: PathObject) => {
+  const points: PointObject[] = useMemo(() => {
+    if (!d) return []
+    const path = new Path()
+    path.parseCommandString(d)
+    return path.commands.reduce(
+      (re, com) => (com.point ? [...re, com.point.toJson()] : re),
+      []
+    )
+  }, [d])
+  return (
+    <>
+      <path d={d} {...attrs} />
+      <path d={d} {...EDIT_PATH_CONFIG} />
+      {points.map(({ x, y }, i) => (
+        <circle key={i} cx={x} cy={y} {...EDIT_POINT_CONFIG} />
+      ))}
+    </>
+  )
+}
