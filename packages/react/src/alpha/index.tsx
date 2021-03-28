@@ -18,7 +18,7 @@ import type {
   SvgObject,
 } from '@svg-drawing/core/lib/types'
 
-type UseDrawing<T extends HTMLElement = any> = [
+type UseDrawing<T extends HTMLElement> = [
   RefObject<T>,
   SvgObject,
   DrawingMethods

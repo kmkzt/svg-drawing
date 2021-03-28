@@ -75,11 +75,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     const converter = curve ? new BezierCurve().convert : convertLineCommands
     return (po) => (close ? closeCommands(converter(po)) : converter(po))
   }, [close, curve])
-  const [drawElRef, svgObj] = useDrawing({
+  const [drawElRef, svgObj] = useDrawing<HTMLDivElement>({
     pathOptions: {
       fill,
       stroke: penColor,
-      strokeWidth: penWidth,
+      strokeWidth: penWidth + '',
     },
     commandsConverter,
   })
