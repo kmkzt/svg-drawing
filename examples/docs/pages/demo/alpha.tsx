@@ -65,12 +65,10 @@ interface Props {
   isSp: boolean
 }
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
-  const [rainbowPen, switchRainbowpen] = useState(false)
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
-  const [delay, setDelay] = useState(20)
   const [penWidth, setPenWidth] = useState(5)
   const commandsConverter = useMemo<CommandsConverter>(() => {
     const converter = curve ? new BezierCurve().convert : convertLineCommands
@@ -147,15 +145,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [updateFill]
   )
 
-  useEffect(() => {
-    const stop = setInterval(() => {
-      if (!rainbowPen) return
-      const color = getRandomColor()
-      setPenColor(color)
-    }, delay * 4)
-    return () => clearInterval(stop)
-  }, [delay, rainbowPen, draw])
-
   const handleFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const reader = new FileReader()
@@ -211,81 +200,76 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 />
                 Curve
               </Label>
-              {!rainbowPen && (
-                <Label htmlFor="close">
-                  <Checkbox
-                    id="close"
-                    checked={close}
-                    onChange={handleChangeClose}
-                  />
-                  Close
-                </Label>
-              )}
+              <Label htmlFor="close">
+                <Checkbox
+                  id="close"
+                  checked={close}
+                  onChange={handleChangeClose}
+                />
+                Close
+              </Label>
             </Flex>
           </Box>
-          {!rainbowPen && (
-            <Box width={[1, 1 / 2, 1 / 2]}>
-              <Label fontSize={0} htmlFor="fill">
-                FILL:
-                <Input
-                  p={1}
-                  fontSize={0}
-                  id="fill"
-                  type="text"
-                  placeholder="#000 or black or rgba(0,0,0,1)"
-                  value={fill}
-                  onChange={handleChangeFill}
-                />
-              </Label>
-              <Flex flexWrap="wrap">
-                {colorList.map((col: string) => (
-                  <Box
-                    key={col}
-                    width={['24px', '24px', '20px']}
-                    height={['24px', '24px', '20px']}
-                    style={{
-                      display: 'inline-block',
-                      backgroundColor: col,
-                      border:
-                        col === fill ? '2px solid #000' : '2px solid #999',
-                    }}
-                    onClick={handleClickFill(col)}
-                  />
-                ))}
-              </Flex>
-              <Label
+          <Box width={[1, 1 / 2, 1 / 2]}>
+            <Label fontSize={0} htmlFor="fill">
+              FILL:
+              <Input
+                p={1}
                 fontSize={0}
-                htmlFor="penColor"
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                PEN COLOR:
-                <Input
-                  fontSize={0}
-                  p={1}
-                  id="penColor"
-                  type="text"
-                  placeholder="#000 or black or rgba(0,0,0,1)"
-                  value={penColor}
-                  onChange={handleChangePenColor}
+                id="fill"
+                type="text"
+                placeholder="#000 or black or rgba(0,0,0,1)"
+                value={fill}
+                onChange={handleChangeFill}
+              />
+            </Label>
+            <Flex flexWrap="wrap">
+              {colorList.map((col: string) => (
+                <Box
+                  key={col}
+                  width={['24px', '24px', '20px']}
+                  height={['24px', '24px', '20px']}
+                  style={{
+                    display: 'inline-block',
+                    backgroundColor: col,
+                    border: col === fill ? '2px solid #000' : '2px solid #999',
+                  }}
+                  onClick={handleClickFill(col)}
                 />
-              </Label>
-              <Flex flexWrap="wrap">
-                {colorList.map((col: string) => (
-                  <Box
-                    key={col}
-                    width={['24px', '24px', '20px']}
-                    height={['24px', '24px', '20px']}
-                    bg={col}
-                    style={{
-                      border:
-                        col === penColor ? '2px solid #000' : '2px solid #999',
-                    }}
-                    onClick={handleClickPenColor(col)}
-                  />
-                ))}
-              </Flex>
-            </Box>
-          )}
+              ))}
+            </Flex>
+            <Label
+              fontSize={0}
+              htmlFor="penColor"
+              style={{ whiteSpace: 'nowrap' }}
+            >
+              PEN COLOR:
+              <Input
+                fontSize={0}
+                p={1}
+                id="penColor"
+                type="text"
+                placeholder="#000 or black or rgba(0,0,0,1)"
+                value={penColor}
+                onChange={handleChangePenColor}
+              />
+            </Label>
+            <Flex flexWrap="wrap">
+              {colorList.map((col: string) => (
+                <Box
+                  key={col}
+                  width={['24px', '24px', '20px']}
+                  height={['24px', '24px', '20px']}
+                  bg={col}
+                  style={{
+                    border:
+                      col === penColor ? '2px solid #000' : '2px solid #999',
+                  }}
+                  onClick={handleClickPenColor(col)}
+                />
+              ))}
+            </Flex>
+          </Box>
         </Flex>
       </Box>
       <Box as="fieldset">
