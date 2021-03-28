@@ -51,8 +51,8 @@ const GlobalHeader = () => (
           </Link>
         </Text>
         <Text mr={2}>
-          <Link href="/demo/drawing-alpha">
-            <a>drawing-alpha</a>
+          <Link href="/demo/alpha">
+            <a>alpha</a>
           </Link>
         </Text>
       </Flex>

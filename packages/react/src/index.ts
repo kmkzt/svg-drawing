@@ -1,3 +1,3 @@
 export * from './useDrawing'
 export * from './types'
-export * from './useDrawingUnstable'
+export * from './alpha'

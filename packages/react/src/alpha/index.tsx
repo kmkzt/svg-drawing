@@ -20,7 +20,7 @@ import type {
   SvgOption,
 } from '@svg-drawing/core/lib/types'
 
-type UseDrawingUnstable<T extends HTMLElement = any> = [
+type UseDrawing<T extends HTMLElement = any> = [
   RefObject<T | null>,
   SvgObject | null,
   DrawingMethods
@@ -31,7 +31,7 @@ type DrawingMethods = {}
 
 const RENDER_INTERVAL = 0
 
-export const useDrawingUnstable = <T extends HTMLElement>({
+export const useDrawing = <T extends HTMLElement>({
   penColor,
   penWidth,
   close,
@@ -39,7 +39,7 @@ export const useDrawingUnstable = <T extends HTMLElement>({
   delay,
   fill,
   background,
-}: DrawingOption & Pick<SvgOption, 'background'>): UseDrawingUnstable<T> => {
+}: DrawingOption & Pick<SvgOption, 'background'>): UseDrawing<T> => {
   const drawElRef = useRef<T>(null)
   const svgRef = useRef(new Svg({ width: 0, height: 0 }))
   const drawPathRef = useRef<Path | null>(null)
