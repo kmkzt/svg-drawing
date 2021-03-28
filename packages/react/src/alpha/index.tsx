@@ -8,8 +8,12 @@ import React, {
   MutableRefObject,
   MouseEventHandler,
 } from 'react'
-import { Svg, Path, Command, COMMAND_TYPE } from '@svg-drawing/core/lib/svg'
-import { DrawHandler, ResizeHandler } from '@svg-drawing/core/lib/handler'
+import { Svg, Path } from '@svg-drawing/core/lib/svg'
+import {
+  DrawHandler,
+  PencilHandler,
+  ResizeHandler,
+} from '@svg-drawing/core/lib/handler'
 import { BezierCurve, CommandsConverter } from '@svg-drawing/core/lib/convert'
 import { throttle } from '@svg-drawing/core/lib/throttle'
 import { isAlmostSameNumber } from '@svg-drawing/core/lib/utils'
@@ -34,6 +38,7 @@ type UseDrawingMethods = {
   update: () => void
   clear: () => void
   undo: () => void
+  setDrawHandler: (handler: typeof DrawHandler) => void
 }
 
 const RENDER_INTERVAL = 0
@@ -43,14 +48,16 @@ const defaultPathOptions: PathObject = {
   strokeLinecap: 'round',
   strokeLinejoin: 'round',
 }
-
+type DrawingOptions = {
+  pathOptions: PathObject
+  commandsConverter?: CommandsConverter
+  drawHandler?: typeof DrawHandler
+}
 export const useDrawing = <T extends HTMLElement>({
   pathOptions,
   commandsConverter,
-}: {
-  pathOptions: PathObject
-  commandsConverter?: CommandsConverter
-}): UseDrawing<T> => {
+  drawHandler: CustomDrawHandler,
+}: DrawingOptions): UseDrawing<T> => {
   const drawElRef = useRef<T>(null)
   const svgRef = useRef(new Svg({ width: 0, height: 0 }))
   const drawPathRef = useRef<Path | null>(null)
@@ -126,17 +133,24 @@ export const useDrawing = <T extends HTMLElement>({
     drawHandlerRef.current.end = handleDrawEnd
   }, [handleDrawStart, handleDrawMove, handleDrawEnd])
 
+  const setDrawHandler = useCallback(
+    (Handler: typeof DrawHandler) => {
+      if (!drawElRef.current) return
+      const { width, height } = drawElRef.current.getBoundingClientRect()
+      svgRef.current.resize({ width, height })
+      drawHandlerRef.current = new Handler(drawElRef.current, {
+        start: handleDrawStart,
+        move: handleDrawMove,
+        end: handleDrawEnd,
+      })
+      drawHandlerRef.current.on()
+    },
+    [handleDrawEnd, handleDrawMove, handleDrawStart]
+  )
+
   useEffect(() => {
-    if (!drawElRef.current) return
     if (drawHandlerRef.current) return
-    const { width, height } = drawElRef.current.getBoundingClientRect()
-    svgRef.current.resize({ width, height })
-    drawHandlerRef.current = new DrawHandler(drawElRef.current, {
-      start: handleDrawStart,
-      move: handleDrawMove,
-      end: handleDrawEnd,
-    })
-    drawHandlerRef.current.on()
+    setDrawHandler(CustomDrawHandler ?? PencilHandler)
   })
 
   /**
@@ -189,6 +203,7 @@ export const useDrawing = <T extends HTMLElement>({
       clear,
       on,
       off,
+      setDrawHandler,
     },
   ]
 }
@@ -236,7 +251,7 @@ const EDIT_PATH_CONFIG = {
 const EDIT_POINT_CONFIG = {
   r: 5,
   style: {
-    fill: EDIT_COLOR
+    fill: EDIT_COLOR,
   }
 } as const
 

@@ -7,7 +7,7 @@ import {
   closeCommands,
 } from './convert'
 import { throttle } from './throttle'
-import { DrawHandler, ResizeHandler } from './handler'
+import { PencilHandler, DrawHandler, ResizeHandler } from './handler'
 import {
   DownloadOption,
   DrawingOption,
@@ -38,7 +38,7 @@ export class SvgDrawing {
    */
   public svg: Svg
   public renderer: Renderer
-  public drawHandler: DrawHandler
+  public drawHandler: any extends DrawHandler ? DrawHandler : never
   public resizeHandler: ResizeHandler
   /**
    * Private property
@@ -95,7 +95,7 @@ export class SvgDrawing {
     this.drawMove = this.drawMove.bind(this)
     this._drawMoveThrottle = throttle(this.drawMove, this.delay)
     this.drawEnd = this.drawEnd.bind(this)
-    this.drawHandler = new DrawHandler(el, {
+    this.drawHandler = new PencilHandler(el, {
       start: this.drawStart,
       move: this._drawMoveThrottle,
       end: this.drawEnd,

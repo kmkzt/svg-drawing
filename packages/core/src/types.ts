@@ -125,6 +125,16 @@ export type ListenerMaps = Record<
     start: Array<DrawEventName>
     move: Array<DrawEventName>
     end: Array<DrawEventName>
-    frameout: Array<DrawEventName>
+    flameout: Array<DrawEventName>
   }
 >
+
+export type ClearListener = () => void
+
+export interface DrawEventHandler {
+  end: DrawHandlerCallback['end']
+  start: DrawHandlerCallback['start']
+  move: DrawHandlerCallback['move']
+  on: () => void
+  off: () => void
+}

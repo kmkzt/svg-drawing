@@ -286,6 +286,12 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             <Button mr={1} mb={1} onClick={draw.undo}>
               Undo
             </Button>
+            <Button mr={1} mb={1} onClick={draw.on}>
+              On
+            </Button>
+            <Button mr={1} mb={1} onClick={draw.off}>
+              Off
+            </Button>
             <Button
               variant="secondary"
               mr={1}
