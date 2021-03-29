@@ -119,15 +119,6 @@ export type DrawEventName = Extract<
   | 'mouseout'
   | 'mouseup'
 >
-export type ListenerMaps = Record<
-  DrawListenerType,
-  {
-    start: Array<DrawEventName>
-    move: Array<DrawEventName>
-    end: Array<DrawEventName>
-    flameout: Array<DrawEventName>
-  }
->
 
 export type ClearListener = () => void
 

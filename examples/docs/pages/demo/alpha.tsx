@@ -7,9 +7,18 @@ import {
   CommandsConverter,
   closeCommands,
   download,
+  PenHandler,
+  PencilHandler,
+  DrawHandler,
 } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
-import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
+import {
+  Input,
+  Checkbox,
+  Label,
+  Slider,
+  Select,
+} from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
 
 const size = 30
@@ -38,12 +47,6 @@ const colorList = [
 ]
 
 console.log(useDrawing)
-const getRandomInt = (max: number): number =>
-  Math.floor(Math.random() * Math.floor(max))
-const getRandomColor = (): string =>
-  `#${Array.from({ length: 3 }, () =>
-    String(getRandomInt(255).toString(16)).padStart(2, '0')
-  ).join('')}`
 
 const lattice = (s: number) => `
   repeating-linear-gradient(
@@ -64,6 +67,11 @@ const lattice = (s: number) => `
 interface Props {
   isSp: boolean
 }
+
+const drawMode: { [key: string]: typeof DrawHandler | undefined } = {
+  pencil: PencilHandler,
+  pen: PenHandler,
+} as const
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
@@ -71,7 +79,12 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [penColor, setPenColor] = useState('black')
   const [penWidth, setPenWidth] = useState(5)
   const [editPathIndex, setEditPathIndex] = useState(0)
+  const [mode, setMode] = useState<keyof typeof drawMode>('pencil')
 
+  const Handler: typeof DrawHandler | undefined = useMemo(
+    () => drawMode[mode],
+    [mode]
+  )
   const commandsConverter = useMemo<CommandsConverter>(() => {
     const converter = curve ? new BezierCurve().convert : convertLineCommands
     return (po) => (close ? closeCommands(converter(po)) : converter(po))
@@ -83,6 +96,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       stroke: penColor,
       strokeWidth: penWidth + '',
     },
+    drawHandler: Handler,
     commandsConverter,
   })
 
@@ -90,7 +104,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     (extension: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
     ) => {
-      download(draw.ref.current, {
+      download(draw.svg.current, {
         extension,
       })
     },
@@ -158,7 +172,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         const [type, data] = ev.target.result.split(',')
         if (type === 'data:image/svg+xml;base64') {
           const svgxml = atob(data)
-          draw.ref.current.parseSVGString(svgxml)
+          draw.svg.current.parseSVGString(svgxml)
           draw.update()
         }
       }
@@ -167,6 +181,15 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     },
     [draw]
   )
+
+  const handleChangeMode = useCallback((ev: ChangeEvent<HTMLSelectElement>) => {
+    const isDrawMode = (str: any): str is 'pencil' | 'pen' =>
+      ['pen', 'pencil'].includes(str)
+    const upd = ev.target.value
+    if (isDrawMode(upd)) {
+      setMode(upd)
+    }
+  }, [])
 
   return (
     <Layout>
@@ -212,6 +235,12 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                   onChange={handleChangeClose}
                 />
                 Close
+              </Label>
+              <Label htmlFor="mode">
+                <Select id="mode" value={mode} onChange={handleChangeMode}>
+                  <option value="pen">Pen</option>
+                  <option value="pencil">Pencil</option>
+                </Select>
               </Label>
             </Flex>
           </Box>

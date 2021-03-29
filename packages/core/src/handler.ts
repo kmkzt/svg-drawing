@@ -1,10 +1,11 @@
 import {
   DrawHandlerCallback,
   ResizeHandlerCallback,
-  ListenerMaps,
   DrawListenerType,
   DrawEventHandler,
   ClearListener,
+  PointObject,
+  DrawEventName,
 } from './types'
 
 export const getPassiveOptions = (
@@ -79,6 +80,32 @@ export class DrawHandler implements DrawEventHandler {
     ]
   }
 
+  public getPointObjectFromDrawEvent(
+    ev: MouseEvent | TouchEvent | PointerEvent
+  ): PointObject {
+    if (ev instanceof TouchEvent) {
+      const touch = ev.touches[0]
+      return {
+        x: touch.clientX - this._left,
+        y: touch.clientY - this._top,
+        pressure: touch.force,
+      }
+    }
+    if (ev instanceof PointerEvent) {
+      return {
+        x: ev.clientX - this._left,
+        y: ev.clientY - this._top,
+        pressure: ev.pressure,
+      }
+    }
+    // if (ev instanceof MouseEvent) {
+    return {
+      x: ev.clientX - this._left,
+      y: ev.clientY - this._top,
+      pressure: (ev as any)?.pressure,
+    }
+    // }
+  }
   protected _setupListener(): Array<ClearListener> {
     return []
   }
@@ -101,27 +128,6 @@ export class DrawHandler implements DrawEventHandler {
 }
 
 export class PencilHandler extends DrawHandler implements DrawHandler {
-  private _eventMap: ListenerMaps = {
-    pointer: {
-      start: ['pointerdown'],
-      move: ['pointermove'],
-      end: ['pointerleave', 'pointercancel'],
-      flameout: ['pointerup'],
-    },
-    touch: {
-      start: ['touchstart'],
-      move: ['touchmove'],
-      end: ['touchend'],
-      flameout: ['touchcancel'],
-    },
-    mouse: {
-      start: ['mousedown'],
-      move: ['mousemove'],
-      end: ['mouseleave', 'mouseout'],
-      flameout: ['mouseup'],
-    },
-  }
-
   constructor(el: HTMLElement, callback: DrawHandlerCallback) {
     super(el, callback)
     /**
@@ -136,12 +142,12 @@ export class PencilHandler extends DrawHandler implements DrawHandler {
     const clearEvent: Array<ClearListener> = []
     if (window.PointerEvent) {
       clearEvent.push(...this._setupDrawListener('pointer'))
+    } else if ('ontouchstart' in window) {
+      clearEvent.push(...this._setupDrawListener('touch'))
     } else {
       clearEvent.push(...this._setupDrawListener('mouse'))
     }
-    if ('ontouchstart' in window) {
-      clearEvent.push(...this._setupDrawListener('touch'))
-    }
+
     return clearEvent
   }
 
@@ -157,55 +163,146 @@ export class PencilHandler extends DrawHandler implements DrawHandler {
 
   private _handleMove(ev: MouseEvent | PointerEvent | TouchEvent) {
     ev.preventDefault()
-    if (ev instanceof TouchEvent) {
-      const touch = ev.touches[0]
-      this.move({
-        x: touch.clientX - this._left,
-        y: touch.clientY - this._top,
-        pressure: touch.force,
-      })
-      return
-    }
-    if (ev instanceof PointerEvent) {
-      this.move({
-        x: ev.clientX - this._left,
-        y: ev.clientY - this._top,
-        pressure: ev.pressure,
-      })
-      return
-    }
-    if (ev instanceof MouseEvent) {
-      this.move({
-        x: ev.clientX - this._left,
-        y: ev.clientY - this._top,
-        pressure: (ev as any)?.pressure,
-      })
-      return
-    }
+    this.move(this.getPointObjectFromDrawEvent(ev))
   }
 
   private _setupDrawListener(type: DrawListenerType): Array<() => void> {
-    const { start, move, end, flameout } = this._eventMap[type]
-    const startClear = start.map((evname): (() => void) => {
-      this._el.addEventListener(evname, this._handleStart, this._listenerOption)
-      return () => this._el.removeEventListener(evname, this._handleStart)
-    })
-    const moveClear = move.map((evname): (() => void) => {
-      this._el.addEventListener(evname, this._handleMove, this._listenerOption)
-      return () => this._el.removeEventListener(evname, this._handleMove)
-    })
-    const endClear = end.map((evname): (() => void) => {
-      this._el.addEventListener(evname, this._handleEnd, this._listenerOption)
-      return () => this._el.removeEventListener(evname, this._handleEnd)
-    })
-    const flameoutClear = flameout.map((evname): (() => void) => {
-      addEventListener(evname, this._handleEnd, this._listenerOption)
-      return () => removeEventListener(evname, this._handleEnd)
-    })
+    const eventMap: Record<
+      DrawListenerType,
+      {
+        start: Array<DrawEventName>
+        move: Array<DrawEventName>
+        end: Array<DrawEventName>
+        flameout: Array<DrawEventName>
+      }
+    > = {
+      pointer: {
+        start: ['pointerdown'],
+        move: ['pointermove'],
+        end: ['pointerleave', 'pointercancel'],
+        flameout: ['pointerup'],
+      },
+      touch: {
+        start: ['touchstart'],
+        move: ['touchmove'],
+        end: ['touchend'],
+        flameout: ['touchcancel'],
+      },
+      mouse: {
+        start: ['mousedown'],
+        move: ['mousemove'],
+        end: ['mouseleave', 'mouseout'],
+        flameout: ['mouseup'],
+      },
+    }
+    const { start, move, end, flameout } = eventMap[type]
+    const startClear = start.map(
+      (evname): ClearListener => {
+        this._el.addEventListener(
+          evname,
+          this._handleStart,
+          this._listenerOption
+        )
+        return () => this._el.removeEventListener(evname, this._handleStart)
+      }
+    )
+    const moveClear = move.map(
+      (evname): ClearListener => {
+        this._el.addEventListener(
+          evname,
+          this._handleMove,
+          this._listenerOption
+        )
+        return () => this._el.removeEventListener(evname, this._handleMove)
+      }
+    )
+    const endClear = end.map(
+      (evname): ClearListener => {
+        this._el.addEventListener(evname, this._handleEnd, this._listenerOption)
+        return () => this._el.removeEventListener(evname, this._handleEnd)
+      }
+    )
+    const flameoutClear = flameout.map(
+      (evname): ClearListener => {
+        addEventListener(evname, this._handleEnd, this._listenerOption)
+        return () => removeEventListener(evname, this._handleEnd)
+      }
+    )
     return [...startClear, ...moveClear, ...endClear, ...flameoutClear]
   }
 }
 
+export class PenHandler extends DrawHandler implements DrawHandler {
+  private _editing: boolean
+  constructor(el: HTMLElement, callback: DrawHandlerCallback) {
+    super(el, callback)
+    this._editing = false
+    this._handleProt = this._handleProt.bind(this)
+  }
+
+  protected _setupListener(): Array<ClearListener> {
+    const clearEvent: ClearListener[] = []
+    if (window.PointerEvent) {
+      clearEvent.push(...this._setupDrawListener('pointer'))
+    } else if ('ontouchstart' in window) {
+      clearEvent.push(...this._setupDrawListener('touch'))
+    } else {
+      clearEvent.push(...this._setupDrawListener('mouse'))
+    }
+
+    clearEvent.push(...this._setupCancelListener())
+    return clearEvent
+  }
+
+  private _handleProt(ev: MouseEvent | PointerEvent | TouchEvent) {
+    ev.preventDefault()
+    const isFrameIn = this._isContainElement(ev)
+    if (!this._editing && isFrameIn) {
+      this.start()
+      this.move(this.getPointObjectFromDrawEvent(ev))
+      this._editing = true
+      return
+    }
+
+    if (isFrameIn) {
+      this.move(this.getPointObjectFromDrawEvent(ev))
+      return
+    }
+
+    // end
+    this._editing = false
+    this.end()
+  }
+
+  private _isContainElement(
+    ev: MouseEvent | PointerEvent | TouchEvent
+  ): boolean {
+    return this._el.contains(ev.target as any)
+  }
+
+  private _setupCancelListener() {
+    const stopId = setInterval(() => {
+      if (!document.hasFocus()) {
+        this._editing = false
+        this.end()
+      }
+    }, 1000)
+    return [() => clearInterval(stopId)]
+  }
+  private _setupDrawListener(type: DrawListenerType): Array<ClearListener> {
+    const eventMap: Record<DrawListenerType, DrawEventName> = {
+      touch: 'touchstart',
+      pointer: 'pointerup',
+      mouse: 'mouseup',
+    }
+    window.addEventListener(eventMap[type], this._handleProt)
+    return [
+      () => {
+        window.removeEventListener(eventMap[type], this._handleProt)
+      },
+    ]
+  }
+}
 export class ResizeHandler {
   /**
    * Remove EventList

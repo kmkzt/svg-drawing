@@ -32,7 +32,9 @@ type UseDrawing<T extends HTMLElement> = [
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type UseDrawingMethods = {
-  ref: MutableRefObject<Svg>
+  svg: MutableRefObject<Svg>
+  drawHandler: MutableRefObject<DrawHandler>
+  resizeHandler: MutableRefObject<ResizeHandler>
   on: () => void
   off: () => void
   update: () => void
@@ -149,9 +151,11 @@ export const useDrawing = <T extends HTMLElement>({
   )
 
   useEffect(() => {
-    if (drawHandlerRef.current) return
+    if (drawHandlerRef.current) {
+      drawHandlerRef.current.off()
+    }
     setDrawHandler(CustomDrawHandler ?? PencilHandler)
-  })
+  }, [CustomDrawHandler, setDrawHandler])
 
   /**
    * Setup ResizeHandler
@@ -197,7 +201,9 @@ export const useDrawing = <T extends HTMLElement>({
     drawElRef,
     svgObj,
     {
-      ref: svgRef,
+      svg: svgRef,
+      resizeHandler: resizeHandlerRef,
+      drawHandler: drawHandlerRef,
       update,
       undo,
       clear,
@@ -262,7 +268,7 @@ export const EditPath = ({ d, ...attrs }: PathObject) => {
     path.parseCommandString(d)
     return path.commands.reduce(
       (re, com) => (com.point ? [...re, com.point.toJson()] : re),
-      []
+      [] as PointObject[]
     )
   }, [d])
   return (
