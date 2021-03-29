@@ -31,7 +31,7 @@ export class BezierCurve implements GenerateCommandsConverter {
     return [po.x, po.y]
   }
 
-  public bezierCurve(
+  public genCommand(
     p1: PointObject,
     p2: PointObject,
     p3: PointObject,
@@ -57,7 +57,7 @@ export class BezierCurve implements GenerateCommandsConverter {
         continue
       }
       commands.push(
-        this.bezierCurve(
+        this.genCommand(
           p[i - 2 < 0 ? 0 : i - 2],
           p[i - 1],
           p[i],
