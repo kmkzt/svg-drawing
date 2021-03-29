@@ -33,8 +33,8 @@ type UseDrawing<T extends HTMLElement> = [
 // eslint-disable-next-line @typescript-eslint/ban-types
 type UseDrawingMethods = {
   svg: MutableRefObject<Svg>
-  drawHandler: MutableRefObject<DrawHandler>
-  resizeHandler: MutableRefObject<ResizeHandler>
+  drawHandler: MutableRefObject<DrawHandler | null>
+  resizeHandler: MutableRefObject<ResizeHandler | null>
   on: () => void
   off: () => void
   update: () => void
@@ -247,7 +247,7 @@ export const RenderSvg = ({
   )
 }
 
-const EDIT_COLOR = '#09f';
+const EDIT_COLOR = '#09f'
 const EDIT_PATH_CONFIG = {
   strokeWidth: 1,
   stroke: EDIT_COLOR,
@@ -258,7 +258,7 @@ const EDIT_POINT_CONFIG = {
   r: 5,
   style: {
     fill: EDIT_COLOR,
-  }
+  },
 } as const
 
 export const EditPath = ({ d, ...attrs }: PathObject) => {
