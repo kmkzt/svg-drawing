@@ -1,5 +1,11 @@
 import { kebab2camel, roundUp, isNaN } from './utils'
-import { PathObject, SvgObject, SvgOption, CommandType, PointObject } from './types'
+import {
+  PathObject,
+  SvgObject,
+  SvgOption,
+  CommandType,
+  PointObject,
+} from './types'
 
 export class Point {
   public x: number

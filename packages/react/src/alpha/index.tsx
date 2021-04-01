@@ -3,10 +3,12 @@ import React, {
   useRef,
   RefObject,
   useEffect,
+  useLayoutEffect,
   useCallback,
   useMemo,
   MutableRefObject,
   MouseEventHandler,
+  MouseEvent,
 } from 'react'
 import { Svg, Path } from '@svg-drawing/core/lib/svg'
 import {
@@ -78,7 +80,7 @@ export const useDrawing = <T extends HTMLElement>({
   const update = useCallback(() => {
     shouldUpdateRef.current = true
   }, [])
-  useEffect(() => {
+  useLayoutEffect(() => {
     const stopId = setInterval(() => {
       if (!shouldUpdateRef.current) return
       shouldUpdateRef.current = false
@@ -213,17 +215,24 @@ export const useDrawing = <T extends HTMLElement>({
     },
   ]
 }
+type EditEventHandler = {
+  onChangePath?: (arg: any) => void
+  onChangePoint?: (arg: any) => void
+}
 
 export const RenderSvg = ({
   background,
   paths,
   onSelectPath: handleSelectPath,
+  onChangePath: handleChangePath,
+  onChangePoint: handleChangePoint,
   editPathIndex,
   ...size
-}: SvgObject & {
-  editPathIndex?: number
-  onSelectPath: (i: number) => void
-}) => {
+}: SvgObject &
+  EditEventHandler & {
+    editPathIndex?: number
+    onSelectPath: (i: number) => void
+  }) => {
   const handleClick = useCallback(
     (i): MouseEventHandler => (ev) => {
       ev.preventDefault()
@@ -239,7 +248,11 @@ export const RenderSvg = ({
           <path key={i} {...pathAttr} onClick={handleClick(i)} />
         ) : (
           <g key={i}>
-            <EditPath {...pathAttr} />
+            <EditPath
+              {...pathAttr}
+              onChangePath={handleChangePath}
+              onChangePoint={handleChangePoint}
+            />
           </g>
         )
       )}
@@ -261,7 +274,12 @@ const EDIT_POINT_CONFIG = {
   },
 } as const
 
-export const EditPath = ({ d, ...attrs }: PathObject) => {
+export const EditPath = ({
+  d,
+  onChangePath,
+  onChangePoint,
+  ...attrs
+}: PathObject & EditEventHandler) => {
   const points: PointObject[] = useMemo(() => {
     if (!d) return []
     const path = new Path()
@@ -271,12 +289,20 @@ export const EditPath = ({ d, ...attrs }: PathObject) => {
       [] as PointObject[]
     )
   }, [d])
+  const handleChangePath = useCallback((ev: MouseEvent<HTMLOrSVGElement>) => {
+    onChangePath('path', { ...ev })
+  }, [onChangePath])
+
+  const handleChangePoint = useCallback((i: number) =>  (ev: MouseEvent<HTMLOrSVGElement>) => {
+    onChangePoint('point', i, { ...ev })
+  }, [onChangePoint])
+
   return (
     <>
       <path d={d} {...attrs} />
-      <path d={d} {...EDIT_PATH_CONFIG} />
+      <path d={d}  onMouseMove={handleChangePath} {...EDIT_PATH_CONFIG} />
       {points.map(({ x, y }, i) => (
-        <circle key={i} cx={x} cy={y} {...EDIT_POINT_CONFIG} />
+        <circle key={i} cx={x} cy={y} onMouseMove={handleChangePoint(i)} {...EDIT_POINT_CONFIG}  />
       ))}
     </>
   )

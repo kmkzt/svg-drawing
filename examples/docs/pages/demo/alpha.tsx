@@ -10,6 +10,7 @@ import {
   PenHandler,
   PencilHandler,
   DrawHandler,
+  Point,
 } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import {
@@ -164,6 +165,26 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     setEditPathIndex(i)
   }, [])
 
+  const handleChangePath = useCallback((...arg: any) => {
+    console.log('path')
+  }, [])
+  const handleChangePoint = useCallback(
+    (...arg: any) => {
+      console.log(arg)
+      const [_type, i, ev] = arg
+      const path = draw.svg.current.paths[editPathIndex]
+      const command = path.commands[i]
+      console.log(command)
+      if (!command) return
+      const { left, top } = drawElRef.current.getBoundingClientRect()
+      const { clientX, clientY } = ev
+      console.log(ev, clientX, clientY)
+      command.point = new Point(clientX - left, clientY - top)
+      path.commands = commandsConverter(path.commands.map((com) => com.point))
+      draw.update()
+    },
+    [draw, editPathIndex, drawElRef, commandsConverter]
+  )
   const handleFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const reader = new FileReader()
@@ -379,6 +400,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             {...svgObj}
             editPathIndex={editPathIndex}
             onSelectPath={handleSelectPath}
+            onChangePath={handleChangePath}
+            onChangePoint={handleChangePoint}
           />
         </div>
       </Box>
