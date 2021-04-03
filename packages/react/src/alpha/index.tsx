@@ -140,7 +140,8 @@ export const useDrawing = <T extends HTMLElement>({
   const setDrawHandler = useCallback(
     (Handler: typeof DrawHandler) => {
       if (!drawElRef.current) return
-      const { width, height } = drawElRef.current.getBoundingClientRect()
+      const drawEl = drawElRef.current
+      const { width, height } = drawEl.getBoundingClientRect()
       svgRef.current.resize({ width, height })
       drawHandlerRef.current = new Handler(drawElRef.current, {
         start: handleDrawStart,
@@ -153,9 +154,7 @@ export const useDrawing = <T extends HTMLElement>({
   )
 
   useEffect(() => {
-    if (drawHandlerRef.current) {
-      drawHandlerRef.current.off()
-    }
+    if (drawHandlerRef.current) drawHandlerRef.current.off()
     setDrawHandler(CustomDrawHandler ?? PencilHandler)
   }, [CustomDrawHandler, setDrawHandler])
 
@@ -166,14 +165,18 @@ export const useDrawing = <T extends HTMLElement>({
   useEffect(() => {
     if (!drawElRef.current) return
     if (resizeHandlerRef.current) return
-    resizeHandlerRef.current = new ResizeHandler(drawElRef.current, {
+    const drawEl = drawElRef.current
+    const svg = svgRef.current
+    const resizeHandler = new ResizeHandler(drawEl, {
       resize: ({ width, height }) => {
-        if (isAlmostSameNumber(svgRef.current.width, width)) return
-        svgRef.current.resize({ width, height })
+        if (isAlmostSameNumber(svg.width, width)) return
+        svg.resize({ width, height })
         shouldUpdateRef.current = true
       },
     })
-    resizeHandlerRef.current.on()
+    resizeHandlerRef.current = resizeHandler
+    resizeHandler.on()
+    return () => resizeHandler.off()
   })
 
   /**
@@ -289,20 +292,32 @@ export const EditPath = ({
       [] as PointObject[]
     )
   }, [d])
-  const handleChangePath = useCallback((ev: MouseEvent<HTMLOrSVGElement>) => {
-    onChangePath('path', { ...ev })
-  }, [onChangePath])
+  const handleChangePath = useCallback(
+    (ev: MouseEvent<HTMLOrSVGElement>) => {
+      onChangePath('path', { ...ev })
+    },
+    [onChangePath]
+  )
 
-  const handleChangePoint = useCallback((i: number) =>  (ev: MouseEvent<HTMLOrSVGElement>) => {
-    onChangePoint('point', i, { ...ev })
-  }, [onChangePoint])
+  const handleChangePoint = useCallback(
+    (i: number) => (ev: MouseEvent<HTMLOrSVGElement>) => {
+      onChangePoint('point', i, { ...ev })
+    },
+    [onChangePoint]
+  )
 
   return (
     <>
       <path d={d} {...attrs} />
       <path d={d}  onMouseMove={handleChangePath} {...EDIT_PATH_CONFIG} />
       {points.map(({ x, y }, i) => (
-        <circle key={i} cx={x} cy={y} onMouseMove={handleChangePoint(i)} {...EDIT_POINT_CONFIG}  />
+        <circle
+          key={i}
+          cx={x}
+          cy={y}
+          onMouseMove={handleChangePoint(i)}
+          {...EDIT_POINT_CONFIG}
+        />
       ))}
     </>
   )
