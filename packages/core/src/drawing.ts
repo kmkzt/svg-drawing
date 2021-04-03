@@ -147,16 +147,17 @@ export class SvgDrawing {
   public drawMove(po: PointObject): void {
     if (!this._drawPath) return
     this._addDrawPoint(po)
-    if (
-      (this._drawPath.attrs.strokeWidth &&
-        +this._drawPath.attrs.strokeWidth !== this.penWidth) ||
-      this._drawPath.attrs.stroke !== this.penColor
-    ) {
-      this._drawPath = this._createDrawPath()
-      this._addDrawPoint(po)
-      this.svg.addPath(this._drawPath)
-    }
     this.update()
+  }
+
+  public switchPath() {
+    const po = this._drawPath?.commands[
+      this._drawPath.commands.length - 1
+    ].point?.clone()
+    if (!po) return
+    this._drawPath = this._createDrawPath()
+    this._addDrawPoint(po.toJson())
+    this.svg.addPath(this._drawPath)
   }
 
   public drawEnd(): void {
