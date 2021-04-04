@@ -250,31 +250,26 @@ export const RenderSvg = ({
         i !== editPathIndex ? (
           <path key={i} {...pathAttr} onClick={handleClick(i)} />
         ) : (
-          <g key={i}>
-            <EditPath
-              {...pathAttr}
-              onChangePath={handleChangePath}
-              onChangePoint={handleChangePoint}
-            />
-          </g>
+          <EditPath
+            key={i}
+            {...pathAttr}
+            onChangePath={handleChangePath}
+            onChangePoint={handleChangePoint}
+          />
         )
       )}
     </svg>
   )
 }
 
-const EDIT_COLOR = '#09f'
-const EDIT_PATH_CONFIG = {
-  strokeWidth: 1,
-  stroke: EDIT_COLOR,
-  fill: 'none',
-} as const
-
-const EDIT_POINT_CONFIG = {
-  r: 5,
-  style: {
-    fill: EDIT_COLOR,
+const EDIT_CONFIG = {
+  line: 1,
+  point: 5,
+  color: {
+    main: '#09f',
+    sub: '#f90',
   },
+  fill: 'none'
 } as const
 
 export const EditPath = ({
@@ -283,14 +278,21 @@ export const EditPath = ({
   onChangePoint,
   ...attrs
 }: PathObject & EditEventHandler) => {
-  const points: PointObject[] = useMemo(() => {
+  const pointsList: PointObject[][] = useMemo(() => {
+
     if (!d) return []
     const path = new Path()
     path.parseCommandString(d)
-    return path.commands.reduce(
-      (re, com) => (com.point ? [...re, com.point.toJson()] : re),
-      [] as PointObject[]
-    )
+    return path.commands.reduce((re, com) => {
+      if (!com.point) return re
+      const po = [
+        com.cl?.toJson(),
+        com.point?.toJson(),
+        com.cr?.toJson(),
+      ].filter(Boolean) as PointObject[]
+      if (!po.length) return re
+      return [...re, po]
+    }, [] as PointObject[][])
   }, [d])
   const handleChangePath = useCallback(
     (ev: MouseEvent<HTMLOrSVGElement>) => {
@@ -306,19 +308,61 @@ export const EditPath = ({
     [onChangePoint]
   )
 
+  const genOutline = useCallback(
+    (points: PointObject[]) =>
+      points.reduce(
+        (str, po, i) =>
+          i === 0 ? `M ${po.x} ${po.y}` : str + `L ${po.x} ${po.y}`,
+        ''
+      ),
+    []
+  )
   return (
     <>
       <path d={d} {...attrs} />
-      <path d={d}  onMouseMove={handleChangePath} {...EDIT_PATH_CONFIG} />
-      {points.map(({ x, y }, i) => (
-        <circle
-          key={i}
-          cx={x}
-          cy={y}
-          onMouseMove={handleChangePoint(i)}
-          {...EDIT_POINT_CONFIG}
-        />
-      ))}
+      <path
+        d={d}
+        onMouseMove={handleChangePath}
+        strokeWidth={EDIT_CONFIG.line}
+        stroke={EDIT_CONFIG.color.main}
+        fill={EDIT_CONFIG.fill}
+      />
+      {pointsList.map((points, i) =>
+        points.length === 1 ? (
+          <circle
+            key={i}
+            cx={points[0].x}
+            cy={points[0].y}
+            onMouseMove={handleChangePoint(i)}
+            r={EDIT_CONFIG.point}
+            style={{
+              fill: EDIT_CONFIG.color.main,
+            }}
+          />
+        ) : (
+          <g key={i}>
+            <path
+              d={genOutline(points)}
+              strokeWidth={EDIT_CONFIG.line}
+              stroke={EDIT_CONFIG.color.main}
+              fill={EDIT_CONFIG.fill}
+            />
+            {points.map(({ x, y }, k) => (
+              <circle
+                key={k}
+                cx={x}
+                cy={y}
+                onMouseMove={k === 1 ? handleChangePoint(i) : undefined}
+                r={EDIT_CONFIG.point}
+                style={{
+                  fill:
+                    k === 1 ? EDIT_CONFIG.color.main : EDIT_CONFIG.color.sub,
+                }}
+              />
+            ))}
+          </g>
+        )
+      )}
     </>
   )
 }
