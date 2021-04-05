@@ -10,7 +10,7 @@ import React, {
   MouseEventHandler,
   MouseEvent,
 } from 'react'
-import { Svg, Path } from '@svg-drawing/core/lib/svg'
+import { Svg, Path, Command } from '@svg-drawing/core/lib/svg'
 import {
   DrawHandler,
   PencilHandler,
@@ -264,12 +264,12 @@ export const RenderSvg = ({
 
 const EDIT_CONFIG = {
   line: 1,
-  point: 5,
+  point: 3,
   color: {
     main: '#09f',
     sub: '#f90',
   },
-  fill: 'none'
+  fill: 'none',
 } as const
 
 export const EditPath = ({
@@ -279,22 +279,26 @@ export const EditPath = ({
   ...attrs
 }: PathObject & EditEventHandler) => {
   const [selected, setSelected] = useState(0)
-  const pointsList: PointObject[][] = useMemo(() => {
-
+  const commands: Command[] = useMemo(() => {
     if (!d) return []
     const path = new Path()
     path.parseCommandString(d)
-    return path.commands.reduce((re, com) => {
-      if (!com.point) return re
-      const po = [
-        com.cl?.toJson(),
-        com.point?.toJson(),
-        com.cr?.toJson(),
-      ].filter(Boolean) as PointObject[]
-      if (!po.length) return re
-      return [...re, po]
-    }, [] as PointObject[][])
+    return path.commands
   }, [d])
+  const pointsList: PointObject[][] = useMemo(() => {
+    const result: PointObject[][] = []
+    for (let i = 0; i < commands.length; i += 1) {
+      const curr = commands[i]
+      const next = commands[i + 1]
+
+      result.push(
+        [curr.cr?.toJson(), curr.point.toJson(), next?.cl?.toJson()].filter(
+          Boolean
+        )
+      )
+    }
+    return result
+  }, [commands])
   const handleChangePath = useCallback(
     (ev: MouseEvent<HTMLOrSVGElement>) => {
       onChangePath('path', { ...ev })
@@ -305,10 +309,9 @@ export const EditPath = ({
   const handleChangePoint = useCallback(
     (i: number) => (ev: MouseEvent<HTMLOrSVGElement>) => {
       setSelected(i)
-      console.log(pointsList[i])
       onChangePoint('point', i, { ...ev })
     },
-    [onChangePoint, pointsList]
+    [onChangePoint]
   )
 
   const genOutline = useCallback(
@@ -330,6 +333,7 @@ export const EditPath = ({
         stroke={EDIT_CONFIG.color.main}
         fill={EDIT_CONFIG.fill}
       />
+
       {pointsList.map((points, i) =>
         points.length === 1 ? (
           <circle
