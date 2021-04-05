@@ -1,4 +1,4 @@
-import { Point, Command, COMMAND_TYPE } from './svg'
+import { Point, Command, Vector, COMMAND_TYPE } from './svg'
 import { PointObject, ConvertOption } from './types'
 
 // TODO: move types.ts
@@ -12,23 +12,29 @@ export const convertLineCommands: CommandsConverter = (points) =>
     (p, i) =>
       new Command(i === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE, [p.x, p.y])
   )
+
+export const distanceVector = (pr: PointObject, ne: PointObject): Vector =>
+  new Point(ne.x, ne.y).sub(new Point(pr.x, pr.y)).toVector()
+
 export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number
   constructor({ ratio }: ConvertOption = {}) {
     this.ratio = ratio ?? 0.2
     this.convert = this.convert.bind(this)
   }
-  private _controlPoint(
-    pr: PointObject,
-    st: PointObject,
-    ne: PointObject
-  ): [number, number] {
-    const prev = new Point(pr.x, pr.y)
-    const start = new Point(st.x, st.y)
-    const next = new Point(ne.x, ne.y)
-    const vector = next.sub(prev).toVector().scale(this.ratio).toPoint()
-    const po = start.add(vector)
-    return [po.x, po.y]
+
+  private _curveVector({
+    prev,
+    next,
+    max,
+  }: {
+    prev: PointObject
+    next: PointObject
+    max: number
+  }): Vector {
+    const vector = distanceVector(prev, next).scale(this.ratio)
+    if (max > vector.value) return vector
+    return new Vector(max * this.ratio, vector.angle)
   }
 
   public genCommand(
@@ -37,13 +43,20 @@ export class BezierCurve implements GenerateCommandsConverter {
     p3: PointObject,
     p4: PointObject
   ): Command {
-    const value = [
-      ...this._controlPoint(p1, p2, p3),
-      ...this._controlPoint(p4, p3, p2),
+    const max = distanceVector(p2, p3).value
+    const vPrev = this._curveVector({ prev: p1, next: p3, max })
+    const vNext = this._curveVector({ prev: p4, next: p2, max })
+
+    const cPrev = new Point(p2.x, p2.y).add(vPrev.toPoint())
+    const cNext = new Point(p3.x, p3.y).add(vNext.toPoint())
+    return new Command(COMMAND_TYPE.CURVE, [
+      cPrev.x,
+      cPrev.y,
+      cNext.x,
+      cNext.y,
       p3.x,
       p3.y,
-    ]
-    return new Command(COMMAND_TYPE.CURVE, value)
+    ])
   }
 
   public convert(p: PointObject[]): Command[] {
