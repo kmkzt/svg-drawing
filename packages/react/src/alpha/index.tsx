@@ -272,6 +272,11 @@ const EDIT_CONFIG = {
   fill: 'none',
 } as const
 
+const genOutline = (points: PointObject[]) =>
+  points.reduce(
+    (str, po, i) => (i === 0 ? `M ${po.x} ${po.y}` : str + `L ${po.x} ${po.y}`),
+    ''
+  )
 export const EditPath = ({
   d,
   onChangePath,
@@ -285,17 +290,32 @@ export const EditPath = ({
     path.parseCommandString(d)
     return path.commands
   }, [d])
-  const pointsList: PointObject[][] = useMemo(() => {
-    const result: PointObject[][] = []
+
+  const controlPointsList: PointObject[][] = useMemo(
+    () =>
+      commands.reduce((re, com) => {
+        if (!com.point) return re
+        const po = [
+          com.cl?.toJson(),
+          com.point?.toJson(),
+          com.cr?.toJson(),
+        ].filter(Boolean) as PointObject[]
+        if (!po.length) return re
+        return [...re, po]
+      }, [] as PointObject[][]),
+    [commands]
+  )
+  const controlOutlines: string[] = useMemo(() => {
+    const result: string[] = []
     for (let i = 0; i < commands.length; i += 1) {
       const curr = commands[i]
       const next = commands[i + 1]
-
-      result.push(
-        [curr.cr?.toJson(), curr.point.toJson(), next?.cl?.toJson()].filter(
-          Boolean
-        )
-      )
+      const points = [
+        curr.cr?.toJson(),
+        curr.point.toJson(),
+        next?.cl?.toJson(),
+      ].filter(Boolean)
+      result.push(genOutline(points))
     }
     return result
   }, [commands])
@@ -314,15 +334,6 @@ export const EditPath = ({
     [onChangePoint]
   )
 
-  const genOutline = useCallback(
-    (points: PointObject[]) =>
-      points.reduce(
-        (str, po, i) =>
-          i === 0 ? `M ${po.x} ${po.y}` : str + `L ${po.x} ${po.y}`,
-        ''
-      ),
-    []
-  )
   return (
     <>
       <path d={d} {...attrs} />
@@ -333,49 +344,31 @@ export const EditPath = ({
         stroke={EDIT_CONFIG.color.main}
         fill={EDIT_CONFIG.fill}
       />
-
-      {pointsList.map((points, i) =>
-        points.length === 1 ? (
-          <circle
-            key={i}
-            cx={points[0].x}
-            cy={points[0].y}
-            onMouseMove={handleChangePoint(i)}
-            r={EDIT_CONFIG.point}
-            style={{
-              fill: selected === i ? '#f00' : EDIT_CONFIG.color.main,
-            }}
-          />
-        ) : (
-          <g key={i}>
-            <path
-              d={genOutline(points)}
-              strokeWidth={EDIT_CONFIG.line}
-              stroke={EDIT_CONFIG.color.main}
-              fill={EDIT_CONFIG.fill}
+      {controlOutlines.map((d, i) => (
+        <path
+          key={i}
+          d={d}
+          strokeWidth={EDIT_CONFIG.line}
+          stroke={selected === i ? '#f00' : EDIT_CONFIG.color.main}
+          fill={EDIT_CONFIG.fill}
+        />
+      ))}
+      {controlPointsList.map((points, i) => (
+        <g key={i}>
+          {points.map(({ x, y }, k) => (
+            <circle
+              key={k}
+              cx={x}
+              cy={y}
+              onMouseMove={k === 1 ? handleChangePoint(i, k) : undefined}
+              r={EDIT_CONFIG.point}
+              style={{
+                fill: EDIT_CONFIG.color.sub,
+              }}
             />
-            {points.map(({ x, y }, k) => (
-              <circle
-                key={k}
-                cx={x}
-                cy={y}
-                onMouseMove={k === 1 ? handleChangePoint(i) : undefined}
-                r={EDIT_CONFIG.point}
-                style={{
-                  fill:
-                    i !== selected
-                      ? EDIT_CONFIG.color.sub
-                      : k === 0
-                      ? '#0F0'
-                      : k === 1
-                      ? '#F00'
-                      : '#00F',
-                }}
-              />
-            ))}
-          </g>
-        )
-      )}
+          ))}
+        </g>
+      ))}
     </>
   )
 }
