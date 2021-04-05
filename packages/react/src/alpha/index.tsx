@@ -278,6 +278,7 @@ export const EditPath = ({
   onChangePoint,
   ...attrs
 }: PathObject & EditEventHandler) => {
+  const [selected, setSelected] = useState(0)
   const pointsList: PointObject[][] = useMemo(() => {
 
     if (!d) return []
@@ -303,9 +304,11 @@ export const EditPath = ({
 
   const handleChangePoint = useCallback(
     (i: number) => (ev: MouseEvent<HTMLOrSVGElement>) => {
+      setSelected(i)
+      console.log(pointsList[i])
       onChangePoint('point', i, { ...ev })
     },
-    [onChangePoint]
+    [onChangePoint, pointsList]
   )
 
   const genOutline = useCallback(
@@ -336,7 +339,7 @@ export const EditPath = ({
             onMouseMove={handleChangePoint(i)}
             r={EDIT_CONFIG.point}
             style={{
-              fill: EDIT_CONFIG.color.main,
+              fill: selected === i ? '#f00' : EDIT_CONFIG.color.main,
             }}
           />
         ) : (
@@ -356,7 +359,13 @@ export const EditPath = ({
                 r={EDIT_CONFIG.point}
                 style={{
                   fill:
-                    k === 1 ? EDIT_CONFIG.color.main : EDIT_CONFIG.color.sub,
+                    i !== selected
+                      ? EDIT_CONFIG.color.sub
+                      : k === 0
+                      ? '#0F0'
+                      : k === 1
+                      ? '#F00'
+                      : '#00F',
                 }}
               />
             ))}
