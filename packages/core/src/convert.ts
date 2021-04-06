@@ -34,7 +34,7 @@ export class BezierCurve implements GenerateCommandsConverter {
   }): Vector {
     const vector = distanceVector(prev, next).scale(this.ratio)
     if (max > vector.value) return vector
-    return new Vector(max * this.ratio, vector.angle)
+    return new Vector(max / 2, vector.angle)
   }
 
   public genCommand(
