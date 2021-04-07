@@ -219,16 +219,29 @@ export const useDrawing = <T extends HTMLElement>({
   ]
 }
 
-type EditPathIndex = {
+export type EditPathIndex = {
   path?: number
   command?: number
-  point?: number
+  value?: number
 }
 
-type EditSvgEventHandler = {
+export type EditSvgEventHandler = {
   editing?: EditPathIndex
   onSelectPath: (arg: EditPathIndex) => void
-  onUpdatePath: (arg: { index: EditPathIndex; point: PointObject }) => void
+  onUpdatePath: (arg: {
+    index: Required<EditPathIndex>
+    point: PointObject
+  }) => void
+}
+export type EditCommandIndex = Omit<EditPathIndex, 'path'>
+export type ArgUpdateCommand = {
+  index: EditCommandIndex
+  point: PointObject
+}
+export type EditPathEventHandler = {
+  editing?: EditCommandIndex
+  onSelectCommand: (arg: Required<EditCommandIndex>) => void
+  onUpdateCommand: (arg: ArgUpdateCommand) => void
 }
 
 export const RenderSvg = ({
@@ -239,11 +252,21 @@ export const RenderSvg = ({
   onUpdatePath: handleUpdatePath,
   ...size
 }: SvgObject & EditSvgEventHandler) => {
-  const handleClick = useCallback(
+  const handleClickPath = useCallback(
     (pathIndex: number): MouseEventHandler => (ev) => {
       ev.preventDefault()
       handleSelectPath({
         path: pathIndex,
+      })
+    },
+    [handleSelectPath]
+  )
+
+  const handleSelectCommand = useCallback(
+    (pathIndex: number) => (arg: EditCommandIndex) => {
+      handleSelectPath({
+        path: pathIndex,
+        ...arg,
       })
     },
     [handleSelectPath]
@@ -261,6 +284,8 @@ export const RenderSvg = ({
     },
     [handleUpdatePath]
   )
+
+
   return (
     <svg {...size}>
       {background && <rect {...size} fill={background} />}
@@ -269,11 +294,15 @@ export const RenderSvg = ({
           <EditPath
             key={i}
             {...pathAttr}
+            editing={{
+              command: editing?.command,
+              value: editing?.value,
+            }}
             onUpdateCommand={handleUpdateCommand(i)}
             onSelectCommand={handleSelectCommand(i)}
           />
         ) : (
-          <path key={i} {...pathAttr} onClick={handleClick(i)} />
+          <path key={i} {...pathAttr} onClick={handleClickPath(i)} />
         )
       )}
     </svg>
@@ -303,23 +332,11 @@ type ControlPoint = {
   d: string
 }
 
-type EditCommandIndex = {
-  command: number
-  point: number
-}
-type ArgUpdateCommand = {
-  index: EditCommandIndex
-  point: PointObject
-}
-type EditPathEventHandler = {
-  editing?: EditCommandIndex
-  onSelectCommand: (arg: EditCommandIndex) => void
-  onUpdateCommand: (arg: ArgUpdateCommand) => void
-}
 export const EditPath = ({
   d,
-  onEditPath,
-  onSelectPath,
+  editing,
+  onUpdateCommand: handleUpdateCommand,
+  onSelectCommand: handleSelectCommand,
   ...attrs
 }: PathObject & EditPathEventHandler) => {
   const commands: Command[] = useMemo(() => {
@@ -348,25 +365,25 @@ export const EditPath = ({
     }
     return result
   }, [commands])
-  const handleChangePath = useCallback(
-    (ev: MouseEvent<HTMLOrSVGElement>) => {
-      onChangePath('path', { ...ev })
+
+  const handleClickPath = useCallback(
+    (_ev: MouseEvent<HTMLOrSVGElement>) => {
+      handleSelectCommand({})
     },
-    [onChangePath]
+    [handleSelectCommand]
   )
 
-  const handleChangePoint = useCallback(
-    ({index, valueIndex}: {index: number, valIndex: number}) => (ev: MouseEvent<HTMLOrSVGElement>) => {
-      onEdit({
+  const handleMouseMovePoint = useCallback(
+    (index: EditCommandIndex): MouseEventHandler<HTMLOrSVGElement> => (ev) => {
+      handleUpdateCommand({
         index,
-        valueIndex,
         point: {
           x: ev.clientX,
           y: ev.clientY,
         },
       })
     },
-    [onChangePoint]
+    [handleUpdateCommand]
   )
 
   return (
@@ -374,7 +391,7 @@ export const EditPath = ({
       <path d={d} {...attrs} />
       <path
         d={d}
-        onMouseMove={handleChangePath}
+        onClick={handleClickPath}
         strokeWidth={EDIT_CONFIG.line}
         stroke={EDIT_CONFIG.color.main}
         fill={EDIT_CONFIG.fill}
@@ -384,16 +401,20 @@ export const EditPath = ({
           <path
             d={d}
             strokeWidth={EDIT_CONFIG.line}
-            stroke={selected === i ? '#f00' : EDIT_CONFIG.color.main}
+            stroke={editing?.command === i ? '#f00' : EDIT_CONFIG.color.main}
             fill={EDIT_CONFIG.fill}
           />
           {[prev, next, point].map(
             (po: PointObject | undefined, k) =>
               po && (
                 <circle
+                  key={k}
                   cx={po.x}
                   cy={po.y}
-                  onMouseMove={handleChangePoint(i, k)}
+                  onMouseMove={handleMouseMovePoint({
+                    command: i,
+                    value: k * 2,
+                  })}
                   r={EDIT_CONFIG.point}
                   style={{
                     fill: EDIT_CONFIG.color.sub,

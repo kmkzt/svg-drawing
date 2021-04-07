@@ -1,6 +1,11 @@
-import { useEffect, useCallback, useState, ChangeEvent, useMemo } from 'react'
+import { useCallback, useState, ChangeEvent, useMemo } from 'react'
 import { NextPage } from 'next'
-import { useDrawing, RenderSvg } from '@svg-drawing/react'
+import {
+  useDrawing,
+  RenderSvg,
+  EditPathIndex,
+  ArgUpdateCommand,
+} from '@svg-drawing/react'
 import {
   BezierCurve,
   convertLineCommands,
@@ -47,8 +52,6 @@ const colorList = [
   'black',
 ]
 
-console.log(useDrawing)
-
 const lattice = (s: number) => `
   repeating-linear-gradient(
     90deg,
@@ -79,7 +82,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
   const [penWidth, setPenWidth] = useState(5)
-  const [editPathIndex, setEditPathIndex] = useState(0)
+  const [editing, setEditing] = useState<EditPathIndex>({
+    path: undefined,
+    command: undefined,
+    value: undefined,
+  })
   const [mode, setMode] = useState<keyof typeof drawMode>('pencil')
 
   const Handler: typeof DrawHandler | undefined = useMemo(
@@ -161,29 +168,22 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [updateFill]
   )
 
-  const handleSelectPath = useCallback((i: number) => {
-    setEditPathIndex(i)
+  const handleSelectPath = useCallback((arg: EditPathIndex) => {
+    console.log(arg)
+    setEditing(arg)
   }, [])
-
-  const handleChangePath = useCallback((...arg: any) => {
-    console.log('path')
-  }, [])
-  const handleChangePoint = useCallback(
-    (...arg: any) => {
-      console.log(arg)
-      const [_type, i, ev] = arg
-      const path = draw.svg.current.paths[editPathIndex]
-      const command = path.commands[i]
-      console.log(command)
+  const handleUpdatePath = useCallback(
+    ({ index, point }: ArgUpdateCommand) => {
+      console.log({ index, point })
+      const path = draw.svg.current.paths[index.path]
+      const command = path.commands[index.command]
       if (!command) return
       const { left, top } = drawElRef.current.getBoundingClientRect()
-      const { clientX, clientY } = ev
-      console.log(ev, clientX, clientY)
-      command.point = new Point(clientX - left, clientY - top)
-      path.commands = commandsConverter(path.commands.map((com) => com.point))
+      command.value[index.value] = point.x - left
+      command.value[index.value + 1] = point.y - top
       draw.update()
     },
-    [draw, editPathIndex, drawElRef, commandsConverter]
+    [draw, drawElRef]
   )
   const handleFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -398,10 +398,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         >
           <RenderSvg
             {...svgObj}
-            editPathIndex={editPathIndex}
+            editing={editing}
             onSelectPath={handleSelectPath}
-            onChangePath={handleChangePath}
-            onChangePoint={handleChangePoint}
+            onUpdatePath={handleUpdatePath}
           />
         </div>
       </Box>
