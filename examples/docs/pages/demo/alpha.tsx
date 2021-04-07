@@ -4,7 +4,7 @@ import {
   useDrawing,
   RenderSvg,
   EditPathIndex,
-  ArgUpdateCommand,
+  ArgUpdatePath,
 } from '@svg-drawing/react'
 import {
   BezierCurve,
@@ -15,7 +15,6 @@ import {
   PenHandler,
   PencilHandler,
   DrawHandler,
-  Point,
 } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import {
@@ -173,7 +172,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     setEditing(arg)
   }, [])
   const handleUpdatePath = useCallback(
-    ({ index, point }: ArgUpdateCommand) => {
+    ({ index, point }: ArgUpdatePath) => {
+      if (!drawElRef.current) return
       console.log({ index, point })
       const path = draw.svg.current.paths[index.path]
       const command = path.commands[index.command]
