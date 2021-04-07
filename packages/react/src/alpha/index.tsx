@@ -225,23 +225,28 @@ export type EditPathIndex = {
   value?: number
 }
 
+type ArgUpdatePath = {
+  index: Required<EditPathIndex>
+  point: PointObject
+}
+type SelectPathHandler = (arg: EditPathIndex) => void
+type UpdatePathHandler = (arg: ArgUpdatePath) => void
 export type EditSvgEventHandler = {
   editing?: EditPathIndex
-  onSelectPath: (arg: EditPathIndex) => void
-  onUpdatePath: (arg: {
-    index: Required<EditPathIndex>
-    point: PointObject
-  }) => void
+  onSelectPath: SelectPathHandler
+  onUpdatePath: UpdatePathHandler
 }
 export type EditCommandIndex = Omit<EditPathIndex, 'path'>
 export type ArgUpdateCommand = {
-  index: EditCommandIndex
+  index: Required<EditCommandIndex>
   point: PointObject
 }
+type SelectCommandHandler = (arg: EditCommandIndex) => void
+type UpdateCommandHandler = (arg: ArgUpdateCommand) => void
 export type EditPathEventHandler = {
   editing?: EditCommandIndex
-  onSelectCommand: (arg: Required<EditCommandIndex>) => void
-  onUpdateCommand: (arg: ArgUpdateCommand) => void
+  onSelectCommand: SelectCommandHandler
+  onUpdateCommand: UpdateCommandHandler
 }
 
 export const RenderSvg = ({
@@ -263,7 +268,7 @@ export const RenderSvg = ({
   )
 
   const handleSelectCommand = useCallback(
-    (pathIndex: number) => (arg: EditCommandIndex) => {
+    (pathIndex: number): SelectCommandHandler => (arg) => {
       handleSelectPath({
         path: pathIndex,
         ...arg,
@@ -273,7 +278,7 @@ export const RenderSvg = ({
   )
 
   const handleUpdateCommand = useCallback(
-    (pathIndex: number) => ({ index, point }: ArgUpdateCommand) => {
+    (pathIndex: number): UpdateCommandHandler => ({ index, point }) => {
       handleUpdatePath({
         index: {
           path: pathIndex,
@@ -285,15 +290,14 @@ export const RenderSvg = ({
     [handleUpdatePath]
   )
 
-
   return (
     <svg {...size}>
       {background && <rect {...size} fill={background} />}
-      {paths.map((pathAttr, i) =>
+      {paths.map((pathAttr: PathObject, i) =>
         i === editing?.path ? (
           <EditPath
             key={i}
-            {...pathAttr}
+            {...(pathAttr as any)}
             editing={{
               command: editing?.command,
               value: editing?.value,
@@ -338,7 +342,7 @@ export const EditPath = ({
   onUpdateCommand: handleUpdateCommand,
   onSelectCommand: handleSelectCommand,
   ...attrs
-}: PathObject & EditPathEventHandler) => {
+}: EditPathEventHandler & PathObject) => {
   const commands: Command[] = useMemo(() => {
     if (!d) return []
     const path = new Path()
@@ -374,7 +378,9 @@ export const EditPath = ({
   )
 
   const handleMouseMovePoint = useCallback(
-    (index: EditCommandIndex): MouseEventHandler<HTMLOrSVGElement> => (ev) => {
+    (
+      index: Required<EditCommandIndex>
+    ): MouseEventHandler<HTMLOrSVGElement> => (ev) => {
       handleUpdateCommand({
         index,
         point: {
