@@ -136,7 +136,6 @@ export const useDrawing = <T extends HTMLElement>({
   const resizeHandlerRef = useRef<ResizeHandler | null>(null)
   useEffect(() => {
     if (!drawElRef.current) return
-    if (resizeHandlerRef.current) return
     const drawEl = drawElRef.current
     const svg = svgRef.current
     const resizeHandler = new ResizeHandler(drawEl, {
@@ -149,7 +148,7 @@ export const useDrawing = <T extends HTMLElement>({
     resizeHandlerRef.current = resizeHandler
     resizeHandler.on()
     return () => resizeHandler.off()
-  })
+  }, [])
 
   /**
    * Methods
