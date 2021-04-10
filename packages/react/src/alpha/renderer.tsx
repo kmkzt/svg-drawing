@@ -94,11 +94,6 @@ const EDIT_CONFIG = {
   fill: 'none',
 } as const
 
-const genOutline = (points: PointObject[]) =>
-  points.reduce(
-    (str, po, i) => (i === 0 ? `M ${po.x} ${po.y}` : str + `L ${po.x} ${po.y}`),
-    ''
-  )
 
 export const EditPath = ({
   d,

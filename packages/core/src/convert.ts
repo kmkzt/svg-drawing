@@ -13,7 +13,7 @@ export const convertLineCommands: CommandsConverter = (points) =>
       new Command(i === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE, [p.x, p.y])
   )
 
-export const distanceVector = ({
+const genVector = ({
   prev,
   next,
 }: {
@@ -30,7 +30,7 @@ const curveVector = ({
   prev: PointObject
   next: PointObject
   value: number
-}): Vector => new Vector(value, distanceVector({ prev, next }).angle)
+}): Vector => new Vector(value, genVector({ prev, next }).angle)
 export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number
   constructor({ ratio }: ConvertOption = {}) {
@@ -44,7 +44,7 @@ export class BezierCurve implements GenerateCommandsConverter {
     p3: PointObject,
     p4: PointObject
   ): Command {
-    const value = distanceVector({ prev: p2, next: p3 }).value * this.ratio
+    const value = genVector({ prev: p2, next: p3 }).value * this.ratio
     const vPrev = curveVector({ prev: p1, next: p3, value })
     const vNext = curveVector({ prev: p4, next: p2, value })
 
