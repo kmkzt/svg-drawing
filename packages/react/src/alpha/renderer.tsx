@@ -4,10 +4,15 @@ import React, {
   MouseEventHandler,
   MouseEvent,
 } from 'react'
-import { Path, Command } from '@svg-drawing/core/lib/svg'
-import { PathObject, PointObject, SvgObject } from '@svg-drawing/core/lib/types'
+import { Path } from '@svg-drawing/core/lib/svg'
+import { EditPath as EditPathCore } from '@svg-drawing/core/lib/edit'
 import {
+  PathObject,
+  PointObject,
+  SvgObject,
   ControlPoint,
+} from '@svg-drawing/core/lib/types'
+import {
   EditCommandIndex,
   EditPathEventHandler,
   EditSvgEventHandler,
@@ -102,32 +107,15 @@ export const EditPath = ({
   onSelectCommand: handleSelectCommand,
   ...attrs
 }: EditPathEventHandler & PathObject) => {
-  const commands: Command[] = useMemo(() => {
-    if (!d) return []
-    const path = new Path()
-    path.parseCommandString(d)
-    return path.commands
+  const editPath: EditPathCore = useMemo(() => {
+    const p = new Path()
+    if (d) p.parseCommandString(d)
+    return new EditPathCore(p)
   }, [d])
 
-  const controlPoint: ControlPoint[] = useMemo(() => {
-    const result: ControlPoint[] = []
-    for (let i = 0; i < commands.length; i += 1) {
-      const curr = commands[i]
-      const next = commands[i + 1]
-      const outlinePoints = [
-        curr.cr?.toJson(),
-        curr.point?.toJson(),
-        next?.cl?.toJson(),
-      ].filter(Boolean) as PointObject[]
-      result.push({
-        point: curr.point?.toJson(),
-        prev: curr.cl?.toJson(),
-        next: curr.cr?.toJson(),
-        d: genOutline(outlinePoints),
-      })
-    }
-    return result
-  }, [commands])
+  const controlPoint: ControlPoint[] = useMemo(() => editPath.controlPoint(), [
+    editPath,
+  ])
 
   const handleClickPath = useCallback(
     (_ev: MouseEvent<HTMLOrSVGElement>) => {

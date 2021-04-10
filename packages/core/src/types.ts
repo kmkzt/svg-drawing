@@ -129,3 +129,13 @@ export interface DrawEventHandler {
   on: () => void
   off: () => void
 }
+
+/**
+ * Control Point
+ */
+export type ControlPoint = {
+  point?: PointObject
+  prev?: PointObject
+  next?: PointObject
+  d: string
+}

@@ -58,9 +58,3 @@ export type EditPathEventHandler = {
   onSelectCommand: SelectCommandHandler
   onUpdateCommand: UpdateCommandHandler
 }
-export type ControlPoint = {
-  point?: PointObject
-  prev?: PointObject
-  next?: PointObject
-  d: string
-}
