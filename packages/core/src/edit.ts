@@ -10,6 +10,9 @@ const genOutline = (points: PointObject[]) =>
 export class EditPath {
   constructor(public path: Path) {}
 
+  /**
+   * @todo compatible relative point
+   */
   public get points(): Point[] {
     const commands = this.path.commands
     return commands.reduce(

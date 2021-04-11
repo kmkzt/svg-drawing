@@ -86,7 +86,7 @@ export class Command {
     this.value.splice(3, 1, po.y)
   }
   public get cr(): Point | undefined {
-    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+    if (!this.isCurve) {
       return undefined
     }
     const [x, y] = this.value.slice(2, 4)
@@ -94,14 +94,14 @@ export class Command {
   }
   public set cl(po: Point | undefined) {
     if (!po) return
-    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+    if (!this.isCurve) {
       return
     }
     this.value.splice(0, 1, po.x)
     this.value.splice(1, 1, po.y)
   }
   public get cl(): Point | undefined {
-    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+    if (!this.isCurve) {
       return undefined
     }
     const [x, y] = this.value.slice(0, 2)
@@ -133,6 +133,30 @@ export class Command {
 
   public clone(): Command {
     return new Command(this.type, this.value.slice())
+  }
+
+  public get isCurve(): boolean {
+    const curveCommandType: CommandType[] = [
+      COMMAND_TYPE.CURVE,
+      COMMAND_TYPE.CURVE_RELATIVE,
+    ]
+    return curveCommandType.includes(this.type) && this.value.length === 6
+  }
+  public get isAbsolute(): boolean {
+    const absoluteCommandType: CommandType[] = [
+      COMMAND_TYPE.MOVE,
+      COMMAND_TYPE.LINE,
+      COMMAND_TYPE.CURVE,
+      COMMAND_TYPE.ARC_CURVE,
+      COMMAND_TYPE.QUADRATIC_CURVE,
+    ]
+    return absoluteCommandType.includes(this.type)
+  }
+  public translate(po: Point) {
+    if (!this.isAbsolute) return
+    this.point = this.point?.add(po)
+    this.cr = this.cr?.add(po)
+    this.cl = this.cl?.add(po)
   }
 }
 
@@ -244,6 +268,12 @@ export class Path {
     return {
       ...this.attrs,
       d: this.getCommandString(),
+    }
+  }
+
+  public translate(po: Point): void {
+    for (let i = 0; i < this.commands.length; i += 1) {
+      this.commands[i].translate(po)
     }
   }
 
