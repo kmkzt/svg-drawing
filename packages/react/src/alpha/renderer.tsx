@@ -11,6 +11,7 @@ import {
   PointObject,
   SvgObject,
   ControlPoint,
+  BoundingBox,
 } from '@svg-drawing/core/lib/types'
 import {
   EditCommandIndex,
@@ -108,7 +109,11 @@ export const EditPath = ({
     return new EditPathCore(p)
   }, [d])
 
-  const controlPoint: ControlPoint[] = useMemo(() => editPath.controlPoint(), [
+  const controlPoints: ControlPoint[] = useMemo(() => editPath.controlPoints, [
+    editPath,
+  ])
+
+  const boundingBox: BoundingBox = useMemo(() => editPath.boundingBox, [
     editPath,
   ])
 
@@ -144,7 +149,12 @@ export const EditPath = ({
         stroke={EDIT_CONFIG.color.main}
         fill={EDIT_CONFIG.fill}
       />
-      {controlPoint.map(({ point, prev, next, d }: ControlPoint, i) => (
+      <rect
+        {...boundingBox}
+        stroke={EDIT_CONFIG.color.main}
+        fill={EDIT_CONFIG.fill}
+      />
+      {controlPoints.map(({ point, prev, next, d }: ControlPoint, i) => (
         <g key={i}>
           <path
             d={d}

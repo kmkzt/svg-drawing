@@ -139,3 +139,13 @@ export type ControlPoint = {
   next?: PointObject
   d: string
 }
+
+/**
+ * BoundingBox
+ */
+export type BoundingBox = {
+  width: number
+  height: number
+  x: number
+  y: number
+}
