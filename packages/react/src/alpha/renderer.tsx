@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo, MouseEvent, useState } from 'react'
-import { Path } from '@svg-drawing/core/lib/svg'
-import { EditPath as EditPathCore } from '@svg-drawing/core/lib/edit'
 import {
+  Path,
   PathObject,
   PointObject,
   ControlPoint,
   BoundingBox,
-} from '@svg-drawing/core/lib/types'
+  EditPath as EditPathCore,
+} from '@svg-drawing/core'
 import {
   EditPathProps,
   EditSvgProps,
@@ -34,7 +34,6 @@ export const EditSvg = ({
   editing,
   onSelect: handleSelect,
   onUpdate: handleUpdate,
-  onMove: handleMove,
   onCancel: handleCancel,
   background,
   paths,
@@ -72,7 +71,6 @@ export const EditSvg = ({
               : null
           }
           onUpdate={handleUpdate}
-          onMove={handleMove}
           onCancel={handleCancel}
           onSelectPath={handleSelectPath(i)}
         />
@@ -131,17 +129,21 @@ const EditPath = ({
         x: ev.clientX - currentPosition.x,
         y: ev.clientY - currentPosition.y,
       })
+      setCurrentPosition({
+        x: ev.clientX,
+        y: ev.clientY,
+      })
     },
     [currentPosition, handleUpdate]
   )
 
   const handleSelectedCircle = useCallback(
     (selector: EditPathIndex) => (ev: MouseEvent<SVGCircleElement>) => {
+      handleSelectPath(selector)
       setCurrentPosition({
         x: ev.clientX,
         y: ev.clientY,
       })
-      handleSelectPath(selector)
     },
     [handleSelectPath]
   )

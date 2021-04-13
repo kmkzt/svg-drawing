@@ -3,10 +3,12 @@ import type {
   PathObject,
   PointObject,
   SvgObject,
-} from '@svg-drawing/core/lib/types'
-import type { Svg } from '@svg-drawing/core/lib/svg'
-import type { DrawHandler, ResizeHandler } from '@svg-drawing/core/lib/handler'
-import type { CommandsConverter } from '@svg-drawing/core/lib/convert'
+  Svg,
+  DrawHandler,
+  ResizeHandler,
+  CommandsConverter,
+} from '@svg-drawing/core'
+
 export type UseDrawing<T extends HTMLElement> = [
   RefObject<T>,
   SvgObject,
@@ -49,10 +51,7 @@ export type EditSvgProps = SvgProps & {
 }
 export type EditPathIndex = Omit<EditIndex, 'path'>
 export type SelectPathHandler = (editCommandIndex: EditPathIndex) => void
-export type EditPathProps = Pick<
-  EditSvgProps,
-  'onCancel' | 'onMove' | 'onUpdate'
-> & {
+export type EditPathProps = Pick<EditSvgProps, 'onCancel' | 'onUpdate'> & {
   editingPath: EditPathIndex | null
   onSelectPath: SelectPathHandler
 }
