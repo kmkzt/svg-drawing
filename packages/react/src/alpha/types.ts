@@ -1,4 +1,4 @@
-import type { RefObject, MutableRefObject } from 'react'
+import type { RefObject, MutableRefObject, HTMLAttributes } from 'react'
 import type {
   PathObject,
   PointObject,
@@ -29,32 +29,30 @@ export type DrawingOptions = {
   commandsConverter?: CommandsConverter
   drawHandler?: typeof DrawHandler
 }
-export type EditPathIndex = {
+export type EditIndex = {
   path?: number
   command?: number
   value?: number
 }
 
-export type ArgUpdatePath = {
-  index: Required<EditPathIndex>
-  point: PointObject
+export type SvgProps = SvgObject & HTMLAttributes<SVGSVGElement>
+
+export type SelectHandler = (editIndex: EditIndex) => void
+export type UpdateHandler = (po: PointObject) => void
+export type CancelHandler = () => void
+
+export type EditSvgProps = SvgProps & {
+  editing: EditIndex
+  onSelect: SelectHandler
+  onUpdate: UpdateHandler
+  onCancel: CancelHandler
 }
-export type SelectPathHandler = (arg: EditPathIndex) => void
-export type UpdatePathHandler = (arg: ArgUpdatePath) => void
-export type EditSvgEventHandler = {
-  editing?: EditPathIndex
+export type EditPathIndex = Omit<EditIndex, 'path'>
+export type SelectPathHandler = (editCommandIndex: EditPathIndex) => void
+export type EditPathProps = Pick<
+  EditSvgProps,
+  'onCancel' | 'onMove' | 'onUpdate'
+> & {
+  editingPath: EditPathIndex | null
   onSelectPath: SelectPathHandler
-  onUpdatePath: UpdatePathHandler
-}
-export type EditCommandIndex = Omit<EditPathIndex, 'path'>
-export type ArgUpdateCommand = {
-  index: Required<EditCommandIndex>
-  point: PointObject
-}
-export type SelectCommandHandler = (arg: EditCommandIndex) => void
-export type UpdateCommandHandler = (arg: ArgUpdateCommand) => void
-export type EditPathEventHandler = {
-  editing?: EditCommandIndex
-  onSelectCommand: SelectCommandHandler
-  onUpdateCommand: UpdateCommandHandler
 }

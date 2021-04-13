@@ -1,11 +1,6 @@
 import { useCallback, useState, ChangeEvent, useMemo } from 'react'
 import { NextPage } from 'next'
-import {
-  useDrawing,
-  RenderSvg,
-  EditPathIndex,
-  ArgUpdatePath,
-} from '@svg-drawing/react'
+import { useDrawing, Svg, EditSvg, EditIndex } from '@svg-drawing/react'
 import {
   BezierCurve,
   convertLineCommands,
@@ -15,6 +10,7 @@ import {
   PenHandler,
   PencilHandler,
   DrawHandler,
+  Point,
 } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import {
@@ -25,6 +21,7 @@ import {
   Select,
 } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
+import { PointObject } from 'packages/core/lib'
 
 const size = 30
 const colorList = [
@@ -97,7 +94,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     return (po) => (close ? closeCommands(converter(po)) : converter(po))
   }, [close, curve])
 
-  const [drawElRef, svgObj, draw] = useDrawing<HTMLDivElement>({
+  const [drawElRef, svgObj, draw] = useDrawing<SVGSVGElement>({
     pathOptions: {
       fill,
       stroke: penColor,
@@ -167,23 +164,21 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [updateFill]
   )
 
-  const handleSelectPath = useCallback((arg: EditPathIndex) => {
+  const handleSelectEdit = useCallback((arg: EditIndex) => {
     console.log(arg)
     setEditing(arg)
   }, [])
-  const handleUpdatePath = useCallback(
-    ({ index, point }: ArgUpdatePath) => {
-      if (!drawElRef.current) return
-      console.log({ index, point })
-      const path = draw.svg.current.paths[index.path]
-      const command = path.commands[index.command]
+  const handleUpdateEdit = useCallback(
+    (po: PointObject) => {
+      if (!drawElRef.current || !editing.path) return
+      const path = draw.svg.current.paths[editing.path]
+      const command = path.commands[editing.command]
       if (!command) return
-      const { left, top } = drawElRef.current.getBoundingClientRect()
-      command.value[index.value] = point.x - left
-      command.value[index.value + 1] = point.y - top
+      command.value[editing.value] += po.x
+      command.value[editing.value + 1] += po.y
       draw.update()
     },
-    [draw, drawElRef]
+    [draw, drawElRef, editing.command, editing.path, editing.value]
   )
   const handleFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -396,11 +391,27 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             touchAction: 'none',
           }}
         >
-          <RenderSvg
+          <Svg {...svgObj} />
+        </div>
+      </Box>
+      <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
+        <div
+          style={{
+            backgroundImage: lattice(size),
+            backgroundSize: `${size}px ${size}px`,
+            border: '1px solid #333',
+            margin: '0 auto 0 0',
+            width: '100%',
+            height: '100%',
+            touchAction: 'none',
+          }}
+        >
+          <EditSvg
             {...svgObj}
             editing={editing}
-            onSelectPath={handleSelectPath}
-            onUpdatePath={handleUpdatePath}
+            onSelect={handleSelectEdit}
+            onUpdate={handleUpdateEdit}
+            onCancel={console.log}
           />
         </div>
       </Box>

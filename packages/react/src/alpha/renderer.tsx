@@ -1,86 +1,82 @@
-import React, {
-  useCallback,
-  useMemo,
-  MouseEventHandler,
-  MouseEvent,
-} from 'react'
+import React, { useCallback, useMemo, MouseEvent, useState } from 'react'
 import { Path } from '@svg-drawing/core/lib/svg'
 import { EditPath as EditPathCore } from '@svg-drawing/core/lib/edit'
 import {
   PathObject,
   PointObject,
-  SvgObject,
   ControlPoint,
   BoundingBox,
 } from '@svg-drawing/core/lib/types'
 import {
-  EditCommandIndex,
-  EditPathEventHandler,
-  EditSvgEventHandler,
-  SelectCommandHandler,
-  UpdateCommandHandler,
+  EditPathProps,
+  EditSvgProps,
+  SelectPathHandler,
+  SvgProps,
+  EditPathIndex,
 } from './types'
 
-export const RenderSvg = ({
+export const Svg = ({
   background,
   paths,
-  editing,
-  onSelectPath: handleSelectPath,
-  onUpdatePath: handleUpdatePath,
-  ...size
-}: SvgObject & EditSvgEventHandler) => {
-  const handleClickPath = useCallback(
-    (pathIndex: number): MouseEventHandler => (ev) => {
-      ev.preventDefault()
-      handleSelectPath({
-        path: pathIndex,
-      })
-    },
-    [handleSelectPath]
-  )
+  width,
+  height,
+  ...rest
+}: SvgProps) => (
+  <svg width={width} height={height} {...rest}>
+    {background && <rect width={width} height={height} fill={background} />}
+    {paths.map((pathAttr, i) => (
+      <path key={i} {...pathAttr} />
+    ))}
+  </svg>
+)
 
-  const handleSelectCommand = useCallback(
-    (pathIndex: number): SelectCommandHandler => (arg) => {
-      handleSelectPath({
+export const EditSvg = ({
+  editing,
+  onSelect: handleSelect,
+  onUpdate: handleUpdate,
+  onMove: handleMove,
+  onCancel: handleCancel,
+  background,
+  paths,
+  width,
+  height,
+  ...rest
+}: EditSvgProps) => {
+  const handleSelectPath = useCallback(
+    (pathIndex: number): SelectPathHandler => (arg) => {
+      console.log({
+        path: pathIndex,
+        ...arg,
+      })
+      handleSelect({
         path: pathIndex,
         ...arg,
       })
     },
-    [handleSelectPath]
-  )
-
-  const handleUpdateCommand = useCallback(
-    (pathIndex: number): UpdateCommandHandler => ({ index, point }) => {
-      handleUpdatePath({
-        index: {
-          path: pathIndex,
-          ...index,
-        },
-        point,
-      })
-    },
-    [handleUpdatePath]
+    [handleSelect]
   )
 
   return (
-    <svg {...size}>
-      {background && <rect {...size} fill={background} />}
-      {paths.map((pathAttr: PathObject, i) =>
-        i === editing?.path ? (
-          <EditPath
-            key={i}
-            {...(pathAttr as any)}
-            editing={{
-              command: editing?.command,
-              value: editing?.value,
-            }}
-            onUpdateCommand={handleUpdateCommand(i)}
-            onSelectCommand={handleSelectCommand(i)}
-          />
-        ) : (
-          <path key={i} {...pathAttr} onClick={handleClickPath(i)} />
-        )
-      )}
+    <svg width={width} height={height} {...rest}>
+      {background && <rect width={width} height={height} fill={background} />}
+      {paths.map((pathAttr: PathObject, i) => (
+        <EditPath
+          key={i}
+          {...(pathAttr as any)}
+          editingPath={
+            i === editing?.path
+              ? {
+                  command: editing?.command,
+                  value: editing?.value,
+                }
+              : null
+          }
+          onUpdate={handleUpdate}
+          onMove={handleMove}
+          onCancel={handleCancel}
+          onSelectPath={handleSelectPath(i)}
+        />
+      ))}
     </svg>
   )
 }
@@ -95,14 +91,17 @@ const EDIT_CONFIG = {
   fill: 'none',
 } as const
 
-
-export const EditPath = ({
+const EditPath = ({
   d,
-  editing,
-  onUpdateCommand: handleUpdateCommand,
-  onSelectCommand: handleSelectCommand,
+  editingPath,
+  onSelectPath: handleSelectPath,
+  onUpdate: handleUpdate,
   ...attrs
-}: EditPathEventHandler & PathObject) => {
+}: EditPathProps & PathObject) => {
+  const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
+    null
+  )
+
   const editPath: EditPathCore = useMemo(() => {
     const p = new Path()
     if (d) p.parseCommandString(d)
@@ -118,27 +117,36 @@ export const EditPath = ({
   ])
 
   const handleClickPath = useCallback(
-    (_ev: MouseEvent<HTMLOrSVGElement>) => {
-      handleSelectCommand({})
+    (ev: MouseEvent<HTMLOrSVGElement>) => {
+      setCurrentPosition(null)
+      handleSelectPath({})
     },
-    [handleSelectCommand]
+    [handleSelectPath]
   )
 
-  const handleMouseMovePoint = useCallback(
-    (
-      index: Required<EditCommandIndex>
-    ): MouseEventHandler<HTMLOrSVGElement> => (ev) => {
-      handleUpdateCommand({
-        index,
-        point: {
-          x: ev.clientX,
-          y: ev.clientY,
-        },
+  const handleMouseMoveCircle = useCallback(
+    (ev: MouseEvent<SVGCircleElement>) => {
+      if (!currentPosition) return
+      handleUpdate({
+        x: ev.clientX - currentPosition.x,
+        y: ev.clientY - currentPosition.y,
       })
     },
-    [handleUpdateCommand]
+    [currentPosition, handleUpdate]
   )
 
+  const handleSelectedCircle = useCallback(
+    (selector: EditPathIndex) => (ev: MouseEvent<SVGCircleElement>) => {
+      setCurrentPosition({
+        x: ev.clientX,
+        y: ev.clientY,
+      })
+      handleSelectPath(selector)
+    },
+    [handleSelectPath]
+  )
+
+  if (!editingPath) return <path d={d} {...attrs} onClick={handleClickPath} />
   return (
     <>
       <path d={d} {...attrs} />
@@ -159,7 +167,7 @@ export const EditPath = ({
           <path
             d={d}
             strokeWidth={EDIT_CONFIG.line}
-            stroke={editing?.command === i ? '#f00' : EDIT_CONFIG.color.main}
+            stroke={editingPath.command === i ? '#f00' : EDIT_CONFIG.color.main}
             fill={EDIT_CONFIG.fill}
           />
           {[prev, next, point].map(
@@ -169,10 +177,15 @@ export const EditPath = ({
                   key={k}
                   cx={po.x}
                   cy={po.y}
-                  onMouseMove={handleMouseMovePoint({
+                  onMouseDown={handleSelectedCircle({
                     command: i,
                     value: k * 2,
                   })}
+                  onMouseMove={
+                    editingPath.value === k * 2
+                      ? handleMouseMoveCircle
+                      : undefined
+                  }
                   r={EDIT_CONFIG.point}
                   style={{
                     fill: EDIT_CONFIG.color.sub,
