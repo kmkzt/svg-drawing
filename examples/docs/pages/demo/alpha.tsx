@@ -78,7 +78,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
   const [penWidth, setPenWidth] = useState(5)
-  const [editing, setEditing] = useState<EditPathIndex>({
+  const [editing, setEditing] = useState<EditIndex>({
     path: undefined,
     command: undefined,
     value: undefined,
