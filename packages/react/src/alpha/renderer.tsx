@@ -85,6 +85,7 @@ const EDIT_CONFIG = {
   color: {
     main: '#09f',
     sub: '#f90',
+    selected: '#f00',
   },
   fill: 'none',
 } as const
@@ -148,6 +149,17 @@ const EditPath = ({
     [handleSelectPath]
   )
 
+  const isEditing = useCallback(
+    (index: EditPathIndex): boolean => {
+      if (!editingPath) return false
+      return (
+        editingPath.command === index.command &&
+        editingPath.value === index.value
+      )
+    },
+    [editingPath]
+  )
+
   if (!editingPath) return <path d={d} {...attrs} onClick={handleClickPath} />
   return (
     <>
@@ -164,39 +176,46 @@ const EditPath = ({
         stroke={EDIT_CONFIG.color.main}
         fill={EDIT_CONFIG.fill}
       />
-      {controlPoints.map(({ point, prev, next, d }: ControlPoint, i) => (
-        <g key={i}>
-          <path
-            d={d}
-            strokeWidth={EDIT_CONFIG.line}
-            stroke={editingPath.command === i ? '#f00' : EDIT_CONFIG.color.main}
-            fill={EDIT_CONFIG.fill}
-          />
-          {[prev, next, point].map(
-            (po: PointObject | undefined, k) =>
-              po && (
-                <circle
-                  key={k}
-                  cx={po.x}
-                  cy={po.y}
-                  onMouseDown={handleSelectedCircle({
-                    command: i,
-                    value: k * 2,
-                  })}
-                  onMouseMove={
-                    editingPath.value === k * 2
-                      ? handleMouseMoveCircle
-                      : undefined
-                  }
-                  r={EDIT_CONFIG.point}
-                  style={{
-                    fill: EDIT_CONFIG.color.sub,
-                  }}
-                />
+      {controlPoints.map(
+        ({ point, prev, next, d }: ControlPoint, commandIndex) => (
+          <g key={commandIndex}>
+            <path
+              d={d}
+              strokeWidth={EDIT_CONFIG.line}
+              stroke={EDIT_CONFIG.color.main}
+              fill={EDIT_CONFIG.fill}
+            />
+            {[prev, next, point].map((po: PointObject | undefined, k) => {
+              const valueIndex = k * 2
+              const editPathIndex = {
+                command: commandIndex,
+                value: valueIndex,
+              }
+              return (
+                po && (
+                  <circle
+                    key={k}
+                    cx={po.x}
+                    cy={po.y}
+                    onMouseDown={handleSelectedCircle(editPathIndex)}
+                    onMouseMove={
+                      isEditing(editPathIndex)
+                        ? handleMouseMoveCircle
+                        : undefined
+                    }
+                    r={EDIT_CONFIG.point}
+                    style={{
+                      fill: isEditing(editPathIndex)
+                        ? EDIT_CONFIG.color.selected
+                        : EDIT_CONFIG.color.sub,
+                    }}
+                  />
+                )
               )
-          )}
-        </g>
-      ))}
+            })}
+          </g>
+        )
+      )}
     </>
   )
 }
