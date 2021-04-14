@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, MouseEvent, useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import {
   Path,
   PathObject,
@@ -43,10 +43,6 @@ export const EditSvg = ({
 }: EditSvgProps) => {
   const handleSelectPath = useCallback(
     (pathIndex: number): SelectPathHandler => (arg) => {
-      console.log({
-        path: pathIndex,
-        ...arg,
-      })
       handleSelect({
         path: pathIndex,
         ...arg,
@@ -87,7 +83,11 @@ const EDIT_CONFIG = {
     sub: '#f90',
     selected: '#f00',
   },
-  fill: 'none',
+  fill: {
+    default: 'none',
+    boundingBox: 'rgba(0,0,0,0)',
+    selected: 'rgba(0,0,0,0.1)',
+  },
 } as const
 
 const EditPath = ({
@@ -95,11 +95,13 @@ const EditPath = ({
   editingPath,
   onSelectPath: handleSelectPath,
   onUpdate: handleUpdate,
+  onCancel: handleCancel,
   ...attrs
 }: EditPathProps & PathObject) => {
   const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
     null
   )
+  const [moveBoundingBox, setMoveBoundingBox] = useState(false)
 
   const editPath: EditPathCore = useMemo(() => {
     const p = new Path()
@@ -116,7 +118,7 @@ const EditPath = ({
   ])
 
   const handleClickPath = useCallback(
-    (ev: MouseEvent<HTMLOrSVGElement>) => {
+    (ev: React.MouseEvent<HTMLOrSVGElement>) => {
       setCurrentPosition(null)
       handleSelectPath({})
     },
@@ -124,7 +126,7 @@ const EditPath = ({
   )
 
   const handleMouseMoveCircle = useCallback(
-    (ev: MouseEvent<SVGCircleElement>) => {
+    (ev: React.MouseEvent<SVGCircleElement>) => {
       if (!currentPosition) return
       handleUpdate({
         x: ev.clientX - currentPosition.x,
@@ -139,7 +141,7 @@ const EditPath = ({
   )
 
   const handleSelectedCircle = useCallback(
-    (selector: EditPathIndex) => (ev: MouseEvent<SVGCircleElement>) => {
+    (selector: EditPathIndex) => (ev: React.MouseEvent<SVGCircleElement>) => {
       handleSelectPath(selector)
       setCurrentPosition({
         x: ev.clientX,
@@ -149,7 +151,7 @@ const EditPath = ({
     [handleSelectPath]
   )
 
-  const isEditing = useCallback(
+  const isSelectedPoint = useCallback(
     (index: EditPathIndex): boolean => {
       if (!editingPath) return false
       return (
@@ -160,6 +162,38 @@ const EditPath = ({
     [editingPath]
   )
 
+  const isSelectedBoundingBox = useMemo(() => {
+    if (!editingPath) return false
+    return editingPath.command === undefined
+  }, [editingPath])
+
+  const handleMoveStartBoundingBox = useCallback(
+    (ev: React.MouseEvent<SVGRectElement>) => {
+      handleSelectPath({})
+      setCurrentPosition({
+        x: ev.clientX,
+        y: ev.clientY,
+      })
+      setMoveBoundingBox(true)
+    },
+    [handleSelectPath]
+  )
+  const handleMoveEndBoundingBox = useCallback(
+    (ev: MouseEvent) => {
+      if (!moveBoundingBox || !isSelectedBoundingBox || !currentPosition) return
+      setMoveBoundingBox(false)
+      handleUpdate({
+        x: ev.clientX - currentPosition.x,
+        y: ev.clientY - currentPosition.y,
+      })
+    },
+    [moveBoundingBox, isSelectedBoundingBox, currentPosition, handleUpdate]
+  )
+
+  useEffect(() => {
+    window.addEventListener('mouseup', handleMoveEndBoundingBox)
+    return () => window.removeEventListener('mouseup', handleMoveEndBoundingBox)
+  }, [handleMoveEndBoundingBox])
   if (!editingPath) return <path d={d} {...attrs} onClick={handleClickPath} />
   return (
     <>
@@ -169,12 +203,18 @@ const EditPath = ({
         onClick={handleClickPath}
         strokeWidth={EDIT_CONFIG.line}
         stroke={EDIT_CONFIG.color.main}
-        fill={EDIT_CONFIG.fill}
+        fill={EDIT_CONFIG.fill.default}
       />
       <rect
         {...boundingBox}
         stroke={EDIT_CONFIG.color.main}
-        fill={EDIT_CONFIG.fill}
+        fill={
+          isSelectedBoundingBox
+            ? EDIT_CONFIG.fill.selected
+            : EDIT_CONFIG.fill.boundingBox
+        }
+        onMouseDown={handleMoveStartBoundingBox}
+        // onMouseMove={handleMoveBoundingBox}
       />
       {controlPoints.map(
         ({ point, prev, next, d }: ControlPoint, commandIndex) => (
@@ -183,7 +223,7 @@ const EditPath = ({
               d={d}
               strokeWidth={EDIT_CONFIG.line}
               stroke={EDIT_CONFIG.color.main}
-              fill={EDIT_CONFIG.fill}
+              fill={EDIT_CONFIG.fill.default}
             />
             {[prev, next, point].map((po: PointObject | undefined, k) => {
               const valueIndex = k * 2
@@ -199,13 +239,13 @@ const EditPath = ({
                     cy={po.y}
                     onMouseDown={handleSelectedCircle(editPathIndex)}
                     onMouseMove={
-                      isEditing(editPathIndex)
+                      isSelectedPoint(editPathIndex)
                         ? handleMouseMoveCircle
                         : undefined
                     }
                     r={EDIT_CONFIG.point}
                     style={{
-                      fill: isEditing(editPathIndex)
+                      fill: isSelectedPoint(editPathIndex)
                         ? EDIT_CONFIG.color.selected
                         : EDIT_CONFIG.color.sub,
                     }}

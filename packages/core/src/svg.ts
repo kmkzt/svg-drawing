@@ -152,8 +152,9 @@ export class Command {
     ]
     return absoluteCommandType.includes(this.type)
   }
-  public translate(po: Point) {
+  public translate(p: PointObject) {
     if (!this.isAbsolute) return
+    const po = new Point(p.x, p.y)
     this.point = this.point?.add(po)
     this.cr = this.cr?.add(po)
     this.cl = this.cl?.add(po)
@@ -271,7 +272,7 @@ export class Path {
     }
   }
 
-  public translate(po: Point): void {
+  public translate(po: PointObject): void {
     for (let i = 0; i < this.commands.length; i += 1) {
       this.commands[i].translate(po)
     }

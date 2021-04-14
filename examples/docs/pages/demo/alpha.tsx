@@ -10,7 +10,7 @@ import {
   PenHandler,
   PencilHandler,
   DrawHandler,
-  Point,
+  EditPath,
 } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import {
@@ -94,7 +94,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     return (po) => (close ? closeCommands(converter(po)) : converter(po))
   }, [close, curve])
 
-  const [drawElRef, svgObj, draw] = useDrawing<SVGSVGElement>({
+  const [drawElRef, svgObj, draw] = useDrawing<HTMLDivElement>({
     pathOptions: {
       fill,
       stroke: penColor,
@@ -165,20 +165,20 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   )
 
   const handleSelectEdit = useCallback((arg: EditIndex) => {
-    console.log(arg)
     setEditing(arg)
   }, [])
   const handleUpdateEdit = useCallback(
     (po: PointObject) => {
-      if (!drawElRef.current || !editing.path) return
+      if (!drawElRef.current || editing.path === undefined) return
       const path = draw.svg.current.paths[editing.path]
-      const command = path.commands[editing.command]
-      if (!command) return
-      command.value[editing.value] += po.x
-      command.value[editing.value + 1] += po.y
+      const editPath = new EditPath(path)
+      editPath.translate(po, {
+        command: editing.command,
+        value: editing.value,
+      })
       draw.update()
     },
-    [draw, drawElRef, editing.command, editing.path, editing.value]
+    [draw, drawElRef, editing]
   )
   const handleFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

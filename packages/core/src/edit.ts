@@ -10,6 +10,28 @@ const genOutline = (points: PointObject[]) =>
 export class EditPath {
   constructor(public path: Path) {}
 
+  public translate(
+    po: PointObject,
+    {
+      command,
+      value,
+    }: {
+      command?: number
+      value?: number
+    }
+  ): void {
+    if (command === undefined) {
+      this.path.translate(po)
+      return
+    }
+    const com = this.path.commands[command]
+    if (value === undefined) {
+      com.translate(po)
+      return
+    }
+    com.value[value] += po.x
+    com.value[value + 1] += po.y
+  }
   /**
    * @todo compatible relative point
    */
