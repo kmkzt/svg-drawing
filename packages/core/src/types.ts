@@ -134,9 +134,7 @@ export interface DrawEventHandler {
  * Control Point
  */
 export type ControlPoint = {
-  point?: PointObject
-  prev?: PointObject
-  next?: PointObject
+  points: PointObject[]
   d: string
 }
 

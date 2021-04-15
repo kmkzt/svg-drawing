@@ -54,10 +54,13 @@ export class EditPath {
         curr.point?.toJson(),
         next?.cl?.toJson(),
       ].filter(Boolean) as PointObject[]
+      const points: PointObject[] = [
+        curr.cl?.toJson(),
+        curr.cr?.toJson(),
+        curr.point?.toJson(),
+      ].filter(Boolean) as PointObject[]
       controlPoints.push({
-        point: curr.point?.toJson(),
-        prev: curr.cl?.toJson(),
-        next: curr.cr?.toJson(),
+        points,
         d: genOutline(outlinePoints),
       })
     }
