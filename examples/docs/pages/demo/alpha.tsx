@@ -78,11 +78,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
   const [penWidth, setPenWidth] = useState(5)
-  const [editing, setEditing] = useState<EditIndex>({
-    path: undefined,
-    command: undefined,
-    value: undefined,
-  })
   const [mode, setMode] = useState<keyof typeof drawMode>('pencil')
 
   const Handler: typeof DrawHandler | undefined = useMemo(
@@ -164,22 +159,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [updateFill]
   )
 
-  const handleSelectEdit = useCallback((arg: EditIndex) => {
-    setEditing(arg)
-  }, [])
-  const handleUpdateEdit = useCallback(
-    (po: PointObject) => {
-      if (!drawElRef.current || editing.path === undefined) return
-      const path = draw.svg.current.paths[editing.path]
-      const editPath = new EditPath(path)
-      editPath.translate(po, {
-        command: editing.command,
-        value: editing.value,
-      })
-      draw.update()
-    },
-    [draw, drawElRef, editing]
-  )
   const handleFiles = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const reader = new FileReader()
@@ -406,13 +385,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             touchAction: 'none',
           }}
         >
-          <EditSvg
-            {...svgObj}
-            editing={editing}
-            onSelect={handleSelectEdit}
-            onUpdate={handleUpdateEdit}
-            onCancel={console.log}
-          />
+          <EditSvg {...svgObj} {...draw.editProps} />
         </div>
       </Box>
     </Layout>

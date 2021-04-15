@@ -6,21 +6,24 @@ import {
   useCallback,
   useMemo,
 } from 'react'
-import { Svg, Path } from '@svg-drawing/core/lib/svg'
 import {
+  Svg,
+  Path,
   DrawHandler,
   PencilHandler,
   ResizeHandler,
-} from '@svg-drawing/core/lib/handler'
-import { BezierCurve, CommandsConverter } from '@svg-drawing/core/lib/convert'
-import { throttle } from '@svg-drawing/core/lib/throttle'
-import { isAlmostSameNumber } from '@svg-drawing/core/lib/utils'
-import {
+  EditPath,
+  BezierCurve,
+  CommandsConverter,
+  throttle,
+  isAlmostSameNumber,
+} from '@svg-drawing/core'
+import type {
   DrawHandlerCallback,
   PathObject,
   PointObject,
-} from '@svg-drawing/core/lib/types'
-import { DrawingOptions, UseDrawing } from './types'
+} from '@svg-drawing/core'
+import type { DrawingOptions, EditIndex, UseDrawing } from './types'
 
 const RENDER_INTERVAL = 0
 const DRAW_DELAY = 20
@@ -28,6 +31,11 @@ const defaultPathOptions: PathObject = {
   fill: 'none',
   strokeLinecap: 'round',
   strokeLinejoin: 'round',
+}
+const initEditing: EditIndex = {
+  path: undefined,
+  command: undefined,
+  value: undefined,
 }
 export const useDrawing = <T extends HTMLElement>({
   pathOptions,
@@ -38,6 +46,7 @@ export const useDrawing = <T extends HTMLElement>({
   const svgRef = useRef(new Svg({ width: 0, height: 0 }))
   const drawPathRef = useRef<Path | null>(null)
   const drawPointsRef = useRef<PointObject[]>([])
+  const [editing, setEditing] = useState<EditIndex>(initEditing)
   const converter = useMemo<CommandsConverter>(
     () => commandsConverter ?? new BezierCurve().convert,
     [commandsConverter]
@@ -173,6 +182,28 @@ export const useDrawing = <T extends HTMLElement>({
     update()
   }, [update])
 
+  const onSelect = useCallback((editIndex: EditIndex) => {
+    setEditing(editIndex)
+  }, [])
+
+  const onUpdate = useCallback(
+    (po: PointObject) => {
+      if (editing.path === undefined) return
+      const path = svgRef.current.paths[editing.path]
+      const editPath = new EditPath(path)
+      editPath.translate(po, {
+        command: editing.command,
+        value: editing.value,
+      })
+      update()
+    },
+    [editing, update]
+  )
+
+  const onCancel = useCallback(() => {
+    setEditing(initEditing)
+  }, [])
+
   return [
     drawElRef,
     svgObj,
@@ -186,6 +217,12 @@ export const useDrawing = <T extends HTMLElement>({
       on,
       off,
       setDrawHandler,
+      editProps: {
+        editing,
+        onSelect,
+        onUpdate,
+        onCancel,
+      },
     },
   ]
 }

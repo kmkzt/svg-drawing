@@ -25,6 +25,7 @@ export type UseDrawingMethods = {
   clear: () => void
   undo: () => void
   setDrawHandler: (handler: typeof DrawHandler) => void
+  editProps: EditProps
 }
 export type DrawingOptions = {
   pathOptions: PathObject
@@ -42,13 +43,13 @@ export type SvgProps = SvgObject & HTMLAttributes<SVGSVGElement>
 export type SelectHandler = (editIndex: EditIndex) => void
 export type UpdateHandler = (po: PointObject) => void
 export type CancelHandler = () => void
-
-export type EditSvgProps = SvgProps & {
+export type EditProps = {
   editing: EditIndex
   onSelect: SelectHandler
   onUpdate: UpdateHandler
   onCancel: CancelHandler
 }
+export type EditSvgProps = SvgProps & EditProps
 export type EditPathIndex = Omit<EditIndex, 'path'>
 export type SelectPathHandler = (editCommandIndex: EditPathIndex) => void
 export type EditPathProps = Pick<EditSvgProps, 'onCancel' | 'onUpdate'> & {
