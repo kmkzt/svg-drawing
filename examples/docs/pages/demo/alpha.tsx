@@ -1,6 +1,6 @@
 import { useCallback, useState, ChangeEvent, useMemo } from 'react'
 import { NextPage } from 'next'
-import { useDrawing, Svg, EditSvg, EditIndex } from '@svg-drawing/react'
+import { useDrawing, Svg, EditSvg } from '@svg-drawing/react'
 import {
   BezierCurve,
   convertLineCommands,
@@ -10,7 +10,6 @@ import {
   PenHandler,
   PencilHandler,
   DrawHandler,
-  EditPath,
 } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import {
@@ -21,7 +20,6 @@ import {
   Select,
 } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
-import { PointObject } from 'packages/core/lib'
 
 const size = 30
 const colorList = [
@@ -99,6 +97,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     commandsConverter,
   })
 
+  const {
+    editProps: { onEdit: handleEdit, ...editProps },
+  } = draw
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
@@ -118,45 +119,56 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     switchClose(!close)
   }, [close])
 
-  const handlePenWidth = useCallback((e: ChangeEvent<any>) => {
-    const num = Number(e.target.value)
-    if (Number.isNaN(num)) return
-    setPenWidth(num)
-  }, [])
-  const updatePenColor = useCallback((color: string) => {
-    setPenColor(color)
-  }, [])
+  const handlePenWidth = useCallback(
+    (e: ChangeEvent<any>) => {
+      const num = Number(e.target.value)
+      if (Number.isNaN(num)) return
+      setPenWidth(num)
+      handleEdit({
+        strokeWidth: num + '',
+      })
+    },
+    [handleEdit]
+  )
 
   const handleChangePenColor = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      updatePenColor(e.target.value)
+      setPenColor(e.target.value)
+      handleEdit({
+        stroke: e.target.value,
+      })
     },
-    [updatePenColor]
+    [handleEdit]
   )
 
   const handleClickPenColor = useCallback(
     (col: string) => () => {
-      updatePenColor(col)
+      setPenColor(col)
+      handleEdit({
+        stroke: col,
+      })
     },
-    [updatePenColor]
+    [handleEdit]
   )
-
-  const updateFill = useCallback((color: string) => {
-    setFill(color)
-  }, [])
 
   const handleChangeFill = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      updateFill(e.target.value)
+      setFill(e.target.value)
+      handleEdit({
+        fill: e.target.value,
+      })
     },
-    [updateFill]
+    [handleEdit]
   )
 
   const handleClickFill = useCallback(
     (col: string) => () => {
-      updateFill(col)
+      setFill(col)
+      handleEdit({
+        fill: col,
+      })
     },
-    [updateFill]
+    [handleEdit]
   )
 
   const handleFiles = useCallback(
@@ -385,7 +397,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             touchAction: 'none',
           }}
         >
-          <EditSvg {...svgObj} {...draw.editProps} />
+          <EditSvg {...svgObj} {...editProps} />
         </div>
       </Box>
     </Layout>

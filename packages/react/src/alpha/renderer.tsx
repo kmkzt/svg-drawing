@@ -33,7 +33,7 @@ export const Svg = ({
 export const EditSvg = ({
   editing,
   onSelect: handleSelect,
-  onUpdate: handleUpdate,
+  onMove: handleMove,
   onCancel: handleCancel,
   background,
   paths,
@@ -66,7 +66,7 @@ export const EditSvg = ({
                 }
               : null
           }
-          onUpdate={handleUpdate}
+          onMove={handleMove}
           onCancel={handleCancel}
           onSelectPath={handleSelectPath(i)}
         />
@@ -94,7 +94,7 @@ const EditPath = ({
   d,
   editingPath,
   onSelectPath: handleSelectPath,
-  onUpdate: handleUpdate,
+  onMove: handleMove,
   onCancel: handleCancel,
   ...attrs
 }: EditPathProps & PathObject) => {
@@ -128,7 +128,7 @@ const EditPath = ({
   const handleMouseMoveCircle = useCallback(
     (ev: React.MouseEvent<SVGCircleElement>) => {
       if (!currentPosition) return
-      handleUpdate({
+      handleMove({
         x: ev.clientX - currentPosition.x,
         y: ev.clientY - currentPosition.y,
       })
@@ -137,7 +137,7 @@ const EditPath = ({
         y: ev.clientY,
       })
     },
-    [currentPosition, handleUpdate]
+    [currentPosition, handleMove]
   )
 
   const handleSelectedCircle = useCallback(
@@ -182,12 +182,12 @@ const EditPath = ({
     (ev: MouseEvent) => {
       if (!moveBoundingBox || !isSelectedBoundingBox || !currentPosition) return
       setMoveBoundingBox(false)
-      handleUpdate({
+      handleMove({
         x: ev.clientX - currentPosition.x,
         y: ev.clientY - currentPosition.y,
       })
     },
-    [moveBoundingBox, isSelectedBoundingBox, currentPosition, handleUpdate]
+    [moveBoundingBox, isSelectedBoundingBox, currentPosition, handleMove]
   )
 
   useEffect(() => {

@@ -186,15 +186,25 @@ export const useDrawing = <T extends HTMLElement>({
     setEditing(editIndex)
   }, [])
 
-  const onUpdate = useCallback(
-    (po: PointObject) => {
+  const onMove = useCallback(
+    (move: PointObject) => {
       if (editing.path === undefined) return
       const path = svgRef.current.paths[editing.path]
-      const editPath = new EditPath(path)
-      editPath.translate(po, {
+      new EditPath(path).translate(move, {
         command: editing.command,
         value: editing.value,
       })
+      update()
+    },
+    [editing, update]
+  )
+
+  const onEdit = useCallback(
+    (arg: PathObject) => {
+      console.log(arg)
+      if (editing.path === undefined) return
+      const path = svgRef.current.paths[editing.path]
+      new EditPath(path).edit(arg)
       update()
     },
     [editing, update]
@@ -220,7 +230,8 @@ export const useDrawing = <T extends HTMLElement>({
       editProps: {
         editing,
         onSelect,
-        onUpdate,
+        onMove,
+        onEdit,
         onCancel,
       },
     },

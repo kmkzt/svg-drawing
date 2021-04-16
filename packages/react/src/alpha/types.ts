@@ -14,7 +14,6 @@ export type UseDrawing<T extends HTMLElement> = [
   SvgObject,
   UseDrawingMethods
 ]
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type UseDrawingMethods = {
   svg: MutableRefObject<Svg>
   drawHandler: MutableRefObject<DrawHandler | null>
@@ -41,18 +40,20 @@ export type EditIndex = {
 export type SvgProps = SvgObject & HTMLAttributes<SVGSVGElement>
 
 export type SelectHandler = (editIndex: EditIndex) => void
-export type UpdateHandler = (po: PointObject) => void
+export type MoveHandler = (move: PointObject) => void
+export type EditHandler = (pathAttrs: PathObject) => void
 export type CancelHandler = () => void
 export type EditProps = {
   editing: EditIndex
   onSelect: SelectHandler
-  onUpdate: UpdateHandler
+  onMove: MoveHandler
+  onEdit: EditHandler
   onCancel: CancelHandler
 }
-export type EditSvgProps = SvgProps & EditProps
+export type EditSvgProps = SvgProps & Omit<EditProps, 'onEdit'>
 export type EditPathIndex = Omit<EditIndex, 'path'>
 export type SelectPathHandler = (editCommandIndex: EditPathIndex) => void
-export type EditPathProps = Pick<EditSvgProps, 'onCancel' | 'onUpdate'> & {
+export type EditPathProps = Pick<EditSvgProps, 'onCancel' | 'onMove'> & {
   editingPath: EditPathIndex | null
   onSelectPath: SelectPathHandler
 }

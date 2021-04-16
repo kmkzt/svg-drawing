@@ -1,5 +1,5 @@
 import { Path, Point } from './svg'
-import { PointObject, ControlPoint, BoundingBox } from './types'
+import { PointObject, ControlPoint, BoundingBox, PathObject } from './types'
 
 const genOutline = (points: PointObject[]) =>
   points.reduce(
@@ -10,6 +10,13 @@ const genOutline = (points: PointObject[]) =>
 export class EditPath {
   constructor(public path: Path) {}
 
+  public edit({ d, ...attrs }: PathObject) {
+    this.path.attrs = {
+      ...this.path.attrs,
+      ...attrs,
+    }
+    if (d) this.path.parseCommandString(d)
+  }
   public translate(
     po: PointObject,
     {
