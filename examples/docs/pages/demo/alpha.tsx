@@ -104,7 +104,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     (extension: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
     ) => {
-      download(draw.svg.current, {
+      download(draw.svg, {
         extension,
       })
     },
@@ -179,7 +179,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         const [type, data] = ev.target.result.split(',')
         if (type === 'data:image/svg+xml;base64') {
           const svgxml = atob(data)
-          draw.svg.current.parseSVGString(svgxml)
+          draw.svg.parseSVGString(svgxml)
           draw.update()
         }
       }
@@ -322,10 +322,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             <Button mr={1} mb={1} onClick={draw.undo}>
               Undo
             </Button>
-            <Button mr={1} mb={1} onClick={draw.on}>
+            <Button mr={1} mb={1} onClick={draw.start}>
               On
             </Button>
-            <Button mr={1} mb={1} onClick={draw.off}>
+            <Button mr={1} mb={1} onClick={draw.stop}>
               Off
             </Button>
             <Button

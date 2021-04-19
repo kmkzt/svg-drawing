@@ -12,7 +12,7 @@ import {
   DownloadOption,
   DrawingOption,
   PointObject,
-  ResizeHandlerCallback,
+  ResizeHandlerOption,
 } from './types'
 import { isAlmostSameNumber } from './utils'
 import { download } from './download'
@@ -85,7 +85,8 @@ export class SvgDrawing {
      * Setup ResizeHandler
      */
     this._resize = this._resize.bind(this)
-    this.resizeHandler = new ResizeHandler(el, {
+    this.resizeHandler = new ResizeHandler({
+      el,
       resize: this._resize,
     })
     /**
@@ -95,7 +96,8 @@ export class SvgDrawing {
     this.drawMove = this.drawMove.bind(this)
     this._drawMoveThrottle = throttle(this.drawMove, this.delay)
     this.drawEnd = this.drawEnd.bind(this)
-    this.drawHandler = new PencilHandler(el, {
+    this.drawHandler = new PencilHandler({
+      el,
       start: this.drawStart,
       move: this._drawMoveThrottle,
       end: this.drawEnd,
@@ -202,7 +204,7 @@ export class SvgDrawing {
   private _resize({
     width,
     height,
-  }: Parameters<ResizeHandlerCallback['resize']>[0]) {
+  }: Parameters<ResizeHandlerOption['resize']>[0]) {
     if (!isAlmostSameNumber(this.svg.width, width)) {
       this.svg.resize({ width, height })
       this.update()

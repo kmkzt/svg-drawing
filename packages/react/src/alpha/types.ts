@@ -15,15 +15,14 @@ export type UseDrawing<T extends HTMLElement> = [
   UseDrawingMethods
 ]
 export type UseDrawingMethods = {
-  svg: MutableRefObject<Svg>
-  drawHandler: MutableRefObject<DrawHandler | null>
-  resizeHandler: MutableRefObject<ResizeHandler | null>
-  on: () => void
-  off: () => void
+  svg: Svg
+  draw: MutableRefObject<DrawHandler | null>
+  resize: ResizeHandler
+  start: () => void
+  stop: () => void
   update: () => void
   clear: () => void
   undo: () => void
-  setDrawHandler: (handler: typeof DrawHandler) => void
   editProps: EditProps
 }
 export type DrawingOptions = {

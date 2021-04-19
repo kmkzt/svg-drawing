@@ -87,7 +87,8 @@ export type DownloadOption = {
 /**
  * DrawHandler callback
  */
-export type DrawHandlerCallback = {
+export type DrawHandlerOption = {
+  el: HTMLElement | null
   start: () => void
   end: () => void
   move: (po: PointObject) => void
@@ -95,7 +96,8 @@ export type DrawHandlerCallback = {
 /**
  * ResizeHandler callback
  */
-export type ResizeHandlerCallback = {
+export type ResizeHandlerOption = {
+  el?: HTMLElement
   resize: (
     rect: DOMRect | { width: number; height: number; left: number; top: number }
   ) => void
@@ -122,10 +124,8 @@ export type DrawEventName = Extract<
 
 export type ClearListener = () => void
 
-export interface DrawEventHandler {
-  end: DrawHandlerCallback['end']
-  start: DrawHandlerCallback['start']
-  move: DrawHandlerCallback['move']
+export interface DrawEventHandler extends Omit<DrawHandlerOption, 'el'> {
+  isActive: boolean
   on: () => void
   off: () => void
 }

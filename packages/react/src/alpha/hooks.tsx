@@ -17,6 +17,7 @@ import {
   CommandsConverter,
   throttle,
   isAlmostSameNumber,
+  ResizeHandlerCallback,
 } from '@svg-drawing/core'
 import type {
   DrawHandlerCallback,
@@ -43,7 +44,7 @@ export const useDrawing = <T extends HTMLElement>({
   drawHandler: CustomDrawHandler,
 }: DrawingOptions): UseDrawing<T> => {
   const drawElRef = useRef<T>(null)
-  const svgRef = useRef(new Svg({ width: 0, height: 0 }))
+  const svg = useMemo(() => new Svg({ width: 0, height: 0 }), [])
   const drawPathRef = useRef<Path | null>(null)
   const drawPointsRef = useRef<PointObject[]>([])
   const [editing, setEditing] = useState<EditIndex>(initEditing)
@@ -52,7 +53,7 @@ export const useDrawing = <T extends HTMLElement>({
     [commandsConverter]
   )
 
-  const [svgObj, setSvgObj] = useState(svgRef.current.toJson())
+  const [svgObj, setSvgObj] = useState(svg.toJson())
 
   /**
    * A variable called shouldUpdateRef manages whether to update to reduce the number of times setState is executed.
@@ -65,10 +66,10 @@ export const useDrawing = <T extends HTMLElement>({
     const stopId = setInterval(() => {
       if (!shouldUpdateRef.current) return
       shouldUpdateRef.current = false
-      setSvgObj(svgRef.current.toJson())
+      setSvgObj(svg.toJson())
     }, RENDER_INTERVAL)
     return () => clearInterval(stopId)
-  }, [])
+  }, [svg])
 
   /**
    * Draw methods
@@ -90,8 +91,8 @@ export const useDrawing = <T extends HTMLElement>({
   const handleDrawStart = useCallback<DrawHandlerCallback['start']>(() => {
     if (drawPathRef.current) return
     drawPathRef.current = createDrawPath()
-    svgRef.current.addPath(drawPathRef.current)
-  }, [createDrawPath])
+    svg.addPath(drawPathRef.current)
+  }, [createDrawPath, svg])
 
   const handleDrawMove = useMemo<DrawHandlerCallback['move']>(() => {
     const move: DrawHandlerCallback['move'] = (po) => {
@@ -123,64 +124,67 @@ export const useDrawing = <T extends HTMLElement>({
       if (!drawElRef.current) return
       const drawEl = drawElRef.current
       const { width, height } = drawEl.getBoundingClientRect()
-      svgRef.current.resize({ width, height })
-      drawHandlerRef.current = new Handler(drawElRef.current, {
+      svg.resize({ width, height })
+      drawHandlerRef.current = new Handler({
+        el: drawElRef.current,
         start: handleDrawStart,
         move: handleDrawMove,
         end: handleDrawEnd,
       })
       drawHandlerRef.current.on()
     },
-    [handleDrawEnd, handleDrawMove, handleDrawStart]
+    [handleDrawEnd, handleDrawMove, handleDrawStart, svg]
   )
 
   useEffect(() => {
     if (drawHandlerRef.current) drawHandlerRef.current.off()
     setDrawHandler(CustomDrawHandler ?? PencilHandler)
-  }, [CustomDrawHandler, setDrawHandler])
+  }, [CustomDrawHandler, setDrawHandler]) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Setup ResizeHandler
    */
-  const resizeHandlerRef = useRef<ResizeHandler | null>(null)
+  const resizeCallback = useCallback<ResizeHandlerCallback['resize']>(
+    ({ width, height }) => {
+      if (isAlmostSameNumber(svg.width, width)) return
+      svg.resize({ width, height })
+      shouldUpdateRef.current = true
+    },
+    [svg]
+  )
+  const resize = useMemo<ResizeHandler>(
+    () => new ResizeHandler({ resize: resizeCallback }),
+    []
+  )
   useEffect(() => {
     if (!drawElRef.current) return
-    const drawEl = drawElRef.current
-    const svg = svgRef.current
-    const resizeHandler = new ResizeHandler(drawEl, {
-      resize: ({ width, height }) => {
-        if (isAlmostSameNumber(svg.width, width)) return
-        svg.resize({ width, height })
-        shouldUpdateRef.current = true
-      },
-    })
-    resizeHandlerRef.current = resizeHandler
-    resizeHandler.on()
-    return () => resizeHandler.off()
-  }, [])
+    resize.setElement(drawElRef.current)
+    resize.on()
+    return () => resize.off()
+  }, [resize])
 
   /**
    * Methods
    */
-  const on = useCallback(() => {
-    if (resizeHandlerRef.current) resizeHandlerRef.current.on()
+  const start = useCallback(() => {
+    resize.on()
     if (drawHandlerRef.current) drawHandlerRef.current.on()
-  }, [])
+  }, [resize])
 
-  const off = useCallback(() => {
-    if (resizeHandlerRef.current) resizeHandlerRef.current.off()
-    if (drawHandlerRef.current) drawHandlerRef.current.off()
-  }, [])
+  const stop = useCallback(() => {
+    resize.off()
+    if (drawHandlerRef.current) drawHandlerRef.current.on()
+  }, [resize])
 
   const clear = useCallback(() => {
-    svgRef.current.paths = []
+    svg.paths = []
     update()
-  }, [update])
+  }, [svg, update])
 
   const undo = useCallback(() => {
-    svgRef.current.paths.pop()
+    svg.paths.pop()
     update()
-  }, [update])
+  }, [svg, update])
 
   const onSelect = useCallback((editIndex: EditIndex) => {
     setEditing(editIndex)
@@ -189,25 +193,24 @@ export const useDrawing = <T extends HTMLElement>({
   const onMove = useCallback(
     (move: PointObject) => {
       if (editing.path === undefined) return
-      const path = svgRef.current.paths[editing.path]
+      const path = svg.paths[editing.path]
       new EditPath(path).translate(move, {
         command: editing.command,
         value: editing.value,
       })
       update()
     },
-    [editing, update]
+    [svg, editing, update]
   )
 
   const onEdit = useCallback(
     (arg: PathObject) => {
-      console.log(arg)
       if (editing.path === undefined) return
-      const path = svgRef.current.paths[editing.path]
+      const path = svg.paths[editing.path]
       new EditPath(path).edit(arg)
       update()
     },
-    [editing, update]
+    [editing.path, svg.paths, update]
   )
 
   const onCancel = useCallback(() => {
@@ -218,15 +221,14 @@ export const useDrawing = <T extends HTMLElement>({
     drawElRef,
     svgObj,
     {
-      svg: svgRef,
-      resizeHandler: resizeHandlerRef,
-      drawHandler: drawHandlerRef,
+      svg,
+      resize,
+      draw: drawHandlerRef,
       update,
       undo,
       clear,
-      on,
-      off,
-      setDrawHandler,
+      start,
+      stop,
       editProps: {
         editing,
         onSelect,
