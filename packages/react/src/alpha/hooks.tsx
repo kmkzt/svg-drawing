@@ -24,7 +24,7 @@ import type {
   PathObject,
   PointObject,
 } from '@svg-drawing/core'
-import type { DrawingOptions, EditIndex, UseDrawing } from './types'
+import type { DrawOptions, EditIndex, UseDraw } from './types'
 
 const RENDER_INTERVAL = 0
 const DRAW_DELAY = 20
@@ -38,11 +38,12 @@ const initEditing: EditIndex = {
   command: undefined,
   value: undefined,
 }
-export const useDrawing = <T extends HTMLElement>({
+
+export const useDraw = <T extends HTMLElement>({
   pathOptions,
   commandsConverter,
   drawHandler: CustomDrawHandler,
-}: DrawingOptions): UseDrawing<T> => {
+}: DrawOptions): UseDraw<T> => {
   const drawElRef = useRef<T>(null)
   const svg = useMemo(() => new Svg({ width: 0, height: 0 }), [])
   const drawPathRef = useRef<Path | null>(null)
@@ -110,13 +111,22 @@ export const useDrawing = <T extends HTMLElement>({
   /**
    * Setup DrawHandler
    */
-  const drawHandlerRef = useRef<DrawHandler | null>(null)
+  const draw = useRef<DrawHandler>(
+    (() => {
+      const Handler = CustomDrawHandler ?? PencilHandler
+      return new Handler({
+        el: drawElRef.current,
+        start: handleDrawStart,
+        move: handleDrawMove,
+        end: handleDrawEnd,
+      })
+    })()
+  )
 
   useEffect(() => {
-    if (!drawHandlerRef.current) return
-    drawHandlerRef.current.start = handleDrawStart
-    drawHandlerRef.current.move = handleDrawMove
-    drawHandlerRef.current.end = handleDrawEnd
+    draw.current.start = handleDrawStart
+    draw.current.move = handleDrawMove
+    draw.current.end = handleDrawEnd
   }, [handleDrawStart, handleDrawMove, handleDrawEnd])
 
   const setDrawHandler = useCallback(
@@ -125,21 +135,28 @@ export const useDrawing = <T extends HTMLElement>({
       const drawEl = drawElRef.current
       const { width, height } = drawEl.getBoundingClientRect()
       svg.resize({ width, height })
-      drawHandlerRef.current = new Handler({
+      const isActive = draw.current.isActive
+      draw.current.off()
+      draw.current = new Handler({
         el: drawElRef.current,
         start: handleDrawStart,
         move: handleDrawMove,
         end: handleDrawEnd,
       })
-      drawHandlerRef.current.on()
+      if (isActive) draw.current.on()
     },
     [handleDrawEnd, handleDrawMove, handleDrawStart, svg]
   )
 
   useEffect(() => {
-    if (drawHandlerRef.current) drawHandlerRef.current.off()
     setDrawHandler(CustomDrawHandler ?? PencilHandler)
-  }, [CustomDrawHandler, setDrawHandler]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [CustomDrawHandler]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!drawElRef.current) return
+    draw.current.setElement(drawElRef.current)
+    draw.current.on()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Setup ResizeHandler
@@ -166,14 +183,14 @@ export const useDrawing = <T extends HTMLElement>({
   /**
    * Methods
    */
-  const start = useCallback(() => {
+  const on = useCallback(() => {
     resize.on()
-    if (drawHandlerRef.current) drawHandlerRef.current.on()
+    draw.current.on()
   }, [resize])
 
-  const stop = useCallback(() => {
+  const off = useCallback(() => {
     resize.off()
-    if (drawHandlerRef.current) drawHandlerRef.current.on()
+    draw.current.off()
   }, [resize])
 
   const clear = useCallback(() => {
@@ -223,12 +240,12 @@ export const useDrawing = <T extends HTMLElement>({
     {
       svg,
       resize,
-      draw: drawHandlerRef,
+      draw: (() => draw.current)(),
       update,
       undo,
       clear,
-      start,
-      stop,
+      on,
+      off,
       editProps: {
         editing,
         onSelect,

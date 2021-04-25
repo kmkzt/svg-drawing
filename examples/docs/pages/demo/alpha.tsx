@@ -1,6 +1,6 @@
-import { useCallback, useState, ChangeEvent, useMemo } from 'react'
+import { useCallback, useState, ChangeEvent, useMemo, useEffect } from 'react'
 import { NextPage } from 'next'
-import { useDrawing, Svg, EditSvg } from '@svg-drawing/react'
+import { useDraw, Svg, EditSvg } from '@svg-drawing/react'
 import {
   BezierCurve,
   convertLineCommands,
@@ -87,7 +87,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     return (po) => (close ? closeCommands(converter(po)) : converter(po))
   }, [close, curve])
 
-  const [drawElRef, svgObj, draw] = useDrawing<HTMLDivElement>({
+  const [drawElRef, svgObj, draw] = useDraw<HTMLDivElement>({
     pathOptions: {
       fill,
       stroke: penColor,
@@ -322,10 +322,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             <Button mr={1} mb={1} onClick={draw.undo}>
               Undo
             </Button>
-            <Button mr={1} mb={1} onClick={draw.start}>
+            <Button mr={1} mb={1} onClick={draw.on}>
               On
             </Button>
-            <Button mr={1} mb={1} onClick={draw.stop}>
+            <Button mr={1} mb={1} onClick={draw.off}>
               Off
             </Button>
             <Button

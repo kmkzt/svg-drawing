@@ -9,23 +9,23 @@ import type {
   CommandsConverter,
 } from '@svg-drawing/core'
 
-export type UseDrawing<T extends HTMLElement> = [
+export type UseDraw<T extends HTMLElement> = [
   RefObject<T>,
   SvgObject,
-  UseDrawingMethods
+  UseDrawMethods
 ]
-export type UseDrawingMethods = {
+export type UseDrawMethods = {
   svg: Svg
-  draw: MutableRefObject<DrawHandler | null>
+  draw: DrawHandler
   resize: ResizeHandler
-  start: () => void
-  stop: () => void
+  on: () => void
+  off: () => void
   update: () => void
   clear: () => void
   undo: () => void
   editProps: EditProps
 }
-export type DrawingOptions = {
+export type DrawOptions = {
   pathOptions: PathObject
   commandsConverter?: CommandsConverter
   drawHandler?: typeof DrawHandler

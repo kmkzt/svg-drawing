@@ -90,6 +90,17 @@ export class DrawHandler implements DrawEventHandler {
     if (this.isActive) this.on()
   }
 
+  public setHandler({
+    start,
+    move,
+    end,
+  }: Pick<DrawHandlerOption, 'start' | 'move' | 'end'>) {
+    this.end = end
+    this.start = start
+    this.move = move
+    if (this.isActive) this.on()
+  }
+
   public getPointObjectFromDrawEvent(
     ev: MouseEvent | TouchEvent | PointerEvent
   ): PointObject {
