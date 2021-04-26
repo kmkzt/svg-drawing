@@ -5,6 +5,7 @@ import {
   useLayoutEffect,
   useCallback,
   useMemo,
+  RefObject,
 } from 'react'
 import {
   Svg,
@@ -18,6 +19,7 @@ import {
   throttle,
   isAlmostSameNumber,
   ResizeHandlerCallback,
+  SvgObject,
 } from '@svg-drawing/core'
 import type {
   DrawHandlerCallback,
@@ -39,23 +41,14 @@ const initEditing: EditIndex = {
   value: undefined,
 }
 
-export const useDraw = <T extends HTMLElement>({
-  pathOptions,
-  commandsConverter,
-  drawHandler: CustomDrawHandler,
-}: DrawOptions): UseDraw<T> => {
-  const drawElRef = useRef<T>(null)
+export const useSvg = <T extends HTMLElement>(): [
+  RefObject<T>,
+  SvgObject,
+  { svg: Svg; update: () => void; resize: ResizeHandler }
+] => {
+  const renderRef = useRef<T>(null)
   const svg = useMemo(() => new Svg({ width: 0, height: 0 }), [])
-  const drawPathRef = useRef<Path | null>(null)
-  const drawPointsRef = useRef<PointObject[]>([])
-  const [editing, setEditing] = useState<EditIndex>(initEditing)
-  const converter = useMemo<CommandsConverter>(
-    () => commandsConverter ?? new BezierCurve().convert,
-    [commandsConverter]
-  )
-
   const [svgObj, setSvgObj] = useState(svg.toJson())
-
   /**
    * A variable called shouldUpdateRef manages whether to update to reduce the number of times setState is executed.
    */
@@ -71,6 +64,53 @@ export const useDraw = <T extends HTMLElement>({
     }, RENDER_INTERVAL)
     return () => clearInterval(stopId)
   }, [svg])
+  /**
+   * Setup ResizeHandler
+   */
+  const resizeCallback = useCallback<ResizeHandlerCallback['resize']>(
+    ({ width, height }) => {
+      if (isAlmostSameNumber(svg.width, width)) return
+      svg.resize({ width, height })
+      shouldUpdateRef.current = true
+    },
+    [svg]
+  )
+  const resize = useMemo<ResizeHandler>(
+    () => new ResizeHandler({ resize: resizeCallback }),
+    []
+  )
+  useEffect(() => {
+    if (!renderRef.current) return
+    resize.setElement(renderRef.current)
+    resize.on()
+    return () => resize.off()
+  }, [resize])
+
+  return [
+    renderRef,
+    svgObj,
+    {
+      svg,
+      update,
+      resize,
+    },
+  ]
+}
+export const useDraw = <T extends HTMLElement>({
+  pathOptions,
+  commandsConverter,
+  drawHandler: CustomDrawHandler,
+}: DrawOptions): UseDraw<T> => {
+  const drawPathRef = useRef<Path | null>(null)
+  const drawPointsRef = useRef<PointObject[]>([])
+  const [editing, setEditing] = useState<EditIndex>(initEditing)
+  const converter = useMemo<CommandsConverter>(
+    () => commandsConverter ?? new BezierCurve().convert,
+    [commandsConverter]
+  )
+
+  const [drawElRef, svgObj, { svg, update, resize }] = useSvg<T>()
+
 
   /**
    * Draw methods
@@ -158,21 +198,6 @@ export const useDraw = <T extends HTMLElement>({
     draw.current.on()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  /**
-   * Setup ResizeHandler
-   */
-  const resizeCallback = useCallback<ResizeHandlerCallback['resize']>(
-    ({ width, height }) => {
-      if (isAlmostSameNumber(svg.width, width)) return
-      svg.resize({ width, height })
-      shouldUpdateRef.current = true
-    },
-    [svg]
-  )
-  const resize = useMemo<ResizeHandler>(
-    () => new ResizeHandler({ resize: resizeCallback }),
-    []
-  )
   useEffect(() => {
     if (!drawElRef.current) return
     resize.setElement(drawElRef.current)
