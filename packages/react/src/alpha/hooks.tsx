@@ -5,7 +5,6 @@ import {
   useLayoutEffect,
   useCallback,
   useMemo,
-  RefObject,
 } from 'react'
 import {
   Svg,
@@ -19,14 +18,22 @@ import {
   throttle,
   isAlmostSameNumber,
   ResizeHandlerCallback,
-  SvgObject,
 } from '@svg-drawing/core'
 import type {
   DrawHandlerCallback,
   PathObject,
   PointObject,
 } from '@svg-drawing/core'
-import type { DrawOptions, EditIndex, UseDraw } from './types'
+import type {
+  DrawOptions,
+  EditIndex,
+  EditOptions,
+  SvgOptions,
+  UseDraw,
+  UseEdit,
+  UseEditProperty,
+  UseSvg,
+} from './types'
 
 const RENDER_INTERVAL = 0
 const DRAW_DELAY = 20
@@ -35,19 +42,14 @@ const defaultPathOptions: PathObject = {
   strokeLinecap: 'round',
   strokeLinejoin: 'round',
 }
-const initEditing: EditIndex = {
-  path: undefined,
-  command: undefined,
-  value: undefined,
-}
 
-export const useSvg = <T extends HTMLElement>(): [
-  RefObject<T>,
-  SvgObject,
-  { svg: Svg; update: () => void; resize: ResizeHandler }
-] => {
+export const useSvg = <T extends HTMLElement>({
+  sharedSvg,
+}: SvgOptions = {}): UseSvg<T> => {
   const renderRef = useRef<T>(null)
-  const svg = useMemo(() => new Svg({ width: 0, height: 0 }), [])
+  const svg = useMemo(() => sharedSvg || new Svg({ width: 0, height: 0 }), [
+    sharedSvg,
+  ])
   const [svgObj, setSvgObj] = useState(svg.toJson())
   /**
    * A variable called shouldUpdateRef manages whether to update to reduce the number of times setState is executed.
@@ -77,7 +79,7 @@ export const useSvg = <T extends HTMLElement>(): [
   )
   const resize = useMemo<ResizeHandler>(
     () => new ResizeHandler({ resize: resizeCallback }),
-    []
+    [] // eslint-disable-line react-hooks/exhaustive-deps
   )
   useEffect(() => {
     if (!renderRef.current) return
@@ -96,21 +98,20 @@ export const useSvg = <T extends HTMLElement>(): [
     },
   ]
 }
+
 export const useDraw = <T extends HTMLElement>({
   pathOptions,
   commandsConverter,
   drawHandler: CustomDrawHandler,
+  sharedSvg,
 }: DrawOptions): UseDraw<T> => {
+  const [elRef, svgObj, { svg, update, resize }] = useSvg<T>({ sharedSvg })
   const drawPathRef = useRef<Path | null>(null)
   const drawPointsRef = useRef<PointObject[]>([])
-  const [editing, setEditing] = useState<EditIndex>(initEditing)
   const converter = useMemo<CommandsConverter>(
     () => commandsConverter ?? new BezierCurve().convert,
     [commandsConverter]
   )
-
-  const [drawElRef, svgObj, { svg, update, resize }] = useSvg<T>()
-
 
   /**
    * Draw methods
@@ -155,7 +156,7 @@ export const useDraw = <T extends HTMLElement>({
     (() => {
       const Handler = CustomDrawHandler ?? PencilHandler
       return new Handler({
-        el: drawElRef.current,
+        el: elRef.current,
         start: handleDrawStart,
         move: handleDrawMove,
         end: handleDrawEnd,
@@ -171,14 +172,14 @@ export const useDraw = <T extends HTMLElement>({
 
   const setDrawHandler = useCallback(
     (Handler: typeof DrawHandler) => {
-      if (!drawElRef.current) return
-      const drawEl = drawElRef.current
+      if (!elRef.current) return
+      const drawEl = elRef.current
       const { width, height } = drawEl.getBoundingClientRect()
       svg.resize({ width, height })
       const isActive = draw.current.isActive
       draw.current.off()
       draw.current = new Handler({
-        el: drawElRef.current,
+        el: elRef.current,
         start: handleDrawStart,
         move: handleDrawMove,
         end: handleDrawEnd,
@@ -193,17 +194,10 @@ export const useDraw = <T extends HTMLElement>({
   }, [CustomDrawHandler]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (!drawElRef.current) return
-    draw.current.setElement(drawElRef.current)
+    if (!elRef.current) return
+    draw.current.setElement(elRef.current)
     draw.current.on()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (!drawElRef.current) return
-    resize.setElement(drawElRef.current)
-    resize.on()
-    return () => resize.off()
-  }, [resize])
 
   /**
    * Methods
@@ -228,12 +222,42 @@ export const useDraw = <T extends HTMLElement>({
     update()
   }, [svg, update])
 
-  const onSelect = useCallback((editIndex: EditIndex) => {
+  return [
+    elRef,
+    svgObj,
+    {
+      svg,
+      resize,
+      draw: (() => draw.current)(),
+      update,
+      undo,
+      clear,
+      on,
+      off,
+    },
+  ]
+}
+
+const initEditing: EditIndex = {
+  path: undefined,
+  command: undefined,
+  value: undefined,
+}
+
+export const useEdit = <T extends HTMLElement>({
+  sharedSvg,
+}: EditOptions): UseEdit<T> => {
+  const [ref, svgObj, { svg, update, resize }] = useSvg<T>({ sharedSvg })
+  const [editing, setEditing] = useState<UseEditProperty['editing']>(
+    initEditing
+  )
+
+  const select = useCallback<UseEditProperty['select']>((editIndex) => {
     setEditing(editIndex)
   }, [])
 
-  const onMove = useCallback(
-    (move: PointObject) => {
+  const move = useCallback<UseEditProperty['move']>(
+    (move) => {
       if (editing.path === undefined) return
       const path = svg.paths[editing.path]
       new EditPath(path).translate(move, {
@@ -245,8 +269,8 @@ export const useDraw = <T extends HTMLElement>({
     [svg, editing, update]
   )
 
-  const onEdit = useCallback(
-    (arg: PathObject) => {
+  const edit = useCallback<UseEditProperty['edit']>(
+    (arg) => {
       if (editing.path === undefined) return
       const path = svg.paths[editing.path]
       new EditPath(path).edit(arg)
@@ -255,29 +279,21 @@ export const useDraw = <T extends HTMLElement>({
     [editing.path, svg.paths, update]
   )
 
-  const onCancel = useCallback(() => {
+  const cancel = useCallback<UseEditProperty['cancel']>(() => {
     setEditing(initEditing)
   }, [])
-
   return [
-    drawElRef,
+    ref,
     svgObj,
     {
       svg,
-      resize,
-      draw: (() => draw.current)(),
       update,
-      undo,
-      clear,
-      on,
-      off,
-      editProps: {
-        editing,
-        onSelect,
-        onMove,
-        onEdit,
-        onCancel,
-      },
+      resize,
+      editing,
+      select,
+      move,
+      edit,
+      cancel,
     },
   ]
 }

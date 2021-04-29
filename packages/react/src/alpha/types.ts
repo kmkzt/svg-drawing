@@ -1,4 +1,4 @@
-import type { RefObject, MutableRefObject, HTMLAttributes } from 'react'
+import type { RefObject, HTMLAttributes } from 'react'
 import type {
   PathObject,
   PointObject,
@@ -9,27 +9,80 @@ import type {
   CommandsConverter,
 } from '@svg-drawing/core'
 
-export type UseDraw<T extends HTMLElement> = [
+/**
+ * useSvg options
+ */
+export type SvgOptions = {
+  sharedSvg?: Svg
+}
+/**
+ * useSvg
+ */
+export type UseSvg<T extends HTMLElement> = [
   RefObject<T>,
   SvgObject,
-  UseDrawMethods
+  UseSvgProperty
 ]
-export type UseDrawMethods = {
+/**
+ * useSvg Return type
+ */
+export type UseSvgProperty = {
   svg: Svg
-  draw: DrawHandler
   resize: ResizeHandler
+  update: () => void
+}
+
+/**
+ * useDraw options
+ */
+export type DrawOptions = SvgOptions & {
+  pathOptions: PathObject
+  commandsConverter?: CommandsConverter
+  drawHandler?: typeof DrawHandler
+}
+
+/**
+ * useDraw return type
+ */
+export type UseDrawProperty = UseSvgProperty & {
+  draw: DrawHandler
   on: () => void
   off: () => void
   update: () => void
   clear: () => void
   undo: () => void
-  editProps: EditProps
 }
-export type DrawOptions = {
-  pathOptions: PathObject
-  commandsConverter?: CommandsConverter
-  drawHandler?: typeof DrawHandler
+
+/**
+ * useDraw
+ */
+export type UseDraw<T extends HTMLElement> = [
+  RefObject<T>,
+  SvgObject,
+  UseDrawProperty
+]
+
+export type EditOptions = SvgOptions
+/**
+ * useEdit
+ */
+export type UseEdit<T extends HTMLElement> = [
+  RefObject<T>,
+  SvgObject,
+  UseEditProperty
+]
+export type SelectHandler = (editIndex: EditIndex) => void
+export type MoveHandler = (move: PointObject) => void
+export type EditHandler = (pathAttrs: PathObject) => void
+export type CancelHandler = () => void
+export type UseEditProperty = UseSvgProperty & {
+  editing: EditIndex
+  select: SelectHandler
+  move: MoveHandler
+  edit: EditHandler
+  cancel: CancelHandler
 }
+
 export type EditIndex = {
   path?: number
   command?: number
@@ -38,10 +91,9 @@ export type EditIndex = {
 
 export type SvgProps = SvgObject & HTMLAttributes<SVGSVGElement>
 
-export type SelectHandler = (editIndex: EditIndex) => void
-export type MoveHandler = (move: PointObject) => void
-export type EditHandler = (pathAttrs: PathObject) => void
-export type CancelHandler = () => void
+/**
+ * EditSvg components
+ */
 export type EditProps = {
   editing: EditIndex
   onSelect: SelectHandler

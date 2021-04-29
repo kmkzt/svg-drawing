@@ -1,6 +1,6 @@
 import { useCallback, useState, ChangeEvent, useMemo, useEffect } from 'react'
 import { NextPage } from 'next'
-import { useDraw, Svg, EditSvg } from '@svg-drawing/react'
+import { useDraw, useEdit, Svg, EditSvg } from '@svg-drawing/react'
 import {
   BezierCurve,
   convertLineCommands,
@@ -97,9 +97,13 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     commandsConverter,
   })
 
-  const {
-    editProps: { onEdit: handleEdit, ...editProps },
-  } = draw
+  const [
+    editElRef,
+    editSvgObj,
+    { editing, edit, select, move, cancel, update },
+  ] = useEdit({
+    sharedSvg: draw.svg,
+  })
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>
@@ -124,51 +128,51 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       const num = Number(e.target.value)
       if (Number.isNaN(num)) return
       setPenWidth(num)
-      handleEdit({
+      edit({
         strokeWidth: num + '',
       })
     },
-    [handleEdit]
+    [edit]
   )
 
   const handleChangePenColor = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setPenColor(e.target.value)
-      handleEdit({
+      edit({
         stroke: e.target.value,
       })
     },
-    [handleEdit]
+    [edit]
   )
 
   const handleClickPenColor = useCallback(
     (col: string) => () => {
       setPenColor(col)
-      handleEdit({
+      edit({
         stroke: col,
       })
     },
-    [handleEdit]
+    [edit]
   )
 
   const handleChangeFill = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setFill(e.target.value)
-      handleEdit({
+      edit({
         fill: e.target.value,
       })
     },
-    [handleEdit]
+    [edit]
   )
 
   const handleClickFill = useCallback(
     (col: string) => () => {
       setFill(col)
-      handleEdit({
+      edit({
         fill: col,
       })
     },
-    [handleEdit]
+    [edit]
   )
 
   const handleFiles = useCallback(
@@ -197,6 +201,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       setMode(upd)
     }
   }, [])
+
+  useEffect(() => {
+    console.log(draw.draw)
+    update()
+  }, [draw])
 
   return (
     <Layout>
@@ -387,6 +396,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       </Box>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
+          ref={editElRef}
           style={{
             backgroundImage: lattice(size),
             backgroundSize: `${size}px ${size}px`,
@@ -397,7 +407,14 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             touchAction: 'none',
           }}
         >
-          <EditSvg {...svgObj} {...editProps} />
+          <EditSvg
+            {...editSvgObj}
+            editing={editing}
+            onEdit={edit}
+            onSelect={select}
+            onMove={move}
+            onCancel={cancel}
+          />
         </div>
       </Box>
     </Layout>
