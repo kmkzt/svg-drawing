@@ -203,7 +203,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   }, [])
 
   useEffect(() => {
-    console.log(draw.draw)
+    // console.log(draw.draw)
     update()
   }, [draw])
 

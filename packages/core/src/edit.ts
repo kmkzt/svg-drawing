@@ -17,6 +17,7 @@ export class EditPath {
     }
     if (d) this.path.parseCommandString(d)
   }
+
   public translate(
     po: PointObject,
     {
@@ -25,19 +26,22 @@ export class EditPath {
     }: {
       command?: number
       value?: number
-    }
-  ): void {
+    } = {}
+  ): Path {
+    const path = this.path.clone()
     if (command === undefined) {
-      this.path.translate(po)
-      return
+      path.translate(po)
+      return path
     }
-    const com = this.path.commands[command]
+    const com = path.commands[command]
     if (value === undefined) {
       com.translate(po)
-      return
+      return path
     }
     com.value[value] += po.x
     com.value[value + 1] += po.y
+
+    return path
   }
   /**
    * @todo compatible relative point
