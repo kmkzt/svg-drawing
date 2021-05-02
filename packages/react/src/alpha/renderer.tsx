@@ -91,7 +91,7 @@ const EDIT_CONFIG = {
 } as const
 
 const EditPath = ({
-  d,
+  d: originD,
   editingPath,
   onSelectPath: handleSelectPath,
   onMove: handleMove,
@@ -101,16 +101,23 @@ const EditPath = ({
   const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
     null
   )
+  const [movePoint, setMovePoint] = useState<PointObject | null>(null)
   const [moving, setMoving] = useState(false)
 
   const path = useMemo(() => {
     const p = new Path()
-    if (d) p.parseCommandString(d)
+    if (originD) p.parseCommandString(originD)
     return p
-  }, [d])
-  const { controlPoints, boundingBox }: EditPathCore = useMemo(() => {
-    return new EditPathCore(path)
-  }, [path])
+  }, [originD])
+  const { controlPoints, boundingBox, d } = useMemo(() => {
+    const editPath = new EditPathCore(path.clone())
+    if (movePoint) editPath.translate(movePoint, editingPath ?? {})
+    return {
+      controlPoints: editPath.controlPoints,
+      boundingBox: editPath.boundingBox,
+      d: editPath.path.getCommandString(),
+    }
+  }, [path, movePoint, editingPath])
 
   const handleClickPath = useCallback(
     (ev: React.MouseEvent<HTMLOrSVGElement>) => {
@@ -149,22 +156,37 @@ const EditPath = ({
     },
     [handleSelectPath]
   )
+  const handleMoveEdit = useCallback(
+    (ev: MouseEvent) => {
+      if (!moving || !currentPosition) return
+      setMovePoint({
+        x: ev.clientX - currentPosition.x,
+        y: ev.clientY - currentPosition.y,
+      })
+    },
+    [currentPosition, moving]
+  )
   const handleMoveEnd = useCallback(
     (ev: MouseEvent) => {
       if (!moving || !currentPosition) return
-      setMoving(false)
       handleMove({
         x: ev.clientX - currentPosition.x,
         y: ev.clientY - currentPosition.y,
       })
+      setMoving(false)
+      setMovePoint(null)
     },
     [moving, currentPosition, handleMove]
   )
 
   useEffect(() => {
     window.addEventListener('mouseup', handleMoveEnd)
-    return () => window.removeEventListener('mouseup', handleMoveEnd)
-  }, [handleMoveEnd])
+    window.addEventListener('mousemove', handleMoveEdit)
+    return () => {
+      window.removeEventListener('mouseup', handleMoveEnd)
+      window.removeEventListener('mousemove', handleMoveEdit)
+    }
+  }, [handleMoveEnd, handleMoveEdit])
   if (!editingPath) return <path d={d} {...attrs} onClick={handleClickPath} />
   return (
     <>

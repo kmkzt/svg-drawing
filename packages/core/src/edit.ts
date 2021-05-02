@@ -27,21 +27,18 @@ export class EditPath {
       command?: number
       value?: number
     } = {}
-  ): Path {
-    const path = this.path.clone()
+  ) {
     if (command === undefined) {
-      path.translate(po)
-      return path
+      this.path.translate(po)
+      return
     }
-    const com = path.commands[command]
+    const com = this.path.commands[command]
     if (value === undefined) {
       com.translate(po)
-      return path
+      return
     }
     com.value[value] += po.x
     com.value[value + 1] += po.y
-
-    return path
   }
   /**
    * @todo compatible relative point

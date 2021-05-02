@@ -260,7 +260,7 @@ export const useEdit = <T extends HTMLElement>({
     (move) => {
       if (editing.path === undefined) return
       const path = svg.paths[editing.path]
-      svg.paths[editing.path] = new EditPath(path).translate(move, {
+      new EditPath(path).translate(move, {
         command: editing.command,
         value: editing.value,
       })
