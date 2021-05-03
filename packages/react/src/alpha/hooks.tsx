@@ -17,10 +17,10 @@ import {
   CommandsConverter,
   throttle,
   isAlmostSameNumber,
-  ResizeHandlerCallback,
 } from '@svg-drawing/core'
 import type {
-  DrawHandlerCallback,
+  DrawHandlerOption,
+  ResizeHandlerOption,
   PathObject,
   PointObject,
 } from '@svg-drawing/core'
@@ -69,7 +69,7 @@ export const useSvg = <T extends HTMLElement>({
   /**
    * Setup ResizeHandler
    */
-  const resizeCallback = useCallback<ResizeHandlerCallback['resize']>(
+  const resizeCallback = useCallback<ResizeHandlerOption['resize']>(
     ({ width, height }) => {
       if (isAlmostSameNumber(svg.width, width)) return
       svg.resize({ width, height })
@@ -130,14 +130,14 @@ export const useDraw = <T extends HTMLElement>({
     update()
   }, [converter, update])
 
-  const handleDrawStart = useCallback<DrawHandlerCallback['start']>(() => {
+  const handleDrawStart = useCallback<DrawHandlerOption['start']>(() => {
     if (drawPathRef.current) return
     drawPathRef.current = createDrawPath()
     svg.addPath(drawPathRef.current)
   }, [createDrawPath, svg])
 
-  const handleDrawMove = useMemo<DrawHandlerCallback['move']>(() => {
-    const move: DrawHandlerCallback['move'] = (po) => {
+  const handleDrawMove = useMemo<DrawHandlerOption['move']>(() => {
+    const move: DrawHandlerOption['move'] = (po) => {
       if (!drawPathRef.current) return
       drawPointsRef.current = [...drawPointsRef.current, po]
       updateCommands()
@@ -145,7 +145,7 @@ export const useDraw = <T extends HTMLElement>({
     return throttle(move, DRAW_DELAY)
   }, [updateCommands])
 
-  const handleDrawEnd = useCallback<DrawHandlerCallback['end']>(() => {
+  const handleDrawEnd = useCallback<DrawHandlerOption['end']>(() => {
     drawPathRef.current = null
   }, [])
 
@@ -186,7 +186,7 @@ export const useDraw = <T extends HTMLElement>({
       })
       if (isActive) draw.current.on()
     },
-    [handleDrawEnd, handleDrawMove, handleDrawStart, svg]
+    [elRef, handleDrawEnd, handleDrawMove, handleDrawStart, svg]
   )
 
   useEffect(() => {
