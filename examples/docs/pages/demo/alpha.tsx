@@ -100,7 +100,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [
     editElRef,
     editSvgObj,
-    { editing, edit, select, move, cancel, update },
+    { editing, edit, select, move, cancel, update, svg: editSvg },
   ] = useEdit({
     sharedSvg: draw.svg,
   })
@@ -206,6 +206,44 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     // console.log(draw.draw)
     update()
   }, [draw])
+
+  useEffect(() => {
+    const handleKeyboardEvent = (ev: KeyboardEvent) => {
+      console.log(ev, ev.key)
+      if (ev.key === 'Escape') {
+        cancel()
+      }
+      if (ev.key === 'Tab') {
+        const { path } = editing
+        if (typeof path === 'number') {
+          ev.preventDefault()
+          select({
+            path: editSvg.paths.length - 1 > path ? path + 1 : 0,
+          })
+        }
+      }
+      if (ev.key === 'ArrowRight') {
+        ev.preventDefault()
+        move({ x: 0.5, y: 0 })
+      }
+      if (ev.key === 'ArrowLeft') {
+        ev.preventDefault()
+        move({ x: -0.5, y: 0 })
+      }
+      if (ev.key === 'ArrowUp') {
+        ev.preventDefault()
+        move({ x: 0, y: -0.5 })
+      }
+      if (ev.key === 'ArrowDown') {
+        ev.preventDefault()
+        move({ x: 0, y: 0.5 })
+      }
+    }
+    window.addEventListener('keydown', handleKeyboardEvent)
+    return () => {
+      window.removeEventListener('keydown', handleKeyboardEvent)
+    }
+  }, [cancel, select, editing, editSvg.paths.length, move, update])
 
   return (
     <Layout>
