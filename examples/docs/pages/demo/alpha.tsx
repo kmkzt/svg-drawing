@@ -66,6 +66,22 @@ interface Props {
   isSp: boolean
 }
 
+const useKeybind = (keyBindMap: {
+  [key: string]: (() => void) | undefined
+}) => {
+  useEffect(() => {
+    const handleKeyboardEvent = (ev: KeyboardEvent) => {
+      const fn = keyBindMap[ev.key]
+      if (!fn) return
+      ev.preventDefault()
+      fn()
+    }
+    window.addEventListener('keydown', handleKeyboardEvent)
+    return () => {
+      window.removeEventListener('keydown', handleKeyboardEvent)
+    }
+  }, [keyBindMap])
+}
 const drawMode: { [key: string]: typeof DrawHandler | undefined } = {
   pencil: PencilHandler,
   pen: PenHandler,
@@ -207,43 +223,25 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     update()
   }, [draw])
 
-  useEffect(() => {
-    const handleKeyboardEvent = (ev: KeyboardEvent) => {
-      console.log(ev, ev.key)
-      if (ev.key === 'Escape') {
-        cancel()
-      }
-      if (ev.key === 'Tab') {
-        const { path } = editing
-        if (typeof path === 'number') {
-          ev.preventDefault()
-          select({
-            path: editSvg.paths.length - 1 > path ? path + 1 : 0,
-          })
+  useKeybind(
+    typeof editing.path === 'number'
+      ? {
+          ['Escape']: cancel,
+          ['Tab']: () => {
+            const { path } = editing
+            if (typeof path === 'number') {
+              select({
+                path: editSvg.paths.length - 1 > path ? path + 1 : 0,
+              })
+            }
+          },
+          ['ArrowRight']: () => move({ x: 0.5, y: 0 }),
+          ['ArrowLeft']: () => move({ x: -0.5, y: 0 }),
+          ['ArrowUp']: () => move({ x: 0, y: -0.5 }),
+          ['ArrowDown']: () => move({ x: 0, y: 0.5 }),
         }
-      }
-      if (ev.key === 'ArrowRight') {
-        ev.preventDefault()
-        move({ x: 0.5, y: 0 })
-      }
-      if (ev.key === 'ArrowLeft') {
-        ev.preventDefault()
-        move({ x: -0.5, y: 0 })
-      }
-      if (ev.key === 'ArrowUp') {
-        ev.preventDefault()
-        move({ x: 0, y: -0.5 })
-      }
-      if (ev.key === 'ArrowDown') {
-        ev.preventDefault()
-        move({ x: 0, y: 0.5 })
-      }
-    }
-    window.addEventListener('keydown', handleKeyboardEvent)
-    return () => {
-      window.removeEventListener('keydown', handleKeyboardEvent)
-    }
-  }, [cancel, select, editing, editSvg.paths.length, move, update])
+      : {}
+  )
 
   return (
     <Layout>
