@@ -4,31 +4,14 @@ import {
   PathObject,
   PointObject,
   ControlPoint,
-  BoundingBox,
   EditPath as EditPathCore,
 } from '@svg-drawing/core'
 import {
   EditPathProps,
+  EditPathIndex,
   EditSvgProps,
   SelectPathHandler,
-  SvgProps,
-  EditPathIndex,
 } from './types'
-
-export const Svg = ({
-  background,
-  paths,
-  width,
-  height,
-  ...rest
-}: SvgProps) => (
-  <svg width={width} height={height} {...rest}>
-    {background && <rect width={width} height={height} fill={background} />}
-    {paths.map((pathAttr, i) => (
-      <path key={i} {...pathAttr} />
-    ))}
-  </svg>
-)
 
 export const EditSvg = ({
   editing,
@@ -90,7 +73,7 @@ const EDIT_CONFIG = {
   },
 } as const
 
-const EditPath = ({
+export const EditPath = ({
   d: originD,
   editingPath,
   onSelectPath: handleSelectPath,
