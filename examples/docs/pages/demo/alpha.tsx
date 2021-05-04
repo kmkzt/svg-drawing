@@ -117,7 +117,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     editElRef,
     editSvgObj,
     { editing, edit, select, move, cancel, update, svg: editSvg },
-  ] = useEdit({
+  ] = useEdit<HTMLDivElement>({
     sharedSvg: draw.svg,
   })
   const clickDownload = useCallback(
@@ -224,7 +224,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   }, [draw])
 
   useKeybind(
-    typeof editing.path === 'number'
+    editing
       ? {
           ['Escape']: cancel,
           ['Tab']: () => {

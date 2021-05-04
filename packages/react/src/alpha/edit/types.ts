@@ -16,7 +16,7 @@ export type MoveHandler = (move: PointObject) => void
 export type EditHandler = (pathAttrs: PathObject) => void
 export type CancelHandler = () => void
 export type UseEditProperty = UseSvgProperty & {
-  editing: EditIndex
+  editing: EditIndex | null
   select: SelectHandler
   move: MoveHandler
   edit: EditHandler
@@ -33,13 +33,14 @@ export type EditIndex = {
  * EditSvg components
  */
 export type EditProps = {
-  editing: EditIndex
-  onSelect: SelectHandler
-  onMove: MoveHandler
-  onEdit: EditHandler
-  onCancel: CancelHandler
+  editing: UseEditProperty['editing']
+  onSelect: UseEditProperty['select']
+  onMove: UseEditProperty['move']
+  onEdit: UseEditProperty['edit']
+  onCancel: UseEditProperty['cancel']
 }
-export type EditSvgProps = SvgProps & Omit<EditProps, 'onEdit'>
+export type EditSvgProps = Omit<SvgProps, 'onSelect'> &
+  Omit<EditProps, 'onEdit'>
 export type EditPathIndex = Omit<EditIndex, 'path'>
 export type SelectPathHandler = (editCommandIndex: EditPathIndex) => void
 export type EditPathProps = Pick<EditSvgProps, 'onCancel' | 'onMove'> & {
