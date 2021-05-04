@@ -66,22 +66,6 @@ interface Props {
   isSp: boolean
 }
 
-const useKeybind = (keyBindMap: {
-  [key: string]: (() => void) | undefined
-}) => {
-  useEffect(() => {
-    const handleKeyboardEvent = (ev: KeyboardEvent) => {
-      const fn = keyBindMap[ev.key]
-      if (!fn) return
-      ev.preventDefault()
-      fn()
-    }
-    window.addEventListener('keydown', handleKeyboardEvent)
-    return () => {
-      window.removeEventListener('keydown', handleKeyboardEvent)
-    }
-  }, [keyBindMap])
-}
 const drawMode: { [key: string]: typeof DrawHandler | undefined } = {
   pencil: PencilHandler,
   pen: PenHandler,
@@ -222,26 +206,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     // console.log(draw.draw)
     update()
   }, [draw])
-
-  useKeybind(
-    editing
-      ? {
-          ['Escape']: cancel,
-          ['Tab']: () => {
-            const { path } = editing
-            if (typeof path === 'number') {
-              select({
-                path: editSvg.paths.length - 1 > path ? path + 1 : 0,
-              })
-            }
-          },
-          ['ArrowRight']: () => move({ x: 0.5, y: 0 }),
-          ['ArrowLeft']: () => move({ x: -0.5, y: 0 }),
-          ['ArrowUp']: () => move({ x: 0, y: -0.5 }),
-          ['ArrowDown']: () => move({ x: 0, y: 0.5 }),
-        }
-      : {}
-  )
 
   return (
     <Layout>
@@ -446,10 +410,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           <EditSvg
             {...editSvgObj}
             editing={editing}
-            onEdit={edit}
             onSelect={select}
             onMove={move}
-            onCancel={cancel}
           />
         </div>
       </Box>

@@ -326,6 +326,11 @@ export class Svg {
     return this
   }
 
+  public deletePath(i: number): this {
+    this.paths.splice(i, 1)
+    return this
+  }
+
   public clonePaths(): Path[] {
     return this.paths.map((p) => p.clone())
   }

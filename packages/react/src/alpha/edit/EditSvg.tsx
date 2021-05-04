@@ -17,7 +17,6 @@ export const EditSvg = ({
   editing,
   onSelect: handleSelect,
   onMove: handleMove,
-  onCancel: handleCancel,
   background,
   paths,
   width,
@@ -50,7 +49,6 @@ export const EditSvg = ({
               : null
           }
           onMove={handleMove}
-          onCancel={handleCancel}
           onSelectPath={handleSelectPath(i)}
         />
       ))}
@@ -78,7 +76,6 @@ export const EditPath = ({
   editingPath,
   onSelectPath: handleSelectPath,
   onMove: handleMove,
-  onCancel: handleCancel,
   ...attrs
 }: EditPathProps & PathObject) => {
   const [currentPosition, setCurrentPosition] = useState<PointObject | null>(

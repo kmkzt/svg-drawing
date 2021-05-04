@@ -14,17 +14,19 @@ export type UseEdit<T extends HTMLElement> = [
 export type SelectHandler = (editIndex: EditIndex) => void
 export type MoveHandler = (move: PointObject) => void
 export type EditHandler = (pathAttrs: PathObject) => void
+export type DeleteHandler = () => void
 export type CancelHandler = () => void
 export type UseEditProperty = UseSvgProperty & {
   editing: EditIndex | null
   select: SelectHandler
   move: MoveHandler
   edit: EditHandler
+  deletePath: DeleteHandler
   cancel: CancelHandler
 }
 
 export type EditIndex = {
-  path?: number
+  path: number
   command?: number
   value?: number
 }
@@ -36,14 +38,12 @@ export type EditProps = {
   editing: UseEditProperty['editing']
   onSelect: UseEditProperty['select']
   onMove: UseEditProperty['move']
-  onEdit: UseEditProperty['edit']
-  onCancel: UseEditProperty['cancel']
 }
 export type EditSvgProps = Omit<SvgProps, 'onSelect'> &
   Omit<EditProps, 'onEdit'>
 export type EditPathIndex = Omit<EditIndex, 'path'>
 export type SelectPathHandler = (editCommandIndex: EditPathIndex) => void
-export type EditPathProps = Pick<EditSvgProps, 'onCancel' | 'onMove'> & {
+export type EditPathProps = Pick<EditSvgProps, 'onMove'> & {
   editingPath: EditPathIndex | null
   onSelectPath: SelectPathHandler
 }
