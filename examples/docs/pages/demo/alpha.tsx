@@ -6,17 +6,10 @@ import {
   Svg,
   EditSvg,
   useDrawHandler,
+  useCommandsConverter,
   DrawHandlerMap,
 } from '@svg-drawing/react'
-import {
-  BezierCurve,
-  convertLineCommands,
-  CommandsConverter,
-  closeCommands,
-  download,
-  PenHandler,
-  PencilHandler,
-} from '@svg-drawing/core'
+import { download, PenHandler, PencilHandler } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import {
   Input,
@@ -86,10 +79,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [type, changeType] = useState<DrawHandlerType>('pencil')
 
   const drawHandler = useDrawHandler(drawHandlerMap, type)
-  const commandsConverter = useMemo<CommandsConverter>(() => {
-    const converter = curve ? new BezierCurve().convert : convertLineCommands
-    return (po) => (close ? closeCommands(converter(po)) : converter(po))
-  }, [close, curve])
+  const commandsConverter = useCommandsConverter({ curve, close })
 
   const [drawElRef, svgObj, draw] = useDraw<HTMLDivElement>({
     pathOptions: {
@@ -120,12 +110,12 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   )
 
   const handleChangeCiruler = useCallback(() => {
-    switchCurve(!curve)
-  }, [curve])
+    switchCurve((curve) => !curve)
+  }, [])
 
   const handleChangeClose = useCallback(() => {
-    switchClose(!close)
-  }, [close])
+    switchClose((close) => !close)
+  }, [])
 
   const handlePenWidth = useCallback(
     (e: ChangeEvent<any>) => {

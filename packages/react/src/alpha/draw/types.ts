@@ -48,3 +48,11 @@ export type DrawHandlerMap<T extends string> = {
  * UseDrawHandler
  */
 export type UseDrawHandler = typeof DrawHandler | undefined
+
+/**
+ * UseCommandsConverterOptions
+ */
+export type UseCommandsConverterOptions = {
+  curve: boolean
+  close: boolean
+}
