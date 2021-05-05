@@ -8,6 +8,7 @@ import {
   useDrawHandler,
   useCommandsConverter,
   DrawHandlerMap,
+  usePathOptions,
 } from '@svg-drawing/react'
 import { download, PenHandler, PencilHandler } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
@@ -71,26 +72,43 @@ const drawHandlerMap: DrawHandlerMap<DrawHandlerType> = {
   pen: PenHandler,
 } as const
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
+  /**
+   * pathOptions
+   */
+  const [
+    pathOptions,
+    { changeStrokeWidth, changeFill, changeStroke },
+  ] = usePathOptions({
+    fill: 'none',
+    stroke: 'black',
+    strokeWidth: '5',
+  })
+
+  /**
+   * drawHandler
+   */
+  const [type, changeType] = useState<DrawHandlerType>('pencil')
+  const drawHandler = useDrawHandler(drawHandlerMap, type)
+
+  /**
+   * commandConverter
+   */
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
-  const [fill, setFill] = useState('none')
-  const [penColor, setPenColor] = useState('black')
-  const [penWidth, setPenWidth] = useState(5)
-  const [type, changeType] = useState<DrawHandlerType>('pencil')
-
-  const drawHandler = useDrawHandler(drawHandlerMap, type)
   const commandsConverter = useCommandsConverter({ curve, close })
 
+  /**
+   * Setup draw
+   */
   const [drawElRef, svgObj, draw] = useDraw<HTMLDivElement>({
-    pathOptions: {
-      fill,
-      stroke: penColor,
-      strokeWidth: penWidth + '',
-    },
+    pathOptions,
     drawHandler,
     commandsConverter,
   })
 
+  /**
+   * Setup edit
+   */
   const [
     editElRef,
     editSvgObj,
@@ -118,55 +136,55 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   }, [])
 
   const handlePenWidth = useCallback(
-    (e: ChangeEvent<any>) => {
-      const num = Number(e.target.value)
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const num = e.target.valueAsNumber
       if (Number.isNaN(num)) return
-      setPenWidth(num)
+      changeStrokeWidth(num)
       edit({
         strokeWidth: num + '',
       })
     },
-    [edit]
+    [changeStrokeWidth, edit]
   )
 
   const handleChangePenColor = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setPenColor(e.target.value)
+      changeStroke(e.target.value)
       edit({
         stroke: e.target.value,
       })
     },
-    [edit]
+    [changeStroke, edit]
   )
 
   const handleClickPenColor = useCallback(
     (col: string) => () => {
-      setPenColor(col)
+      changeStroke(col)
       edit({
         stroke: col,
       })
     },
-    [edit]
+    [changeStroke, edit]
   )
 
   const handleChangeFill = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setFill(e.target.value)
+      changeFill(e.target.value)
       edit({
         fill: e.target.value,
       })
     },
-    [edit]
+    [changeFill, edit]
   )
 
   const handleClickFill = useCallback(
     (col: string) => () => {
-      setFill(col)
+      changeFill(col)
       edit({
         fill: col,
       })
     },
-    [edit]
+    [changeFill, edit]
   )
 
   const handleFiles = useCallback(
@@ -218,7 +236,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 min="1"
                 max="20"
                 step="1"
-                value={penWidth}
+                value={pathOptions.strokeWidth}
                 onChange={handlePenWidth}
               />
               <Input
@@ -228,7 +246,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 min="1"
                 max="20"
                 step="1"
-                value={penWidth}
+                value={pathOptions.strokeWidth}
                 onChange={handlePenWidth}
               />
             </Flex>
@@ -266,7 +284,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 id="fill"
                 type="text"
                 placeholder="#000 or black or rgba(0,0,0,1)"
-                value={fill}
+                value={pathOptions.fill}
                 onChange={handleChangeFill}
               />
             </Label>
@@ -279,7 +297,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                   style={{
                     display: 'inline-block',
                     backgroundColor: col,
-                    border: col === fill ? '2px solid #000' : '2px solid #999',
+                    border:
+                      col === pathOptions.fill
+                        ? '2px solid #000'
+                        : '2px solid #999',
                   }}
                   onClick={handleClickFill(col)}
                 />
@@ -297,7 +318,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 id="penColor"
                 type="text"
                 placeholder="#000 or black or rgba(0,0,0,1)"
-                value={penColor}
+                value={pathOptions.stroke}
                 onChange={handleChangePenColor}
               />
             </Label>
@@ -310,7 +331,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                   bg={col}
                   style={{
                     border:
-                      col === penColor ? '2px solid #000' : '2px solid #999',
+                      col === pathOptions.stroke
+                        ? '2px solid #000'
+                        : '2px solid #999',
                   }}
                   onClick={handleClickPenColor(col)}
                 />
