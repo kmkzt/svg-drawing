@@ -71,6 +71,27 @@ const EDIT_CONFIG = {
   },
 } as const
 
+const getPointFromEvent = (
+  ev:
+    | MouseEvent
+    | TouchEvent
+    | PointerEvent
+    | React.MouseEvent<any>
+    | React.TouchEvent<any>
+): PointObject => {
+  if ('touches' in ev) {
+    const touche = ev.touches[0]
+    return {
+      x: touche.clientX,
+      y: touche.clientY,
+    }
+  }
+  return {
+    x: ev.clientX,
+    y: ev.clientY,
+  }
+}
+
 export const EditPath = ({
   d: originD,
   editingPath,
@@ -100,7 +121,11 @@ export const EditPath = ({
   }, [path, movePoint, editingPath])
 
   const handleClickPath = useCallback(
-    (ev: React.MouseEvent<HTMLOrSVGElement>) => {
+    (
+      _ev:
+        | React.MouseEvent<HTMLOrSVGElement>
+        | React.TouchEvent<HTMLOrSVGElement>
+    ) => {
       setCurrentPosition(null)
       handleSelectPath({})
     },
@@ -125,33 +150,34 @@ export const EditPath = ({
 
   const handleMoveStart = useCallback(
     (commandIndex: EditPathIndex) => (
-      ev: React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+      ev:
+        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
       handleSelectPath(commandIndex)
-      setCurrentPosition({
-        x: ev.clientX,
-        y: ev.clientY,
-      })
+      setCurrentPosition(getPointFromEvent(ev))
       setMoving(true)
     },
     [handleSelectPath]
   )
   const handleMoveEdit = useCallback(
-    (ev: MouseEvent) => {
+    (ev: MouseEvent | TouchEvent) => {
       if (!moving || !currentPosition) return
+      const { x, y } = getPointFromEvent(ev)
       setMovePoint({
-        x: ev.clientX - currentPosition.x,
-        y: ev.clientY - currentPosition.y,
+        x: x - currentPosition.x,
+        y: y - currentPosition.y,
       })
     },
     [currentPosition, moving]
   )
   const handleMoveEnd = useCallback(
-    (ev: MouseEvent) => {
+    (ev: MouseEvent | TouchEvent) => {
       if (!moving || !currentPosition) return
+      const { x, y } = getPointFromEvent(ev)
       handleMove({
-        x: ev.clientX - currentPosition.x,
-        y: ev.clientY - currentPosition.y,
+        x: x - currentPosition.x,
+        y: y - currentPosition.y,
       })
       setMoving(false)
       setMovePoint(null)
@@ -162,9 +188,13 @@ export const EditPath = ({
   useEffect(() => {
     window.addEventListener('mouseup', handleMoveEnd)
     window.addEventListener('mousemove', handleMoveEdit)
+    window.addEventListener('touchcancel', handleMoveEnd)
+    window.addEventListener('touchmove', handleMoveEdit)
     return () => {
       window.removeEventListener('mouseup', handleMoveEnd)
       window.removeEventListener('mousemove', handleMoveEdit)
+      window.removeEventListener('touchcancel', handleMoveEnd)
+      window.removeEventListener('touchmove', handleMoveEdit)
     }
   }, [handleMoveEnd, handleMoveEdit])
   if (!editingPath) return <path d={d} {...attrs} onClick={handleClickPath} />
@@ -173,10 +203,11 @@ export const EditPath = ({
       <path d={d} {...attrs} />
       <path
         d={d}
-        onClick={handleClickPath}
         strokeWidth={EDIT_CONFIG.line}
         stroke={EDIT_CONFIG.color.main}
         fill={EDIT_CONFIG.fill.default}
+        onClick={handleClickPath}
+        onTouchStart={handleClickPath}
       />
       <rect
         {...boundingBox}
@@ -187,7 +218,7 @@ export const EditPath = ({
             : EDIT_CONFIG.fill.boundingBox
         }
         onMouseDown={handleMoveStart({})}
-        // onMouseMove={handleMoveBoundingBox}
+        onTouchStart={handleMoveStart({})}
       />
       {controlPoints.map(({ points, d }: ControlPoint, commandIndex) => (
         <g key={commandIndex}>
@@ -209,6 +240,7 @@ export const EditPath = ({
                 cx={po.x}
                 cy={po.y}
                 onMouseDown={handleMoveStart(editPathIndex)}
+                onTouchStart={handleMoveStart(editPathIndex)}
                 r={EDIT_CONFIG.point}
                 style={{
                   fill: isSelectedPoint(editPathIndex)

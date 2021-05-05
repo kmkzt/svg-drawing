@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { EditPath } from '@svg-drawing/core'
 import type { UseEditOptions, UseEdit, UseEditProperty } from './types'
 import { useSvg } from '../svg/useSvg'
@@ -41,11 +41,12 @@ export const useEdit = <T extends HTMLElement>({
     [editPath, update]
   )
 
-  const deletePath = useCallback<UseEditProperty['delete']>(() => {
+  const deletePath = useCallback<UseEditProperty['deletePath']>(() => {
     if (!editing) return
     svg.deletePath(editing.path)
+    update()
     setEditing(null)
-  }, [editing, svg])
+  }, [editing, svg, update])
 
   const cancel = useCallback<UseEditProperty['cancel']>(() => {
     setEditing(null)
@@ -71,17 +72,6 @@ export const useEdit = <T extends HTMLElement>({
     }
   }, [editing, cancel, deletePath, select, svg.paths.length, move])
   useKeyBind(keyBindMap)
-
-  useEffect(() => {
-    const handleMouseDown = (ev: MouseEvent) => {
-      if (!ev.target) return
-      if (!ref.current?.contains(ev.target as Node)) cancel()
-    }
-    window.addEventListener('mousedown', handleMouseDown)
-    return () => {
-      window.removeEventListener('mousedown', handleMouseDown)
-    }
-  }, [cancel, ref])
 
   return [
     ref,
