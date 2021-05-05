@@ -6,6 +6,7 @@ import {
   Svg,
   EditSvg,
   useDrawHandler,
+  DrawHandlerMap,
 } from '@svg-drawing/react'
 import {
   BezierCurve,
@@ -15,7 +16,6 @@ import {
   download,
   PenHandler,
   PencilHandler,
-  DrawHandler,
 } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import {
@@ -71,19 +71,21 @@ const lattice = (s: number) => `
 interface Props {
   isSp: boolean
 }
+
+type DrawHandlerType = 'pen' | 'pencil'
+const drawHandlerMap: DrawHandlerMap<DrawHandlerType> = {
+  pencil: PencilHandler,
+  pen: PenHandler,
+} as const
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
   const [penWidth, setPenWidth] = useState(5)
-  const { type, changeType, drawHandler } = useDrawHandler(
-    {
-      pencil: PencilHandler,
-      pen: PenHandler,
-    },
-    'pencil'
-  )
+  const [type, changeType] = useState<DrawHandlerType>('pencil')
+
+  const drawHandler = useDrawHandler(drawHandlerMap, type)
   const commandsConverter = useMemo<CommandsConverter>(() => {
     const converter = curve ? new BezierCurve().convert : convertLineCommands
     return (po) => (close ? closeCommands(converter(po)) : converter(po))

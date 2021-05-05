@@ -40,12 +40,11 @@ export type UseDraw<T extends HTMLElement> = [
 /**
  * DrawHandlerMap
  */
-export type DrawHandlerMap = { [key: string]: typeof DrawHandler }
+export type DrawHandlerMap<T extends string> = {
+  [key in T]: typeof DrawHandler
+}
+
 /**
  * UseDrawHandler
  */
-export type UseDrawHandler = {
-  type: string
-  drawHandler: typeof DrawHandler | undefined
-  changeType: (type: string) => void
-}
+export type UseDrawHandler = typeof DrawHandler | undefined
