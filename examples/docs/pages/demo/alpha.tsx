@@ -1,6 +1,12 @@
 import { useCallback, useState, ChangeEvent, useMemo, useEffect } from 'react'
 import { NextPage } from 'next'
-import { useDraw, useEdit, Svg, EditSvg } from '@svg-drawing/react'
+import {
+  useDraw,
+  useEdit,
+  Svg,
+  EditSvg,
+  useDrawHandler,
+} from '@svg-drawing/react'
 import {
   BezierCurve,
   convertLineCommands,
@@ -65,22 +71,18 @@ const lattice = (s: number) => `
 interface Props {
   isSp: boolean
 }
-
-const drawMode: { [key: string]: typeof DrawHandler | undefined } = {
-  pencil: PencilHandler,
-  pen: PenHandler,
-} as const
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
   const [fill, setFill] = useState('none')
   const [penColor, setPenColor] = useState('black')
   const [penWidth, setPenWidth] = useState(5)
-  const [mode, setMode] = useState<keyof typeof drawMode>('pencil')
-
-  const Handler: typeof DrawHandler | undefined = useMemo(
-    () => drawMode[mode],
-    [mode]
+  const { type, changeType, drawHandler } = useDrawHandler(
+    {
+      pencil: PencilHandler,
+      pen: PenHandler,
+    },
+    'pencil'
   )
   const commandsConverter = useMemo<CommandsConverter>(() => {
     const converter = curve ? new BezierCurve().convert : convertLineCommands
@@ -93,7 +95,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       stroke: penColor,
       strokeWidth: penWidth + '',
     },
-    drawHandler: Handler,
+    drawHandler,
     commandsConverter,
   })
 
@@ -193,14 +195,17 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [draw]
   )
 
-  const handleChangeMode = useCallback((ev: ChangeEvent<HTMLSelectElement>) => {
-    const isDrawMode = (str: any): str is 'pencil' | 'pen' =>
-      ['pen', 'pencil'].includes(str)
-    const upd = ev.target.value
-    if (isDrawMode(upd)) {
-      setMode(upd)
-    }
-  }, [])
+  const handleChangeMode = useCallback(
+    (ev: ChangeEvent<HTMLSelectElement>) => {
+      const isDrawMode = (str: any): str is 'pencil' | 'pen' =>
+        ['pen', 'pencil'].includes(str)
+      const upd = ev.target.value
+      if (isDrawMode(upd)) {
+        changeType(upd)
+      }
+    },
+    [changeType]
+  )
 
   useEffect(() => {
     // console.log(draw.draw)
@@ -253,7 +258,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 Close
               </Label>
               <Label htmlFor="mode">
-                <Select id="mode" value={mode} onChange={handleChangeMode}>
+                <Select id="mode" value={type} onChange={handleChangeMode}>
                   <option value="pen">Pen</option>
                   <option value="pencil">Pencil</option>
                 </Select>

@@ -36,3 +36,16 @@ export type UseDraw<T extends HTMLElement> = [
   SvgObject,
   UseDrawProperty
 ]
+
+/**
+ * DrawHandlerMap
+ */
+export type DrawHandlerMap = { [key: string]: typeof DrawHandler }
+/**
+ * UseDrawHandler
+ */
+export type UseDrawHandler = {
+  type: string
+  drawHandler: typeof DrawHandler | undefined
+  changeType: (type: string) => void
+}

@@ -1,2 +1,9 @@
 export { useDraw } from './useDraw'
-export type { UseDraw, UseDrawOptions, UseDrawProperty } from './types'
+export { useDrawHandler } from './useDrawHandler'
+export type {
+  UseDraw,
+  UseDrawOptions,
+  UseDrawProperty,
+  DrawHandlerMap,
+  UseDrawHandler,
+} from './types'
