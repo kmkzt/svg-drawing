@@ -9,7 +9,7 @@ import {
   useCommandsConverter,
   DrawHandlerMap,
   usePathOptions,
-} from '@svg-drawing/react'
+} from '@svg-drawing/react/lib/alpha'
 import { download, PenHandler, PencilHandler } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import {
