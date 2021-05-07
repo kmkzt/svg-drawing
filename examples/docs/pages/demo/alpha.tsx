@@ -71,7 +71,10 @@ const drawHandlerMap: DrawHandlerMap<DrawHandlerType> = {
   pencil: PencilHandler,
   pen: PenHandler,
 } as const
+
+type Mode = 'edit' | 'draw'
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
+  const [mode, setMode] = useState<Mode>('draw')
   /**
    * pathOptions
    */
@@ -205,9 +208,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [draw]
   )
 
-  const handleChangeMode = useCallback(
+  const handleChangeType = useCallback(
     (ev: ChangeEvent<HTMLSelectElement>) => {
-      const isDrawMode = (str: any): str is 'pencil' | 'pen' =>
+      const isDrawMode = (str: any): str is DrawHandlerType =>
         ['pen', 'pencil'].includes(str)
       const upd = ev.target.value
       if (isDrawMode(upd)) {
@@ -217,10 +220,19 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [changeType]
   )
 
-  useEffect(() => {
-    // console.log(draw.draw)
-    update()
-  }, [draw])
+  const handleChangeMode = useCallback(
+    (ev: ChangeEvent<HTMLSelectElement>) => {
+      const isDrawMode = (str: any): str is Mode =>
+        ['edit', 'draw'].includes(str)
+      const upd = ev.target.value
+      if (isDrawMode(upd)) {
+        setMode(upd)
+        draw.update()
+        update()
+      }
+    },
+    [draw, update]
+  )
 
   return (
     <Layout>
@@ -267,10 +279,16 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 />
                 Close
               </Label>
-              <Label htmlFor="mode">
-                <Select id="mode" value={type} onChange={handleChangeMode}>
+              <Label htmlFor="type">
+                <Select id="type" value={type} onChange={handleChangeType}>
                   <option value="pen">Pen</option>
                   <option value="pencil">Pencil</option>
+                </Select>
+              </Label>
+              <Label htmlFor="mode">
+                <Select id="mode" value={mode} onChange={handleChangeMode}>
+                  <option value="draw">draw</option>
+                  <option value="edit">edit</option>
                 </Select>
               </Label>
             </Flex>
@@ -399,41 +417,42 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         </Flex>
       </Box>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
-        <div
-          ref={drawElRef}
-          style={{
-            backgroundImage: lattice(size),
-            backgroundSize: `${size}px ${size}px`,
-            border: '1px solid #333',
-            margin: '0 auto 0 0',
-            width: '100%',
-            height: '100%',
-            touchAction: 'none',
-          }}
-        >
-          <Svg {...svgObj} />
-        </div>
-      </Box>
-      <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
-        <div
-          ref={editElRef}
-          style={{
-            backgroundImage: lattice(size),
-            backgroundSize: `${size}px ${size}px`,
-            border: '1px solid #333',
-            margin: '0 auto 0 0',
-            width: '100%',
-            height: '100%',
-            touchAction: 'none',
-          }}
-        >
-          <EditSvg
-            {...editSvgObj}
-            editing={editing}
-            onSelect={select}
-            onMove={move}
-          />
-        </div>
+        {mode === 'draw' ? (
+          <div
+            ref={drawElRef}
+            style={{
+              backgroundImage: lattice(size),
+              backgroundSize: `${size}px ${size}px`,
+              border: '1px solid #333',
+              margin: '0 auto 0 0',
+              width: '100%',
+              height: '100%',
+              touchAction: 'none',
+            }}
+          >
+            <Svg {...svgObj} />
+          </div>
+        ) : (
+          <div
+            ref={editElRef}
+            style={{
+              backgroundImage: lattice(size),
+              backgroundSize: `${size}px ${size}px`,
+              border: '1px solid #333',
+              margin: '0 auto 0 0',
+              width: '100%',
+              height: '100%',
+              touchAction: 'none',
+            }}
+          >
+            <EditSvg
+              {...editSvgObj}
+              editing={editing}
+              onSelect={select}
+              onMove={move}
+            />
+          </div>
+        )}
       </Box>
     </Layout>
   )

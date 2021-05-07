@@ -118,9 +118,11 @@ export const useDraw = <T extends HTMLElement>({
 
   useEffect(() => {
     if (!elRef.current) return
-    draw.current.setElement(elRef.current)
-    draw.current.on()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    const drawInstance = draw.current
+    drawInstance.setElement(elRef.current)
+    drawInstance.on()
+    return () => drawInstance.off()
+  }, [elRef.current]) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Methods
