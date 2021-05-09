@@ -8,13 +8,13 @@ import {
 } from '@svg-drawing/core'
 import {
   EditPathProps,
-  EditPathIndex,
+  SelectPathIndex,
   EditSvgProps,
   SelectPathHandler,
 } from './types'
 
 export const EditSvg = ({
-  editing,
+  selecting,
   onSelect: handleSelect,
   onMove: handleMove,
   background,
@@ -40,11 +40,11 @@ export const EditSvg = ({
         <EditPath
           key={i}
           {...(pathAttr as any)}
-          editingPath={
-            i === editing?.path
+          selectingPath={
+            i === selecting?.path
               ? {
-                  command: editing?.command,
-                  value: editing?.value,
+                  command: selecting?.command,
+                  value: selecting?.value,
                 }
               : null
           }
@@ -94,7 +94,7 @@ const getPointFromEvent = (
 
 export const EditPath = ({
   d: originD,
-  editingPath,
+  selectingPath,
   onSelectPath: handleSelectPath,
   onMove: handleMove,
   ...attrs
@@ -112,13 +112,13 @@ export const EditPath = ({
   }, [originD])
   const { controlPoints, boundingBox, d } = useMemo(() => {
     const editPath = new EditPathCore(path.clone())
-    if (movePoint) editPath.translate(movePoint, editingPath ?? {})
+    if (movePoint) editPath.translate(movePoint, selectingPath ?? {})
     return {
       controlPoints: editPath.controlPoints,
       boundingBox: editPath.boundingBox,
       d: editPath.path.getCommandString(),
     }
-  }, [path, movePoint, editingPath])
+  }, [path, movePoint, selectingPath])
 
   const handleClickPath = useCallback(
     (
@@ -133,23 +133,23 @@ export const EditPath = ({
   )
 
   const isSelectedPoint = useCallback(
-    (index: EditPathIndex): boolean => {
-      if (!editingPath) return false
+    (index: SelectPathIndex): boolean => {
+      if (!selectingPath) return false
       return (
-        editingPath.command === index.command &&
-        editingPath.value === index.value
+        selectingPath.command === index.command &&
+        selectingPath.value === index.value
       )
     },
-    [editingPath]
+    [selectingPath]
   )
 
   const isSelectedBoundingBox = useMemo(() => {
-    if (!editingPath) return false
-    return editingPath.command === undefined
-  }, [editingPath])
+    if (!selectingPath) return false
+    return selectingPath.command === undefined
+  }, [selectingPath])
 
   const handleMoveStart = useCallback(
-    (commandIndex: EditPathIndex) => (
+    (commandIndex: SelectPathIndex) => (
       ev:
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
@@ -197,7 +197,7 @@ export const EditPath = ({
       window.removeEventListener('touchmove', handleMoveEdit)
     }
   }, [handleMoveEnd, handleMoveEdit])
-  if (!editingPath) return <path d={d} {...attrs} onClick={handleClickPath} />
+  if (!selectingPath) return <path d={d} {...attrs} onClick={handleClickPath} />
   return (
     <>
       <path d={d} {...attrs} />

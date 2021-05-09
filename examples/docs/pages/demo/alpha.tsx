@@ -112,11 +112,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   /**
    * Setup edit
    */
-  const [
-    editElRef,
-    editSvgObj,
-    { editing, edit, select, move, cancel, update, svg: editSvg },
-  ] = useEdit<HTMLDivElement>({
+  const [editElRef, editSvgObj, edit] = useEdit<HTMLDivElement>({
     sharedSvg: draw.svg,
   })
   const clickDownload = useCallback(
@@ -143,7 +139,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       const num = e.target.valueAsNumber
       if (Number.isNaN(num)) return
       changeStrokeWidth(num)
-      edit({
+      edit.changeAttributes({
         strokeWidth: num + '',
       })
     },
@@ -153,7 +149,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const handleChangePenColor = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       changeStroke(e.target.value)
-      edit({
+      edit.changeAttributes({
         stroke: e.target.value,
       })
     },
@@ -163,7 +159,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const handleClickPenColor = useCallback(
     (col: string) => () => {
       changeStroke(col)
-      edit({
+      edit.changeAttributes({
         stroke: col,
       })
     },
@@ -173,7 +169,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const handleChangeFill = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       changeFill(e.target.value)
-      edit({
+      edit.changeAttributes({
         fill: e.target.value,
       })
     },
@@ -183,7 +179,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const handleClickFill = useCallback(
     (col: string) => () => {
       changeFill(col)
-      edit({
+      edit.changeAttributes({
         fill: col,
       })
     },
@@ -228,10 +224,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       if (isDrawMode(upd)) {
         setMode(upd)
         draw.update()
-        update()
+        edit.update()
       }
     },
-    [draw, update]
+    [draw, edit]
   )
 
   return (
@@ -447,9 +443,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           >
             <EditSvg
               {...editSvgObj}
-              editing={editing}
-              onSelect={select}
-              onMove={move}
+              selecting={edit.selecting}
+              onSelect={edit.select}
+              onMove={edit.move}
             />
           </div>
         )}

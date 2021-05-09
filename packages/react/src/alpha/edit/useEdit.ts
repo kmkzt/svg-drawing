@@ -6,33 +6,33 @@ import { KeyBindMap, useKeyBind } from '../keyboard'
 
 export const useEdit = <T extends HTMLElement>({
   sharedSvg,
-}: UseEditOptions): UseEdit<T> => {
+}: UseEditOptions = {}): UseEdit<T> => {
   const [ref, svgObj, { svg, update, resize }] = useSvg<T>({ sharedSvg })
-  const [editing, setEditing] = useState<UseEditProperty['editing']>(null)
-  const select = useCallback<UseEditProperty['select']>((editIndex) => {
-    setEditing(editIndex)
+  const [selecting, setEditing] = useState<UseEditProperty['selecting']>(null)
+  const select = useCallback<UseEditProperty['select']>((selectIndex) => {
+    setEditing(selectIndex)
   }, [])
 
   const editPath: EditPath | null = useMemo(() => {
-    if (!editing) return null
-    const path = svg.paths[editing.path] ?? null
+    if (!selecting) return null
+    const path = svg.paths[selecting.path] ?? null
     if (!path) return null
     return new EditPath(path)
-  }, [editing, svg.paths])
+  }, [selecting, svg.paths])
 
   const move = useCallback<UseEditProperty['move']>(
     (move) => {
       if (!editPath) return
       editPath.translate(move, {
-        command: editing?.command,
-        value: editing?.value,
+        command: selecting?.command,
+        value: selecting?.value,
       })
       update()
     },
-    [editPath, editing, update]
+    [editPath, selecting, update]
   )
 
-  const edit = useCallback<UseEditProperty['edit']>(
+  const changeAttributes = useCallback<UseEditProperty['changeAttributes']>(
     (arg) => {
       if (!editPath) return
       editPath.edit(arg)
@@ -42,22 +42,22 @@ export const useEdit = <T extends HTMLElement>({
   )
 
   const deletePath = useCallback<UseEditProperty['deletePath']>(() => {
-    if (!editing) return
-    svg.deletePath(editing.path)
+    if (!selecting) return
+    svg.deletePath(selecting.path)
     update()
     setEditing(null)
-  }, [editing, svg, update])
+  }, [selecting, svg, update])
 
   const cancel = useCallback<UseEditProperty['cancel']>(() => {
     setEditing(null)
   }, [])
 
   const keyBindMap = useMemo<KeyBindMap>(() => {
-    if (!editing) return {}
+    if (!selecting) return {}
     return {
       ['Escape']: cancel,
       ['Tab']: () => {
-        const { path } = editing
+        const { path } = selecting
         if (typeof path === 'number') {
           select({
             path: svg.paths.length - 1 > path ? path + 1 : 0,
@@ -70,7 +70,7 @@ export const useEdit = <T extends HTMLElement>({
       ['ArrowDown']: () => move({ x: 0, y: 0.5 }),
       ['Backspace']: deletePath,
     }
-  }, [editing, cancel, deletePath, select, svg.paths.length, move])
+  }, [selecting, cancel, deletePath, select, svg.paths.length, move])
   useKeyBind(keyBindMap)
 
   return [
@@ -80,10 +80,10 @@ export const useEdit = <T extends HTMLElement>({
       svg,
       update,
       resize,
-      editing,
+      selecting,
       select,
       move,
-      edit,
+      changeAttributes,
       deletePath,
       cancel,
     },
