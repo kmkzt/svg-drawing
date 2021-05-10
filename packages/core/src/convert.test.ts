@@ -1,12 +1,12 @@
-import { Convert } from './convert'
+import { BezierCurve } from './convert'
 
 describe('convert.ts', () => {
-  describe('Convert', () => {
-    it('bezierCurve', () => {
-      const convert = new Convert()
+  describe('BezierCurve', () => {
+    it('genCommand', () => {
+      const bezierCurve = new BezierCurve()
       expect(
-        convert
-          .bezierCurve(
+        bezierCurve
+          .genCommand(
             { x: 0, y: 0 },
             { x: 1, y: 1 },
             { x: 2, y: 1 },
