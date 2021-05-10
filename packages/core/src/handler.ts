@@ -37,8 +37,10 @@ export class DrawHandler implements DrawEventHandler {
   /**
    * Offset coordinates
    */
-  protected _left: number
-  protected _top: number
+  protected _offset: {
+    left: number
+    top: number
+  }
   /**
    * EventHandler
    */
@@ -57,8 +59,7 @@ export class DrawHandler implements DrawEventHandler {
      */
     this._el = el
     const { left, top } = el ? el.getBoundingClientRect() : { left: 0, top: 0 }
-    this._left = left
-    this._top = top
+    this._offset = { left, top }
     /**
      * Setup property.
      */
@@ -107,22 +108,22 @@ export class DrawHandler implements DrawEventHandler {
     if (ev instanceof TouchEvent) {
       const touch = ev.touches[0]
       return {
-        x: touch.clientX - this._left,
-        y: touch.clientY - this._top,
+        x: touch.clientX - this._offset.left,
+        y: touch.clientY - this._offset.top,
         pressure: touch.force,
       }
     }
     if (ev instanceof PointerEvent) {
       return {
-        x: ev.clientX - this._left,
-        y: ev.clientY - this._top,
+        x: ev.clientX - this._offset.left,
+        y: ev.clientY - this._offset.top,
         pressure: ev.pressure,
       }
     }
     // if (ev instanceof MouseEvent) {
     return {
-      x: ev.clientX - this._left,
-      y: ev.clientY - this._top,
+      x: ev.clientX - this._offset.left,
+      y: ev.clientY - this._offset.top,
       pressure: (ev as any)?.pressure,
     }
     // }
@@ -137,17 +138,18 @@ export class DrawHandler implements DrawEventHandler {
   private _setupCoordinatesListener(): Array<ClearListener> {
     const el = this._el
     if (!el) return []
-    const handleEvent = (_ev: Event) => {
+    const setOffsetPosition = () => {
       const { left, top } = el.getBoundingClientRect()
-      this._left = left
-      this._top = top
+      this._offset.left = left
+      this._offset.top = top
     }
-    addEventListener('scroll', handleEvent)
-    el.addEventListener('resize', handleEvent)
+    setOffsetPosition()
+    addEventListener('scroll', setOffsetPosition)
+    el.addEventListener('resize', setOffsetPosition)
     return [
       () => {
-        removeEventListener('scroll', handleEvent)
-        el.removeEventListener('resize', handleEvent)
+        removeEventListener('scroll', setOffsetPosition)
+        el.removeEventListener('resize', setOffsetPosition)
       },
     ]
   }
