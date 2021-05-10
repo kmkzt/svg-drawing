@@ -7,7 +7,7 @@ import { KeyBindMap, useKeyBind } from '../keyboard'
 export const useEdit = <T extends HTMLElement>({
   sharedSvg,
 }: UseEditOptions = {}): UseEdit<T> => {
-  const [ref, svgObj, { svg, update, resize }] = useSvg<T>({ sharedSvg })
+  const [ref, svgObj, { svg, update, ...rest }] = useSvg<T>({ sharedSvg })
   const [selecting, setEditing] = useState<UseEditProperty['selecting']>(null)
   const select = useCallback<UseEditProperty['select']>((selectIndex) => {
     setEditing(selectIndex)
@@ -79,13 +79,13 @@ export const useEdit = <T extends HTMLElement>({
     {
       svg,
       update,
-      resize,
       selecting,
       select,
       move,
       changeAttributes,
       deletePath,
       cancel,
+      ...rest,
     },
   ]
 }

@@ -22,6 +22,7 @@ export type UseSvgProperty = {
   svg: Svg
   resize: ResizeHandler
   update: () => void
+  clear: () => void
 }
 
 export type SvgProps = SvgObject & HTMLAttributes<SVGSVGElement>

@@ -35,6 +35,11 @@ export const useSvg = <T extends HTMLElement>({
     }, RENDER_INTERVAL)
     return () => clearInterval(stopId)
   }, [svg])
+
+  const clear = useCallback(() => {
+    svg.paths = []
+    update()
+  }, [svg, update])
   /**
    * Setup ResizeHandler
    */
@@ -64,6 +69,7 @@ export const useSvg = <T extends HTMLElement>({
       svg,
       update,
       resize,
+      clear,
     },
   ]
 }

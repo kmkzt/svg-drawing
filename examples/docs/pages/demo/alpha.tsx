@@ -1,4 +1,4 @@
-import { useCallback, useState, ChangeEvent, useMemo, useEffect } from 'react'
+import { useCallback, useState, ChangeEvent, ChangeEventHandler } from 'react'
 import { NextPage } from 'next'
 import {
   useDraw,
@@ -126,16 +126,22 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [draw]
   )
 
-  const handleChangeCiruler = useCallback(() => {
-    switchCurve((curve) => !curve)
-  }, [])
+  const handleChangeCurve = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => {
+      switchCurve(ev.target.checked)
+    },
+    []
+  )
 
-  const handleChangeClose = useCallback(() => {
-    switchClose((close) => !close)
-  }, [])
+  const handleChangeClose = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => {
+      switchClose(ev.target.checked)
+    },
+    []
+  )
 
-  const handlePenWidth = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+  const handlePenWidth = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (e) => {
       const num = e.target.valueAsNumber
       if (Number.isNaN(num)) return
       changeStrokeWidth(num)
@@ -146,8 +152,10 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [changeStrokeWidth, edit]
   )
 
-  const handleChangePenColor = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangePenColor = useCallback<
+    ChangeEventHandler<HTMLInputElement>
+  >(
+    (e) => {
       changeStroke(e.target.value)
       edit.changeAttributes({
         stroke: e.target.value,
@@ -166,8 +174,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [changeStroke, edit]
   )
 
-  const handleChangeFill = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeFill = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (e) => {
       changeFill(e.target.value)
       edit.changeAttributes({
         fill: e.target.value,
@@ -186,8 +194,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [changeFill, edit]
   )
 
-  const handleFiles = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFiles = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (e) => {
       const reader = new FileReader()
       reader.onload = (ev: ProgressEvent<FileReader>) => {
         if (!ev.target || typeof ev.target.result !== 'string') return
@@ -196,16 +204,17 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           const svgxml = atob(data)
           draw.svg.parseSVGString(svgxml)
           draw.update()
+          edit.update()
         }
       }
       if (!e.target?.files) return
       reader.readAsDataURL(e.target.files[0])
     },
-    [draw]
+    [draw, edit]
   )
 
-  const handleChangeType = useCallback(
-    (ev: ChangeEvent<HTMLSelectElement>) => {
+  const handleChangeType = useCallback<ChangeEventHandler<HTMLSelectElement>>(
+    (ev) => {
       const isDrawMode = (str: any): str is DrawHandlerType =>
         ['pen', 'pencil'].includes(str)
       const upd = ev.target.value
@@ -216,15 +225,15 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [changeType]
   )
 
-  const handleChangeMode = useCallback(
-    (ev: ChangeEvent<HTMLSelectElement>) => {
+  const handleChangeMode = useCallback<ChangeEventHandler<HTMLSelectElement>>(
+    (ev) => {
       const isDrawMode = (str: any): str is Mode =>
         ['edit', 'draw'].includes(str)
       const upd = ev.target.value
       if (isDrawMode(upd)) {
-        setMode(upd)
         draw.update()
         edit.update()
+        setMode(upd)
       }
     },
     [draw, edit]
@@ -232,6 +241,31 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
 
   return (
     <Layout>
+      <Box as="fieldset">
+        <Label htmlFor="mode">
+          <Text fontSize={0}>Mode</Text>
+          <select
+            id="mode"
+            value={mode}
+            onBlur={() => undefined}
+            onChange={handleChangeMode}
+          >
+            <option value="draw">draw</option>
+            <option value="edit">edit</option>
+          </select>
+        </Label>
+        {!isSp && (
+          <Label width="auto">
+            <Text fontSize={0}>Svg exported by this library can be read.</Text>
+            <Input
+              type="file"
+              onChange={handleFiles}
+              multiple
+              accept="image/*"
+            />
+          </Label>
+        )}
+      </Box>
       <Box as="fieldset">
         <Flex flexWrap="wrap">
           <Box width={[1, 1 / 2, 1 / 2]} pr={3}>
@@ -257,36 +291,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 value={pathOptions.strokeWidth}
                 onChange={handlePenWidth}
               />
-            </Flex>
-            <Flex pt={3} justifyContent="start">
-              <Label htmlFor="curve">
-                <Checkbox
-                  id="curve"
-                  checked={curve}
-                  onChange={handleChangeCiruler}
-                />
-                Curve
-              </Label>
-              <Label htmlFor="close">
-                <Checkbox
-                  id="close"
-                  checked={close}
-                  onChange={handleChangeClose}
-                />
-                Close
-              </Label>
-              <Label htmlFor="type">
-                <Select id="type" value={type} onChange={handleChangeType}>
-                  <option value="pen">Pen</option>
-                  <option value="pencil">Pencil</option>
-                </Select>
-              </Label>
-              <Label htmlFor="mode">
-                <Select id="mode" value={mode} onChange={handleChangeMode}>
-                  <option value="draw">draw</option>
-                  <option value="edit">edit</option>
-                </Select>
-              </Label>
             </Flex>
           </Box>
           <Box width={[1, 1 / 2, 1 / 2]}>
@@ -357,20 +361,43 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         </Flex>
       </Box>
       <Box as="fieldset">
+        <Flex pt={3} justifyContent="start">
+          <Label htmlFor="curve">
+            <Checkbox id="curve" checked={curve} onChange={handleChangeCurve} />
+            Curve
+          </Label>
+          <Label htmlFor="close">
+            <Checkbox id="close" checked={close} onChange={handleChangeClose} />
+            Close
+          </Label>
+          <Label htmlFor="type">
+            <select
+              id="type"
+              value={type}
+              onBlur={() => undefined}
+              onChange={handleChangeType}
+            >
+              <option value="pen">Pen</option>
+              <option value="pencil">Pencil</option>
+            </select>
+          </Label>
+          <Button mr={1} mb={1} onClick={draw.clear}>
+            Clear
+          </Button>
+          <Button mr={1} mb={1} onClick={draw.undo}>
+            Undo
+          </Button>
+          <Button mr={1} mb={1} onClick={draw.on}>
+            On
+          </Button>
+          <Button mr={1} mb={1} onClick={draw.off}>
+            Off
+          </Button>
+        </Flex>
+      </Box>
+      <Box as="fieldset">
         <Flex flexWrap="wrap" justifyContent="start">
           <Box mr={2}>
-            <Button mr={1} mb={1} onClick={draw.clear}>
-              Clear
-            </Button>
-            <Button mr={1} mb={1} onClick={draw.undo}>
-              Undo
-            </Button>
-            <Button mr={1} mb={1} onClick={draw.on}>
-              On
-            </Button>
-            <Button mr={1} mb={1} onClick={draw.off}>
-              Off
-            </Button>
             <Button
               variant="secondary"
               mr={1}
@@ -397,58 +424,32 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
               Download SVG
             </Button>
           </Box>
-          {!isSp && (
-            <Box width="auto">
-              <Text fontSize={0}>
-                Svg exported by this library can be read.
-              </Text>
-              <Input
-                type="file"
-                onChange={handleFiles}
-                multiple
-                accept="image/*"
-              />
-            </Box>
-          )}
         </Flex>
       </Box>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
-        {mode === 'draw' ? (
-          <div
-            ref={drawElRef}
-            style={{
-              backgroundImage: lattice(size),
-              backgroundSize: `${size}px ${size}px`,
-              border: '1px solid #333',
-              margin: '0 auto 0 0',
-              width: '100%',
-              height: '100%',
-              touchAction: 'none',
-            }}
-          >
+        <div
+          ref={mode === 'draw' ? drawElRef : editElRef}
+          style={{
+            backgroundImage: lattice(size),
+            backgroundSize: `${size}px ${size}px`,
+            border: '1px solid #333',
+            margin: '0 auto 0 0',
+            width: '100%',
+            height: '100%',
+            touchAction: 'none',
+          }}
+        >
+          {mode === 'draw' ? (
             <Svg {...svgObj} />
-          </div>
-        ) : (
-          <div
-            ref={editElRef}
-            style={{
-              backgroundImage: lattice(size),
-              backgroundSize: `${size}px ${size}px`,
-              border: '1px solid #333',
-              margin: '0 auto 0 0',
-              width: '100%',
-              height: '100%',
-              touchAction: 'none',
-            }}
-          >
+          ) : (
             <EditSvg
               {...editSvgObj}
               selecting={edit.selecting}
               onSelect={edit.select}
               onMove={edit.move}
             />
-          </div>
-        )}
+          )}
+        </div>
       </Box>
     </Layout>
   )

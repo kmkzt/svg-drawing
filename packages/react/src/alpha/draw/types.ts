@@ -20,11 +20,8 @@ export type UseDrawOptions = UseSvgOptions & {
  * useDraw return type
  */
 export type UseDrawProperty = UseSvgProperty & {
-  draw: DrawHandler
   on: () => void
   off: () => void
-  update: () => void
-  clear: () => void
   undo: () => void
 }
 

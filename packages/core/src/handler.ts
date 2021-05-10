@@ -55,6 +55,11 @@ export class DrawHandler implements DrawEventHandler {
     this.start = start
     this.move = move
     /**
+     * Bind method
+     */
+    this.on = this.on.bind(this)
+    this.off = this.off.bind(this)
+    /**
      * Set offset coordinates
      */
     this._el = el

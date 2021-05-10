@@ -28,7 +28,9 @@ export const useDraw = <T extends HTMLElement>({
   drawHandler: CustomDrawHandler,
   sharedSvg,
 }: UseDrawOptions): UseDraw<T> => {
-  const [elRef, svgObj, { svg, update, resize }] = useSvg<T>({ sharedSvg })
+  const [elRef, svgObj, { svg, update, resize, clear }] = useSvg<T>({
+    sharedSvg,
+  })
   const drawPathRef = useRef<Path | null>(null)
   const drawPointsRef = useRef<PointObject[]>([])
   const converter = useMemo<CommandsConverter>(
@@ -75,7 +77,7 @@ export const useDraw = <T extends HTMLElement>({
   /**
    * Setup DrawHandler
    */
-  const draw = useRef<DrawHandler>(
+  const handler = useRef<DrawHandler>(
     (() => {
       const Handler = CustomDrawHandler ?? PencilHandler
       return new Handler({
@@ -88,9 +90,9 @@ export const useDraw = <T extends HTMLElement>({
   )
 
   useEffect(() => {
-    draw.current.start = handleDrawStart
-    draw.current.move = handleDrawMove
-    draw.current.end = handleDrawEnd
+    handler.current.start = handleDrawStart
+    handler.current.move = handleDrawMove
+    handler.current.end = handleDrawEnd
   }, [handleDrawStart, handleDrawMove, handleDrawEnd])
 
   const setDrawHandler = useCallback(
@@ -99,15 +101,15 @@ export const useDraw = <T extends HTMLElement>({
       const drawEl = elRef.current
       const { width, height } = drawEl.getBoundingClientRect()
       svg.resize({ width, height })
-      const isActive = draw.current.isActive
-      draw.current.off()
-      draw.current = new Handler({
+      const isActive = handler.current.isActive
+      handler.current.off()
+      handler.current = new Handler({
         el: elRef.current,
         start: handleDrawStart,
         move: handleDrawMove,
         end: handleDrawEnd,
       })
-      if (isActive) draw.current.on()
+      if (isActive) handler.current.on()
     },
     [elRef, handleDrawEnd, handleDrawMove, handleDrawStart, svg]
   )
@@ -118,30 +120,19 @@ export const useDraw = <T extends HTMLElement>({
 
   useEffect(() => {
     if (!elRef.current) return
-    const drawInstance = draw.current
+    const drawInstance = handler.current
     drawInstance.setElement(elRef.current)
     drawInstance.on()
     return () => drawInstance.off()
   }, [elRef.current]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  /**
-   * Methods
-   */
   const on = useCallback(() => {
-    resize.on()
-    draw.current.on()
-  }, [resize])
+    handler.current.on()
+  }, [])
 
   const off = useCallback(() => {
-    resize.off()
-    draw.current.off()
-  }, [resize])
-
-  const clear = useCallback(() => {
-    svg.paths = []
-    update()
-  }, [svg, update])
-
+    handler.current.off()
+  }, [])
   const undo = useCallback(() => {
     svg.paths.pop()
     update()
@@ -153,7 +144,7 @@ export const useDraw = <T extends HTMLElement>({
     {
       svg,
       resize,
-      draw: (() => draw.current)(),
+      handler: (() => handler.current)(),
       update,
       undo,
       clear,
