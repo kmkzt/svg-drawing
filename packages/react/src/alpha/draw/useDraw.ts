@@ -144,7 +144,6 @@ export const useDraw = <T extends HTMLElement>({
     {
       svg,
       resize,
-      handler: (() => handler.current)(),
       update,
       undo,
       clear,
