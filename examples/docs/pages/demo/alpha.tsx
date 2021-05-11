@@ -360,41 +360,66 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           </Box>
         </Flex>
       </Box>
-      <Box as="fieldset">
-        <Flex pt={3} justifyContent="start">
-          <Label htmlFor="curve">
-            <Checkbox id="curve" checked={curve} onChange={handleChangeCurve} />
-            Curve
-          </Label>
-          <Label htmlFor="close">
-            <Checkbox id="close" checked={close} onChange={handleChangeClose} />
-            Close
-          </Label>
-          <Label htmlFor="type">
-            <select
-              id="type"
-              value={type}
-              onBlur={() => undefined}
-              onChange={handleChangeType}
-            >
-              <option value="pen">Pen</option>
-              <option value="pencil">Pencil</option>
-            </select>
-          </Label>
-          <Button mr={1} mb={1} onClick={draw.clear}>
-            Clear
-          </Button>
-          <Button mr={1} mb={1} onClick={draw.undo}>
-            Undo
-          </Button>
-          <Button mr={1} mb={1} onClick={draw.on}>
-            On
-          </Button>
-          <Button mr={1} mb={1} onClick={draw.off}>
-            Off
-          </Button>
-        </Flex>
-      </Box>
+      {mode === 'draw' && (
+        <Box as="fieldset">
+          <Flex pt={3} justifyContent="start">
+            <Label htmlFor="curve">
+              <Checkbox
+                id="curve"
+                checked={curve}
+                onChange={handleChangeCurve}
+              />
+              Curve
+            </Label>
+            <Label htmlFor="close">
+              <Checkbox
+                id="close"
+                checked={close}
+                onChange={handleChangeClose}
+              />
+              Close
+            </Label>
+            <Label htmlFor="type">
+              <select
+                id="type"
+                value={type}
+                onBlur={() => undefined}
+                onChange={handleChangeType}
+              >
+                <option value="pen">Pen</option>
+                <option value="pencil">Pencil</option>
+              </select>
+            </Label>
+            <Button mr={1} mb={1} onClick={draw.undo}>
+              Undo
+            </Button>
+            {!draw.isActive ? (
+              <Button mr={1} mb={1} onClick={draw.on}>
+                On
+              </Button>
+            ) : (
+              <Button mr={1} mb={1} onClick={draw.off}>
+                Off
+              </Button>
+            )}
+            <Button mr={1} mb={1} onClick={draw.clear}>
+              Clear
+            </Button>
+          </Flex>
+        </Box>
+      )}
+      {mode === 'edit' && (
+        <Box as="fieldset">
+          <Flex pt={3} justifyContent="start">
+            <Button mr={1} mb={1} onClick={edit.cancel}>
+              Cancel
+            </Button>
+            <Button mr={1} mb={1} onClick={edit.clear}>
+              Clear
+            </Button>
+          </Flex>
+        </Box>
+      )}
       <Box as="fieldset">
         <Flex flexWrap="wrap" justifyContent="start">
           <Box mr={2}>

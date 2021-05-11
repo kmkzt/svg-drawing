@@ -20,6 +20,7 @@ export type UseDrawOptions = UseSvgOptions & {
  * useDraw return type
  */
 export type UseDrawProperty = UseSvgProperty & {
+  isActive: boolean
   on: () => void
   off: () => void
   undo: () => void
