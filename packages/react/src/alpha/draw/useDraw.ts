@@ -117,9 +117,13 @@ export const useDraw = <T extends HTMLElement>({
   }, [CustomDrawHandler]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (!elRef.current) return
     const drawInstance = handler.current
+    if (!elRef.current) {
+      drawInstance.off()
+      return
+    }
     drawInstance.setElement(elRef.current)
+    if (isActive) drawInstance.on()
   }, [elRef.current]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const on = useCallback<UseDrawProperty['on']>(() => {
