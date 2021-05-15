@@ -7,18 +7,13 @@ import {
   EditSvg,
   useDrawHandler,
   useCommandsConverter,
-  DrawHandlerMap,
   usePathOptions,
+  useParseFile,
+  DrawHandlerMap,
 } from '@svg-drawing/react/lib/alpha'
 import { download, PenHandler, PencilHandler } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
-import {
-  Input,
-  Checkbox,
-  Label,
-  Slider,
-  Select,
-} from '@rebass/forms/styled-components'
+import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
 
 const size = 30
@@ -109,11 +104,12 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     commandsConverter,
   })
 
+  const sharedSvg = draw.svg
   /**
    * Setup edit
    */
   const [editElRef, editSvgObj, edit] = useEdit<HTMLDivElement>({
-    sharedSvg: draw.svg,
+    sharedSvg,
   })
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (
@@ -194,23 +190,20 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [changeFill, edit]
   )
 
+  const parseFile = useParseFile({
+    parseSVGString: (svgXml) => {
+      sharedSvg.parseSVGString(svgXml)
+      draw.update()
+      edit.update()
+    },
+  })
+
   const handleFiles = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
-      const reader = new FileReader()
-      reader.onload = (ev: ProgressEvent<FileReader>) => {
-        if (!ev.target || typeof ev.target.result !== 'string') return
-        const [type, data] = ev.target.result.split(',')
-        if (type === 'data:image/svg+xml;base64') {
-          const svgxml = atob(data)
-          draw.svg.parseSVGString(svgxml)
-          draw.update()
-          edit.update()
-        }
-      }
       if (!e.target?.files) return
-      reader.readAsDataURL(e.target.files[0])
+      parseFile(e.target.files[0])
     },
-    [draw, edit]
+    [parseFile]
   )
 
   const handleChangeType = useCallback<ChangeEventHandler<HTMLSelectElement>>(
