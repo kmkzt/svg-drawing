@@ -1,3 +1,3 @@
-export type UseParseFile = (opts: {
-  parseSVGString: (svg: string) => void
-}) => (file: File) => void
+import { Svg } from '@svg-drawing/core'
+
+export type UseParseFile = (opts: { svg: Svg }) => (file: File) => Promise<void>

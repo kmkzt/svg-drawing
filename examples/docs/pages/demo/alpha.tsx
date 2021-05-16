@@ -191,19 +191,17 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   )
 
   const parseFile = useParseFile({
-    parseSVGString: (svgXml) => {
-      sharedSvg.parseSVGString(svgXml)
-      draw.update()
-      edit.update()
-    },
+    svg: sharedSvg,
   })
 
   const handleFiles = useCallback<ChangeEventHandler<HTMLInputElement>>(
-    (e) => {
+    async (e) => {
       if (!e.target?.files) return
-      parseFile(e.target.files[0])
+      await parseFile(e.target.files[0])
+      draw.update()
+      edit.update()
     },
-    [parseFile]
+    [parseFile, draw, edit]
   )
 
   const handleChangeType = useCallback<ChangeEventHandler<HTMLSelectElement>>(
