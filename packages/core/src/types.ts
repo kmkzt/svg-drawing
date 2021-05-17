@@ -43,6 +43,8 @@ export type CommandType =
   | 'a'
   | 'Q'
   | 'q'
+  | 'S'
+  | 's'
 export type CommandObject = {
   type: CommandType
   value: number[]

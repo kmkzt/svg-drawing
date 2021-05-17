@@ -50,7 +50,7 @@ export class BezierCurve implements GenerateCommandsConverter {
 
     const cPrev = new Point(p2.x, p2.y).add(vPrev.toPoint())
     const cNext = new Point(p3.x, p3.y).add(vNext.toPoint())
-    return new Command(COMMAND_TYPE.CURVE, [
+    return new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
       cPrev.x,
       cPrev.y,
       cNext.x,

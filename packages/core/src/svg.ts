@@ -54,8 +54,8 @@ export const COMMAND_TYPE: { [name: string]: CommandType } = {
   MOVE_RELATIVE: 'm', // m 0 0
   LINE: 'L', // L 1 1
   LINE_RELATIVE: 'l', // l 1 1
-  CURVE: 'C', // C 1 1 2 2 3 3
-  CURVE_RELATIVE: 'c', // c 1 1 2 2 3 3
+  CUBIC_BEZIER_CURVE: 'C', // C 1 1 2 2 3 3
+  CUBIC_BEZIER_CURVE_RELATIVE: 'c', // c 1 1 2 2 3 3
   CLOSE: 'Z', // Z, z
   HORIZONTAL: 'H', // H 10
   HORIZONTAL_RELATIVE: 'h', // h 10
@@ -65,6 +65,8 @@ export const COMMAND_TYPE: { [name: string]: CommandType } = {
   ARC_CURVE_RELATIVE: 'a', // A 6 4 10 0 1 14 10
   QUADRATIC_CURVE: 'Q', // Q 10 60 10 30
   QUADRATIC_CURVE_RELATIVE: 'q', // q 10 60 10 30
+  SHORTCUT_CURVE: 'S', // S 10 60 10 30
+  SHORTCUT_CURVE_RELATIVE: 's', // s 10 60 10 30
 } as const
 
 // TODO: compatible COMMAND_TYPE
@@ -79,14 +81,14 @@ export class Command {
 
   public set cr(po: Point | undefined) {
     if (!po) return
-    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+    if (!this.isCubicBezierCurve) {
       return
     }
     this.value.splice(2, 1, po.x)
     this.value.splice(3, 1, po.y)
   }
   public get cr(): Point | undefined {
-    if (!this.isCurve) {
+    if (!this.isCubicBezierCurve) {
       return undefined
     }
     const [x, y] = this.value.slice(2, 4)
@@ -135,22 +137,39 @@ export class Command {
     return new Command(this.type, this.value.slice())
   }
 
-  public get isCurve(): boolean {
-    const curveCommandType: CommandType[] = [
-      COMMAND_TYPE.CURVE,
-      COMMAND_TYPE.CURVE_RELATIVE,
-    ]
-    return curveCommandType.includes(this.type) && this.value.length === 6
+  public get isCubicBezierCurve(): boolean {
+    switch (this.type) {
+      case COMMAND_TYPE.CUBIC_BEZIER_CURVE:
+      case COMMAND_TYPE.CUBIC_BEZIER_CURVE_RELATIVE:
+        return this.value.length === 6
+      default:
+        return false
+    }
   }
+  public get isCurve(): boolean {
+    switch (this.type) {
+      case COMMAND_TYPE.CUBIC_BEZIER_CURVE:
+      case COMMAND_TYPE.CUBIC_BEZIER_CURVE_RELATIVE:
+        return this.value.length === 6
+      case COMMAND_TYPE.QUADRATIC_CURVE:
+      case COMMAND_TYPE.QUADRATIC_CURVE_RELATIVE:
+      case COMMAND_TYPE.SHORTCUT_CURVE:
+      case COMMAND_TYPE.SHORTCUT_CURVE_RELATIVE:
+        return this.value.length === 4
+      default:
+        return false
+    }
+  }
+
   public get isAbsolute(): boolean {
-    const absoluteCommandType: CommandType[] = [
+    return [
       COMMAND_TYPE.MOVE,
       COMMAND_TYPE.LINE,
-      COMMAND_TYPE.CURVE,
+      COMMAND_TYPE.CUBIC_BEZIER_CURVE,
       COMMAND_TYPE.ARC_CURVE,
       COMMAND_TYPE.QUADRATIC_CURVE,
-    ]
-    return absoluteCommandType.includes(this.type)
+      COMMAND_TYPE.SHORTCUT_CURVE_RELATIVE,
+    ].includes(this.type)
   }
   public translate(p: PointObject) {
     if (!this.isAbsolute) return

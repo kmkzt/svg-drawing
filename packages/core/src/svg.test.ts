@@ -58,7 +58,7 @@ describe('svg.ts', () => {
       expect(cmd.toString()).toBe('L 1 1')
     })
     it('CURVE', () => {
-      const cmd = new Command(COMMAND_TYPE.CURVE, [
+      const cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
         0.25,
         0.25,
         0.75,
@@ -73,7 +73,14 @@ describe('svg.ts', () => {
       let cmd: Command
       let clone: Command
       beforeEach(() => {
-        cmd = new Command(COMMAND_TYPE.CURVE, [0.25, 0.25, 0.75, 0.25, 1, 1])
+        cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+          0.25,
+          0.25,
+          0.75,
+          0.25,
+          1,
+          1,
+        ])
         clone = cmd.clone()
       })
       it('point is not overwritten', () => {
@@ -182,13 +189,13 @@ describe('svg.ts', () => {
           new Path()
             .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
             .addCommand(
-              new Command(COMMAND_TYPE.CURVE, [0.2, 0.2, 0.6, 0.8, 1, 1])
+              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [0.2, 0.2, 0.6, 0.8, 1, 1])
             )
             .addCommand(
-              new Command(COMMAND_TYPE.CURVE, [1.4, 1.2, 1.6, 1.2, 2, 1])
+              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [1.4, 1.2, 1.6, 1.2, 2, 1])
             )
             .addCommand(
-              new Command(COMMAND_TYPE.CURVE, [2.4, 0.8, 2.8, 0.2, 3, 0])
+              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [2.4, 0.8, 2.8, 0.2, 3, 0])
             )
         )
         .addPath(
@@ -253,13 +260,34 @@ describe('svg.ts', () => {
             new Path()
               .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
               .addCommand(
-                new Command(COMMAND_TYPE.CURVE, [0.2, 0.2, 0.6, 0.8, 1, 1])
+                new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+                  0.2,
+                  0.2,
+                  0.6,
+                  0.8,
+                  1,
+                  1,
+                ])
               )
               .addCommand(
-                new Command(COMMAND_TYPE.CURVE, [1.4, 1.2, 1.6, 1.2, 2, 1])
+                new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+                  1.4,
+                  1.2,
+                  1.6,
+                  1.2,
+                  2,
+                  1,
+                ])
               )
               .addCommand(
-                new Command(COMMAND_TYPE.CURVE, [2.4, 0.8, 2.8, 0.2, 3, 0])
+                new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+                  2.4,
+                  0.8,
+                  2.8,
+                  0.2,
+                  3,
+                  0,
+                ])
               )
           )
           .addPath(
