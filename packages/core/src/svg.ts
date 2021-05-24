@@ -228,6 +228,12 @@ export class Path {
     }
     return this
   }
+
+  public deleteCommand(i: number): this {
+    this.commands.splice(i, 1)
+    return this
+  }
+
   public getCommandString(): string {
     if (this.commands.length === 0) return ''
     return this.commands

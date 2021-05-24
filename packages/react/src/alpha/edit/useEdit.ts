@@ -38,7 +38,7 @@ export const useEdit = <T extends HTMLElement>({
     [editPath, update]
   )
 
-  const deletePath = useCallback<UseEditProperty['deletePath']>(() => {
+  const deleteAction = useCallback<UseEditProperty['delete']>(() => {
     if (!selecting) return
     svg.deletePath(selecting.path)
     update()
@@ -57,9 +57,9 @@ export const useEdit = <T extends HTMLElement>({
       ['ArrowLeft']: () => move({ x: -0.5, y: 0 }),
       ['ArrowUp']: () => move({ x: 0, y: -0.5 }),
       ['ArrowDown']: () => move({ x: 0, y: 0.5 }),
-      ['Backspace']: deletePath,
+      ['Backspace']: deleteAction,
     }
-  }, [selecting, cancel, deletePath, move])
+  }, [selecting, cancel, deleteAction, move])
   useKeyBind(keyBindMap)
 
   return [
@@ -72,7 +72,7 @@ export const useEdit = <T extends HTMLElement>({
       select: setSelecting,
       move,
       changeAttributes,
-      deletePath,
+      delete: deleteAction,
       cancel,
       ...rest,
     },

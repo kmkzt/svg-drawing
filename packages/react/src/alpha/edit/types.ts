@@ -21,7 +21,7 @@ export type UseEditProperty = UseSvgProperty & {
   select: SelectHandler
   move: MoveHandler
   cancel: CancelHandler
-  deletePath: DeleteHandler
+  delete: DeleteHandler
   changeAttributes: ChangeAttributesHandler
 }
 
