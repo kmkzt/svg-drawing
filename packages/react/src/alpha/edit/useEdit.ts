@@ -8,10 +8,7 @@ export const useEdit = <T extends HTMLElement>({
   sharedSvg,
 }: UseEditOptions = {}): UseEdit<T> => {
   const [ref, svgObj, { svg, update, ...rest }] = useSvg<T>({ sharedSvg })
-  const [selecting, setEditing] = useState<UseEditProperty['selecting']>(null)
-  const select = useCallback<UseEditProperty['select']>((selectIndex) => {
-    setEditing(selectIndex)
-  }, [])
+  const [selecting, setSelecting] = useState<UseEditProperty['selecting']>(null)
 
   const editPath: EditPath | null = useMemo(() => {
     if (!selecting) return null
@@ -45,32 +42,24 @@ export const useEdit = <T extends HTMLElement>({
     if (!selecting) return
     svg.deletePath(selecting.path)
     update()
-    setEditing(null)
+    setSelecting(null)
   }, [selecting, svg, update])
 
   const cancel = useCallback<UseEditProperty['cancel']>(() => {
-    setEditing(null)
+    setSelecting(null)
   }, [])
 
   const keyBindMap = useMemo<KeyBindMap>(() => {
     if (!selecting) return {}
     return {
       ['Escape']: cancel,
-      ['Tab']: () => {
-        const { path } = selecting
-        if (typeof path === 'number') {
-          select({
-            path: svg.paths.length - 1 > path ? path + 1 : 0,
-          })
-        }
-      },
       ['ArrowRight']: () => move({ x: 0.5, y: 0 }),
       ['ArrowLeft']: () => move({ x: -0.5, y: 0 }),
       ['ArrowUp']: () => move({ x: 0, y: -0.5 }),
       ['ArrowDown']: () => move({ x: 0, y: 0.5 }),
       ['Backspace']: deletePath,
     }
-  }, [selecting, cancel, deletePath, select, svg.paths.length, move])
+  }, [selecting, cancel, deletePath, move])
   useKeyBind(keyBindMap)
 
   return [
@@ -80,7 +69,7 @@ export const useEdit = <T extends HTMLElement>({
       svg,
       update,
       selecting,
-      select,
+      select: setSelecting,
       move,
       changeAttributes,
       deletePath,
