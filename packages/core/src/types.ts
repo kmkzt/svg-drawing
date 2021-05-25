@@ -149,3 +149,9 @@ export type BoundingBox = {
   x: number
   y: number
 }
+
+export type Selecting = {
+  [path: number]: SelectingCommand
+}
+export type SelectingCommand = { [command: number]: SelectingPoint }
+export type SelectingPoint = Array<number>

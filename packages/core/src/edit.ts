@@ -1,5 +1,11 @@
-import { Path, Point } from './svg'
-import { PointObject, ControlPoint, BoundingBox, PathObject } from './types'
+import { Path, Point, Svg } from './svg'
+import type {
+  PointObject,
+  ControlPoint,
+  BoundingBox,
+  PathObject,
+  Selecting,
+} from './types'
 
 const genOutline = (points: PointObject[]) =>
   points.reduce(
@@ -7,39 +13,73 @@ const genOutline = (points: PointObject[]) =>
     ''
   )
 
+export class EditSvg {
+  constructor(public svg: Svg) {}
+
+  public changeAttributes({ d, ...attrs }: PathObject, selecting: Selecting) {
+    for (const pathKey in selecting) {
+      const path = this.svg.paths[+pathKey]
+      path.attrs = {
+        ...path.attrs,
+        ...attrs,
+      }
+      if (d) path.parseCommandString(d)
+    }
+  }
+
+  public translate(po: PointObject, selecting: Selecting) {
+    for (const pathKey in selecting) {
+      const path = this.svg.paths[+pathKey]
+      const selectingCommand = selecting[pathKey]
+      if (Object.keys(selectingCommand).length === 0) {
+        path.translate(po)
+        continue
+      }
+      for (const commandKey in selectingCommand) {
+        const command = path.commands[+commandKey]
+        const selectingPoint = selectingCommand[+commandKey]
+        if (Object.keys(selectingPoint).length === 0) {
+          command.translate(po)
+          continue
+        }
+        for (const pointKey in selectingPoint) {
+          command.value[pointKey] += po.x
+          command.value[pointKey + 1] += po.y
+        }
+      }
+    }
+  }
+
+  public delete(selecting: Selecting) {
+    for (const pathKey in selecting) {
+      const selectingCommand = selecting[pathKey]
+      if (Object.keys(selectingCommand).length === 0) {
+        this.svg.deletePath(+pathKey)
+        continue
+      }
+      const path = this.svg.paths[+pathKey]
+      for (const commandKey in selectingCommand) {
+        path.deleteCommand(+commandKey)
+        /**
+         * @todo delete points
+         */
+        // const selectingPoint = selectingCommand[+commandKey]
+        // if (Object.keys(selectingPoint).length === 0) {
+        //   path.deleteCommand(+commandKey)
+        //   continue
+        // }
+        // const command = path.commands[+commandKey]
+        // for (const pointKey in selectingPoint) {
+        //   command.deletePoint(pointKey)
+        // }
+      }
+    }
+  }
+}
+
 export class EditPath {
   constructor(public path: Path) {}
 
-  public edit({ d, ...attrs }: PathObject) {
-    this.path.attrs = {
-      ...this.path.attrs,
-      ...attrs,
-    }
-    if (d) this.path.parseCommandString(d)
-  }
-
-  public translate(
-    po: PointObject,
-    {
-      command,
-      value,
-    }: {
-      command?: number
-      value?: number
-    } = {}
-  ) {
-    if (command === undefined) {
-      this.path.translate(po)
-      return
-    }
-    const com = this.path.commands[command]
-    if (value === undefined) {
-      com.translate(po)
-      return
-    }
-    com.value[value] += po.x
-    com.value[value + 1] += po.y
-  }
   /**
    * @todo compatible relative point
    */
