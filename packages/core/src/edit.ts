@@ -5,6 +5,7 @@ import type {
   BoundingBox,
   PathObject,
   Selecting,
+  EditSvgObject,
 } from './types'
 
 const genOutline = (points: PointObject[]) =>
@@ -75,6 +76,49 @@ export class EditSvg {
       }
     }
   }
+
+  public toJson(selecting: Selecting): EditSvgObject {
+    let minX = 0
+    let minY = 0
+    let maxX = 0
+    let maxY = 0
+
+    const editPaths: EditSvgObject['editPaths'] = Object.keys(selecting).reduce(
+      (obj, selectId: string) => {
+        const index = +selectId
+        const path = this.svg.paths[index]
+        if (!path) return obj
+        const edit = new EditPath(path.clone())
+        const boundingBox = edit.boundingBox
+
+        const {
+          min: [cMinX, cMinY],
+          max: [cMaxX, cMaxY],
+        } = boundingBox
+
+        minX = minX > cMinX ? cMinX : minX
+        minY = minY > cMinY ? cMinY : minY
+        maxX = maxX < cMaxX ? cMaxX : maxX
+        maxY = maxY > cMaxY ? cMaxY : maxY
+        return {
+          ...obj,
+          [index]: {
+            d: path.getCommandString(),
+            boundingBox,
+            controlPoints: edit.controlPoints,
+          },
+        }
+      },
+      {} as EditSvgObject['editPaths']
+    )
+    return {
+      boundingBox: {
+        min: [minX, minY],
+        max: [maxX, maxY],
+      },
+      editPaths,
+    }
+  }
 }
 
 export class EditPath {
@@ -119,10 +163,8 @@ export class EditPath {
     const points = this.points
     if (!points.length)
       return {
-        width: 0,
-        height: 0,
-        x: 0,
-        y: 0,
+        min: [0, 0],
+        max: [0, 0],
       }
     let minX = points[0].x
     let minY = points[0].y
@@ -137,10 +179,8 @@ export class EditPath {
     }
 
     return {
-      width: maxX - minX,
-      height: maxY - minY,
-      x: minX,
-      y: minY,
+      min: [minX, minY],
+      max: [maxX, maxY],
     }
   }
 }
