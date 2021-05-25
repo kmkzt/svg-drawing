@@ -1,18 +1,17 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import {
-  Path,
   PathObject,
   PointObject,
   ControlPoint,
-  EditPath as EditPathCore,
+  EditSvgObject,
 } from '@svg-drawing/core'
-import {
-  EditPathProps,
-  SelectPathIndex,
-  EditSvgProps,
-  SelectPathHandler,
-} from './types'
+import { EditSvgProps } from './types'
 
+type EditPointIndex = {
+  path: number
+  command: number
+  point: number
+}
 export const EditSvg = ({
   selecting,
   onSelect: handleSelect,
@@ -21,37 +20,203 @@ export const EditSvg = ({
   paths,
   width,
   height,
+  getEditInfo,
   ...rest
 }: EditSvgProps) => {
-  const handleSelectPath = useCallback(
-    (pathIndex: number): SelectPathHandler => (arg) => {
-      handleSelect({
-        path: pathIndex,
-        ...arg,
-      })
-    },
-    [handleSelect]
+  const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
+    null
   )
+  const [movePoint, setMovePoint] = useState<PointObject | null>(null)
+  const [moving, setMoving] = useState(false)
+  const [editInfo, setEditInfo] = useState<EditSvgObject>(getEditInfo())
+
+  const boundingBox = useMemo(() => {
+    const {
+      min: [minX, minY],
+      max: [maxX, maxY],
+    } = editInfo.boundingBox
+    return {
+      x: minX,
+      y: minY,
+      width: maxX - minX,
+      height: maxY - minY,
+    }
+  }, [editInfo.boundingBox])
+  const isSelectedBoundingBox = useMemo(() => {
+    if (Object.keys(selecting).length < 2) return false
+    return true
+  }, [selecting])
+
+  const handleClickPath = useCallback(
+    (i: number) => (
+      _ev:
+        | React.MouseEvent<HTMLOrSVGElement>
+        | React.TouchEvent<HTMLOrSVGElement>
+    ) => {
+      setCurrentPosition(null)
+      handleSelect({
+        ...selecting,
+        [i]: {},
+      })
+      setEditInfo(getEditInfo())
+    },
+    [getEditInfo, handleSelect, selecting]
+  )
+
+  const isSelectedPoint = useCallback(
+    ({ path, command, point }: EditPointIndex): boolean => {
+      if (!(path in selecting)) return false
+      const selectingCommand = selecting[path]
+      if (!(command in selectingCommand)) return false
+      return point in selectingCommand[command]
+    },
+    [selecting]
+  )
+
+  const handleMovePointStart = useCallback(
+    ({ path, command, point }: EditPointIndex) => (
+      ev:
+        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+    ) => {
+      handleSelect({
+        [path]: {
+          [command]: [point],
+        },
+      })
+      setCurrentPosition(getPointFromEvent(ev))
+      setMoving(true)
+      setEditInfo(getEditInfo())
+    },
+    [getEditInfo, handleSelect]
+  )
+
+  const handleMoveBoundingBoxStart = useCallback(
+    (
+      ev:
+        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+    ) => {
+      setCurrentPosition(getPointFromEvent(ev))
+      setMoving(true)
+    },
+    []
+  )
+  const handleMoveEdit = useCallback(
+    (ev: MouseEvent | TouchEvent) => {
+      if (!moving || !currentPosition) return
+      const { x, y } = getPointFromEvent(ev)
+      setMovePoint({
+        x: x - currentPosition.x,
+        y: y - currentPosition.y,
+      })
+      setEditInfo(getEditInfo())
+    },
+    [currentPosition, getEditInfo, moving]
+  )
+  const handleMoveEnd = useCallback(
+    (ev: MouseEvent | TouchEvent) => {
+      if (!moving || !currentPosition) return
+      const { x, y } = getPointFromEvent(ev)
+      handleMove({
+        x: x - currentPosition.x,
+        y: y - currentPosition.y,
+      })
+      setMoving(false)
+      setMovePoint(null)
+      setEditInfo(getEditInfo())
+    },
+    [moving, currentPosition, handleMove, getEditInfo]
+  )
+
+  useEffect(() => {
+    window.addEventListener('mouseup', handleMoveEnd)
+    window.addEventListener('mousemove', handleMoveEdit)
+    window.addEventListener('touchcancel', handleMoveEnd)
+    window.addEventListener('touchmove', handleMoveEdit)
+    return () => {
+      window.removeEventListener('mouseup', handleMoveEnd)
+      window.removeEventListener('mousemove', handleMoveEdit)
+      window.removeEventListener('touchcancel', handleMoveEnd)
+      window.removeEventListener('touchmove', handleMoveEdit)
+    }
+  }, [handleMoveEnd, handleMoveEdit])
 
   return (
     <svg width={width} height={height} {...rest}>
       {background && <rect width={width} height={height} fill={background} />}
-      {paths.map((pathAttr: PathObject, i) => (
-        <EditPath
-          key={i}
-          {...(pathAttr as any)}
-          selectingPath={
-            i === selecting?.path
-              ? {
-                  command: selecting?.command,
-                  value: selecting?.value,
-                }
-              : null
-          }
-          onMove={handleMove}
-          onSelectPath={handleSelectPath(i)}
-        />
-      ))}
+      {paths.map((pathAttr: PathObject, pathIndex) => {
+        const editPath = editInfo.editPaths[pathIndex]
+
+        if (!editPath) {
+          return (
+            <path
+              key={pathIndex}
+              {...pathAttr}
+              onClick={handleClickPath(pathIndex)}
+              onTouchStart={handleClickPath(pathIndex)}
+            />
+          )
+        }
+        const { controlPoints, d } = editPath
+        return (
+          <g key={pathIndex}>
+            <path {...pathAttr} />
+            <path
+              d={d}
+              strokeWidth={EDIT_CONFIG.line}
+              stroke={EDIT_CONFIG.color.main}
+              fill={EDIT_CONFIG.fill.default}
+              onClick={handleClickPath(pathIndex)}
+              onTouchStart={handleClickPath(pathIndex)}
+            />
+            {controlPoints.map(({ points, d }: ControlPoint, commandIndex) => (
+              <g key={commandIndex}>
+                <path
+                  d={d}
+                  strokeWidth={EDIT_CONFIG.line}
+                  stroke={EDIT_CONFIG.color.main}
+                  fill={EDIT_CONFIG.fill.default}
+                />
+                {points.map((po: PointObject, k) => {
+                  const editPathIndex = {
+                    path: pathIndex,
+                    command: commandIndex,
+                    point: k * 2,
+                  }
+                  return (
+                    <circle
+                      key={k}
+                      cx={po.x}
+                      cy={po.y}
+                      onMouseDown={handleMovePointStart(editPathIndex)}
+                      onTouchStart={handleMovePointStart(editPathIndex)}
+                      r={EDIT_CONFIG.point}
+                      style={{
+                        fill: isSelectedPoint(editPathIndex)
+                          ? EDIT_CONFIG.color.selected
+                          : EDIT_CONFIG.color.sub,
+                      }}
+                    />
+                  )
+                })}
+              </g>
+            ))}
+          </g>
+        )
+      })}
+
+      <rect
+        {...boundingBox}
+        stroke={EDIT_CONFIG.color.main}
+        fill={
+          isSelectedBoundingBox
+            ? EDIT_CONFIG.fill.selected
+            : EDIT_CONFIG.fill.boundingBox
+        }
+        onMouseDown={handleMoveBoundingBoxStart}
+        onTouchStart={handleMoveBoundingBoxStart}
+      />
     </svg>
   )
 }
@@ -90,168 +255,4 @@ const getPointFromEvent = (
     x: ev.clientX,
     y: ev.clientY,
   }
-}
-
-export const EditPath = ({
-  d: originD,
-  selectingPath,
-  onSelectPath: handleSelectPath,
-  onMove: handleMove,
-  ...attrs
-}: EditPathProps & PathObject) => {
-  const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
-    null
-  )
-  const [movePoint, setMovePoint] = useState<PointObject | null>(null)
-  const [moving, setMoving] = useState(false)
-
-  const path = useMemo(() => {
-    const p = new Path()
-    if (originD) p.parseCommandString(originD)
-    return p
-  }, [originD])
-  const { controlPoints, boundingBox, d } = useMemo(() => {
-    const editPath = new EditPathCore(path.clone())
-    if (movePoint) editPath.translate(movePoint, selectingPath ?? {})
-    return {
-      controlPoints: editPath.controlPoints,
-      boundingBox: editPath.boundingBox,
-      d: editPath.path.getCommandString(),
-    }
-  }, [path, movePoint, selectingPath])
-
-  const handleClickPath = useCallback(
-    (
-      _ev:
-        | React.MouseEvent<HTMLOrSVGElement>
-        | React.TouchEvent<HTMLOrSVGElement>
-    ) => {
-      setCurrentPosition(null)
-      handleSelectPath({})
-    },
-    [handleSelectPath]
-  )
-
-  const isSelectedPoint = useCallback(
-    (index: SelectPathIndex): boolean => {
-      if (!selectingPath) return false
-      return (
-        selectingPath.command === index.command &&
-        selectingPath.value === index.value
-      )
-    },
-    [selectingPath]
-  )
-
-  const isSelectedBoundingBox = useMemo(() => {
-    if (!selectingPath) return false
-    return selectingPath.command === undefined
-  }, [selectingPath])
-
-  const handleMoveStart = useCallback(
-    (commandIndex: SelectPathIndex) => (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      handleSelectPath(commandIndex)
-      setCurrentPosition(getPointFromEvent(ev))
-      setMoving(true)
-    },
-    [handleSelectPath]
-  )
-  const handleMoveEdit = useCallback(
-    (ev: MouseEvent | TouchEvent) => {
-      if (!moving || !currentPosition) return
-      const { x, y } = getPointFromEvent(ev)
-      setMovePoint({
-        x: x - currentPosition.x,
-        y: y - currentPosition.y,
-      })
-    },
-    [currentPosition, moving]
-  )
-  const handleMoveEnd = useCallback(
-    (ev: MouseEvent | TouchEvent) => {
-      if (!moving || !currentPosition) return
-      const { x, y } = getPointFromEvent(ev)
-      handleMove({
-        x: x - currentPosition.x,
-        y: y - currentPosition.y,
-      })
-      setMoving(false)
-      setMovePoint(null)
-    },
-    [moving, currentPosition, handleMove]
-  )
-
-  useEffect(() => {
-    window.addEventListener('mouseup', handleMoveEnd)
-    window.addEventListener('mousemove', handleMoveEdit)
-    window.addEventListener('touchcancel', handleMoveEnd)
-    window.addEventListener('touchmove', handleMoveEdit)
-    return () => {
-      window.removeEventListener('mouseup', handleMoveEnd)
-      window.removeEventListener('mousemove', handleMoveEdit)
-      window.removeEventListener('touchcancel', handleMoveEnd)
-      window.removeEventListener('touchmove', handleMoveEdit)
-    }
-  }, [handleMoveEnd, handleMoveEdit])
-  if (!selectingPath) return <path d={d} {...attrs} onClick={handleClickPath} />
-  return (
-    <>
-      <path d={d} {...attrs} />
-      <path
-        d={d}
-        strokeWidth={EDIT_CONFIG.line}
-        stroke={EDIT_CONFIG.color.main}
-        fill={EDIT_CONFIG.fill.default}
-        onClick={handleClickPath}
-        onTouchStart={handleClickPath}
-      />
-      <rect
-        {...boundingBox}
-        stroke={EDIT_CONFIG.color.main}
-        fill={
-          isSelectedBoundingBox
-            ? EDIT_CONFIG.fill.selected
-            : EDIT_CONFIG.fill.boundingBox
-        }
-        onMouseDown={handleMoveStart({})}
-        onTouchStart={handleMoveStart({})}
-      />
-      {controlPoints.map(({ points, d }: ControlPoint, commandIndex) => (
-        <g key={commandIndex}>
-          <path
-            d={d}
-            strokeWidth={EDIT_CONFIG.line}
-            stroke={EDIT_CONFIG.color.main}
-            fill={EDIT_CONFIG.fill.default}
-          />
-          {points.map((po: PointObject, k) => {
-            const valueIndex = k * 2
-            const editPathIndex = {
-              command: commandIndex,
-              value: valueIndex,
-            }
-            return (
-              <circle
-                key={k}
-                cx={po.x}
-                cy={po.y}
-                onMouseDown={handleMoveStart(editPathIndex)}
-                onTouchStart={handleMoveStart(editPathIndex)}
-                r={EDIT_CONFIG.point}
-                style={{
-                  fill: isSelectedPoint(editPathIndex)
-                    ? EDIT_CONFIG.color.selected
-                    : EDIT_CONFIG.color.sub,
-                }}
-              />
-            )
-          })}
-        </g>
-      ))}
-    </>
-  )
 }

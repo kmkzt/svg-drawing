@@ -463,6 +463,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
               selecting={edit.selecting}
               onSelect={edit.select}
               onMove={edit.move}
+              getEditInfo={edit.toJson}
             />
           )}
         </div>

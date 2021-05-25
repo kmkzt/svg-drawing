@@ -6,12 +6,7 @@ export type {
   UseEditProperty,
   SelectHandler,
   MoveHandler,
-  SelectPathIndex,
   CancelHandler,
-  SelectIndex,
-  EditProps,
   EditSvgProps,
-  EditPathProps,
-  SelectPathHandler,
   ChangeAttributesHandler,
 } from './types'
