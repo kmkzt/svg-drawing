@@ -31,8 +31,11 @@ export const EditSvg = ({
   const [moving, setMoving] = useState(false)
 
   const isSelectedBoundingBox = useMemo(() => {
-    if (Object.keys(selecting).length < 2) return false
-    return true
+    if (Object.keys(selecting).length < 1) return false
+    return Object.keys(selecting).every((pKey: string) => {
+      const selectingCommand = selecting[+pKey]
+      return Object.keys(selectingCommand).length === 0
+    })
   }, [selecting])
 
   const handleClickPath = useCallback(
@@ -54,7 +57,7 @@ export const EditSvg = ({
       if (!(path in selecting)) return false
       const selectingCommand = selecting[path]
       if (!(command in selectingCommand)) return false
-      return point in selectingCommand[command]
+      return selectingCommand[command].includes(point)
     },
     [selecting]
   )

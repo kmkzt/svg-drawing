@@ -43,10 +43,10 @@ export class EditSvg {
           command.translate(po)
           continue
         }
-        for (const pointKey in selectingPoint) {
-          command.value[+pointKey] += po.x
-          command.value[+pointKey + 1] += po.y
-        }
+        selectingPoint.map((pointKey: number) => {
+          command.value[pointKey] += po.x
+          command.value[pointKey + 1] += po.y
+        })
       }
     }
   }

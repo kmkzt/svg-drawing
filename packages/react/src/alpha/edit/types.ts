@@ -4,7 +4,6 @@ import type {
   PointObject,
   SvgObject,
   Selecting,
-  EditSvgObject,
   BoundingBox,
   SelectPaths,
 } from '@svg-drawing/core'
