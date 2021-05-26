@@ -5,6 +5,8 @@ import type {
   SvgObject,
   Selecting,
   EditSvgObject,
+  BoundingBox,
+  SelectPaths,
 } from '@svg-drawing/core'
 import { UseSvgOptions, UseSvgProperty, SvgProps } from '../svg/types'
 
@@ -24,19 +26,21 @@ export type DeleteHandler = () => void
 export type CancelHandler = () => void
 export type UseEditProperty = UseSvgProperty & {
   selecting: Selecting
+  boundingBox: BoundingBox
+  selectPaths: SelectPaths
   select: SelectHandler
   move: MoveHandler
   cancel: CancelHandler
   delete: DeleteHandler
   changeAttributes: ChangeAttributesHandler
-  toJson: () => EditSvgObject
 }
 /**
  * EditSvg components
  */
 export type EditSvgProps = Omit<SvgProps, 'onSelect'> & {
-  selecting: UseEditProperty['selecting']
+  selecting: Selecting
+  boundingBox: BoundingBox
+  selectPaths: SelectPaths
   onSelect: UseEditProperty['select']
   onMove: UseEditProperty['move']
-  getEditInfo: () => EditSvgObject
 }

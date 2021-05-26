@@ -442,6 +442,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           </Box>
         </Flex>
       </Box>
+      <div>
+        {JSON.stringify(edit.boundingBox)} {JSON.stringify(edit.selecting)}
+      </div>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
           ref={mode === 'draw' ? drawElRef : editElRef}
@@ -463,7 +466,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
               selecting={edit.selecting}
               onSelect={edit.select}
               onMove={edit.move}
-              getEditInfo={edit.toJson}
+              boundingBox={edit.boundingBox}
+              selectPaths={edit.selectPaths}
             />
           )}
         </div>

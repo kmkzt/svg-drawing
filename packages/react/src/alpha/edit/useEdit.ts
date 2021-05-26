@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
-import { EditPath, EditSvg } from '@svg-drawing/core'
+import { EditPath, EditSvg, Selecting } from '@svg-drawing/core'
 import type { UseEditOptions, UseEdit, UseEditProperty } from './types'
 import { useSvg } from '../svg/useSvg'
 import { KeyBindMap, useKeyBind } from '../keyboard'
@@ -9,19 +9,27 @@ export const useEdit = <T extends HTMLElement>({
 }: UseEditOptions = {}): UseEdit<T> => {
   const [ref, svgObj, { svg, update, ...rest }] = useSvg<T>({ sharedSvg })
   const [selecting, setSelecting] = useState<UseEditProperty['selecting']>({})
-
   const editing = useMemo(() => Object.keys(selecting).length !== 0, [
     selecting,
   ])
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
+  const [editSvgObject, setEditSvgObject] = useState(editSvg.toJson(selecting))
 
+  const updateSelect = useCallback(
+    (sel: Selecting = selecting) => {
+      setSelecting(sel)
+      setEditSvgObject(editSvg.toJson(sel))
+    },
+    [editSvg, selecting]
+  )
   const move = useCallback<UseEditProperty['move']>(
     (move) => {
       if (!editing) return
       editSvg.translate(move, selecting)
       update()
+      updateSelect()
     },
-    [editSvg, editing, selecting, update]
+    [editSvg, editing, selecting, update, updateSelect]
   )
 
   const changeAttributes = useCallback<UseEditProperty['changeAttributes']>(
@@ -37,12 +45,12 @@ export const useEdit = <T extends HTMLElement>({
     if (!selecting) return
     editSvg.delete(selecting)
     update()
-    setSelecting({})
-  }, [editSvg, selecting, update])
+    updateSelect({})
+  }, [editSvg, selecting, update, updateSelect])
 
   const cancel = useCallback<UseEditProperty['cancel']>(() => {
-    setSelecting({})
-  }, [])
+    updateSelect({})
+  }, [updateSelect])
 
   const keyBindMap = useMemo<KeyBindMap>(() => {
     if (!selecting) return {}
@@ -57,11 +65,6 @@ export const useEdit = <T extends HTMLElement>({
   }, [selecting, cancel, deleteAction, move])
   useKeyBind(keyBindMap)
 
-  const toJson = useCallback<UseEditProperty['toJson']>(
-    () => editSvg.toJson(selecting),
-    [editSvg, selecting]
-  )
-
   return [
     ref,
     svgObj,
@@ -69,12 +72,13 @@ export const useEdit = <T extends HTMLElement>({
       svg,
       update,
       selecting,
-      select: setSelecting,
+      select: updateSelect,
       move,
       changeAttributes,
       delete: deleteAction,
       cancel,
-      toJson,
+      boundingBox: editSvgObject.boundingBox,
+      selectPaths: editSvgObject.selectPaths,
       ...rest,
     },
   ]

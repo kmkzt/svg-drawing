@@ -44,8 +44,8 @@ export class EditSvg {
           continue
         }
         for (const pointKey in selectingPoint) {
-          command.value[pointKey] += po.x
-          command.value[pointKey + 1] += po.y
+          command.value[+pointKey] += po.x
+          command.value[+pointKey + 1] += po.y
         }
       }
     }
@@ -78,45 +78,38 @@ export class EditSvg {
   }
 
   public toJson(selecting: Selecting): EditSvgObject {
-    let minX = 0
-    let minY = 0
-    let maxX = 0
-    let maxY = 0
+    const listX: number[] = []
+    const listY: number[] = []
+    const selectPaths: EditSvgObject['selectPaths'] = Object.keys(
+      selecting
+    ).reduce((obj, selectId: string) => {
+      const index = +selectId
+      const path = this.svg.paths[index]
+      if (!path) return obj
+      const edit = new EditPath(path.clone())
+      const boundingBox = edit.boundingBox
+      const {
+        min: [cMinX, cMinY],
+        max: [cMaxX, cMaxY],
+      } = boundingBox
 
-    const editPaths: EditSvgObject['editPaths'] = Object.keys(selecting).reduce(
-      (obj, selectId: string) => {
-        const index = +selectId
-        const path = this.svg.paths[index]
-        if (!path) return obj
-        const edit = new EditPath(path.clone())
-        const boundingBox = edit.boundingBox
-
-        const {
-          min: [cMinX, cMinY],
-          max: [cMaxX, cMaxY],
-        } = boundingBox
-
-        minX = minX > cMinX ? cMinX : minX
-        minY = minY > cMinY ? cMinY : minY
-        maxX = maxX < cMaxX ? cMaxX : maxX
-        maxY = maxY > cMaxY ? cMaxY : maxY
-        return {
-          ...obj,
-          [index]: {
-            d: path.getCommandString(),
-            boundingBox,
-            controlPoints: edit.controlPoints,
-          },
-        }
-      },
-      {} as EditSvgObject['editPaths']
-    )
+      listX.push(cMinX, cMaxX)
+      listY.push(cMinY, cMaxY)
+      return {
+        ...obj,
+        [index]: {
+          d: path.getCommandString(),
+          boundingBox,
+          controlPoints: edit.controlPoints,
+        },
+      }
+    }, {} as EditSvgObject['selectPaths'])
     return {
       boundingBox: {
-        min: [minX, minY],
-        max: [maxX, maxY],
+        min: [Math.min(...listX), Math.min(...listY)],
+        max: [Math.max(...listX), Math.max(...listY)],
       },
-      editPaths,
+      selectPaths,
     }
   }
 }

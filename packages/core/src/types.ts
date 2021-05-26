@@ -153,14 +153,14 @@ export type Selecting = {
 }
 export type SelectingCommand = { [command: number]: SelectingPoint }
 export type SelectingPoint = Array<number>
-
+export type SelectPaths = {
+  [path: number]: {
+    d: string
+    controlPoints: ControlPoint[]
+    boundingBox: BoundingBox
+  }
+}
 export type EditSvgObject = {
   boundingBox: BoundingBox
-  editPaths: {
-    [path: number]: {
-      d: string
-      controlPoints: ControlPoint[]
-      boundingBox: BoundingBox
-    }
-  }
+  selectPaths: SelectPaths
 }

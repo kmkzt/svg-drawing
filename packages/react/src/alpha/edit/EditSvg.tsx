@@ -20,7 +20,8 @@ export const EditSvg = ({
   paths,
   width,
   height,
-  getEditInfo,
+  boundingBox,
+  selectPaths,
   ...rest
 }: EditSvgProps) => {
   const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
@@ -28,20 +29,7 @@ export const EditSvg = ({
   )
   const [movePoint, setMovePoint] = useState<PointObject | null>(null)
   const [moving, setMoving] = useState(false)
-  const [editInfo, setEditInfo] = useState<EditSvgObject>(getEditInfo())
 
-  const boundingBox = useMemo(() => {
-    const {
-      min: [minX, minY],
-      max: [maxX, maxY],
-    } = editInfo.boundingBox
-    return {
-      x: minX,
-      y: minY,
-      width: maxX - minX,
-      height: maxY - minY,
-    }
-  }, [editInfo.boundingBox])
   const isSelectedBoundingBox = useMemo(() => {
     if (Object.keys(selecting).length < 2) return false
     return true
@@ -55,12 +43,10 @@ export const EditSvg = ({
     ) => {
       setCurrentPosition(null)
       handleSelect({
-        ...selecting,
         [i]: {},
       })
-      setEditInfo(getEditInfo())
     },
-    [getEditInfo, handleSelect, selecting]
+    [handleSelect]
   )
 
   const isSelectedPoint = useCallback(
@@ -86,9 +72,8 @@ export const EditSvg = ({
       })
       setCurrentPosition(getPointFromEvent(ev))
       setMoving(true)
-      setEditInfo(getEditInfo())
     },
-    [getEditInfo, handleSelect]
+    [handleSelect]
   )
 
   const handleMoveBoundingBoxStart = useCallback(
@@ -110,9 +95,8 @@ export const EditSvg = ({
         x: x - currentPosition.x,
         y: y - currentPosition.y,
       })
-      setEditInfo(getEditInfo())
     },
-    [currentPosition, getEditInfo, moving]
+    [currentPosition, moving]
   )
   const handleMoveEnd = useCallback(
     (ev: MouseEvent | TouchEvent) => {
@@ -124,9 +108,8 @@ export const EditSvg = ({
       })
       setMoving(false)
       setMovePoint(null)
-      setEditInfo(getEditInfo())
     },
-    [moving, currentPosition, handleMove, getEditInfo]
+    [moving, currentPosition, handleMove]
   )
 
   useEffect(() => {
@@ -145,8 +128,22 @@ export const EditSvg = ({
   return (
     <svg width={width} height={height} {...rest}>
       {background && <rect width={width} height={height} fill={background} />}
+      <rect
+        x={boundingBox.min[0]}
+        y={boundingBox.min[1]}
+        width={boundingBox.max[0] - boundingBox.min[0]}
+        height={boundingBox.max[1] - boundingBox.min[1]}
+        stroke={EDIT_CONFIG.color.main}
+        fill={
+          isSelectedBoundingBox
+            ? EDIT_CONFIG.fill.selected
+            : EDIT_CONFIG.fill.boundingBox
+        }
+        onMouseDown={handleMoveBoundingBoxStart}
+        onTouchStart={handleMoveBoundingBoxStart}
+      />
       {paths.map((pathAttr: PathObject, pathIndex) => {
-        const editPath = editInfo.editPaths[pathIndex]
+        const editPath = selectPaths[pathIndex]
 
         if (!editPath) {
           return (
@@ -205,18 +202,6 @@ export const EditSvg = ({
           </g>
         )
       })}
-
-      <rect
-        {...boundingBox}
-        stroke={EDIT_CONFIG.color.main}
-        fill={
-          isSelectedBoundingBox
-            ? EDIT_CONFIG.fill.selected
-            : EDIT_CONFIG.fill.boundingBox
-        }
-        onMouseDown={handleMoveBoundingBoxStart}
-        onTouchStart={handleMoveBoundingBoxStart}
-      />
     </svg>
   )
 }
