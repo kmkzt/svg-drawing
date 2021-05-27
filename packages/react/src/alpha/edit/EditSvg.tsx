@@ -145,23 +145,19 @@ export const EditSvg = ({
         onMouseDown={handleMoveBoundingBoxStart}
         onTouchStart={handleMoveBoundingBoxStart}
       />
-      {paths.map((pathAttr: PathObject, pathIndex) => {
-        const editPath = selectPaths[pathIndex]
-
-        if (!editPath) {
-          return (
-            <path
-              key={pathIndex}
-              {...pathAttr}
-              onClick={handleClickPath(pathIndex)}
-              onTouchStart={handleClickPath(pathIndex)}
-            />
-          )
-        }
+      {paths.map((pathAttr: PathObject, pathIndex) => (
+        <path
+          key={pathIndex}
+          {...pathAttr}
+          onClick={handleClickPath(pathIndex)}
+          onTouchStart={handleClickPath(pathIndex)}
+        />
+      ))}
+      {Object.entries(selectPaths).map(([key, editPath]) => {
+        const pathIndex = +key
         const { controlPoints, d } = editPath
         return (
           <g key={pathIndex}>
-            <path {...pathAttr} />
             <path
               d={d}
               strokeWidth={EDIT_CONFIG.line}
