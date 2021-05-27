@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { EditPath, EditSvg, Selecting } from '@svg-drawing/core'
 import type { UseEditOptions, UseEdit, UseEditProperty } from './types'
 import { useSvg } from '../svg/useSvg'
@@ -13,19 +13,37 @@ export const useEdit = <T extends HTMLElement>({
     selecting,
   ])
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
-  const [editSvgObject, setEditSvgObject] = useState(editSvg.toJson(selecting))
+  const [editInfo, setEditInfo] = useState(editSvg.toJson(selecting))
+  const [previewSvgObject, setPreviewSvgObject] = useState(svg.toJson())
+
+  useEffect(() => {
+    if (!editing) return
+    setPreviewSvgObject(svg.toJson())
+  }, [editing]) // eslint-disable-line
 
   const updateSelect = useCallback(
     (sel: Selecting = selecting) => {
       setSelecting(sel)
-      setEditSvgObject(editSvg.toJson(sel))
+      setEditInfo(editSvg.toJson(sel))
     },
     [editSvg, selecting]
   )
-  const move = useCallback<UseEditProperty['move']>(
+
+  const movePreview = useCallback<UseEditProperty['movePreview']>(
     (move) => {
       if (!editing) return
-      editSvg.translate(move, selecting)
+      const preview = editSvg.preview()
+      preview.translate(move, selecting)
+      setEditInfo(preview.toJson(selecting))
+      setPreviewSvgObject(preview.svg.toJson())
+    },
+    [editSvg, editing, selecting]
+  )
+
+  const move = useCallback<UseEditProperty['move']>(
+    (movePoint) => {
+      if (!editing) return
+      editSvg.translate(movePoint, selecting)
       update()
       updateSelect()
     },
@@ -67,18 +85,19 @@ export const useEdit = <T extends HTMLElement>({
 
   return [
     ref,
-    svgObj,
+    editing ? previewSvgObject : svgObj,
     {
       svg,
-      update,
       selecting,
+      selectPaths: editInfo.selectPaths,
+      boundingBox: editInfo.boundingBox,
+      update,
       select: updateSelect,
       move,
+      movePreview,
       changeAttributes,
       delete: deleteAction,
       cancel,
-      boundingBox: editSvgObject.boundingBox,
-      selectPaths: editSvgObject.selectPaths,
       ...rest,
     },
   ]

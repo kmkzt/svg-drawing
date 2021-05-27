@@ -29,6 +29,7 @@ export type UseEditProperty = UseSvgProperty & {
   selectPaths: SelectPaths
   select: SelectHandler
   move: MoveHandler
+  movePreview: MoveHandler
   cancel: CancelHandler
   delete: DeleteHandler
   changeAttributes: ChangeAttributesHandler
@@ -42,4 +43,5 @@ export type EditSvgProps = Omit<SvgProps, 'onSelect'> & {
   selectPaths: SelectPaths
   onSelect: UseEditProperty['select']
   onMove: UseEditProperty['move']
+  onMovePreview: UseEditProperty['movePreview']
 }

@@ -16,6 +16,7 @@ export const EditSvg = ({
   selecting,
   onSelect: handleSelect,
   onMove: handleMove,
+  onMovePreview: handleMovePreview,
   background,
   paths,
   width,
@@ -27,7 +28,6 @@ export const EditSvg = ({
   const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
     null
   )
-  const [movePoint, setMovePoint] = useState<PointObject | null>(null)
   const [moving, setMoving] = useState(false)
 
   const isSelectedBoundingBox = useMemo(() => {
@@ -94,12 +94,12 @@ export const EditSvg = ({
     (ev: MouseEvent | TouchEvent) => {
       if (!moving || !currentPosition) return
       const { x, y } = getPointFromEvent(ev)
-      setMovePoint({
+      handleMovePreview({
         x: x - currentPosition.x,
         y: y - currentPosition.y,
       })
     },
-    [currentPosition, moving]
+    [currentPosition, handleMovePreview, moving]
   )
   const handleMoveEnd = useCallback(
     (ev: MouseEvent | TouchEvent) => {
@@ -110,7 +110,6 @@ export const EditSvg = ({
         y: y - currentPosition.y,
       })
       setMoving(false)
-      setMovePoint(null)
     },
     [moving, currentPosition, handleMove]
   )

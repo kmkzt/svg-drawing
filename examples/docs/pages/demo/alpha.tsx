@@ -466,6 +466,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
               selecting={edit.selecting}
               onSelect={edit.select}
               onMove={edit.move}
+              onMovePreview={edit.movePreview}
               boundingBox={edit.boundingBox}
               selectPaths={edit.selectPaths}
             />

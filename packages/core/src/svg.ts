@@ -410,4 +410,14 @@ export class Svg {
     }
     return this
   }
+
+  public clone(): Svg {
+    const svg = new Svg({
+      width: this.width,
+      height: this.height,
+      background: this.background,
+    })
+    svg.addPath(this.clonePaths())
+    return svg
+  }
 }
