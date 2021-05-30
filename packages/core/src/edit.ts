@@ -77,6 +77,9 @@ export class EditSvg {
     }
   }
 
+  public preview(): EditSvg {
+    return new EditSvg(svg.clone())
+  }
   public toJson(selecting: Selecting): EditSvgObject {
     const listX: number[] = []
     const listY: number[] = []
