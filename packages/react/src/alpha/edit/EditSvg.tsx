@@ -62,7 +62,7 @@ export const EditSvg = ({
     [selecting]
   )
 
-  const handleMovePointStart = useCallback(
+  const handleMoveStartPoint = useCallback(
     ({ path, command, point }: EditPointIndex) => (
       ev:
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
@@ -79,7 +79,7 @@ export const EditSvg = ({
     [handleSelect]
   )
 
-  const handleMoveBoundingBoxStart = useCallback(
+  const handleMoveStartPath = useCallback(
     (
       ev:
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
@@ -141,8 +141,8 @@ export const EditSvg = ({
             ? EDIT_CONFIG.fill.selected
             : EDIT_CONFIG.fill.boundingBox
         }
-        onMouseDown={handleMoveBoundingBoxStart}
-        onTouchStart={handleMoveBoundingBoxStart}
+        onMouseDown={handleMoveStartPath}
+        onTouchStart={handleMoveStartPath}
       />
       {paths.map((pathAttr: PathObject, pathIndex) => (
         <path
@@ -161,9 +161,9 @@ export const EditSvg = ({
               d={d}
               strokeWidth={EDIT_CONFIG.line}
               stroke={EDIT_CONFIG.color.main}
-              fill={EDIT_CONFIG.fill.default}
-              onClick={handleClickPath(pathIndex)}
-              onTouchStart={handleClickPath(pathIndex)}
+              fill={EDIT_CONFIG.fill.selected}
+              onMouseDown={handleMoveStartPath}
+              onTouchStart={handleMoveStartPath}
             />
             {controlPoints.map(({ points, d }: ControlPoint, commandIndex) => (
               <g key={commandIndex}>
@@ -184,8 +184,8 @@ export const EditSvg = ({
                       key={k}
                       cx={po.x}
                       cy={po.y}
-                      onMouseDown={handleMovePointStart(editPathIndex)}
-                      onTouchStart={handleMovePointStart(editPathIndex)}
+                      onMouseDown={handleMoveStartPoint(editPathIndex)}
+                      onTouchStart={handleMoveStartPoint(editPathIndex)}
                       r={EDIT_CONFIG.point}
                       style={{
                         fill: isSelectedPoint(editPathIndex)
