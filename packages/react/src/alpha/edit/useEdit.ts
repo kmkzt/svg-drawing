@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { EditPath, EditSvg, Selecting } from '@svg-drawing/core'
+import { EditSvg, Selecting } from '@svg-drawing/core'
 import type { UseEditOptions, UseEdit, UseEditProperty } from './types'
 import { useSvg } from '../svg/useSvg'
 import { KeyBindMap, useKeyBind } from '../keyboard'
@@ -7,26 +7,27 @@ import { KeyBindMap, useKeyBind } from '../keyboard'
 export const useEdit = <T extends HTMLElement>({
   sharedSvg,
 }: UseEditOptions = {}): UseEdit<T> => {
-  const [ref, svgObj, { svg, update, ...rest }] = useSvg<T>({ sharedSvg })
+  const [ref, originObj, { svg, update, ...rest }] = useSvg<T>({ sharedSvg })
   const [selecting, setSelecting] = useState<UseEditProperty['selecting']>({})
   const editing = useMemo(() => Object.keys(selecting).length !== 0, [
     selecting,
   ])
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
   const [editInfo, setEditInfo] = useState(editSvg.toJson(selecting))
-  const [previewSvgObject, setPreviewSvgObject] = useState(svg.toJson())
+  const [previewObj, setPreviewObj] = useState(svg.toJson())
 
   useEffect(() => {
     if (!editing) return
-    setPreviewSvgObject(svg.toJson())
+    setPreviewObj(svg.toJson())
   }, [editing]) // eslint-disable-line
 
   const updateSelect = useCallback(
     (sel: Selecting = selecting) => {
       setSelecting(sel)
       setEditInfo(editSvg.toJson(sel))
+      setPreviewObj(svg.toJson())
     },
-    [editSvg, selecting]
+    [editSvg, selecting, svg]
   )
 
   const movePreview = useCallback<UseEditProperty['movePreview']>(
@@ -35,7 +36,7 @@ export const useEdit = <T extends HTMLElement>({
       const preview = editSvg.preview()
       preview.translate(move, selecting)
       setEditInfo(preview.toJson(selecting))
-      setPreviewSvgObject(preview.svg.toJson())
+      setPreviewObj(preview.svg.toJson())
     },
     [editSvg, editing, selecting]
   )
@@ -83,9 +84,14 @@ export const useEdit = <T extends HTMLElement>({
   }, [selecting, cancel, deleteAction, move])
   useKeyBind(keyBindMap)
 
+  const svgObj = useMemo(() => (editing ? previewObj : originObj), [
+    editing,
+    previewObj,
+    originObj,
+  ])
   return [
     ref,
-    editing ? previewSvgObject : svgObj,
+    svgObj,
     {
       svg,
       selecting,
