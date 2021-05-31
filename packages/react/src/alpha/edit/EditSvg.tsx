@@ -28,7 +28,6 @@ export const EditSvg = ({
   const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
     null
   )
-  const [moving, setMoving] = useState(false)
 
   const isSelectedBoundingBox = useMemo(() => {
     if (Object.keys(selecting).length < 1) return false
@@ -37,20 +36,6 @@ export const EditSvg = ({
       return Object.keys(selectingCommand).length === 0
     })
   }, [selecting])
-
-  const handleClickPath = useCallback(
-    (i: number) => (
-      _ev:
-        | React.MouseEvent<HTMLOrSVGElement>
-        | React.TouchEvent<HTMLOrSVGElement>
-    ) => {
-      setCurrentPosition(null)
-      handleSelect({
-        [i]: {},
-      })
-    },
-    [handleSelect]
-  )
 
   const isSelectedPoint = useCallback(
     ({ path, command, point }: EditPointIndex): boolean => {
@@ -62,6 +47,16 @@ export const EditSvg = ({
     [selecting]
   )
 
+  const handleMoveStart = useCallback(
+    (
+      ev:
+        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+    ) => {
+      setCurrentPosition(getPointFromEvent(ev))
+    },
+    []
+  )
   const handleMoveStartPoint = useCallback(
     ({ path, command, point }: EditPointIndex) => (
       ev:
@@ -73,45 +68,46 @@ export const EditSvg = ({
           [command]: [point],
         },
       })
-      setCurrentPosition(getPointFromEvent(ev))
-      setMoving(true)
+      handleMoveStart(ev)
     },
-    [handleSelect]
+    [handleMoveStart, handleSelect]
   )
 
   const handleMoveStartPath = useCallback(
-    (
+    (i: number) => (
       ev:
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
-      setCurrentPosition(getPointFromEvent(ev))
-      setMoving(true)
+      handleSelect({
+        [i]: {},
+      })
+      handleMoveStart(ev)
     },
-    []
+    [handleMoveStart, handleSelect]
   )
   const handleMoveEdit = useCallback(
     (ev: MouseEvent | TouchEvent) => {
-      if (!moving || !currentPosition) return
+      if (!currentPosition) return
       const { x, y } = getPointFromEvent(ev)
       handleMovePreview({
         x: x - currentPosition.x,
         y: y - currentPosition.y,
       })
     },
-    [currentPosition, handleMovePreview, moving]
+    [currentPosition, handleMovePreview]
   )
   const handleMoveEnd = useCallback(
     (ev: MouseEvent | TouchEvent) => {
-      if (!moving || !currentPosition) return
+      if (!currentPosition) return
       const { x, y } = getPointFromEvent(ev)
       handleMove({
         x: x - currentPosition.x,
         y: y - currentPosition.y,
       })
-      setMoving(false)
+      setCurrentPosition(null)
     },
-    [moving, currentPosition, handleMove]
+    [currentPosition, handleMove]
   )
 
   useEffect(() => {
@@ -141,15 +137,15 @@ export const EditSvg = ({
             ? EDIT_CONFIG.fill.selected
             : EDIT_CONFIG.fill.boundingBox
         }
-        onMouseDown={handleMoveStartPath}
-        onTouchStart={handleMoveStartPath}
+        onMouseDown={handleMoveStart}
+        onTouchStart={handleMoveStart}
       />
       {paths.map((pathAttr: PathObject, pathIndex) => (
         <path
           key={pathIndex}
           {...pathAttr}
-          onClick={handleClickPath(pathIndex)}
-          onTouchStart={handleClickPath(pathIndex)}
+          onClick={handleMoveStartPath(pathIndex)}
+          onTouchStart={handleMoveStartPath(pathIndex)}
         />
       ))}
       {Object.entries(selectPaths).map(([key, editPath]) => {
@@ -161,9 +157,9 @@ export const EditSvg = ({
               d={d}
               strokeWidth={EDIT_CONFIG.line}
               stroke={EDIT_CONFIG.color.main}
-              fill={EDIT_CONFIG.fill.selected}
-              onMouseDown={handleMoveStartPath}
-              onTouchStart={handleMoveStartPath}
+              fill={EDIT_CONFIG.fill.boundingBox}
+              onMouseDown={handleMoveStartPath(pathIndex)}
+              onTouchStart={handleMoveStartPath(pathIndex)}
             />
             {controlPoints.map(({ points, d }: ControlPoint, commandIndex) => (
               <g key={commandIndex}>
