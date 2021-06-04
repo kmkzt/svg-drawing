@@ -144,7 +144,7 @@ export const EditSvg = ({
         <path
           key={pathIndex}
           {...pathAttr}
-          onClick={handleMoveStartPath(pathIndex)}
+          onMouseDown={handleMoveStartPath(pathIndex)}
           onTouchStart={handleMoveStartPath(pathIndex)}
         />
       ))}
