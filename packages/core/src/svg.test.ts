@@ -22,6 +22,18 @@ describe('svg.ts', () => {
       expect(po.y).toBe(3.0)
     })
 
+    it('scaleX', () => {
+      const po = new Point(1.0, 1.0).scaleX(3)
+      expect(po.x).toBe(3.0)
+      expect(po.y).toBe(1.0)
+    })
+
+    it('scaleY', () => {
+      const po = new Point(1.0, 1.0).scaleY(3)
+      expect(po.x).toBe(1.0)
+      expect(po.y).toBe(3.0)
+    })
+
     it('toVector', () => {
       const vec = new Point(1.0, 1.0).toVector()
       expect(vec.value).toBe(1.4142135623730951)
@@ -99,8 +111,74 @@ describe('svg.ts', () => {
         expect(clone.cr.x).toBe(1.2)
       })
     })
+
+    describe('scale', () => {
+      it('MOVE', () => {
+        const cmd = new Command(COMMAND_TYPE.MOVE, [1, 1]).scale(2)
+        expect(cmd.toString()).toBe('M 2 2')
+      })
+      it('LINE', () => {
+        const cmd = new Command(COMMAND_TYPE.LINE, [1, 1]).scale(2)
+        expect(cmd.toString()).toBe('L 2 2')
+      })
+      it('CURVE', () => {
+        const cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+          0.25,
+          0.25,
+          0.75,
+          0.25,
+          1,
+          1,
+        ]).scale(2)
+        expect(cmd.toString()).toBe('C 0.5 0.5 1.5 0.5 2 2')
+      })
+    })
+
+    describe('scaleX', () => {
+      it('MOVE', () => {
+        const cmd = new Command(COMMAND_TYPE.MOVE, [1, 1]).scaleX(2)
+        expect(cmd.toString()).toBe('M 2 1')
+      })
+      it('LINE', () => {
+        const cmd = new Command(COMMAND_TYPE.LINE, [1, 1]).scaleX(2)
+        expect(cmd.toString()).toBe('L 2 1')
+      })
+      it('CURVE', () => {
+        const cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+          0.25,
+          0.25,
+          0.75,
+          0.25,
+          1,
+          1,
+        ]).scaleX(2)
+        expect(cmd.toString()).toBe('C 0.5 0.25 1.5 0.25 2 1')
+      })
+    })
+
+    describe('scaleY', () => {
+      it('MOVE', () => {
+        const cmd = new Command(COMMAND_TYPE.MOVE, [1, 1]).scaleY(2)
+        expect(cmd.toString()).toBe('M 1 2')
+      })
+      it('LINE', () => {
+        const cmd = new Command(COMMAND_TYPE.LINE, [1, 1]).scaleY(2)
+        expect(cmd.toString()).toBe('L 1 2')
+      })
+      it('CURVE', () => {
+        const cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+          0.25,
+          0.25,
+          0.75,
+          0.25,
+          1,
+          1,
+        ]).scaleY(2)
+        expect(cmd.toString()).toBe('C 0.25 0.5 0.75 0.5 1 2')
+      })
+    })
   })
-  describe('Path', () => {
+  describe('new Path()', () => {
     let path: Path
     beforeEach(() => {
       path = new Path({ strokeWidth: '1' })
@@ -189,13 +267,34 @@ describe('svg.ts', () => {
           new Path()
             .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
             .addCommand(
-              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [0.2, 0.2, 0.6, 0.8, 1, 1])
+              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+                0.2,
+                0.2,
+                0.6,
+                0.8,
+                1,
+                1,
+              ])
             )
             .addCommand(
-              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [1.4, 1.2, 1.6, 1.2, 2, 1])
+              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+                1.4,
+                1.2,
+                1.6,
+                1.2,
+                2,
+                1,
+              ])
             )
             .addCommand(
-              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [2.4, 0.8, 2.8, 0.2, 3, 0])
+              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+                2.4,
+                0.8,
+                2.8,
+                0.2,
+                3,
+                0,
+              ])
             )
         )
         .addPath(

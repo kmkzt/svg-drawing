@@ -25,6 +25,14 @@ export class Point {
     return new Point(this.x * r, this.y * r)
   }
 
+  public scaleX(r: number): Point {
+    return new Point(this.x * r, this.y)
+  }
+
+  public scaleY(r: number): Point {
+    return new Point(this.x, this.y * r)
+  }
+
   public add(p: Point): Point {
     return new Point(this.x + p.x, this.y + p.y)
   }
@@ -131,6 +139,34 @@ export class Command {
       this.value.map((p) => p * r)
     )
     return upd
+  }
+
+  public scaleX(r: number): Command {
+    const point = this.point?.scaleX(r)
+    const cl = this.cl?.scaleX(r)
+    const cr = this.cr?.scaleX(r)
+    return new Command(
+      this.type,
+      [cl, cr, point].reduce(
+        (res: number[], po: Point | undefined) =>
+          po ? [...res, po.x, po.y] : res,
+        []
+      )
+    )
+  }
+
+  public scaleY(r: number): Command {
+    const point = this.point?.scaleY(r)
+    const cl = this.cl?.scaleY(r)
+    const cr = this.cr?.scaleY(r)
+    return new Command(
+      this.type,
+      [cl, cr, point].reduce(
+        (res: number[], po: Point | undefined) =>
+          po ? [...res, po.x, po.y] : res,
+        []
+      )
+    )
   }
 
   public clone(): Command {
