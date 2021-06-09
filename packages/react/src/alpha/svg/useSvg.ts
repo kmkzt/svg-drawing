@@ -60,7 +60,7 @@ export const useSvg = <T extends HTMLElement>({
     resize.setElement(renderRef.current)
     resize.on()
     return () => resize.off()
-  }, [resize])
+  }, [resize, renderRef])
 
   return [
     renderRef,
