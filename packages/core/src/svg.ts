@@ -256,6 +256,16 @@ export class Path {
     return this
   }
 
+  public scaleX(r: number): this {
+    this.commands = this.commands.map((c: Command) => c.scaleX(r))
+    return this
+  }
+
+  public scaleY(r: number): this {
+    this.commands = this.commands.map((c: Command) => c.scaleY(r))
+    return this
+  }
+
   public addCommand(param: Command | Command[]): this {
     if (Array.isArray(param)) {
       this.commands.push(...param)
@@ -364,15 +374,33 @@ export class Svg {
    * @todo check height
    */
   public resize({ width, height }: { width: number; height: number }) {
-    this.scalePath(width / this.width)
+    this.scale(width / this.width)
     this.width = width
     this.height = height
   }
 
-  public scalePath(r: number): this {
+  public scale(r: number): this {
     if (r !== 1) {
       for (let i = 0; i < this.paths.length; i += 1) {
         this.paths[i].scale(r)
+      }
+    }
+    return this
+  }
+
+  public scaleX(r: number): this {
+    if (r !== 1) {
+      for (let i = 0; i < this.paths.length; i += 1) {
+        this.paths[i].scaleX(r)
+      }
+    }
+    return this
+  }
+
+  public scaleY(r: number): this {
+    if (r !== 1) {
+      for (let i = 0; i < this.paths.length; i += 1) {
+        this.paths[i].scaleY(r)
       }
     }
     return this
@@ -415,7 +443,7 @@ export class Svg {
   public copy(svg: any extends Svg ? Svg : never): this {
     this.paths = svg.clonePaths()
     if (svg.width && this.width) {
-      this.scalePath(this.width / svg.width)
+      this.scale(this.width / svg.width)
     }
     return this
   }
@@ -442,7 +470,7 @@ export class Svg {
     this.paths = update
     const width = Number(svgEl.getAttribute('width'))
     if (width && this.width) {
-      this.scalePath(this.width / width)
+      this.scale(this.width / width)
     }
     return this
   }
