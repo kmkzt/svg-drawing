@@ -14,6 +14,10 @@ const genOutline = (points: PointObject[]) =>
     ''
   )
 
+const fallbackBoundingBox: BoundingBox = {
+  min: [0, 0],
+  max: [0, 0],
+}
 export class EditSvg {
   constructor(public svg: Svg) {}
 
@@ -107,11 +111,16 @@ export class EditSvg {
         },
       }
     }, {} as EditSvgObject['selectPaths'])
+
+    const boundingBox: BoundingBox =
+      listX.length !== 0 && listY.length !== 0
+        ? {
+            min: [Math.min(...listX), Math.min(...listY)],
+            max: [Math.max(...listX), Math.max(...listY)],
+          }
+        : fallbackBoundingBox
     return {
-      boundingBox: {
-        min: [Math.min(...listX), Math.min(...listY)],
-        max: [Math.max(...listX), Math.max(...listY)],
-      },
+      boundingBox,
       selectPaths,
     }
   }
@@ -124,10 +133,9 @@ export class EditPath {
    * @todo compatible relative point
    */
   public get points(): Point[] {
-    const commands = this.path.commands
-    return commands.reduce(
-      (p, com) => (com.point ? [...p, com.point] : p),
-      [] as Point[]
+    return this.path.commands.reduce(
+      (p: Point[], com) => (com.point ? [...p, com.point] : p),
+      []
     )
   }
 
@@ -157,11 +165,7 @@ export class EditPath {
 
   public get boundingBox(): BoundingBox {
     const points = this.points
-    if (!points.length)
-      return {
-        min: [0, 0],
-        max: [0, 0],
-      }
+    if (points.length === 0) return fallbackBoundingBox
     let minX = points[0].x
     let minY = points[0].y
     let maxX = points[0].x
