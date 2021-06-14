@@ -23,11 +23,12 @@ export const useEdit = <T extends HTMLElement>({
 
   const updateSelect = useCallback(
     (sel: Selecting = selecting) => {
+      update()
       setSelecting(sel)
       setEditInfo(editSvg.toJson(sel))
       setPreviewObj(svg.toJson())
     },
-    [editSvg, selecting, svg]
+    [editSvg, selecting, svg, update]
   )
 
   const movePreview = useCallback<UseEditProperty['movePreview']>(
@@ -45,27 +46,25 @@ export const useEdit = <T extends HTMLElement>({
     (movePoint) => {
       if (!editing) return
       editSvg.translate(movePoint, selecting)
-      update()
       updateSelect()
     },
-    [editSvg, editing, selecting, update, updateSelect]
+    [editSvg, editing, selecting, updateSelect]
   )
 
   const changeAttributes = useCallback<UseEditProperty['changeAttributes']>(
     (arg) => {
       if (!editing) return
       editSvg.changeAttributes(arg, selecting)
-      update()
+      updateSelect()
     },
-    [editSvg, editing, selecting, update]
+    [editSvg, editing, selecting, updateSelect]
   )
 
   const deleteAction = useCallback<UseEditProperty['delete']>(() => {
     if (!selecting) return
     editSvg.delete(selecting)
-    update()
     updateSelect({})
-  }, [editSvg, selecting, update, updateSelect])
+  }, [editSvg, selecting, updateSelect])
 
   const cancel = useCallback<UseEditProperty['cancel']>(() => {
     updateSelect({})
