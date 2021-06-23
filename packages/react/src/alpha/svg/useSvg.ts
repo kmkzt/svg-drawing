@@ -43,18 +43,18 @@ export const useSvg = <T extends HTMLElement>({
   /**
    * Setup ResizeHandler
    */
-  const resizeCallback = useCallback<ResizeHandlerOption['resize']>(
-    ({ width, height }) => {
+
+  const resize = useMemo<ResizeHandler>(() => {
+    const resizeCallback: ResizeHandlerOption['resize'] = ({
+      width,
+      height,
+    }) => {
       if (isAlmostSameNumber(svg.width, width)) return
       svg.resize({ width, height })
       shouldUpdateRef.current = true
-    },
-    [svg]
-  )
-  const resize = useMemo<ResizeHandler>(
-    () => new ResizeHandler({ resize: resizeCallback }),
-    [] // eslint-disable-line react-hooks/exhaustive-deps
-  )
+    }
+    return new ResizeHandler({ resize: resizeCallback })
+  }, [svg])
   useEffect(() => {
     if (!renderRef.current) return
     resize.setElement(renderRef.current)

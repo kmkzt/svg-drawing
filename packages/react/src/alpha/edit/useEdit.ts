@@ -19,7 +19,7 @@ export const useEdit = <T extends HTMLElement>({
   useEffect(() => {
     if (!editing) return
     setPreviewObj(svg.toJson())
-  }, [editing]) // eslint-disable-line
+  }, [editing])
 
   const updateSelect = useCallback(
     (sel: Selecting = selecting) => {
