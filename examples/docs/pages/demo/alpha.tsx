@@ -245,16 +245,61 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             <option value="edit">edit</option>
           </select>
         </Label>
-        {!isSp && (
-          <Label width="auto">
-            <Text fontSize={0}>Svg exported by this library can be read.</Text>
-            <Input
-              type="file"
-              onChange={handleFiles}
-              multiple
-              accept="image/*"
-            />
-          </Label>
+        {mode === 'draw' && (
+          <Flex pt={3} justifyContent="start">
+            <Label htmlFor="curve">
+              <Checkbox
+                id="curve"
+                checked={curve}
+                onChange={handleChangeCurve}
+              />
+              Curve
+            </Label>
+            <Label htmlFor="close">
+              <Checkbox
+                id="close"
+                checked={close}
+                onChange={handleChangeClose}
+              />
+              Close
+            </Label>
+            <Label htmlFor="type">
+              <select
+                id="type"
+                value={type}
+                onBlur={() => undefined}
+                onChange={handleChangeType}
+              >
+                <option value="pen">Pen</option>
+                <option value="pencil">Pencil</option>
+              </select>
+            </Label>
+            <Button mr={1} mb={1} onClick={draw.undo}>
+              Undo
+            </Button>
+            {!draw.isActive ? (
+              <Button mr={1} mb={1} onClick={draw.on}>
+                On
+              </Button>
+            ) : (
+              <Button mr={1} mb={1} onClick={draw.off}>
+                Off
+              </Button>
+            )}
+            <Button mr={1} mb={1} onClick={draw.clear}>
+              Clear
+            </Button>
+          </Flex>
+        )}
+        {mode === 'edit' && (
+          <Flex pt={3} justifyContent="start">
+            <Button mr={1} mb={1} onClick={edit.cancel}>
+              Cancel
+            </Button>
+            <Button mr={1} mb={1} onClick={edit.clear}>
+              Clear
+            </Button>
+          </Flex>
         )}
       </Box>
       <Box as="fieldset">
@@ -351,66 +396,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           </Box>
         </Flex>
       </Box>
-      {mode === 'draw' && (
-        <Box as="fieldset">
-          <Flex pt={3} justifyContent="start">
-            <Label htmlFor="curve">
-              <Checkbox
-                id="curve"
-                checked={curve}
-                onChange={handleChangeCurve}
-              />
-              Curve
-            </Label>
-            <Label htmlFor="close">
-              <Checkbox
-                id="close"
-                checked={close}
-                onChange={handleChangeClose}
-              />
-              Close
-            </Label>
-            <Label htmlFor="type">
-              <select
-                id="type"
-                value={type}
-                onBlur={() => undefined}
-                onChange={handleChangeType}
-              >
-                <option value="pen">Pen</option>
-                <option value="pencil">Pencil</option>
-              </select>
-            </Label>
-            <Button mr={1} mb={1} onClick={draw.undo}>
-              Undo
-            </Button>
-            {!draw.isActive ? (
-              <Button mr={1} mb={1} onClick={draw.on}>
-                On
-              </Button>
-            ) : (
-              <Button mr={1} mb={1} onClick={draw.off}>
-                Off
-              </Button>
-            )}
-            <Button mr={1} mb={1} onClick={draw.clear}>
-              Clear
-            </Button>
-          </Flex>
-        </Box>
-      )}
-      {mode === 'edit' && (
-        <Box as="fieldset">
-          <Flex pt={3} justifyContent="start">
-            <Button mr={1} mb={1} onClick={edit.cancel}>
-              Cancel
-            </Button>
-            <Button mr={1} mb={1} onClick={edit.clear}>
-              Clear
-            </Button>
-          </Flex>
-        </Box>
-      )}
       <Box as="fieldset">
         <Flex flexWrap="wrap" justifyContent="start">
           <Box mr={2}>
@@ -441,6 +426,17 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             </Button>
           </Box>
         </Flex>
+        {!isSp && (
+          <Label width="auto">
+            <Text fontSize={0}>Svg exported by this library can be read.</Text>
+            <Input
+              type="file"
+              onChange={handleFiles}
+              multiple
+              accept="image/*"
+            />
+          </Label>
+        )}
       </Box>
       <div>
         {JSON.stringify(edit.boundingBox)} {JSON.stringify(edit.selecting)}
