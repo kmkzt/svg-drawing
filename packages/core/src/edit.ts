@@ -1,4 +1,4 @@
-import { Path, Point, Svg } from './svg'
+import { Command, Path, Point, Svg } from './svg'
 import type {
   PointObject,
   ControlPoint,
@@ -21,96 +21,114 @@ const fallbackBoundingBox: BoundingBox = {
 export class EditSvg {
   constructor(public svg: Svg) {}
 
-  public changeAttributes({ d, ...attrs }: PathObject, selecting: Selecting) {
-    for (const pathKey in selecting) {
-      const path = this.svg.paths[+pathKey]
-      path.attrs = {
-        ...path.attrs,
-        ...attrs,
-      }
-      if (d) path.parseCommandString(d)
-    }
-  }
-
-  public translate(po: PointObject, selecting: Selecting) {
+  private exec(
+    selecting: Selecting,
+    pathExec: (path: Path, i: { path: number }) => void,
+    commandExec?: (
+      command: Command,
+      i: { path: number; command: number }
+    ) => void,
+    pointExec?: (
+      point: Point,
+      i: { path: number; command: number; point: number }
+    ) => void
+  ): void {
     for (const pathKey in selecting) {
       const path = this.svg.paths[+pathKey]
       const selectingCommand = selecting[pathKey]
-      if (Object.keys(selectingCommand).length === 0) {
-        path.translate(po)
+
+      if (Object.keys(selectingCommand).length === 0 || !commandExec) {
+        pathExec(path, { path: +pathKey })
         continue
       }
+
       for (const commandKey in selectingCommand) {
         const command = path.commands[+commandKey]
         const selectingPoint = selectingCommand[+commandKey]
-        if (Object.keys(selectingPoint).length === 0) {
-          command.translate(po)
+        if (Object.keys(selectingPoint).length === 0 || !pointExec) {
+          commandExec(command, { path: +pathKey, command: +commandKey })
           continue
         }
+
         selectingPoint.map((pointKey: number) => {
-          command.value[pointKey] += po.x
-          command.value[pointKey + 1] += po.y
+          const po = new Point(
+            command.value[pointKey],
+            command.value[pointKey + 1]
+          )
+          pointExec(po, {
+            path: +pathKey,
+            command: +commandKey,
+            point: +pointKey,
+          })
+          command.value[pointKey] = po.x
+          command.value[pointKey + 1] = po.y
         })
       }
     }
   }
 
+  public changeAttributes({ d, ...attrs }: PathObject, selecting: Selecting) {
+    this.exec(selecting, (path) => {
+      path.attrs = {
+        ...path.attrs,
+        ...attrs,
+      }
+      if (d) path.parseCommandString(d)
+    })
+  }
+
+  public translate(po: PointObject, selecting: Selecting) {
+    this.exec(
+      selecting,
+      (path) => path.translate(po),
+      (command) => command.translate(po),
+      (point) => point.translate(new Point(po.x, po.y))
+    )
+  }
+
+  /**
+   * @todo delete points
+   */
   public delete(selecting: Selecting) {
-    for (const pathKey in selecting) {
-      const selectingCommand = selecting[pathKey]
-      if (Object.keys(selectingCommand).length === 0) {
-        this.svg.deletePath(+pathKey)
-        continue
+    this.exec(
+      selecting,
+      (_p, index) => this.svg.deletePath(index.path),
+      (_c, index) => {
+        const path = this.svg.paths[+index.path]
+        path.deleteCommand(index.command)
       }
-      const path = this.svg.paths[+pathKey]
-      for (const commandKey in selectingCommand) {
-        path.deleteCommand(+commandKey)
-        /**
-         * @todo delete points
-         */
-        // const selectingPoint = selectingCommand[+commandKey]
-        // if (Object.keys(selectingPoint).length === 0) {
-        //   path.deleteCommand(+commandKey)
-        //   continue
-        // }
-        // const command = path.commands[+commandKey]
-        // for (const pointKey in selectingPoint) {
-        //   command.deletePoint(pointKey)
-        // }
-      }
-    }
+    )
   }
 
   public preview(): EditSvg {
     return new EditSvg(this.svg.clone())
   }
+
   public toJson(selecting: Selecting): EditSvgObject {
     const listX: number[] = []
     const listY: number[] = []
-    const selectPaths: EditSvgObject['selectPaths'] = Object.keys(
-      selecting
-    ).reduce((obj, selectId: string) => {
-      const index = +selectId
-      const path = this.svg.paths[index]
-      if (!path) return obj
+
+    let selectPaths: EditSvgObject['selectPaths'] = {}
+
+    this.exec(selecting, (path, index) => {
       const edit = new EditPath(path.clone())
       const boundingBox = edit.boundingBox
       const {
         min: [cMinX, cMinY],
         max: [cMaxX, cMaxY],
       } = boundingBox
-
       listX.push(cMinX, cMaxX)
       listY.push(cMinY, cMaxY)
-      return {
-        ...obj,
-        [index]: {
+
+      selectPaths = {
+        ...selectPaths,
+        [index.path]: {
           d: path.getCommandString(),
           boundingBox,
           controlPoints: edit.controlPoints,
         },
       }
-    }, {} as EditSvgObject['selectPaths'])
+    })
 
     const boundingBox: BoundingBox =
       listX.length !== 0 && listY.length !== 0
