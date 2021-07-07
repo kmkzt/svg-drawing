@@ -42,6 +42,6 @@
     "@svg-drawing/core": "4.2.1"
   },
   "devDependencies": {
-    "react": "16.13.1"
+    "react": "17.0.2"
   }
 }
