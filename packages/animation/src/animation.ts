@@ -3,13 +3,16 @@ import {
   createSvgElement,
   createSvgChildElement,
   pathObjectToElement,
-} from '@svg-drawing/core/lib/renderer'
-import { camel2kebab, roundUp } from '@svg-drawing/core/lib/utils'
-import { downloadBlob, svg2base64 } from '@svg-drawing/core/lib/download'
-import { Path, Svg } from '@svg-drawing/core/lib/svg'
+  Path,
+  Svg,
+  ResizeHandler,
+  downloadBlob,
+  svg2base64,
+  camel2kebab,
+  roundUp,
+} from '@svg-drawing/core'
 import { AnimationOption, FrameAnimation } from './types'
-import { ResizeHandler } from '@svg-drawing/core/lib/handler'
-import type { ResizeHandlerCallback } from '@svg-drawing/core/lib/types'
+import type { ResizeHandlerOption } from '@svg-drawing/core'
 
 export class SvgAnimation {
   /**
@@ -58,9 +61,7 @@ export class SvgAnimation {
      * Setup resize handler
      */
     this._resize = this._resize.bind(this)
-    this.resizeHandler = new ResizeHandler(el, {
-      resize: this._resize,
-    })
+    this.resizeHandler = new ResizeHandler({ el, resize: this._resize })
     this.resizeHandler.on()
   }
 
@@ -274,7 +275,7 @@ export class SvgAnimation {
   private _resize({
     width,
     height,
-  }: Parameters<ResizeHandlerCallback['resize']>[0]): void {
+  }: Parameters<ResizeHandlerOption['resize']>[0]): void {
     this.stop()
     this.svg.resize({ width, height })
     this.start()

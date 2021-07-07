@@ -1,50 +1,69 @@
-import { Point, Command, COMMAND_TYPE } from './svg'
+import { Point, Command, Vector, COMMAND_TYPE } from './svg'
 import { PointObject, ConvertOption } from './types'
 
-export class Convert {
+// TODO: move types.ts
+export type CommandsConverter = (points: PointObject[]) => Command[]
+export interface GenerateCommandsConverter {
+  convert: CommandsConverter
+}
+
+export const convertLineCommands: CommandsConverter = (points) =>
+  points.map(
+    (p, i) =>
+      new Command(i === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE, [p.x, p.y])
+  )
+
+const genVector = ({
+  prev,
+  next,
+}: {
+  prev: PointObject
+  next: PointObject
+}): Vector =>
+  new Point(next.x, next.y).sub(new Point(prev.x, prev.y)).toVector()
+
+const curveVector = ({
+  prev,
+  next,
+  value,
+}: {
+  prev: PointObject
+  next: PointObject
+  value: number
+}): Vector => new Vector(value, genVector({ prev, next }).angle)
+export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number
   constructor({ ratio }: ConvertOption = {}) {
-    this.ratio = ratio ?? 0.2
-  }
-  private _controlPoint(
-    pr: PointObject,
-    st: PointObject,
-    ne: PointObject
-  ): [number, number] {
-    const prev = new Point(pr.x, pr.y)
-    const start = new Point(st.x, st.y)
-    const next = new Point(ne.x, ne.y)
-    const vector = next.sub(prev).toVector().scale(this.ratio).toPoint()
-    const po = start.add(vector)
-    return [po.x, po.y]
+    this.ratio = ratio ?? 0.4
+    this.convert = this.convert.bind(this)
   }
 
-  public bezierCurve(
+  public genCommand(
     p1: PointObject,
     p2: PointObject,
     p3: PointObject,
     p4: PointObject
   ): Command {
-    const value = [
-      ...this._controlPoint(p1, p2, p3),
-      ...this._controlPoint(p4, p3, p2),
+    const value = genVector({ prev: p2, next: p3 }).value * this.ratio
+    const vPrev = curveVector({ prev: p1, next: p3, value })
+    const vNext = curveVector({ prev: p4, next: p2, value })
+
+    const cPrev = new Point(p2.x, p2.y).add(vPrev.toPoint())
+    const cNext = new Point(p3.x, p3.y).add(vNext.toPoint())
+    return new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
+      cPrev.x,
+      cPrev.y,
+      cNext.x,
+      cNext.y,
       p3.x,
       p3.y,
-    ]
-    return new Command(COMMAND_TYPE.CURVE, value)
+    ])
   }
 
-  public lineCommands(points: PointObject[]): Command[] {
-    return points.map(
-      (p, i) =>
-        new Command(i === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE, [p.x, p.y])
-    )
-  }
-
-  public bezierCurveCommands(p: PointObject[]): Command[] {
+  public convert(p: PointObject[]): Command[] {
     const commands: Command[] = []
     if (p.length < 3) {
-      return this.lineCommands(p)
+      return convertLineCommands(p)
     }
     for (let i = 0; i < p.length; i += 1) {
       if (i === 0) {
@@ -52,7 +71,7 @@ export class Convert {
         continue
       }
       commands.push(
-        this.bezierCurve(
+        this.genCommand(
           p[i - 2 < 0 ? 0 : i - 2],
           p[i - 1],
           p[i],
@@ -63,3 +82,8 @@ export class Convert {
     return commands
   }
 }
+
+export const closeCommands = (commands: Command[]): Command[] => [
+  ...commands,
+  new Command(COMMAND_TYPE.CLOSE),
+]

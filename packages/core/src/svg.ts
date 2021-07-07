@@ -1,5 +1,11 @@
 import { kebab2camel, roundUp, isNaN } from './utils'
-import { PathObject, SvgObject, SvgOption, CommandType } from './types'
+import {
+  PathObject,
+  SvgObject,
+  SvgOption,
+  CommandType,
+  PointObject,
+} from './types'
 
 export class Point {
   public x: number
@@ -19,6 +25,14 @@ export class Point {
     return new Point(this.x * r, this.y * r)
   }
 
+  public scaleX(r: number): Point {
+    return new Point(this.x * r, this.y)
+  }
+
+  public scaleY(r: number): Point {
+    return new Point(this.x, this.y * r)
+  }
+
   public add(p: Point): Point {
     return new Point(this.x + p.x, this.y + p.y)
   }
@@ -34,6 +48,13 @@ export class Point {
   public clone(): Point {
     return new Point(this.x, this.y)
   }
+
+  public toJson(): PointObject {
+    return {
+      x: this.x,
+      y: this.y,
+    }
+  }
 }
 
 export const COMMAND_TYPE: { [name: string]: CommandType } = {
@@ -41,8 +62,8 @@ export const COMMAND_TYPE: { [name: string]: CommandType } = {
   MOVE_RELATIVE: 'm', // m 0 0
   LINE: 'L', // L 1 1
   LINE_RELATIVE: 'l', // l 1 1
-  CURVE: 'C', // C 1 1 2 2 3 3
-  CURVE_RELATIVE: 'c', // c 1 1 2 2 3 3
+  CUBIC_BEZIER_CURVE: 'C', // C 1 1 2 2 3 3
+  CUBIC_BEZIER_CURVE_RELATIVE: 'c', // c 1 1 2 2 3 3
   CLOSE: 'Z', // Z, z
   HORIZONTAL: 'H', // H 10
   HORIZONTAL_RELATIVE: 'h', // h 10
@@ -52,6 +73,8 @@ export const COMMAND_TYPE: { [name: string]: CommandType } = {
   ARC_CURVE_RELATIVE: 'a', // A 6 4 10 0 1 14 10
   QUADRATIC_CURVE: 'Q', // Q 10 60 10 30
   QUADRATIC_CURVE_RELATIVE: 'q', // q 10 60 10 30
+  SHORTCUT_CURVE: 'S', // S 10 60 10 30
+  SHORTCUT_CURVE_RELATIVE: 's', // s 10 60 10 30
 } as const
 
 // TODO: compatible COMMAND_TYPE
@@ -66,14 +89,14 @@ export class Command {
 
   public set cr(po: Point | undefined) {
     if (!po) return
-    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+    if (!this.isCubicBezierCurve) {
       return
     }
     this.value.splice(2, 1, po.x)
     this.value.splice(3, 1, po.y)
   }
   public get cr(): Point | undefined {
-    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+    if (!this.isCubicBezierCurve) {
       return undefined
     }
     const [x, y] = this.value.slice(2, 4)
@@ -81,14 +104,14 @@ export class Command {
   }
   public set cl(po: Point | undefined) {
     if (!po) return
-    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+    if (!this.isCurve) {
       return
     }
     this.value.splice(0, 1, po.x)
     this.value.splice(1, 1, po.y)
   }
   public get cl(): Point | undefined {
-    if ((this.type !== 'C' && this.type !== 'c') || this.value.length !== 6) {
+    if (!this.isCurve) {
       return undefined
     }
     const [x, y] = this.value.slice(0, 2)
@@ -118,8 +141,78 @@ export class Command {
     return upd
   }
 
+  public scaleX(r: number): Command {
+    const point = this.point?.scaleX(r)
+    const cl = this.cl?.scaleX(r)
+    const cr = this.cr?.scaleX(r)
+    return new Command(
+      this.type,
+      [cl, cr, point].reduce(
+        (res: number[], po: Point | undefined) =>
+          po ? [...res, po.x, po.y] : res,
+        []
+      )
+    )
+  }
+
+  public scaleY(r: number): Command {
+    const point = this.point?.scaleY(r)
+    const cl = this.cl?.scaleY(r)
+    const cr = this.cr?.scaleY(r)
+    return new Command(
+      this.type,
+      [cl, cr, point].reduce(
+        (res: number[], po: Point | undefined) =>
+          po ? [...res, po.x, po.y] : res,
+        []
+      )
+    )
+  }
+
   public clone(): Command {
     return new Command(this.type, this.value.slice())
+  }
+
+  public get isCubicBezierCurve(): boolean {
+    switch (this.type) {
+      case COMMAND_TYPE.CUBIC_BEZIER_CURVE:
+      case COMMAND_TYPE.CUBIC_BEZIER_CURVE_RELATIVE:
+        return this.value.length === 6
+      default:
+        return false
+    }
+  }
+  public get isCurve(): boolean {
+    switch (this.type) {
+      case COMMAND_TYPE.CUBIC_BEZIER_CURVE:
+      case COMMAND_TYPE.CUBIC_BEZIER_CURVE_RELATIVE:
+        return this.value.length === 6
+      case COMMAND_TYPE.QUADRATIC_CURVE:
+      case COMMAND_TYPE.QUADRATIC_CURVE_RELATIVE:
+      case COMMAND_TYPE.SHORTCUT_CURVE:
+      case COMMAND_TYPE.SHORTCUT_CURVE_RELATIVE:
+        return this.value.length === 4
+      default:
+        return false
+    }
+  }
+
+  public get isAbsolute(): boolean {
+    return [
+      COMMAND_TYPE.MOVE,
+      COMMAND_TYPE.LINE,
+      COMMAND_TYPE.CUBIC_BEZIER_CURVE,
+      COMMAND_TYPE.ARC_CURVE,
+      COMMAND_TYPE.QUADRATIC_CURVE,
+      COMMAND_TYPE.SHORTCUT_CURVE_RELATIVE,
+    ].includes(this.type)
+  }
+  public translate(p: PointObject) {
+    if (!this.isAbsolute) return
+    const po = new Point(p.x, p.y)
+    this.point = this.point?.add(po)
+    this.cr = this.cr?.add(po)
+    this.cl = this.cl?.add(po)
   }
 }
 
@@ -163,6 +256,16 @@ export class Path {
     return this
   }
 
+  public scaleX(r: number): this {
+    this.commands = this.commands.map((c: Command) => c.scaleX(r))
+    return this
+  }
+
+  public scaleY(r: number): this {
+    this.commands = this.commands.map((c: Command) => c.scaleY(r))
+    return this
+  }
+
   public addCommand(param: Command | Command[]): this {
     if (Array.isArray(param)) {
       this.commands.push(...param)
@@ -171,6 +274,12 @@ export class Path {
     }
     return this
   }
+
+  public deleteCommand(i: number): this {
+    this.commands.splice(i, 1)
+    return this
+  }
+
   public getCommandString(): string {
     if (this.commands.length === 0) return ''
     return this.commands
@@ -234,6 +343,12 @@ export class Path {
     }
   }
 
+  public translate(po: PointObject): void {
+    for (let i = 0; i < this.commands.length; i += 1) {
+      this.commands[i].translate(po)
+    }
+  }
+
   public clone(): Path {
     const path = new Path(this.attrs)
     this.commands.map((c) => {
@@ -259,15 +374,33 @@ export class Svg {
    * @todo check height
    */
   public resize({ width, height }: { width: number; height: number }) {
-    this.scalePath(width / this.width)
+    this.scale(width / this.width)
     this.width = width
     this.height = height
   }
 
-  public scalePath(r: number): this {
+  public scale(r: number): this {
     if (r !== 1) {
       for (let i = 0; i < this.paths.length; i += 1) {
         this.paths[i].scale(r)
+      }
+    }
+    return this
+  }
+
+  public scaleX(r: number): this {
+    if (r !== 1) {
+      for (let i = 0; i < this.paths.length; i += 1) {
+        this.paths[i].scaleX(r)
+      }
+    }
+    return this
+  }
+
+  public scaleY(r: number): this {
+    if (r !== 1) {
+      for (let i = 0; i < this.paths.length; i += 1) {
+        this.paths[i].scaleY(r)
       }
     }
     return this
@@ -279,6 +412,11 @@ export class Svg {
     } else {
       this.paths.push(pa)
     }
+    return this
+  }
+
+  public deletePath(i: number): this {
+    this.paths.splice(i, 1)
     return this
   }
 
@@ -305,7 +443,7 @@ export class Svg {
   public copy(svg: any extends Svg ? Svg : never): this {
     this.paths = svg.clonePaths()
     if (svg.width && this.width) {
-      this.scalePath(this.width / svg.width)
+      this.scale(this.width / svg.width)
     }
     return this
   }
@@ -332,8 +470,18 @@ export class Svg {
     this.paths = update
     const width = Number(svgEl.getAttribute('width'))
     if (width && this.width) {
-      this.scalePath(this.width / width)
+      this.scale(this.width / width)
     }
     return this
+  }
+
+  public clone(): Svg {
+    const svg = new Svg({
+      width: this.width,
+      height: this.height,
+      background: this.background,
+    })
+    svg.addPath(this.clonePaths())
+    return svg
   }
 }

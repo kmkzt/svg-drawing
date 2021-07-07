@@ -43,6 +43,8 @@ export type CommandType =
   | 'a'
   | 'Q'
   | 'q'
+  | 'S'
+  | 's'
 export type CommandObject = {
   type: CommandType
   value: number[]
@@ -87,7 +89,8 @@ export type DownloadOption = {
 /**
  * DrawHandler callback
  */
-export type DrawHandlerCallback = {
+export type DrawHandlerOption = {
+  el: HTMLElement | null
   start: () => void
   end: () => void
   move: (po: PointObject) => void
@@ -95,7 +98,8 @@ export type DrawHandlerCallback = {
 /**
  * ResizeHandler callback
  */
-export type ResizeHandlerCallback = {
+export type ResizeHandlerOption = {
+  el?: HTMLElement
   resize: (
     rect: DOMRect | { width: number; height: number; left: number; top: number }
   ) => void
@@ -119,12 +123,44 @@ export type DrawEventName = Extract<
   | 'mouseout'
   | 'mouseup'
 >
-export type ListenerMaps = Record<
-  DrawListenerType,
-  {
-    start: Array<DrawEventName>
-    move: Array<DrawEventName>
-    end: Array<DrawEventName>
-    frameout: Array<DrawEventName>
+
+export type ClearListener = () => void
+
+export interface DrawEventHandler extends Omit<DrawHandlerOption, 'el'> {
+  isActive: boolean
+  on: () => void
+  off: () => void
+}
+
+/**
+ * Control Point
+ */
+export type ControlPoint = {
+  points: PointObject[]
+  d: string
+}
+
+/**
+ * BoundingBox
+ */
+export type BoundingBox = {
+  min: [number, number]
+  max: [number, number]
+}
+
+export type Selecting = {
+  [path: number]: SelectingCommand
+}
+export type SelectingCommand = { [command: number]: SelectingPoint }
+export type SelectingPoint = Array<number>
+export type SelectPaths = {
+  [path: number]: {
+    d: string
+    controlPoints: ControlPoint[]
+    boundingBox: BoundingBox
   }
->
+}
+export type EditSvgObject = {
+  boundingBox: BoundingBox
+  selectPaths: SelectPaths
+}

@@ -1,13 +1,18 @@
 import { Renderer } from './renderer'
-import { Path, Command, COMMAND_TYPE, Svg } from './svg'
-import { Convert } from './convert'
+import { Path, Svg } from './svg'
+import {
+  BezierCurve,
+  CommandsConverter,
+  convertLineCommands,
+  closeCommands,
+} from './convert'
 import { throttle } from './throttle'
-import { DrawHandler, ResizeHandler } from './handler'
+import { PencilHandler, DrawHandler, ResizeHandler } from './handler'
 import {
   DownloadOption,
   DrawingOption,
   PointObject,
-  ResizeHandlerCallback,
+  ResizeHandlerOption,
 } from './types'
 import { isAlmostSameNumber } from './utils'
 import { download } from './download'
@@ -19,16 +24,21 @@ export class SvgDrawing {
   public penColor: string
   public penWidth: number
   public fill: string
+  /**
+   * @deprecated
+   */
   public curve: boolean
+  /**
+   * @deprecated
+   */
   public close: boolean
   public delay: number
   /**
    * Module
    */
   public svg: Svg
-  public convert: Convert
   public renderer: Renderer
-  public drawHandler: DrawHandler
+  public drawHandler: any extends DrawHandler ? DrawHandler : never
   public resizeHandler: ResizeHandler
   /**
    * Private property
@@ -72,14 +82,11 @@ export class SvgDrawing {
      */
     this.renderer = new Renderer(el, { background })
     /**
-     * Setup BezierCurve
-     */
-    this.convert = new Convert()
-    /**
      * Setup ResizeHandler
      */
     this._resize = this._resize.bind(this)
-    this.resizeHandler = new ResizeHandler(el, {
+    this.resizeHandler = new ResizeHandler({
+      el,
       resize: this._resize,
     })
     /**
@@ -89,7 +96,8 @@ export class SvgDrawing {
     this.drawMove = this.drawMove.bind(this)
     this._drawMoveThrottle = throttle(this.drawMove, this.delay)
     this.drawEnd = this.drawEnd.bind(this)
-    this.drawHandler = new DrawHandler(el, {
+    this.drawHandler = new PencilHandler({
+      el,
       start: this.drawStart,
       move: this._drawMoveThrottle,
       end: this.drawEnd,
@@ -141,16 +149,17 @@ export class SvgDrawing {
   public drawMove(po: PointObject): void {
     if (!this._drawPath) return
     this._addDrawPoint(po)
-    if (
-      (this._drawPath.attrs.strokeWidth &&
-        +this._drawPath.attrs.strokeWidth !== this.penWidth) ||
-      this._drawPath.attrs.stroke !== this.penColor
-    ) {
-      this._drawPath = this._createDrawPath()
-      this._addDrawPoint(po)
-      this.svg.addPath(this._drawPath)
-    }
     this.update()
+  }
+
+  public switchPath() {
+    const po = this._drawPath?.commands[
+      this._drawPath.commands.length - 1
+    ].point?.clone()
+    if (!po) return
+    this._drawPath = this._createDrawPath()
+    this._addDrawPoint(po.toJson())
+    this.svg.addPath(this._drawPath)
   }
 
   public drawEnd(): void {
@@ -158,20 +167,19 @@ export class SvgDrawing {
     this.update()
   }
 
+  /**
+   * @TODO Allow the conversion part to be passed from the outside.
+   */
+  private get _converter(): CommandsConverter {
+    const converter = this.curve
+      ? new BezierCurve().convert
+      : convertLineCommands
+    return (po) => (this.close ? closeCommands(converter(po)) : converter(po))
+  }
+
   private _createCommand() {
     if (!this._drawPath) return
-
-    if (this.curve) {
-      this._drawPath.commands = this.convert.bezierCurveCommands(
-        this._drawPoints
-      )
-    } else {
-      this._drawPath.commands = this.convert.lineCommands(this._drawPoints)
-    }
-
-    if (this.close) {
-      this._drawPath.commands.push(new Command(COMMAND_TYPE.CLOSE))
-    }
+    this._drawPath.commands = this._converter(this._drawPoints)
   }
 
   private _addDrawPoint(p4: PointObject) {
@@ -196,7 +204,7 @@ export class SvgDrawing {
   private _resize({
     width,
     height,
-  }: Parameters<ResizeHandlerCallback['resize']>[0]) {
+  }: Parameters<ResizeHandlerOption['resize']>[0]) {
     if (!isAlmostSameNumber(this.svg.width, width)) {
       this.svg.resize({ width, height })
       this.update()

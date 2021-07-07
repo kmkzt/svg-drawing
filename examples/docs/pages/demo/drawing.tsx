@@ -190,6 +190,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       if (!rainbowPen) return
       const color = getRandomColor()
       draw.changePenColor(color)
+      draw.ref.current?.switchPath()
       setPenColor(color)
     }, delay * 4)
     return () => clearInterval(stop)

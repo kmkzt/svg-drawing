@@ -81,7 +81,7 @@ export class Renderer {
   /**
    * render
    * TODO: XSS test
-   * TODO: Partially renderable
+   * TODO: Partially render
    */
   public update(svgObj: SvgObject): void {
     this.el.replaceChild(svgObjectToElement(svgObj), this.el.childNodes[0])
