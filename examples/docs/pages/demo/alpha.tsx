@@ -460,11 +460,12 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             <EditSvg
               {...editSvgObj}
               selecting={edit.selecting}
+              boundingBox={edit.boundingBox}
+              selectPaths={edit.selectPaths}
               onSelect={edit.select}
               onMove={edit.move}
               onMovePreview={edit.movePreview}
-              boundingBox={edit.boundingBox}
-              selectPaths={edit.selectPaths}
+              onResizeEdit={edit.resizeEdit}
             />
           )}
         </div>

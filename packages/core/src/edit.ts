@@ -86,6 +86,33 @@ export class EditSvg {
     )
   }
 
+  public scale(r: number, selecting: Selecting) {
+    this.exec(
+      selecting,
+      (path) => path.scale(r),
+      (command) => command.scale(r),
+      (point) => point.scale(r)
+    )
+  }
+
+  public scaleX(r: number, selecting: Selecting) {
+    this.exec(
+      selecting,
+      (path) => path.scaleX(r),
+      (command) => command.scaleX(r),
+      (point) => point.scaleX(r)
+    )
+  }
+
+  public scaleY(r: number, selecting: Selecting) {
+    this.exec(
+      selecting,
+      (path) => path.scaleY(r),
+      (command) => command.scaleY(r),
+      (point) => point.scaleY(r)
+    )
+  }
+
   /**
    * @todo delete points
    */

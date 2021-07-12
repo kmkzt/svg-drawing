@@ -16,7 +16,7 @@ export type SvgObject = {
 }
 
 /**
- * Path Object
+ * Point Object
  */
 export type PointObject = {
   x: number

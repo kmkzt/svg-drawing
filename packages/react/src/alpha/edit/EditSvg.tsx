@@ -12,20 +12,27 @@ type EditPointIndex = {
   command: number
   point: number
 }
+
+type ResizeEditType = 'LeftTop' | 'RightTop' | 'RightBottom' | 'LeftBottom'
 export const EditSvg = ({
   selecting,
-  onSelect: handleSelect,
-  onMove: handleMove,
-  onMovePreview: handleMovePreview,
   background,
   paths,
   width,
   height,
   boundingBox,
   selectPaths,
+  onSelect: handleSelect,
+  onMove: handleMove,
+  onMovePreview: handleMovePreview,
+  onResizeEdit: handleResizeEdit,
   ...rest
 }: EditSvgProps) => {
   const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
+    null
+  )
+
+  const [resizeEditType, setResizeEditType] = useState<ResizeEditType | null>(
     null
   )
 
@@ -86,6 +93,8 @@ export const EditSvg = ({
     },
     [handleMoveStart, handleSelect]
   )
+
+  // move preview
   const handleMoveEdit = useCallback(
     (ev: MouseEvent | TouchEvent) => {
       if (!currentPosition) return
@@ -97,6 +106,8 @@ export const EditSvg = ({
     },
     [currentPosition, handleMovePreview]
   )
+
+  // move
   const handleMoveEnd = useCallback(
     (ev: MouseEvent | TouchEvent) => {
       if (!currentPosition) return
@@ -110,18 +121,69 @@ export const EditSvg = ({
     [currentPosition, handleMove]
   )
 
+  const handleResizeStart = useCallback(
+    (type: ResizeEditType) => (
+      ev:
+        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+    ) => {
+      ev.preventDefault()
+      setResizeEditType(type)
+    },
+    []
+  )
+
+  // resize edit
+  const handleResizeEnd = useCallback(
+    (ev: MouseEvent | TouchEvent) => {
+      if (!resizeEditType) return
+      const { x, y } = getPointFromEvent(ev)
+
+      switch (resizeEditType) {
+        case 'LeftTop':
+          console.log('LeftTop', x, y)
+          break
+        case 'RightTop':
+          console.log('RightTop', x, y)
+          break
+        case 'LeftBottom':
+          console.log('LeftBottom', x, y)
+          break
+        case 'RightBottom':
+          console.log('RightBottom', x, y)
+          break
+      }
+    },
+    [resizeEditType]
+  )
+
   useEffect(() => {
+    // move
     window.addEventListener('mouseup', handleMoveEnd)
-    window.addEventListener('mousemove', handleMoveEdit)
     window.addEventListener('touchcancel', handleMoveEnd)
+
+    // movePreview
+    window.addEventListener('mousemove', handleMoveEdit)
     window.addEventListener('touchmove', handleMoveEdit)
+
+    // resizeEdit
+    window.addEventListener('mouseup', handleResizeEnd)
+    window.addEventListener('touchcancel', handleResizeEnd)
+
     return () => {
+      // move
       window.removeEventListener('mouseup', handleMoveEnd)
-      window.removeEventListener('mousemove', handleMoveEdit)
       window.removeEventListener('touchcancel', handleMoveEnd)
+
+      // movePreview
+      window.removeEventListener('mousemove', handleMoveEdit)
       window.removeEventListener('touchmove', handleMoveEdit)
+
+      // resizeEdit
+      window.removeEventListener('mouseup', handleResizeEnd)
+      window.removeEventListener('touchcancel', handleResizeEnd)
     }
-  }, [handleMoveEnd, handleMoveEdit])
+  }, [handleMoveEnd, handleMoveEdit, handleResizeEnd])
 
   return (
     <svg width={width} height={height} {...rest}>
@@ -196,6 +258,58 @@ export const EditSvg = ({
           </g>
         )
       })}
+      <circle
+        cx={boundingBox.min[0]}
+        cy={boundingBox.min[1]}
+        r={EDIT_CONFIG.point}
+        stroke={EDIT_CONFIG.color.main}
+        fill={
+          isSelectedBoundingBox
+            ? EDIT_CONFIG.fill.selected
+            : EDIT_CONFIG.fill.boundingBox
+        }
+        onMouseDown={handleResizeStart('LeftTop')}
+        onTouchStart={handleResizeStart('LeftTop')}
+      />
+      <circle
+        cx={boundingBox.max[0]}
+        cy={boundingBox.min[1]}
+        r={EDIT_CONFIG.point}
+        stroke={EDIT_CONFIG.color.main}
+        fill={
+          isSelectedBoundingBox
+            ? EDIT_CONFIG.fill.selected
+            : EDIT_CONFIG.fill.boundingBox
+        }
+        onMouseDown={handleResizeStart('RightTop')}
+        onTouchStart={handleResizeStart('RightTop')}
+      />
+      <circle
+        cx={boundingBox.min[0]}
+        cy={boundingBox.max[1]}
+        r={EDIT_CONFIG.point}
+        stroke={EDIT_CONFIG.color.main}
+        fill={
+          isSelectedBoundingBox
+            ? EDIT_CONFIG.fill.selected
+            : EDIT_CONFIG.fill.boundingBox
+        }
+        onMouseDown={handleResizeStart('LeftBottom')}
+        onTouchStart={handleResizeStart('LeftBottom')}
+      />
+      <circle
+        cx={boundingBox.max[0]}
+        cy={boundingBox.max[1]}
+        r={EDIT_CONFIG.point}
+        stroke={EDIT_CONFIG.color.main}
+        fill={
+          isSelectedBoundingBox
+            ? EDIT_CONFIG.fill.selected
+            : EDIT_CONFIG.fill.boundingBox
+        }
+        onMouseDown={handleResizeStart('RightBottom')}
+        onTouchStart={handleResizeStart('RightBottom')}
+      />
     </svg>
   )
 }
