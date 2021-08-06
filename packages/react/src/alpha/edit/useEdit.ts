@@ -23,10 +23,10 @@ export const useEdit = <T extends HTMLElement>({
 
   const updateSelect = useCallback(
     (sel: Selecting = selecting) => {
+      update()
       setSelecting(sel)
       setEditInfo(editSvg.toJson(sel))
       setPreviewObj(svg.toJson())
-      update()
     },
     [editSvg, selecting, svg, update]
   )
@@ -52,14 +52,14 @@ export const useEdit = <T extends HTMLElement>({
   )
 
   const resizeEdit = useCallback<UseEditProperty['resizeEdit']>(
-    (move, scale) => {
+    (scale, move) => {
       if (!editing) return
-      editSvg.translate(move, selecting)
       editSvg.scaleX(scale.x, selecting)
       editSvg.scaleY(scale.y, selecting)
+      if (move) editSvg.translate(move, selecting)
       updateSelect()
     },
-    []
+    [editSvg, editing, selecting, updateSelect]
   )
 
   const changeAttributes = useCallback<UseEditProperty['changeAttributes']>(

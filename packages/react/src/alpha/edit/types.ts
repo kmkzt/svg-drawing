@@ -23,7 +23,7 @@ export type MoveHandler = (move: PointObject) => void
 export type ChangeAttributesHandler = (pathAttrs: PathObject) => void
 export type DeleteHandler = () => void
 export type CancelHandler = () => void
-export type ResizeEditHandler = (move: PointObject, scale: PointObject) => void
+export type ResizeEditHandler = (scale: PointObject, move?: PointObject) => void
 export type UseEditProperty = UseSvgProperty & {
   selecting: Selecting
   boundingBox: BoundingBox
@@ -46,5 +46,5 @@ export type EditSvgProps = Omit<SvgProps, 'onSelect'> & {
   onSelect: UseEditProperty['select']
   onMove: UseEditProperty['move']
   onMovePreview: UseEditProperty['movePreview']
-  onResizeEdit: UseEditProperty['resize']
+  onResizeEdit: UseEditProperty['resizeEdit']
 }

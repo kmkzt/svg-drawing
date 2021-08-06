@@ -14,6 +14,10 @@ type EditPointIndex = {
 }
 
 type ResizeEditType = 'LeftTop' | 'RightTop' | 'RightBottom' | 'LeftBottom'
+
+type ResizeBasePoint = {
+  type: ResizeEditType
+} & PointObject
 export const EditSvg = ({
   selecting,
   background,
@@ -32,9 +36,10 @@ export const EditSvg = ({
     null
   )
 
-  const [resizeEditType, setResizeEditType] = useState<ResizeEditType | null>(
-    null
-  )
+  const [
+    resizeBasePoint,
+    setResizeBasePoint,
+  ] = useState<ResizeBasePoint | null>(null)
 
   const isSelectedBoundingBox = useMemo(() => {
     if (Object.keys(selecting).length < 1) return false
@@ -128,7 +133,12 @@ export const EditSvg = ({
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
       ev.preventDefault()
-      setResizeEditType(type)
+      const { x, y } = getPointFromEvent(ev)
+      setResizeBasePoint({
+        type,
+        x,
+        y,
+      })
     },
     []
   )
@@ -136,25 +146,58 @@ export const EditSvg = ({
   // resize edit
   const handleResizeEnd = useCallback(
     (ev: MouseEvent | TouchEvent) => {
-      if (!resizeEditType) return
+      if (!resizeBasePoint) return
       const { x, y } = getPointFromEvent(ev)
 
-      switch (resizeEditType) {
-        case 'LeftTop':
-          console.log('LeftTop', x, y)
+      const width = boundingBox.max[0] - boundingBox.min[0]
+      const height = boundingBox.max[1] - boundingBox.min[1]
+      const { type, ...basePoint } = resizeBasePoint
+
+      const movePointX = x - basePoint.x
+      const movePointY = y - basePoint.y
+
+      switch (type) {
+        case 'LeftTop': {
+          console.log('LeftTop', movePointX, movePointY)
+          const scale = {
+            x: (width - movePointX) / width,
+            y: (height - movePointY) / height,
+          }
+          handleResizeEdit(scale)
           break
-        case 'RightTop':
-          console.log('RightTop', x, y)
+        }
+        case 'RightTop': {
+          console.log('RightTop', movePointX, movePointY)
+          const scale = {
+            x: (width + movePointX) / width,
+            y: (height - movePointY) / height,
+          }
+          handleResizeEdit(scale)
           break
-        case 'LeftBottom':
-          console.log('LeftBottom', x, y)
+        }
+        case 'LeftBottom': {
+          console.log('LeftBottom', movePointX, movePointY)
+          const scale = {
+            x: (width - movePointX) / width,
+            y: (height + movePointY) / height,
+          }
+          handleResizeEdit(scale)
           break
-        case 'RightBottom':
-          console.log('RightBottom', x, y)
+        }
+        case 'RightBottom': {
+          console.log('RightBottom', movePointX, movePointY)
+          const scale = {
+            x: (width + movePointX) / width,
+            y: (height + movePointY) / height,
+          }
+          handleResizeEdit(scale)
           break
+        }
       }
+      setResizeBasePoint(null)
+      console.log('DONE')
     },
-    [resizeEditType]
+    [boundingBox.max, boundingBox.min, handleResizeEdit, resizeBasePoint]
   )
 
   useEffect(() => {
