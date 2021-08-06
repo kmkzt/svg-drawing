@@ -163,7 +163,11 @@ export const EditSvg = ({
             x: (width - movePointX) / width,
             y: (height - movePointY) / height,
           }
-          handleResizeEdit(scale)
+          const move = {
+            x: -(boundingBox.max[0] * scale.x - boundingBox.max[0]),
+            y: -(boundingBox.max[1] * scale.y - boundingBox.max[1]),
+          }
+          handleResizeEdit(scale, move)
           break
         }
         case 'RightTop': {
@@ -172,7 +176,11 @@ export const EditSvg = ({
             x: (width + movePointX) / width,
             y: (height - movePointY) / height,
           }
-          handleResizeEdit(scale)
+          const move = {
+            x: -(boundingBox.min[0] * scale.x - boundingBox.min[0]),
+            y: -(boundingBox.max[1] * scale.y - boundingBox.max[1]),
+          }
+          handleResizeEdit(scale, move)
           break
         }
         case 'LeftBottom': {
@@ -181,7 +189,12 @@ export const EditSvg = ({
             x: (width - movePointX) / width,
             y: (height + movePointY) / height,
           }
-          handleResizeEdit(scale)
+
+          const move = {
+            x: -(boundingBox.max[0] * scale.x - boundingBox.max[0]),
+            y: -(boundingBox.min[1] * scale.y - boundingBox.min[1]),
+          }
+          handleResizeEdit(scale, move)
           break
         }
         case 'RightBottom': {
@@ -190,7 +203,11 @@ export const EditSvg = ({
             x: (width + movePointX) / width,
             y: (height + movePointY) / height,
           }
-          handleResizeEdit(scale)
+          const move = {
+            x: -(boundingBox.min[0] * scale.x - boundingBox.min[0]),
+            y: -(boundingBox.min[1] * scale.y - boundingBox.min[1]),
+          }
+          handleResizeEdit(scale, move)
           break
         }
       }
