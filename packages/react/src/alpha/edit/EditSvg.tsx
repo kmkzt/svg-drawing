@@ -29,6 +29,7 @@ export const EditSvg = ({
   onMove: handleMove,
   onMovePreview: handleMovePreview,
   onResizeEdit: handleResizeEdit,
+  onResizeEditPreview: handleResizeEditPreview,
   ...rest
 }: EditSvgProps) => {
   const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
@@ -142,6 +143,20 @@ export const EditSvg = ({
     []
   )
 
+  const handleResizePreview = useCallback(
+    (ev: MouseEvent | TouchEvent) => {
+      if (!resizeBasePoint) return
+      const { x, y } = getPointFromEvent(ev)
+      const { type, ...base } = resizeBasePoint
+
+      handleResizeEditPreview(type, {
+        x: x - base.x,
+        y: y - base.y,
+      })
+    },
+    [handleResizeEditPreview, resizeBasePoint]
+  )
+
   // resize edit
   const handleResizeEnd = useCallback(
     (ev: MouseEvent | TouchEvent) => {
@@ -171,6 +186,10 @@ export const EditSvg = ({
     window.addEventListener('mouseup', handleResizeEnd)
     window.addEventListener('touchcancel', handleResizeEnd)
 
+    // resizePreview
+    window.addEventListener('mousemove', handleResizePreview)
+    window.addEventListener('touchmove', handleResizePreview)
+
     return () => {
       // move
       window.removeEventListener('mouseup', handleMoveEnd)
@@ -183,8 +202,12 @@ export const EditSvg = ({
       // resizeEdit
       window.removeEventListener('mouseup', handleResizeEnd)
       window.removeEventListener('touchcancel', handleResizeEnd)
+
+      // resizePreview
+      window.removeEventListener('mousemove', handleResizePreview)
+      window.removeEventListener('touchmove', handleResizePreview)
     }
-  }, [handleMoveEnd, handleMoveEdit, handleResizeEnd])
+  }, [handleMoveEnd, handleMoveEdit, handleResizeEnd, handleResizePreview])
 
   return (
     <svg width={width} height={height} {...rest}>

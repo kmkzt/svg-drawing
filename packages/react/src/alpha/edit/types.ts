@@ -39,6 +39,7 @@ export type UseEditProperty = UseSvgProperty & {
   delete: DeleteHandler
   changeAttributes: ChangeAttributesHandler
   resizeEdit: ResizeEditHandler
+  resizeEditPreview: ResizeEditHandler
 }
 /**
  * EditSvg components
@@ -51,4 +52,5 @@ export type EditSvgProps = Omit<SvgProps, 'onSelect'> & {
   onMove: UseEditProperty['move']
   onMovePreview: UseEditProperty['movePreview']
   onResizeEdit: UseEditProperty['resizeEdit']
+  onResizeEditPreview: UseEditProperty['resizeEditPreview']
 }

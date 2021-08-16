@@ -466,6 +466,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
               onMove={edit.move}
               onMovePreview={edit.movePreview}
               onResizeEdit={edit.resizeEdit}
+              onResizeEditPreview={edit.resizeEditPreview}
             />
           )}
         </div>
