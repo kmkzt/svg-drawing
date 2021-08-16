@@ -164,3 +164,9 @@ export type EditSvgObject = {
   boundingBox: BoundingBox
   selectPaths: SelectPaths
 }
+
+export type ResizeEditType =
+  | 'LeftTop'
+  | 'RightTop'
+  | 'RightBottom'
+  | 'LeftBottom'

@@ -6,6 +6,7 @@ import type {
   PathObject,
   Selecting,
   EditSvgObject,
+  ResizeEditType,
 } from './types'
 
 const genOutline = (points: PointObject[]) =>
@@ -17,6 +18,69 @@ const genOutline = (points: PointObject[]) =>
 const fallbackBoundingBox: BoundingBox = {
   min: [0, 0],
   max: [0, 0],
+}
+
+const getResizeEditObject = (
+  type: ResizeEditType,
+  boundingBox: BoundingBox,
+  movePoint: PointObject
+): { scale: PointObject; move: PointObject } => {
+  const width = boundingBox.max[0] - boundingBox.min[0]
+  const height = boundingBox.max[1] - boundingBox.min[1]
+
+  switch (type) {
+    case 'LeftTop': {
+      const scale = {
+        x: (width - movePoint.x) / width,
+        y: (height - movePoint.y) / height,
+      }
+      const move = {
+        x: -(boundingBox.max[0] * scale.x - boundingBox.max[0]),
+        y: -(boundingBox.max[1] * scale.y - boundingBox.max[1]),
+      }
+      return { scale, move }
+    }
+    case 'RightTop': {
+      const scale = {
+        x: (width + movePoint.x) / width,
+        y: (height - movePoint.y) / height,
+      }
+      return {
+        scale,
+        move: {
+          x: -(boundingBox.min[0] * scale.x - boundingBox.min[0]),
+          y: -(boundingBox.max[1] * scale.y - boundingBox.max[1]),
+        },
+      }
+    }
+    case 'LeftBottom': {
+      const scale = {
+        x: (width - movePoint.x) / width,
+        y: (height + movePoint.y) / height,
+      }
+
+      return {
+        scale,
+        move: {
+          x: -(boundingBox.max[0] * scale.x - boundingBox.max[0]),
+          y: -(boundingBox.min[1] * scale.y - boundingBox.min[1]),
+        },
+      }
+    }
+    case 'RightBottom': {
+      const scale = {
+        x: (width + movePoint.x) / width,
+        y: (height + movePoint.y) / height,
+      }
+      return {
+        scale,
+        move: {
+          x: -(boundingBox.min[0] * scale.x - boundingBox.min[0]),
+          y: -(boundingBox.min[1] * scale.y - boundingBox.min[1]),
+        },
+      }
+    }
+  }
 }
 export class EditSvg {
   constructor(public svg: Svg) {}
@@ -111,6 +175,20 @@ export class EditSvg {
       (command) => command.scaleY(r),
       (point) => point.scaleY(r)
     )
+  }
+
+  public resizeEdit(
+    { type, move: argMove }: { type: ResizeEditType; move: PointObject },
+    selecting: Selecting
+  ) {
+    const { boundingBox } = this.toJson(selecting)
+    const { move, scale } = getResizeEditObject(type, boundingBox, argMove)
+
+    this.exec(selecting, (path) => {
+      path.scaleX(scale.x)
+      path.scaleY(scale.y)
+      path.translate(move)
+    })
   }
 
   /**

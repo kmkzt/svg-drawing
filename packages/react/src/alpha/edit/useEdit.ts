@@ -52,11 +52,9 @@ export const useEdit = <T extends HTMLElement>({
   )
 
   const resizeEdit = useCallback<UseEditProperty['resizeEdit']>(
-    (scale, move) => {
+    (type, move) => {
       if (!editing) return
-      editSvg.scaleX(scale.x, selecting)
-      editSvg.scaleY(scale.y, selecting)
-      if (move) editSvg.translate(move, selecting)
+      editSvg.resizeEdit({ type, move }, selecting)
       updateSelect()
     },
     [editSvg, editing, selecting, updateSelect]

@@ -6,6 +6,7 @@ import type {
   Selecting,
   BoundingBox,
   SelectPaths,
+  ResizeEditType,
 } from '@svg-drawing/core'
 import { UseSvgOptions, UseSvgProperty, SvgProps } from '../svg/types'
 
@@ -23,7 +24,10 @@ export type MoveHandler = (move: PointObject) => void
 export type ChangeAttributesHandler = (pathAttrs: PathObject) => void
 export type DeleteHandler = () => void
 export type CancelHandler = () => void
-export type ResizeEditHandler = (scale: PointObject, move?: PointObject) => void
+export type ResizeEditHandler = (
+  type: ResizeEditType,
+  move: PointObject
+) => void
 export type UseEditProperty = UseSvgProperty & {
   selecting: Selecting
   boundingBox: BoundingBox

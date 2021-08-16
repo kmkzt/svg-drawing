@@ -3,7 +3,7 @@ import {
   PathObject,
   PointObject,
   ControlPoint,
-  EditSvgObject,
+  ResizeEditType,
 } from '@svg-drawing/core'
 import { EditSvgProps } from './types'
 
@@ -13,11 +13,10 @@ type EditPointIndex = {
   point: number
 }
 
-type ResizeEditType = 'LeftTop' | 'RightTop' | 'RightBottom' | 'LeftBottom'
-
 type ResizeBasePoint = {
   type: ResizeEditType
 } & PointObject
+
 export const EditSvg = ({
   selecting,
   background,
@@ -148,73 +147,15 @@ export const EditSvg = ({
     (ev: MouseEvent | TouchEvent) => {
       if (!resizeBasePoint) return
       const { x, y } = getPointFromEvent(ev)
+      const { type, ...base } = resizeBasePoint
 
-      const width = boundingBox.max[0] - boundingBox.min[0]
-      const height = boundingBox.max[1] - boundingBox.min[1]
-      const { type, ...basePoint } = resizeBasePoint
-
-      const movePointX = x - basePoint.x
-      const movePointY = y - basePoint.y
-
-      switch (type) {
-        case 'LeftTop': {
-          console.log('LeftTop', movePointX, movePointY)
-          const scale = {
-            x: (width - movePointX) / width,
-            y: (height - movePointY) / height,
-          }
-          const move = {
-            x: -(boundingBox.max[0] * scale.x - boundingBox.max[0]),
-            y: -(boundingBox.max[1] * scale.y - boundingBox.max[1]),
-          }
-          handleResizeEdit(scale, move)
-          break
-        }
-        case 'RightTop': {
-          console.log('RightTop', movePointX, movePointY)
-          const scale = {
-            x: (width + movePointX) / width,
-            y: (height - movePointY) / height,
-          }
-          const move = {
-            x: -(boundingBox.min[0] * scale.x - boundingBox.min[0]),
-            y: -(boundingBox.max[1] * scale.y - boundingBox.max[1]),
-          }
-          handleResizeEdit(scale, move)
-          break
-        }
-        case 'LeftBottom': {
-          console.log('LeftBottom', movePointX, movePointY)
-          const scale = {
-            x: (width - movePointX) / width,
-            y: (height + movePointY) / height,
-          }
-
-          const move = {
-            x: -(boundingBox.max[0] * scale.x - boundingBox.max[0]),
-            y: -(boundingBox.min[1] * scale.y - boundingBox.min[1]),
-          }
-          handleResizeEdit(scale, move)
-          break
-        }
-        case 'RightBottom': {
-          console.log('RightBottom', movePointX, movePointY)
-          const scale = {
-            x: (width + movePointX) / width,
-            y: (height + movePointY) / height,
-          }
-          const move = {
-            x: -(boundingBox.min[0] * scale.x - boundingBox.min[0]),
-            y: -(boundingBox.min[1] * scale.y - boundingBox.min[1]),
-          }
-          handleResizeEdit(scale, move)
-          break
-        }
-      }
+      handleResizeEdit(type, {
+        x: x - base.x,
+        y: y - base.y,
+      })
       setResizeBasePoint(null)
-      console.log('DONE')
     },
-    [boundingBox.max, boundingBox.min, handleResizeEdit, resizeBasePoint]
+    [handleResizeEdit, resizeBasePoint]
   )
 
   useEffect(() => {
