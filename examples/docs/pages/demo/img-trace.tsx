@@ -114,8 +114,8 @@ export default () => {
       renderer.update(svg.toJson())
     }
     renderSvg()
-    window.addEventListener('resize', renderSvg)
-    return () => window.removeEventListener('resize', renderSvg)
+    addEventListener('resize', renderSvg)
+    return () => removeEventListener('resize', renderSvg)
   }, [svg])
 
   // const blurImage = useCallback(async () => {

@@ -118,6 +118,7 @@ export class DrawHandler implements DrawEventHandler {
         pressure: touch.force,
       }
     }
+
     if (ev instanceof PointerEvent) {
       return {
         x: ev.clientX - this._offset.left,
@@ -125,13 +126,12 @@ export class DrawHandler implements DrawEventHandler {
         pressure: ev.pressure,
       }
     }
-    // if (ev instanceof MouseEvent) {
+
     return {
       x: ev.clientX - this._offset.left,
       y: ev.clientY - this._offset.top,
       pressure: (ev as any)?.pressure,
     }
-    // }
   }
   protected _setupListener(): Array<ClearListener> {
     return []
@@ -172,16 +172,11 @@ export class PencilHandler extends DrawHandler implements DrawHandler {
   }
 
   protected _setupListener(): Array<ClearListener> {
-    const clearEvent: Array<ClearListener> = []
-    if (window.PointerEvent) {
-      clearEvent.push(...this._setupDrawListener('pointer'))
-    } else if ('ontouchstart' in window) {
-      clearEvent.push(...this._setupDrawListener('touch'))
-    } else {
-      clearEvent.push(...this._setupDrawListener('mouse'))
-    }
+    if (PointerEvent) return this._setupDrawListener('pointer')
 
-    return clearEvent
+    if ('ontouchstart' in window) return this._setupDrawListener('touch')
+
+    return this._setupDrawListener('mouse')
   }
 
   private _handleStart(ev: TouchEvent | MouseEvent | PointerEvent) {
@@ -268,17 +263,14 @@ export class PenHandler extends DrawHandler implements DrawHandler {
   }
 
   protected _setupListener(): Array<ClearListener> {
-    const clearEvent: ClearListener[] = []
-    if (window.PointerEvent) {
-      clearEvent.push(...this._setupDrawListener('pointer'))
-    } else if ('ontouchstart' in window) {
-      clearEvent.push(...this._setupDrawListener('touch'))
-    } else {
-      clearEvent.push(...this._setupDrawListener('mouse'))
-    }
+    const clearEvent: ClearListener[] = [...this._setupCancelListener()]
+    if (PointerEvent)
+      return [...this._setupDrawListener('pointer'), ...clearEvent]
 
-    clearEvent.push(...this._setupCancelListener())
-    return clearEvent
+    if ('ontouchstart' in window)
+      return [...this._setupDrawListener('touch'), ...clearEvent]
+
+    return [...this._setupDrawListener('mouse'), ...clearEvent]
   }
 
   private _handleProt(ev: MouseEvent | PointerEvent | TouchEvent) {
@@ -317,16 +309,17 @@ export class PenHandler extends DrawHandler implements DrawHandler {
     }, 1000)
     return [() => clearInterval(stopId)]
   }
+
   private _setupDrawListener(type: DrawListenerType): Array<ClearListener> {
     const eventMap: Record<DrawListenerType, DrawEventName> = {
       touch: 'touchstart',
       pointer: 'pointerup',
       mouse: 'mouseup',
     }
-    window.addEventListener(eventMap[type], this._handleProt)
+    addEventListener(eventMap[type], this._handleProt)
     return [
       () => {
-        window.removeEventListener(eventMap[type], this._handleProt)
+        removeEventListener(eventMap[type], this._handleProt)
       },
     ]
   }
@@ -366,7 +359,9 @@ export class ResizeHandler {
 
   private _setupListener(): void {
     if (!this._el) return
-    if ((window as any).ResizeObserver) {
+
+    // ResizeObserver
+    if (ResizeObserver) {
       const resizeObserver: any = new (window as any).ResizeObserver(
         ([entry]: any[]) => {
           this.resize(entry.contentRect)
@@ -374,15 +369,16 @@ export class ResizeHandler {
       )
       resizeObserver.observe(this._el)
       this._clearEventList.push(() => resizeObserver.disconnect())
-    } else {
-      const handleResizeEvent = () => {
-        if (!this._el) return
-        this.resize(this._el.getBoundingClientRect())
-      }
-      addEventListener('resize', handleResizeEvent)
-      this._clearEventList.push(() =>
-        removeEventListener('resize', handleResizeEvent)
-      )
+      return
     }
+
+    const handleResizeEvent = () => {
+      if (!this._el) return
+      this.resize(this._el.getBoundingClientRect())
+    }
+    addEventListener('resize', handleResizeEvent)
+    this._clearEventList.push(() =>
+      removeEventListener('resize', handleResizeEvent)
+    )
   }
 }

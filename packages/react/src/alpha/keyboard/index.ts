@@ -11,9 +11,9 @@ export const useKeyBind = (keyBindMap: KeyBindMap) => {
       ev.preventDefault()
       fn()
     }
-    window.addEventListener('keydown', handleKeyboardEvent)
+    addEventListener('keydown', handleKeyboardEvent)
     return () => {
-      window.removeEventListener('keydown', handleKeyboardEvent)
+      removeEventListener('keydown', handleKeyboardEvent)
     }
   }, [keyBindMap])
 }

@@ -33,27 +33,31 @@ export const downloadBlob = ({
   const blob = new Blob([buffer.buffer], {
     type: mimeTypeMap[extension],
   })
-  if (window.navigator.msSaveBlob) {
-    // IE
-    window.navigator.msSaveBlob(blob, fname)
-  } else if (window.URL && window.URL.createObjectURL) {
-    // Firefox, Chrome, Safari
+  // IE
+  if (navigator.msSaveBlob) {
+    navigator.msSaveBlob(blob, fname)
+    return
+  }
+
+  // Firefox, Chrome, Safari
+  if (URL && URL.createObjectURL) {
     const a = document.createElement('a')
     a.download = fname
-    a.href = window.URL.createObjectURL(blob)
+    a.href = URL.createObjectURL(blob)
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-  } else {
-    // Other
-    window.open(data, '_blank')
+    return
   }
+
+  // Other
+  open(data, '_blank')
 }
 
 const defaultOpts: DownloadOption = {
   extension: 'svg',
 }
-// TODO: Add filename config
+
 export const download = (
   svg: Svg,
   opt: DownloadOption = defaultOpts,

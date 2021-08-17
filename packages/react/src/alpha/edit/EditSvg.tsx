@@ -175,37 +175,37 @@ export const EditSvg = ({
 
   useEffect(() => {
     // move
-    window.addEventListener('mouseup', handleMoveEnd)
-    window.addEventListener('touchcancel', handleMoveEnd)
+    addEventListener('mouseup', handleMoveEnd)
+    addEventListener('touchcancel', handleMoveEnd)
 
     // movePreview
-    window.addEventListener('mousemove', handleMoveEdit)
-    window.addEventListener('touchmove', handleMoveEdit)
+    addEventListener('mousemove', handleMoveEdit)
+    addEventListener('touchmove', handleMoveEdit)
 
     // resizeEdit
-    window.addEventListener('mouseup', handleResizeEnd)
-    window.addEventListener('touchcancel', handleResizeEnd)
+    addEventListener('mouseup', handleResizeEnd)
+    addEventListener('touchcancel', handleResizeEnd)
 
     // resizePreview
-    window.addEventListener('mousemove', handleResizePreview)
-    window.addEventListener('touchmove', handleResizePreview)
+    addEventListener('mousemove', handleResizePreview)
+    addEventListener('touchmove', handleResizePreview)
 
     return () => {
       // move
-      window.removeEventListener('mouseup', handleMoveEnd)
-      window.removeEventListener('touchcancel', handleMoveEnd)
+      removeEventListener('mouseup', handleMoveEnd)
+      removeEventListener('touchcancel', handleMoveEnd)
 
       // movePreview
-      window.removeEventListener('mousemove', handleMoveEdit)
-      window.removeEventListener('touchmove', handleMoveEdit)
+      removeEventListener('mousemove', handleMoveEdit)
+      removeEventListener('touchmove', handleMoveEdit)
 
       // resizeEdit
-      window.removeEventListener('mouseup', handleResizeEnd)
-      window.removeEventListener('touchcancel', handleResizeEnd)
+      removeEventListener('mouseup', handleResizeEnd)
+      removeEventListener('touchcancel', handleResizeEnd)
 
       // resizePreview
-      window.removeEventListener('mousemove', handleResizePreview)
-      window.removeEventListener('touchmove', handleResizePreview)
+      removeEventListener('mousemove', handleResizePreview)
+      removeEventListener('touchmove', handleResizePreview)
     }
   }, [handleMoveEnd, handleMoveEdit, handleResizeEnd, handleResizePreview])
 
