@@ -1,4 +1,4 @@
-import type { RefObject } from 'react'
+import type { MutableRefObject, RefObject } from 'react'
 import type {
   PathObject,
   PointObject,
@@ -11,7 +11,10 @@ import type {
 import type { UseSvgOptions, SvgAction } from '../svg/types'
 import type { KeyboardMap } from '../keyboard'
 
-export type UseEditOptions = UseSvgOptions
+export type UseEditOptions = UseSvgOptions & {
+  multipleSelectBindKey?: string
+}
+
 /**
  * useEdit
  */

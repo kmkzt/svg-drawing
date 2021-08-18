@@ -1,4 +1,11 @@
-import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
+import {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+  MutableRefObject,
+} from 'react'
 import { EditSvg, Selecting } from '@svg-drawing/core'
 import { useSvg } from '../svg/useSvg'
 import type { KeyboardMap } from '../keyboard'
@@ -8,32 +15,11 @@ import type {
   EditSvgAction,
   EditSvgProps,
 } from './types'
-
-const useMultipleSelect = (key = '') => {
-  const multiple = useRef(false)
-
-  useEffect(() => {
-    const handleOn = (ev: KeyboardEvent) => {
-      multiple.current = true
-    }
-
-    const handleOff = (ev: KeyboardEvent) => {
-      multiple.current = true
-    }
-    addEventListener('keydown', handleOn)
-    addEventListener('keypress', handleOn)
-    addEventListener('keyup', handleOff)
-    return () => {
-      removeEventListener('keydown', handleOn)
-      addEventListener('keypress', handleOn)
-      addEventListener('keyup', handleOff)
-    }
-  }, [])
-  return multiple
-}
+import { useMultipleSelect } from './useMultipleSelect'
 
 export const useEdit = <T extends HTMLElement>({
   sharedSvg,
+  multipleSelectBindKey,
 }: UseEditOptions = {}): UseEdit<T> => {
   const [ref, originObj, { svg, onUpdate, ...rest }] = useSvg<T>({ sharedSvg })
   const [selecting, setSelecting] = useState<EditSvgProps['selecting']>({})
@@ -44,8 +30,7 @@ export const useEdit = <T extends HTMLElement>({
   const [editInfo, setEditInfo] = useState(editSvg.toJson(selecting))
   const [previewObj, setPreviewObj] = useState(svg.toJson())
 
-  const multipleSelect = useMultipleSelect()
-
+  const multipleSelect = useMultipleSelect(multipleSelectBindKey)
   useEffect(() => {
     if (!editing) return
     setPreviewObj(svg.toJson())
