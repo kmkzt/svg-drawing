@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useMemo, useState } from 'react'
+import { useRef, useEffect, useCallback, useMemo } from 'react'
 import {
   Path,
   DrawHandler,
@@ -14,6 +14,7 @@ import type {
   PointObject,
 } from '@svg-drawing/core'
 import type { UseDrawOptions, UseDraw, DrawAction } from './types'
+import type { KeyboardMap } from '../keyboard'
 
 const DRAW_DELAY = 20
 const defaultPathOptions: PathObject = {
@@ -138,6 +139,12 @@ export const useDraw = <T extends HTMLElement>({
     onUpdate()
   }, [svg, onUpdate])
 
+  const keyboardMap = useMemo<KeyboardMap>(() => {
+    return {
+      ['Escape']: handleDrawEnd,
+    }
+  }, [handleDrawEnd])
+
   return [
     elRef,
     svgObj,
@@ -145,6 +152,7 @@ export const useDraw = <T extends HTMLElement>({
       svg,
       onUndoDraw,
       onUpdate,
+      keyboardMap,
       ...rest,
     },
   ]

@@ -1,4 +1,10 @@
-import { useCallback, useState, ChangeEvent, ChangeEventHandler } from 'react'
+import {
+  useCallback,
+  useState,
+  ChangeEvent,
+  ChangeEventHandler,
+  useMemo,
+} from 'react'
 import { NextPage } from 'next'
 import {
   useDraw,
@@ -10,6 +16,7 @@ import {
   usePathOptions,
   useParseFile,
   DrawHandlerMap,
+  useKeyboard,
 } from '@svg-drawing/react/lib/alpha'
 import { download, PenHandler, PencilHandler } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
@@ -123,6 +130,15 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     },
     [draw]
   )
+
+  /**
+   * Setup keyboardBind
+   */
+  const keyboardMap = useMemo(
+    () => (mode === 'edit' ? edit.keyboardMap : draw.keyboardMap),
+    [mode, edit.keyboardMap, draw.keyboardMap]
+  )
+  useKeyboard(keyboardMap)
 
   const handleChangeCurve = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (ev) => {

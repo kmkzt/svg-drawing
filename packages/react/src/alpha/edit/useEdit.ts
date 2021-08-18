@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { EditSvg, Selecting } from '@svg-drawing/core'
 import { useSvg } from '../svg/useSvg'
-import { KeyBindMap, useKeyBind } from '../keyboard'
+import type { KeyboardMap } from '../keyboard'
 import type {
   UseEditOptions,
   UseEdit,
@@ -130,7 +130,7 @@ export const useEdit = <T extends HTMLElement>({
     onCancelSelecting()
   }, [onCancelSelecting, editSvg, selecting, onUpdate])
 
-  const keyBindMap = useMemo<KeyBindMap>(() => {
+  const keyboardMap = useMemo<KeyboardMap>(() => {
     if (!selecting) return {}
     return {
       ['Escape']: onCancelSelecting,
@@ -141,7 +141,6 @@ export const useEdit = <T extends HTMLElement>({
       ['Backspace']: onDeletePaths,
     }
   }, [selecting, onCancelSelecting, onDeletePaths, onMovePaths])
-  useKeyBind(keyBindMap)
 
   const svgProps = useMemo(() => (editing ? previewObj : originObj), [
     editing,
@@ -167,6 +166,7 @@ export const useEdit = <T extends HTMLElement>({
       onChangeAttributes,
       onDeletePaths,
       onCancelSelecting,
+      keyboardMap,
       ...rest,
     },
   ]

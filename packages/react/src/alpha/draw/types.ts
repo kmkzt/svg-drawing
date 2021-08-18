@@ -6,6 +6,7 @@ import type {
   CommandsConverter,
 } from '@svg-drawing/core'
 import type { UseSvgOptions, SvgAction } from '../svg/types'
+import type { KeyboardMap } from '../keyboard'
 
 /**
  * useDraw options
@@ -22,6 +23,7 @@ export type UseDrawOptions = UseSvgOptions & {
  */
 export type DrawAction = SvgAction & {
   onUndoDraw: () => void
+  keyboardMap: KeyboardMap
 }
 
 /**

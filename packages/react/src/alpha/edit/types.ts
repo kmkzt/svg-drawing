@@ -8,7 +8,8 @@ import type {
   ResizeFixedType,
   SvgObject,
 } from '@svg-drawing/core'
-import { UseSvgOptions, SvgAction } from '../svg/types'
+import type { UseSvgOptions, SvgAction } from '../svg/types'
+import type { KeyboardMap } from '../keyboard'
 
 export type UseEditOptions = UseSvgOptions
 /**
@@ -29,6 +30,7 @@ export type ResizePathsHandler = (
   move: PointObject
 ) => void
 export type EditSvgAction = SvgAction & {
+  keyboardMap: KeyboardMap
   onCancelSelecting: CancelSelectingHandler
   onDeletePaths: DeletePathsHandler
   onChangeAttributes: ChangeAttributesHandler

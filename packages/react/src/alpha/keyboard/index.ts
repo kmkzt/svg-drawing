@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 
-export type KeyBindMap = {
+export type KeyboardMap = {
   [key: string]: (() => void) | undefined
 }
-export const useKeyBind = (keyBindMap: KeyBindMap) => {
+export const useKeyboard = (keyboardMap: KeyboardMap) => {
   useEffect(() => {
     const handleKeyboardEvent = (ev: KeyboardEvent) => {
-      const fn = keyBindMap[ev.key]
+      const fn = keyboardMap[ev.key]
       if (!fn) return
       ev.preventDefault()
       fn()
@@ -15,5 +15,5 @@ export const useKeyBind = (keyBindMap: KeyBindMap) => {
     return () => {
       removeEventListener('keydown', handleKeyboardEvent)
     }
-  }, [keyBindMap])
+  }, [keyboardMap])
 }
