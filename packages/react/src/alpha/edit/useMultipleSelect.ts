@@ -19,7 +19,7 @@ export const useMultipleSelect = (
     addEventListener('keyup', handleOff)
     return () => {
       removeEventListener('keydown', handleOn)
-      addEventListener('keyup', handleOff)
+      removeEventListener('keyup', handleOff)
     }
   }, [bindKey])
   return multipleSelect
