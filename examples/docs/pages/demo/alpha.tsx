@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useState,
-  ChangeEvent,
-  ChangeEventHandler,
-  useMemo,
-} from 'react'
+import { useCallback, useState, ChangeEventHandler, useMemo } from 'react'
 import { NextPage } from 'next'
 import {
   useDraw,
@@ -138,7 +132,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     () => (mode === 'edit' ? edit.keyboardMap : draw.keyboardMap),
     [mode, edit.keyboardMap, draw.keyboardMap]
   )
-  useKeyboard(keyboardMap)
+  useKeyboard?.(keyboardMap)
 
   const handleChangeCurve = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (ev) => {

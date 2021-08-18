@@ -3,11 +3,11 @@ import { useEffect } from 'react'
 export type KeyboardMap = {
   [key: string]: (() => void) | undefined
 }
-export const useKeyboard = (keyboardMap: KeyboardMap) => {
+export const useKeyboard = (keyboardMap: KeyboardMap = {}) => {
   useEffect(() => {
     const handleKeyboardEvent = (ev: KeyboardEvent) => {
       const fn = keyboardMap[ev.key]
-      if (!fn) return
+      if (typeof fn !== 'function') return
       ev.preventDefault()
       fn()
     }
