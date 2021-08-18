@@ -1,14 +1,42 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { EditSvg, Selecting } from '@svg-drawing/core'
-import type { UseEditOptions, UseEdit, UseEditProperty } from './types'
 import { useSvg } from '../svg/useSvg'
 import { KeyBindMap, useKeyBind } from '../keyboard'
+import type {
+  UseEditOptions,
+  UseEdit,
+  EditSvgAction,
+  EditSvgProps,
+} from './types'
+
+const useMultipleSelect = (key = '') => {
+  const multiple = useRef(false)
+
+  useEffect(() => {
+    const handleOn = (ev: KeyboardEvent) => {
+      multiple.current = true
+    }
+
+    const handleOff = (ev: KeyboardEvent) => {
+      multiple.current = true
+    }
+    addEventListener('keydown', handleOn)
+    addEventListener('keypress', handleOn)
+    addEventListener('keyup', handleOff)
+    return () => {
+      removeEventListener('keydown', handleOn)
+      addEventListener('keypress', handleOn)
+      addEventListener('keyup', handleOff)
+    }
+  }, [])
+  return multiple
+}
 
 export const useEdit = <T extends HTMLElement>({
   sharedSvg,
 }: UseEditOptions = {}): UseEdit<T> => {
-  const [ref, originObj, { svg, update, ...rest }] = useSvg<T>({ sharedSvg })
-  const [selecting, setSelecting] = useState<UseEditProperty['selecting']>({})
+  const [ref, originObj, { svg, onUpdate, ...rest }] = useSvg<T>({ sharedSvg })
+  const [selecting, setSelecting] = useState<EditSvgProps['selecting']>({})
   const editing = useMemo(() => Object.keys(selecting).length !== 0, [
     selecting,
   ])
@@ -16,22 +44,27 @@ export const useEdit = <T extends HTMLElement>({
   const [editInfo, setEditInfo] = useState(editSvg.toJson(selecting))
   const [previewObj, setPreviewObj] = useState(svg.toJson())
 
+  const multipleSelect = useMultipleSelect()
+
   useEffect(() => {
     if (!editing) return
     setPreviewObj(svg.toJson())
   }, [editing, svg])
 
-  const updateSelect = useCallback(
-    (sel: Selecting = selecting) => {
-      update()
-      setSelecting(sel)
-      setEditInfo(editSvg.toJson(sel))
+  const onSelecting = useCallback<EditSvgProps['onSelecting']>(
+    (sel: Selecting) => {
+      const updateSelecting = multipleSelect.current
+        ? { ...selecting, ...sel }
+        : sel
+      onUpdate()
+      setSelecting(updateSelecting)
+      setEditInfo(editSvg.toJson(updateSelecting))
       setPreviewObj(svg.toJson())
     },
-    [editSvg, selecting, svg, update]
+    [editSvg, multipleSelect, selecting, svg, onUpdate]
   )
 
-  const movePreview = useCallback<UseEditProperty['movePreview']>(
+  const onMovePathsPreview = useCallback<EditSvgProps['onMovePathsPreview']>(
     (move) => {
       if (!editing) return
       const preview = editSvg.preview()
@@ -42,25 +75,27 @@ export const useEdit = <T extends HTMLElement>({
     [editSvg, editing, selecting]
   )
 
-  const move = useCallback<UseEditProperty['move']>(
+  const onMovePaths = useCallback<EditSvgProps['onMovePaths']>(
     (movePoint) => {
       if (!editing) return
       editSvg.translate(movePoint, selecting)
-      updateSelect()
+      onSelecting(selecting)
     },
-    [editSvg, editing, selecting, updateSelect]
+    [editSvg, editing, selecting, onSelecting]
   )
 
-  const resizeEdit = useCallback<UseEditProperty['resizeEdit']>(
+  const onResizePaths = useCallback<EditSvgProps['onResizePaths']>(
     (type, movePoint) => {
       if (!editing) return
       editSvg.resizeEdit({ type, move: movePoint }, selecting)
-      updateSelect()
+      onSelecting(selecting)
     },
-    [editSvg, editing, selecting, updateSelect]
+    [editSvg, editing, selecting, onSelecting]
   )
 
-  const resizeEditPreview = useCallback<UseEditProperty['resizeEditPreview']>(
+  const onResizePathsPreview = useCallback<
+    EditSvgProps['onResizePathsPreview']
+  >(
     (type, movePoint) => {
       if (!editing) return
       const preview = editSvg.preview()
@@ -71,60 +106,67 @@ export const useEdit = <T extends HTMLElement>({
     [editSvg, editing, selecting]
   )
 
-  const changeAttributes = useCallback<UseEditProperty['changeAttributes']>(
+  const onChangeAttributes = useCallback<EditSvgAction['onChangeAttributes']>(
     (arg) => {
       if (!editing) return
       editSvg.changeAttributes(arg, selecting)
-      updateSelect()
+      onSelecting(selecting)
     },
-    [editSvg, editing, selecting, updateSelect]
+    [editSvg, editing, selecting, onSelecting]
   )
 
-  const deleteAction = useCallback<UseEditProperty['delete']>(() => {
+  const onCancelSelecting = useCallback<
+    EditSvgAction['onCancelSelecting']
+  >(() => {
+    setSelecting({})
+    setEditInfo(editSvg.toJson({}))
+    setPreviewObj(svg.toJson())
+  }, [editSvg, svg])
+
+  const onDeletePaths = useCallback<EditSvgAction['onDeletePaths']>(() => {
     if (!selecting) return
     editSvg.delete(selecting)
-    updateSelect({})
-  }, [editSvg, selecting, updateSelect])
-
-  const cancel = useCallback<UseEditProperty['cancel']>(() => {
-    updateSelect({})
-  }, [updateSelect])
+    onUpdate()
+    onCancelSelecting()
+  }, [onCancelSelecting, editSvg, selecting, onUpdate])
 
   const keyBindMap = useMemo<KeyBindMap>(() => {
     if (!selecting) return {}
     return {
-      ['Escape']: cancel,
-      ['ArrowRight']: () => move({ x: 0.5, y: 0 }),
-      ['ArrowLeft']: () => move({ x: -0.5, y: 0 }),
-      ['ArrowUp']: () => move({ x: 0, y: -0.5 }),
-      ['ArrowDown']: () => move({ x: 0, y: 0.5 }),
-      ['Backspace']: deleteAction,
+      ['Escape']: onCancelSelecting,
+      ['ArrowRight']: () => onMovePaths({ x: 0.5, y: 0 }),
+      ['ArrowLeft']: () => onMovePaths({ x: -0.5, y: 0 }),
+      ['ArrowUp']: () => onMovePaths({ x: 0, y: -0.5 }),
+      ['ArrowDown']: () => onMovePaths({ x: 0, y: 0.5 }),
+      ['Backspace']: onDeletePaths,
     }
-  }, [selecting, cancel, deleteAction, move])
+  }, [selecting, onCancelSelecting, onDeletePaths, onMovePaths])
   useKeyBind(keyBindMap)
 
-  const svgObj = useMemo(() => (editing ? previewObj : originObj), [
+  const svgProps = useMemo(() => (editing ? previewObj : originObj), [
     editing,
     previewObj,
     originObj,
   ])
   return [
     ref,
-    svgObj,
     {
-      svg,
+      ...svgProps,
       selecting,
       selectPaths: editInfo.selectPaths,
       boundingBox: editInfo.boundingBox,
-      update,
-      select: updateSelect,
-      move,
-      movePreview,
-      changeAttributes,
-      delete: deleteAction,
-      resizeEdit,
-      resizeEditPreview,
-      cancel,
+      onSelecting,
+      onMovePaths,
+      onMovePathsPreview,
+      onResizePaths,
+      onResizePathsPreview,
+    },
+    {
+      svg,
+      onUpdate,
+      onChangeAttributes,
+      onDeletePaths,
+      onCancelSelecting,
       ...rest,
     },
   ]

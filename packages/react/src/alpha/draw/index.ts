@@ -4,7 +4,7 @@ export { useCommandsConverter } from './useCommandsConverter'
 export type {
   UseDraw,
   UseDrawOptions,
-  UseDrawProperty,
+  DrawAction,
   DrawHandlerMap,
   UseDrawHandler,
   UseCommandsConverterOptions,

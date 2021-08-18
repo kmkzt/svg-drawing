@@ -1,5 +1,6 @@
 import React from 'react'
-import type { SvgProps } from './types'
+import type { HTMLAttributes } from 'react'
+import type { SvgObject } from '@svg-drawing/core'
 
 export const Svg = ({
   background,
@@ -7,7 +8,7 @@ export const Svg = ({
   width,
   height,
   ...rest
-}: SvgProps) => (
+}: SvgObject & HTMLAttributes<SVGSVGElement>) => (
   <svg width={width} height={height} {...rest}>
     {background && <rect width={width} height={height} fill={background} />}
     {paths.map((pathAttr, i) => (

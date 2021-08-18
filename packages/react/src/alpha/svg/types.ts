@@ -1,4 +1,4 @@
-import type { HTMLAttributes, RefObject } from 'react'
+import type { RefObject } from 'react'
 import type { SvgObject, Svg, ResizeHandler } from '@svg-drawing/core'
 
 /**
@@ -10,19 +10,13 @@ export type UseSvgOptions = {
 /**
  * useSvg
  */
-export type UseSvg<T extends HTMLElement> = [
-  RefObject<T>,
-  SvgObject,
-  UseSvgProperty
-]
+export type UseSvg<T extends HTMLElement> = [RefObject<T>, SvgObject, SvgAction]
 /**
  * useSvg Return type
  */
-export type UseSvgProperty = {
+export type SvgAction = {
   svg: Svg
   resize: ResizeHandler
-  update: () => void
-  clear: () => void
+  onUpdate: () => void
+  onClear: () => void
 }
-
-export type SvgProps = SvgObject & HTMLAttributes<SVGSVGElement>

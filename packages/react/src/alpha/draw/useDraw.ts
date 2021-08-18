@@ -13,7 +13,7 @@ import type {
   PathObject,
   PointObject,
 } from '@svg-drawing/core'
-import type { UseDrawOptions, UseDraw, UseDrawProperty } from './types'
+import type { UseDrawOptions, UseDraw, DrawAction } from './types'
 
 const DRAW_DELAY = 20
 const defaultPathOptions: PathObject = {
@@ -23,12 +23,13 @@ const defaultPathOptions: PathObject = {
 }
 
 export const useDraw = <T extends HTMLElement>({
+  active = true,
   pathOptions,
   commandsConverter,
   drawHandler: CustomDrawHandler,
   sharedSvg,
 }: UseDrawOptions): UseDraw<T> => {
-  const [elRef, svgObj, { svg, update, ...rest }] = useSvg<T>({
+  const [elRef, svgObj, { svg, onUpdate, ...rest }] = useSvg<T>({
     sharedSvg,
   })
   const drawPathRef = useRef<Path | null>(null)
@@ -51,8 +52,8 @@ export const useDraw = <T extends HTMLElement>({
   const updateCommands = useCallback(() => {
     if (!drawPathRef.current) return
     drawPathRef.current.commands = converter(drawPointsRef.current)
-    update()
-  }, [converter, update])
+    onUpdate()
+  }, [converter, onUpdate])
 
   const handleDrawStart = useCallback<DrawHandlerOption['start']>(() => {
     if (drawPathRef.current) return
@@ -87,7 +88,6 @@ export const useDraw = <T extends HTMLElement>({
       })
     })()
   )
-  const [isActive, setIsActive] = useState<UseDrawProperty['isActive']>(true)
   useEffect(() => {
     handler.current.start = handleDrawStart
     handler.current.move = handleDrawMove
@@ -107,9 +107,9 @@ export const useDraw = <T extends HTMLElement>({
         move: handleDrawMove,
         end: handleDrawEnd,
       })
-      if (isActive) handler.current.on()
+      if (active) handler.current.on()
     },
-    [elRef, handleDrawEnd, handleDrawMove, handleDrawStart, svg, isActive]
+    [elRef, handleDrawEnd, handleDrawMove, handleDrawStart, svg, active]
   )
 
   useEffect(() => {
@@ -123,39 +123,28 @@ export const useDraw = <T extends HTMLElement>({
       return
     }
     drawInstance.setElement(elRef.current)
-    if (isActive) drawInstance.on()
+    if (active) drawInstance.on()
   }, [elRef.current]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const on = useCallback<UseDrawProperty['on']>(() => {
-    setIsActive(true)
-  }, [])
-
-  const off = useCallback<UseDrawProperty['off']>(() => {
-    setIsActive(false)
-  }, [])
-
   useEffect(() => {
-    if (!isActive) return
+    if (!active) return
     const drawInstance = handler.current
     drawInstance.on()
     return () => drawInstance.off()
-  }, [isActive])
+  }, [active])
 
-  const undo = useCallback<UseDrawProperty['undo']>(() => {
+  const onUndoDraw = useCallback<DrawAction['onUndoDraw']>(() => {
     svg.paths.pop()
-    update()
-  }, [svg, update])
+    onUpdate()
+  }, [svg, onUpdate])
 
   return [
     elRef,
     svgObj,
     {
       svg,
-      isActive,
-      update,
-      undo,
-      on,
-      off,
+      onUndoDraw,
+      onUpdate,
       ...rest,
     },
   ]

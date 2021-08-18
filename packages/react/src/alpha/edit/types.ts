@@ -2,13 +2,13 @@ import type { RefObject } from 'react'
 import type {
   PathObject,
   PointObject,
-  SvgObject,
   Selecting,
   BoundingBox,
   SelectPaths,
-  ResizeEditType,
+  ResizeFixedType,
+  SvgObject,
 } from '@svg-drawing/core'
-import { UseSvgOptions, UseSvgProperty, SvgProps } from '../svg/types'
+import { UseSvgOptions, SvgAction } from '../svg/types'
 
 export type UseEditOptions = UseSvgOptions
 /**
@@ -16,41 +16,34 @@ export type UseEditOptions = UseSvgOptions
  */
 export type UseEdit<T extends HTMLElement> = [
   RefObject<T>,
-  SvgObject,
-  UseEditProperty
+  EditSvgProps,
+  EditSvgAction
 ]
-export type SelectHandler = (selectIndex: Selecting) => void
-export type MoveHandler = (move: PointObject) => void
+export type SelectingHandler = (selectIndex: Selecting) => void
+export type MovePathsHandler = (move: PointObject) => void
 export type ChangeAttributesHandler = (pathAttrs: PathObject) => void
-export type DeleteHandler = () => void
-export type CancelHandler = () => void
-export type ResizeEditHandler = (
-  type: ResizeEditType,
+export type DeletePathsHandler = () => void
+export type CancelSelectingHandler = () => void
+export type ResizePathsHandler = (
+  type: ResizeFixedType,
   move: PointObject
 ) => void
-export type UseEditProperty = UseSvgProperty & {
-  selecting: Selecting
-  boundingBox: BoundingBox
-  selectPaths: SelectPaths
-  select: SelectHandler
-  move: MoveHandler
-  movePreview: MoveHandler
-  cancel: CancelHandler
-  delete: DeleteHandler
-  changeAttributes: ChangeAttributesHandler
-  resizeEdit: ResizeEditHandler
-  resizeEditPreview: ResizeEditHandler
+export type EditSvgAction = SvgAction & {
+  onCancelSelecting: CancelSelectingHandler
+  onDeletePaths: DeletePathsHandler
+  onChangeAttributes: ChangeAttributesHandler
 }
+
 /**
  * EditSvg components
  */
-export type EditSvgProps = Omit<SvgProps, 'onSelect'> & {
+export type EditSvgProps = SvgObject & {
   selecting: Selecting
   boundingBox: BoundingBox
   selectPaths: SelectPaths
-  onSelect: UseEditProperty['select']
-  onMove: UseEditProperty['move']
-  onMovePreview: UseEditProperty['movePreview']
-  onResizeEdit: UseEditProperty['resizeEdit']
-  onResizeEditPreview: UseEditProperty['resizeEditPreview']
+  onSelecting: SelectingHandler
+  onMovePaths: MovePathsHandler
+  onMovePathsPreview: MovePathsHandler
+  onResizePaths: ResizePathsHandler
+  onResizePathsPreview: ResizePathsHandler
 }

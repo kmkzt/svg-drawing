@@ -1,11 +1,4 @@
-import {
-  useState,
-  useRef,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-  useMemo,
-} from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Svg, ResizeHandler, isAlmostSameNumber } from '@svg-drawing/core'
 import type { ResizeHandlerOption } from '@svg-drawing/core'
 import type { UseSvgOptions, UseSvg } from './types'
@@ -24,10 +17,10 @@ export const useSvg = <T extends HTMLElement>({
    * A variable called shouldUpdateRef manages whether to update to reduce the number of times setState is executed.
    */
   const shouldUpdateRef = useRef<boolean>(false)
-  const update = useCallback(() => {
+  const onUpdate = useCallback(() => {
     shouldUpdateRef.current = true
   }, [])
-  useLayoutEffect(() => {
+  useEffect(() => {
     const stopId = setInterval(() => {
       if (!shouldUpdateRef.current) return
       shouldUpdateRef.current = false
@@ -36,14 +29,14 @@ export const useSvg = <T extends HTMLElement>({
     return () => clearInterval(stopId)
   }, [svg])
 
-  const clear = useCallback(() => {
+  const onClear = useCallback(() => {
     svg.paths = []
-    update()
-  }, [svg, update])
+    onUpdate()
+  }, [svg, onUpdate])
+
   /**
    * Setup ResizeHandler
    */
-
   const resize = useMemo<ResizeHandler>(() => {
     const resizeCallback: ResizeHandlerOption['resize'] = ({
       width,
@@ -67,9 +60,9 @@ export const useSvg = <T extends HTMLElement>({
     svgObj,
     {
       svg,
-      update,
       resize,
-      clear,
+      onUpdate,
+      onClear,
     },
   ]
 }

@@ -70,6 +70,7 @@ const drawHandlerMap: DrawHandlerMap<DrawHandlerType> = {
 type Mode = 'edit' | 'draw'
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [mode, setMode] = useState<Mode>('draw')
+  const [drawActive, setDrawActive] = useState(true)
   /**
    * pathOptions
    */
@@ -98,7 +99,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   /**
    * Setup draw
    */
-  const [drawElRef, svgObj, draw] = useDraw<HTMLDivElement>({
+  const [drawElRef, svgProps, draw] = useDraw<HTMLDivElement>({
+    active: drawActive,
     pathOptions,
     drawHandler,
     commandsConverter,
@@ -108,7 +110,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   /**
    * Setup edit
    */
-  const [editElRef, editSvgObj, edit] = useEdit<HTMLDivElement>({
+  const [editElRef, editSvgProps, edit] = useEdit<HTMLDivElement>({
     sharedSvg,
   })
   const clickDownload = useCallback(
@@ -141,7 +143,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       const num = e.target.valueAsNumber
       if (Number.isNaN(num)) return
       changeStrokeWidth(num)
-      edit.changeAttributes({
+      edit.onChangeAttributes({
         strokeWidth: num + '',
       })
     },
@@ -153,7 +155,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   >(
     (e) => {
       changeStroke(e.target.value)
-      edit.changeAttributes({
+      edit.onChangeAttributes({
         stroke: e.target.value,
       })
     },
@@ -163,7 +165,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const handleClickPenColor = useCallback(
     (col: string) => () => {
       changeStroke(col)
-      edit.changeAttributes({
+      edit.onChangeAttributes({
         stroke: col,
       })
     },
@@ -173,7 +175,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const handleChangeFill = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
       changeFill(e.target.value)
-      edit.changeAttributes({
+      edit.onChangeAttributes({
         fill: e.target.value,
       })
     },
@@ -183,7 +185,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const handleClickFill = useCallback(
     (col: string) => () => {
       changeFill(col)
-      edit.changeAttributes({
+      edit.onChangeAttributes({
         fill: col,
       })
     },
@@ -198,8 +200,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     async (e) => {
       if (!e.target?.files) return
       await parseFile(e.target.files[0])
-      draw.update()
-      edit.update()
+      draw.onUpdate()
+      edit.onUpdate()
     },
     [parseFile, draw, edit]
   )
@@ -222,8 +224,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ['edit', 'draw'].includes(str)
       const upd = ev.target.value
       if (isDrawMode(upd)) {
-        draw.update()
-        edit.update()
+        draw.onUpdate()
+        edit.onUpdate()
         setMode(upd)
       }
     },
@@ -274,29 +276,27 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 <option value="pencil">Pencil</option>
               </select>
             </Label>
-            <Button mr={1} mb={1} onClick={draw.undo}>
+            <Button mr={1} mb={1} onClick={draw.onUndoDraw}>
               Undo
             </Button>
-            {!draw.isActive ? (
-              <Button mr={1} mb={1} onClick={draw.on}>
-                On
-              </Button>
-            ) : (
-              <Button mr={1} mb={1} onClick={draw.off}>
-                Off
-              </Button>
-            )}
-            <Button mr={1} mb={1} onClick={draw.clear}>
+            <Button
+              mr={1}
+              mb={1}
+              onClick={() => setDrawActive((active) => !active)}
+            >
+              {drawActive ? 'Off' : 'On'}
+            </Button>
+            <Button mr={1} mb={1} onClick={draw.onClear}>
               Clear
             </Button>
           </Flex>
         )}
         {mode === 'edit' && (
           <Flex pt={3} justifyContent="start">
-            <Button mr={1} mb={1} onClick={edit.cancel}>
+            <Button mr={1} mb={1} onClick={edit.onCancelSelecting}>
               Cancel
             </Button>
-            <Button mr={1} mb={1} onClick={edit.clear}>
+            <Button mr={1} mb={1} onClick={edit.onClear}>
               Clear
             </Button>
           </Flex>
@@ -439,7 +439,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         )}
       </Box>
       <div>
-        {JSON.stringify(edit.boundingBox)} {JSON.stringify(edit.selecting)}
+        {JSON.stringify(editSvgProps.boundingBox)}
+        {JSON.stringify(editSvgProps.selecting)}
       </div>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
@@ -455,19 +456,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           }}
         >
           {mode === 'draw' ? (
-            <Svg {...svgObj} />
+            <Svg {...svgProps} />
           ) : (
-            <EditSvg
-              {...editSvgObj}
-              selecting={edit.selecting}
-              boundingBox={edit.boundingBox}
-              selectPaths={edit.selectPaths}
-              onSelect={edit.select}
-              onMove={edit.move}
-              onMovePreview={edit.movePreview}
-              onResizeEdit={edit.resizeEdit}
-              onResizeEditPreview={edit.resizeEditPreview}
-            />
+            <EditSvg {...editSvgProps} />
           )}
         </div>
       </Box>

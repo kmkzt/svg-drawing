@@ -5,12 +5,13 @@ import type {
   DrawHandler,
   CommandsConverter,
 } from '@svg-drawing/core'
-import type { UseSvgOptions, UseSvgProperty } from '../svg/types'
+import type { UseSvgOptions, SvgAction } from '../svg/types'
 
 /**
  * useDraw options
  */
 export type UseDrawOptions = UseSvgOptions & {
+  active?: boolean
   pathOptions: PathObject
   commandsConverter?: CommandsConverter
   drawHandler?: typeof DrawHandler
@@ -19,11 +20,8 @@ export type UseDrawOptions = UseSvgOptions & {
 /**
  * useDraw return type
  */
-export type UseDrawProperty = UseSvgProperty & {
-  isActive: boolean
-  on: () => void
-  off: () => void
-  undo: () => void
+export type DrawAction = SvgAction & {
+  onUndoDraw: () => void
 }
 
 /**
@@ -32,7 +30,7 @@ export type UseDrawProperty = UseSvgProperty & {
 export type UseDraw<T extends HTMLElement> = [
   RefObject<T>,
   SvgObject,
-  UseDrawProperty
+  DrawAction
 ]
 
 /**

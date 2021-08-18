@@ -1,9 +1,15 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react'
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  HTMLAttributes,
+} from 'react'
 import {
   PathObject,
   PointObject,
   ControlPoint,
-  ResizeEditType,
+  ResizeFixedType,
 } from '@svg-drawing/core'
 import { EditSvgProps } from './types'
 
@@ -14,7 +20,7 @@ type EditPointIndex = {
 }
 
 type ResizeBasePoint = {
-  type: ResizeEditType
+  type: ResizeFixedType
 } & PointObject
 
 export const EditSvg = ({
@@ -25,13 +31,13 @@ export const EditSvg = ({
   height,
   boundingBox,
   selectPaths,
-  onSelect: handleSelect,
-  onMove: handleMove,
-  onMovePreview: handleMovePreview,
-  onResizeEdit: handleResizeEdit,
-  onResizeEditPreview: handleResizeEditPreview,
+  onSelecting: handleSelect,
+  onMovePaths: handleMove,
+  onMovePathsPreview: handleMovePreview,
+  onResizePaths: handleResizeEdit,
+  onResizePathsPreview: handleResizeEditPreview,
   ...rest
-}: EditSvgProps) => {
+}: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
   const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
     null
   )
@@ -127,7 +133,7 @@ export const EditSvg = ({
   )
 
   const handleResizeStart = useCallback(
-    (type: ResizeEditType) => (
+    (type: ResizeFixedType) => (
       ev:
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>

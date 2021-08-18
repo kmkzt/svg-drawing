@@ -3,10 +3,10 @@ export { EditSvg } from './EditSvg'
 export type {
   UseEdit,
   UseEditOptions,
-  UseEditProperty,
-  SelectHandler,
-  MoveHandler,
-  CancelHandler,
   EditSvgProps,
+  EditSvgAction,
+  SelectingHandler,
+  MovePathsHandler,
+  CancelSelectingHandler,
   ChangeAttributesHandler,
 } from './types'
