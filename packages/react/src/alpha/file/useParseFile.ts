@@ -2,11 +2,18 @@ import { useCallback } from 'react'
 import { ImgLoader, ImgTrace, Palette } from '@svg-drawing/img-trace'
 import type { UseParseFile } from './types'
 
+/**
+ *
+ * @todo Added cancel event handler.
+ */
 export const useParseFile: UseParseFile = ({ svg }) =>
   useCallback(
     async (file) => {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         const reader = new FileReader()
+
+        reader.onerror = (err) => reject(err)
+
         reader.onload = async (ev: ProgressEvent<FileReader>) => {
           if (!ev.target || typeof ev.target.result !== 'string') return
           const [type, data] = ev.target.result.split(',')
