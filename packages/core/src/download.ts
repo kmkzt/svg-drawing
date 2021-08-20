@@ -9,7 +9,7 @@ export const toBase64 = (svgObj: SvgObject): string => {
 export const svg2base64 = (svg: string): string =>
   `data:image/svg+xml;base64,${btoa(svg)}`
 
-export const mimeTypeMap: { [key in DownloadOption['extension']]: string } = {
+export const mimeTypeMap = {
   png: 'image/png',
   jpg: 'image/jpeg',
   svg: 'image/svg+xml',
