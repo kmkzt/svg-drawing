@@ -20,7 +20,7 @@ Example code is [here](/examples/docs/pages/demo/animation.tsx)
 import { SvgDrawing } from '@svg-drawing/core'
 import { SvgAnimation } from '@svg-drawing/animation'
 // Render drawing area. omitted the description
-const draw = new SvgDrawing(el)
+const draw = SvgDrawing.init(el)
 
 // Render animation
 // It is resized to fit the rendering area as well as the SvgDrawing area.

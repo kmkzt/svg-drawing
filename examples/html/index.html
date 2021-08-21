@@ -30,7 +30,7 @@
       // Render Drawing area
       // Drawing area will be resized to fit the rendering area
       const drawEl = document.getElementById('draw')
-      const draw = new SvgDrawing(drawEl)
+      const draw = SvgDrawing.init(drawEl)
 
       const clear = document.getElementById('clear')
       clear.onclick = () => draw.clear()
@@ -41,7 +41,7 @@
       // Render Animation Area
       // It is resized to fit the rendering area as well as the SvgDrawing area.
       const animEl = document.getElementById('anim')
-      const anim = new SvgAnimation(animEl)
+      const anim = SvgAnimation.init(animEl)
 
       const start = document.getElementById('start')
       start.onclick = () => {
