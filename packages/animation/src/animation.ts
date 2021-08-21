@@ -279,7 +279,7 @@ export class SvgAnimation {
    */
   public static init(
     el: HTMLElement,
-    { ms, background }: AnimationOption & RendererOption
+    { ms, background }: AnimationOption & RendererOption = { ms: 60 }
   ): SvgAnimation {
     const { width, height } = el.getBoundingClientRect()
     return new SvgAnimation(

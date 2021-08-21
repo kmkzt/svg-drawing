@@ -9,7 +9,7 @@ const defaultTestData = `<svg width="200" height="200">
 describe('animation.ts', () => {
   describe('SvgAnimation', () => {
     const generateAniamtion = (svgStr = defaultTestData) => {
-      const anim = new SvgAnimation(document.createElement('div'))
+      const anim = SvgAnimation.init(document.createElement('div'))
       anim.svg.parseSVGString(svgStr)
       return anim
     }
