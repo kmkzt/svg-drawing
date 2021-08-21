@@ -36,10 +36,6 @@ export class SvgDrawing {
   /**
    * Module
    */
-  public svg: Svg
-  public renderer: Renderer
-  public drawHandler: any extends DrawHandler ? DrawHandler : never
-  public resizeHandler: ResizeHandler
   /**
    * Private property
    */
@@ -47,16 +43,11 @@ export class SvgDrawing {
   private _drawPoints: PointObject[]
   private _drawMoveThrottle: this['drawMove']
   constructor(
-    public el: HTMLElement,
-    {
-      penColor,
-      penWidth,
-      curve,
-      close,
-      delay,
-      fill,
-      background,
-    }: DrawingOption = {}
+    public svg: Svg,
+    public renderer: Renderer,
+    public drawHandler: any extends DrawHandler ? DrawHandler : never,
+    public resizeHandler: ResizeHandler,
+    { penColor, penWidth, curve, close, delay, fill }: DrawingOption = {}
   ) {
     /**
      * Setup Config
@@ -65,30 +56,19 @@ export class SvgDrawing {
     this.penWidth = penWidth ?? 1
     this.curve = curve ?? true
     this.close = close ?? false
-    this.delay = delay ?? 0
     this.fill = fill ?? 'none'
     /**
      * Setup property
      */
-    const { width, height } = el.getBoundingClientRect()
+    this.delay = delay ?? 0
     this._drawPath = null
     this._drawPoints = []
-    /**
-     * Setup Svg
-     */
-    this.svg = new Svg({ width, height, background })
-    /**
-     * Setup Renderer
-     */
-    this.renderer = new Renderer(el, { background })
+
     /**
      * Setup ResizeHandler
      */
     this._resize = this._resize.bind(this)
-    this.resizeHandler = new ResizeHandler({
-      el,
-      resize: this._resize,
-    })
+    this.resizeHandler.resize = this._resize.bind(this)
     /**
      * Setup EventDrawHandler
      */
@@ -96,12 +76,10 @@ export class SvgDrawing {
     this.drawMove = this.drawMove.bind(this)
     this._drawMoveThrottle = throttle(this.drawMove, this.delay)
     this.drawEnd = this.drawEnd.bind(this)
-    this.drawHandler = new PencilHandler({
-      el,
-      start: this.drawStart,
-      move: this._drawMoveThrottle,
-      end: this.drawEnd,
-    })
+
+    this.drawHandler.start = this.drawStart
+    this.drawHandler.move = this._drawMoveThrottle
+    this.drawHandler.end = this.drawEnd
     /**
      * Start exec
      */
@@ -188,7 +166,7 @@ export class SvgDrawing {
   }
 
   private _createDrawPath(): Path {
-    this._resize(this.el.getBoundingClientRect())
+    // this._resize(this.el.getBoundingClientRect())
     this._drawPoints = []
     return new Path({
       stroke: this.penColor,
@@ -213,5 +191,27 @@ export class SvgDrawing {
 
   public download(opt?: DownloadOption): void {
     download(this.svg, opt)
+  }
+
+  public static init(el: HTMLElement, opts: DrawingOption = {}): SvgDrawing {
+    const { width, height } = el.getBoundingClientRect()
+
+    const dummyHandler = () => undefined
+
+    return new SvgDrawing(
+      new Svg({ width, height, background: opts.background }),
+      new Renderer(el, { background: opts.background }),
+      new PencilHandler({
+        el,
+        start: dummyHandler,
+        move: dummyHandler,
+        end: dummyHandler,
+      }),
+      new ResizeHandler({
+        el,
+        resize: dummyHandler,
+      }),
+      opts
+    )
   }
 }

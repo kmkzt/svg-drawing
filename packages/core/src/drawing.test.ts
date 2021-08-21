@@ -4,7 +4,7 @@ import { svgObjectToElement } from './renderer'
 describe('drawing.ts', () => {
   describe('SvgDrawing', () => {
     it('default', () => {
-      const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
+      const draw: SvgDrawing = SvgDrawing.init(document.createElement('div'))
       draw.drawStart()
       draw.drawMove({ x: 0, y: 0 })
       draw.drawMove({ x: 1, y: 1 })
@@ -14,7 +14,7 @@ describe('drawing.ts', () => {
       expect(svgObjectToElement(draw.svg.toJson())).toMatchSnapshot()
     })
     it('close', () => {
-      const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
+      const draw: SvgDrawing = SvgDrawing.init(document.createElement('div'))
       draw.close = true
       draw.drawStart()
       draw.drawMove({ x: 0, y: 0 })
@@ -26,7 +26,7 @@ describe('drawing.ts', () => {
       expect(el).toMatchSnapshot()
     })
     it('curve = false', () => {
-      const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
+      const draw: SvgDrawing = SvgDrawing.init(document.createElement('div'))
       draw.curve = false
       draw.drawStart()
       draw.drawMove({ x: 0, y: 0 })
@@ -38,7 +38,7 @@ describe('drawing.ts', () => {
       expect(el).toMatchSnapshot()
     })
     it('clear()', () => {
-      const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
+      const draw: SvgDrawing = SvgDrawing.init(document.createElement('div'))
       draw.curve = false
       draw.drawStart()
       draw.drawMove({ x: 0, y: 0 })
@@ -52,7 +52,7 @@ describe('drawing.ts', () => {
      * TODO: Fix NaN
      */
     it('undo()', () => {
-      const draw: SvgDrawing = new SvgDrawing(document.createElement('div'))
+      const draw: SvgDrawing = SvgDrawing.init(document.createElement('div'))
       draw.drawStart()
       draw.drawMove({ x: 0, y: 0 })
       draw.drawEnd()

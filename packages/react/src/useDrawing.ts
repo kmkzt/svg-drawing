@@ -52,7 +52,7 @@ export const useSvgDrawing = (
   useEffect(() => {
     if (drawingRef.current) return
     if (!renderRef.current) return
-    drawingRef.current = new SvgDrawing(renderRef.current, {
+    drawingRef.current = SvgDrawing.init(renderRef.current, {
       ...option,
     })
   })
