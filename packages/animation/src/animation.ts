@@ -10,6 +10,7 @@ import {
   svg2base64,
   camel2kebab,
   roundUp,
+  RendererOption,
 } from '@svg-drawing/core'
 import { AnimationOption, FrameAnimation } from './types'
 import type { ResizeHandlerOption } from '@svg-drawing/core'
@@ -30,17 +31,17 @@ export class SvgAnimation {
   /**
    * Modules
    */
-  public svg: Svg
-  public renderer: Renderer
-  public resizeHandler: ResizeHandler
+
   /**
    * Relation animate element
    * TODO: add easing option
    */
   private _repeatCount: string
   constructor(
-    el: HTMLElement,
-    { background, ms }: AnimationOption = { ms: 60 }
+    public svg: Svg,
+    public renderer: Renderer,
+    public resizeHandler: ResizeHandler,
+    { ms }: AnimationOption
   ) {
     this.ms = ms
     this._stopAnimation = null
@@ -48,20 +49,12 @@ export class SvgAnimation {
     this._restorePaths = []
     this._stopId = 0
     this._repeatCount = 'indefinite'
-    /**
-     * Setup Svg
-     */
-    const { width, height } = el.getBoundingClientRect()
-    this.svg = new Svg({ width, height, background })
-    /**
-     * Setup renderer
-     */
-    this.renderer = new Renderer(el, { background })
+
     /**
      * Setup resize handler
      */
     this._resize = this._resize.bind(this)
-    this.resizeHandler = new ResizeHandler({ el, resize: this._resize })
+    this.resizeHandler.resize = this._resize.bind(this)
     this.resizeHandler.on()
   }
 
@@ -279,5 +272,21 @@ export class SvgAnimation {
     this.stop()
     this.svg.resize({ width, height })
     this.start()
+  }
+
+  /**
+   * @todo improve resize handler
+   */
+  public static init(
+    el: HTMLElement,
+    { ms, background }: AnimationOption & RendererOption
+  ): SvgAnimation {
+    const { width, height } = el.getBoundingClientRect()
+    return new SvgAnimation(
+      new Svg({ width, height, background }),
+      new Renderer(el, { background }),
+      new ResizeHandler({ el, resize: () => undefined }),
+      { ms }
+    )
   }
 }

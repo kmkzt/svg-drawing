@@ -82,7 +82,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   useEffect(() => {
     if (animationRef.current) return
     if (!aniDivRef.current) return
-    animationRef.current = new SvgAnimation(aniDivRef.current, {
+    animationRef.current = SvgAnimation.init(aniDivRef.current, {
       ms: animMs,
       background: '#fff',
     })
