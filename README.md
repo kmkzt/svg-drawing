@@ -36,7 +36,7 @@ el.setAttribute(
   `
 )
 document.body.appendChid(el)
-new SvgDrawing(el)
+SvgDrawing.init(el)
 ```
 
 ### CDN
