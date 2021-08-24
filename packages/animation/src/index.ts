@@ -1,2 +1,2 @@
-export * from './animation'
+export * from './SvgAnimation'
 export * from './types'

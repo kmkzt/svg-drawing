@@ -1,4 +1,4 @@
-import { SvgAnimation } from './animation'
+import { SvgAnimation } from './SvgAnimation'
 import { FrameAnimation } from './types'
 
 const defaultTestData = `<svg width="200" height="200">
