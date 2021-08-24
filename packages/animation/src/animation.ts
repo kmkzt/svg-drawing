@@ -29,7 +29,7 @@ export class Animation {
    * TODO: add easing option
    */
   private _repeatCount: string
-  constructor(public svg: Svg, { ms }: AnimationOption) {
+  constructor(public svg: Svg, { ms }: AnimationOption = { ms: 60 }) {
     this.ms = ms
     this._anim = null
     this.originPaths = this.cloneOriginPaths()
