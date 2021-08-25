@@ -1,4 +1,5 @@
-import { SvgAnimation } from './SvgAnimation'
+import { Svg } from '@svg-drawing/core'
+import { Animation } from './Animation'
 import { FrameAnimation } from './types'
 
 const defaultTestData = `<svg width="200" height="200">
@@ -6,18 +7,19 @@ const defaultTestData = `<svg width="200" height="200">
   <path fill="#ff0" stroke="#f0f" stroke-width="2" d="M 2 2 L 4 4 C 6 6 10 6 14 6 Z"></path>
 </svg>`
 
-describe('SvgAnimation.ts', () => {
-  describe('SvgAnimation', () => {
-    const generateAniamtion = (svgStr = defaultTestData) => {
-      const anim = SvgAnimation.init(document.createElement('div'))
-      anim.svg.parseSVGString(svgStr)
+describe('animation.ts', () => {
+  describe('Animation', () => {
+    const generateAnimation = (svgStr = defaultTestData) => {
+      const svg = new Svg({ width: 200, height: 200 })
+      svg.parseSVGString(svgStr)
+      const anim = new Animation(svg)
       return anim
     }
     it('init', () => {
-      expect(generateAniamtion()).toMatchSnapshot()
+      expect(generateAnimation()).toMatchSnapshot()
     })
     it('generateFrame', () => {
-      const svg = generateAniamtion()
+      const svg = generateAnimation()
       svg.setAnimation((paths) => {
         return [paths[0]]
       })
@@ -25,7 +27,7 @@ describe('SvgAnimation.ts', () => {
     })
     // TODO: Improve test pattern
     it('toAnimationElement', () => {
-      const svg = generateAniamtion()
+      const svg = generateAnimation()
       const testAnimation: FrameAnimation = (paths, count) => {
         const update = []
         for (let i = 0; i < paths.length; i += 1) {
@@ -48,26 +50,6 @@ describe('SvgAnimation.ts', () => {
       }
       svg.setAnimation(testAnimation)
       expect(svg.toElement()).toMatchSnapshot()
-    })
-
-    it('setAnimation, start, stop', async () => {
-      const svg = generateAniamtion()
-      let loop = 0
-      svg.setAnimation(
-        (_paths, fid) => {
-          loop += 1
-          return []
-        },
-        {
-          ms: 300,
-          frames: 3,
-        }
-      )
-      svg.start()
-      setTimeout(() => {
-        svg.stop()
-        expect(loop).toBe(3)
-      }, 1000)
     })
   })
 })
