@@ -165,7 +165,7 @@ export type EditSvgObject = {
   selectPaths: SelectPaths
 }
 
-export type ResizeFixedType =
+export type FixedPositionType =
   | 'LeftTop'
   | 'RightTop'
   | 'RightBottom'

@@ -5,7 +5,7 @@ import type {
   Selecting,
   BoundingBox,
   SelectPaths,
-  ResizeFixedType,
+  FixedPositionType,
   SvgObject,
 } from '@svg-drawing/core'
 import type { UseSvgOptions, SvgAction } from '../svg/types'
@@ -29,7 +29,7 @@ export type ChangeAttributesHandler = (pathAttrs: PathObject) => void
 export type DeletePathsHandler = () => void
 export type CancelSelectingHandler = () => void
 export type ResizePathsHandler = (
-  type: ResizeFixedType,
+  type: FixedPositionType,
   move: PointObject
 ) => void
 export type EditSvgAction = SvgAction & {

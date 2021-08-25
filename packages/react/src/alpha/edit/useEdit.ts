@@ -72,7 +72,7 @@ export const useEdit = <T extends HTMLElement>({
   const onResizePaths = useCallback<EditSvgProps['onResizePaths']>(
     (type, movePoint) => {
       if (!editing) return
-      editSvg.resizeEdit({ type, move: movePoint }, selecting)
+      editSvg.resizeFixedPostion({ type, move: movePoint }, selecting)
       onSelecting(selecting)
     },
     [editSvg, editing, selecting, onSelecting]
@@ -84,7 +84,7 @@ export const useEdit = <T extends HTMLElement>({
     (type, movePoint) => {
       if (!editing) return
       const preview = editSvg.preview()
-      preview.resizeEdit({ type, move: movePoint }, selecting)
+      preview.resizeFixedPosition({ type, move: movePoint }, selecting)
       setEditInfo(preview.toJson(selecting))
       setPreviewObj(preview.svg.toJson())
     },

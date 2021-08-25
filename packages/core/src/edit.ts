@@ -6,7 +6,7 @@ import type {
   PathObject,
   Selecting,
   EditSvgObject,
-  ResizeFixedType,
+  FixedPositionType,
 } from './types'
 
 const genOutline = (points: PointObject[]) =>
@@ -21,7 +21,7 @@ const fallbackBoundingBox: BoundingBox = {
 }
 
 const getResizeEditObject = (
-  type: ResizeFixedType,
+  type: FixedPositionType,
   boundingBox: BoundingBox,
   movePoint: PointObject
 ): { scale: PointObject; move: PointObject } => {
@@ -82,6 +82,10 @@ const getResizeEditObject = (
     }
   }
 }
+
+/**
+ * @todo Rename SvgEditing or Editing or SvgEdit ?
+ */
 export class EditSvg {
   constructor(public svg: Svg) {}
 
@@ -177,8 +181,8 @@ export class EditSvg {
     )
   }
 
-  public resizeEdit(
-    { type, move: argMove }: { type: ResizeFixedType; move: PointObject },
+  public resizeFixedPosition(
+    { type, move: argMove }: { type: FixedPositionType; move: PointObject },
     selecting: Selecting
   ) {
     const { boundingBox } = this.toJson(selecting)
@@ -249,6 +253,9 @@ export class EditSvg {
   }
 }
 
+/**
+ * @todo Rename PathEdit ?
+ */
 export class EditPath {
   constructor(public path: Path) {}
 

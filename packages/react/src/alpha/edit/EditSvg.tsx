@@ -9,7 +9,7 @@ import {
   PathObject,
   PointObject,
   ControlPoint,
-  ResizeFixedType,
+  FixedPositionType,
 } from '@svg-drawing/core'
 import { EditSvgProps } from './types'
 
@@ -20,7 +20,7 @@ type EditPointIndex = {
 }
 
 type ResizeBasePoint = {
-  type: ResizeFixedType
+  type: FixedPositionType
 } & PointObject
 
 export const EditSvg = ({
@@ -133,7 +133,7 @@ export const EditSvg = ({
   )
 
   const handleResizeStart = useCallback(
-    (type: ResizeFixedType) => (
+    (type: FixedPositionType) => (
       ev:
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
