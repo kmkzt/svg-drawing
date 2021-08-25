@@ -7,7 +7,8 @@ import {
   closeCommands,
 } from './convert'
 import { throttle } from './throttle'
-import { PencilHandler, DrawHandler, ResizeHandler } from './handler'
+import { PencilHandler, DrawHandler } from './handler'
+import { ResizeHandler } from './resize'
 import {
   DownloadOption,
   DrawingOption,
@@ -19,10 +20,16 @@ import { download } from './download'
 
 export class SvgDrawing {
   /**
-   * Draw Option
+   * @deprecated
    */
   public penColor: string
+  /**
+   * @deprecated
+   */
   public penWidth: number
+  /**
+   * @deprecated
+   */
   public fill: string
   /**
    * @deprecated
@@ -32,13 +39,12 @@ export class SvgDrawing {
    * @deprecated
    */
   public close: boolean
+
+  /**
+   * throttle delay
+   */
   public delay: number
-  /**
-   * Module
-   */
-  /**
-   * Private property
-   */
+
   private _drawPath: Path | null
   private _drawPoints: PointObject[]
   private _drawMoveThrottle: this['drawMove']

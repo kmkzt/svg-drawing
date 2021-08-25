@@ -1,25 +1,29 @@
-import {
+import type {
   DrawHandlerOption,
   DrawListenerType,
   DrawEventHandler,
   ClearListener,
   PointObject,
   DrawEventName,
-  ResizeHandlerOption,
 } from './types'
 
-export const getPassiveOptions = (
-  passive = true
-): boolean | { passive: boolean } => {
+const SUPPORT_POINTER_EVENT = typeof PointerEvent !== 'undefined'
+
+const SUPPORT_ON_TOUCH_START = typeof ontouchstart !== 'undefined'
+
+const SUPPORT_EVENT_LISTENER_PASSIVE_OPTION = (() => {
   try {
     const check = () => null
-    addEventListener('testPassive', check, { passive })
+    addEventListener('testPassive', check, { passive: true })
     removeEventListener('testPassive', check)
-    return { passive }
+    return true
   } catch (e) {
     return false
   }
-}
+})()
+
+const getPassiveOptions = (passive = true): false | { passive: boolean } =>
+  SUPPORT_EVENT_LISTENER_PASSIVE_OPTION ? { passive } : false
 
 export class DrawHandler implements DrawEventHandler {
   /**
@@ -172,9 +176,9 @@ export class PencilHandler extends DrawHandler implements DrawHandler {
   }
 
   protected _setupListener(): Array<ClearListener> {
-    if (PointerEvent) return this._setupDrawListener('pointer')
+    if (SUPPORT_POINTER_EVENT) return this._setupDrawListener('pointer')
 
-    if ('ontouchstart' in window) return this._setupDrawListener('touch')
+    if (SUPPORT_ON_TOUCH_START) return this._setupDrawListener('touch')
 
     return this._setupDrawListener('mouse')
   }
@@ -264,10 +268,10 @@ export class PenHandler extends DrawHandler implements DrawHandler {
 
   protected _setupListener(): Array<ClearListener> {
     const clearEvent: ClearListener[] = [...this._setupCancelListener()]
-    if (PointerEvent)
+    if (SUPPORT_POINTER_EVENT)
       return [...this._setupDrawListener('pointer'), ...clearEvent]
 
-    if ('ontouchstart' in window)
+    if (SUPPORT_ON_TOUCH_START)
       return [...this._setupDrawListener('touch'), ...clearEvent]
 
     return [...this._setupDrawListener('mouse'), ...clearEvent]
@@ -322,63 +326,5 @@ export class PenHandler extends DrawHandler implements DrawHandler {
         removeEventListener(eventMap[type], this._handleProt)
       },
     ]
-  }
-}
-export class ResizeHandler {
-  /**
-   * Remove EventList
-   */
-  private _clearEventList: Array<() => void>
-  public resize: ResizeHandlerOption['resize']
-  private _el?: ResizeHandlerOption['el']
-  constructor({ el, resize }: ResizeHandlerOption) {
-    this._el = el
-    this.resize = resize
-    this._clearEventList = []
-  }
-
-  public off() {
-    this._clearEventList.map((fn) => fn())
-    this._clearEventList = []
-  }
-
-  public on() {
-    this.off()
-    this._setupListener()
-  }
-
-  public get isActive(): boolean {
-    return this._clearEventList.length > 0
-  }
-
-  public setElement(el: HTMLElement) {
-    this._el = el
-    if (this.isActive) this.on()
-    return this
-  }
-
-  private _setupListener(): void {
-    if (!this._el) return
-
-    // ResizeObserver
-    if (ResizeObserver) {
-      const resizeObserver: any = new (window as any).ResizeObserver(
-        ([entry]: any[]) => {
-          this.resize(entry.contentRect)
-        }
-      )
-      resizeObserver.observe(this._el)
-      this._clearEventList.push(() => resizeObserver.disconnect())
-      return
-    }
-
-    const handleResizeEvent = () => {
-      if (!this._el) return
-      this.resize(this._el.getBoundingClientRect())
-    }
-    addEventListener('resize', handleResizeEvent)
-    this._clearEventList.push(() =>
-      removeEventListener('resize', handleResizeEvent)
-    )
   }
 }
