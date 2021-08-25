@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { DrawHandlerMap, UseDrawHandler } from './types'
+import type { DrawHandlerMap, UseDrawHandler } from '../types'
 
 export const useDrawHandler = <T extends string>(
   handlerMap: DrawHandlerMap<T>,

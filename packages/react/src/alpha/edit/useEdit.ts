@@ -1,20 +1,13 @@
-import {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-  useRef,
-  MutableRefObject,
-} from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { EditSvg, Selecting } from '@svg-drawing/core'
 import { useSvg } from '../svg/useSvg'
-import type { KeyboardMap } from '../keyboard'
 import type {
+  KeyboardMap,
   UseEditOptions,
   UseEdit,
   EditSvgAction,
   EditSvgProps,
-} from './types'
+} from '../types'
 import { useMultipleSelect } from './useMultipleSelect'
 
 export const useEdit = <T extends HTMLElement>({

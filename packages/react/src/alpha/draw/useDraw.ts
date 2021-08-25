@@ -13,8 +13,7 @@ import type {
   PathObject,
   PointObject,
 } from '@svg-drawing/core'
-import type { UseDrawOptions, UseDraw, DrawAction } from './types'
-import type { KeyboardMap } from '../keyboard'
+import type { UseDrawOptions, UseDraw, DrawAction, KeyboardMap } from '../types'
 
 const DRAW_DELAY = 20
 const defaultPathOptions: PathObject = {

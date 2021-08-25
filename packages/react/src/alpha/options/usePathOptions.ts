@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { PathObject } from '@svg-drawing/core'
-import { UsePathOptions } from './types'
+import { UsePathOptions } from '../types'
 
 export const usePathOptions = (initPathOpts: PathObject): UsePathOptions => {
   const [pathOptions, setPathOptions] = useState(initPathOpts)

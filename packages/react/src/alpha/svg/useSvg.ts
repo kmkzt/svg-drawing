@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Svg, ResizeHandler, isAlmostSameNumber } from '@svg-drawing/core'
 import type { ResizeHandlerOption } from '@svg-drawing/core'
-import type { UseSvgOptions, UseSvg } from './types'
+import type { UseSvgOptions, UseSvg } from '../types'
 
 const RENDER_INTERVAL = 0
 
