@@ -11,7 +11,7 @@ import {
   ControlPoint,
   FixedPositionType,
 } from '@svg-drawing/core'
-import { EditSvgProps } from './types'
+import { EditSvgProps } from '../types'
 
 type EditPointIndex = {
   path: number
