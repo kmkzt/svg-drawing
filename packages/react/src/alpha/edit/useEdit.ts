@@ -65,7 +65,7 @@ export const useEdit = <T extends HTMLElement>({
   const onResizePaths = useCallback<EditSvgProps['onResizePaths']>(
     (type, movePoint) => {
       if (!editing) return
-      editSvg.resizeFixedPostion({ type, move: movePoint }, selecting)
+      editSvg.resizeFixedPosition({ type, move: movePoint }, selecting)
       onSelecting(selecting)
     },
     [editSvg, editing, selecting, onSelecting]
