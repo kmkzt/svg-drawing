@@ -217,7 +217,7 @@ export class EditSvg {
     const listX: number[] = []
     const listY: number[] = []
 
-    let selectPaths: EditSvgObject['selectPaths'] = {}
+    const selectPaths: EditSvgObject['selectPaths'] = {}
 
     this.exec(selecting, (path, index) => {
       const edit = new EditPath(path.clone())
@@ -229,13 +229,10 @@ export class EditSvg {
       listX.push(cMinX, cMaxX)
       listY.push(cMinY, cMaxY)
 
-      selectPaths = {
-        ...selectPaths,
-        [index.path]: {
-          d: path.getCommandString(),
-          boundingBox,
-          controlPoints: edit.controlPoints,
-        },
+      selectPaths[index.path] = {
+        d: path.getCommandString(),
+        boundingBox,
+        controlPoints: edit.controlPoints,
       }
     })
 
