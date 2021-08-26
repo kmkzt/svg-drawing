@@ -5,7 +5,7 @@ import {
   convertLineCommands,
 } from '@svg-drawing/core'
 import { useMemo } from 'react'
-import { UseCommandsConverterOptions } from './types'
+import { UseCommandsConverterOptions } from '../types'
 
 export const useCommandsConverter = ({
   curve,
