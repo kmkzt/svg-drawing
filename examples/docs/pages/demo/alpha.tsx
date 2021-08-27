@@ -449,8 +449,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         )}
       </Box>
       <div>
-        {JSON.stringify(editSvgProps.boundingBox)}
-        {JSON.stringify(editSvgProps.selecting)}
+        {JSON.stringify(editSvgProps.edit.index)}
+        {JSON.stringify(editSvgProps.edit.boundingBox)}
       </div>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
