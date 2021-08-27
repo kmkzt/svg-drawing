@@ -24,13 +24,11 @@ type ResizeBasePoint = {
 } & PointObject
 
 export const EditSvg = ({
-  selecting,
   background,
   paths,
   width,
   height,
-  boundingBox,
-  selectPaths,
+  edit: { index: selecting, boundingBox, paths: selectedPaths },
   onSelecting: handleSelect,
   onMovePaths: handleMove,
   onMovePathsPreview: handleMovePreview,
@@ -240,7 +238,7 @@ export const EditSvg = ({
           onTouchStart={handleMoveStartPath(pathIndex)}
         />
       ))}
-      {Object.entries(selectPaths).map(([key, editPath]) => {
+      {Object.entries(selectedPaths).map(([key, editPath]) => {
         const pathIndex = +key
         const { controlPoints, d } = editPath
         return (

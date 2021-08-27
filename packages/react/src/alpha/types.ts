@@ -6,8 +6,7 @@ import type {
   PathObject,
   PointObject,
   Selecting,
-  BoundingBox,
-  SelectPaths,
+  EditSvgObject,
   FixedPositionType,
   DrawHandler,
   CommandsConverter,
@@ -79,9 +78,7 @@ export type EditSvgAction = SvgAction & {
  * EditSvg components
  */
 export type EditSvgProps = SvgObject & {
-  selecting: Selecting
-  boundingBox: BoundingBox
-  selectPaths: SelectPaths
+  edit: EditSvgObject
   onSelecting: SelectingHandler
   onMovePaths: MovePathsHandler
   onMovePathsPreview: MovePathsHandler

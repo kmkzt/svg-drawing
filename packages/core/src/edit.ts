@@ -7,6 +7,7 @@ import type {
   Selecting,
   EditSvgObject,
   FixedPositionType,
+  EditPathObject,
 } from './types'
 
 const genOutline = (points: PointObject[]) =>
@@ -217,23 +218,20 @@ export class EditSvg {
     const listX: number[] = []
     const listY: number[] = []
 
-    const selectPaths: EditSvgObject['selectPaths'] = {}
+    const paths: EditSvgObject['paths'] = {}
 
     this.exec(selecting, (path, index) => {
-      const edit = new EditPath(path.clone())
-      const boundingBox = edit.boundingBox
+      const editPath = new EditPath(path.clone())
+      paths[index.path] = editPath.toJson()
+
       const {
-        min: [cMinX, cMinY],
-        max: [cMaxX, cMaxY],
-      } = boundingBox
+        boundingBox: {
+          min: [cMinX, cMinY],
+          max: [cMaxX, cMaxY],
+        },
+      } = editPath
       listX.push(cMinX, cMaxX)
       listY.push(cMinY, cMaxY)
-
-      selectPaths[index.path] = {
-        d: path.getCommandString(),
-        boundingBox,
-        controlPoints: edit.controlPoints,
-      }
     })
 
     const boundingBox: BoundingBox =
@@ -244,8 +242,9 @@ export class EditSvg {
           }
         : fallbackBoundingBox
     return {
+      index: selecting,
+      paths,
       boundingBox,
-      selectPaths,
     }
   }
 }
@@ -308,6 +307,14 @@ export class EditPath {
     return {
       min: [minX, minY],
       max: [maxX, maxY],
+    }
+  }
+
+  public toJson(): EditPathObject {
+    return {
+      d: this.path.getCommandString(),
+      boundingBox: this.boundingBox,
+      controlPoints: this.controlPoints,
     }
   }
 }

@@ -15,7 +15,7 @@ export const useEdit = <T extends HTMLElement>({
   multipleSelectBindKey,
 }: UseEditOptions = {}): UseEdit<T> => {
   const [ref, originObj, { svg, onUpdate, ...rest }] = useSvg<T>({ sharedSvg })
-  const [selecting, setSelecting] = useState<EditSvgProps['selecting']>({})
+  const [selecting, setSelecting] = useState<Selecting>({})
   const editing = useMemo(() => Object.keys(selecting).length !== 0, [
     selecting,
   ])
@@ -129,9 +129,7 @@ export const useEdit = <T extends HTMLElement>({
     ref,
     {
       ...svgProps,
-      selecting,
-      selectPaths: editInfo.selectPaths,
-      boundingBox: editInfo.boundingBox,
+      edit: editInfo,
       onSelecting,
       onMovePaths,
       onMovePathsPreview,
