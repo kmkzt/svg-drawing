@@ -1,9 +1,25 @@
-// import { EditSvg, EditPath } from './edit'
+import { EditSvg, EditPath } from './edit'
+import { Svg } from './svg'
+
+const testSvgData =
+  '<svg width="200" height="200">' +
+  '<path id="path_0" fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>' +
+  '<path id="path_1" fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>' +
+  '<path id="path_2" fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>' +
+  '</svg>'
 
 describe('edit.ts', () => {
+  const edit = new EditSvg(new Svg({ width: 200, height: 200 }))
+
   describe('EditSvg', () => {
+    beforeEach(() => {
+      edit.svg.parseSVGString(testSvgData)
+    })
     describe('changeAttributes', () => {
-      it.todo('Selecting path')
+      it('Change attributes of selected paths', () => {
+        edit.changeAttributes({ fill: '#ff0' }, { ['0']: {} })
+        expect(edit.svg.paths[0].attrs.fill).toBe('#ff0')
+      })
       it.todo('Selecting commands')
       it.todo('Selecting point')
       it.todo('Selecting Multiple path')
@@ -45,7 +61,12 @@ describe('edit.ts', () => {
     })
 
     describe('delete', () => {
-      it.todo('Selecting path')
+      it('Delete Selected path', () => {
+        edit.delete({ ['0']: {} })
+        expect(edit.svg.paths.length).toBe(2)
+        expect(edit.svg.paths[0].attrs.id).toBe('path_1')
+        expect(edit.svg.paths[1].attrs.id).toBe('path_2')
+      })
       it.todo('Selecting commands')
       it.todo('Selecting point')
       it.todo('Selecting Multiple path')
