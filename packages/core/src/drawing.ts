@@ -7,10 +7,11 @@ import {
   closeCommands,
 } from './convert'
 import { throttle } from './throttle'
-import { PencilHandler, DrawHandler } from './handler'
+import { PencilHandler } from './handler'
 import { ResizeHandler } from './resize'
 import {
   DownloadOption,
+  DrawEventHandler,
   DrawingOption,
   PointObject,
   ResizeHandlerOption,
@@ -51,8 +52,8 @@ export class SvgDrawing {
   constructor(
     public svg: Svg,
     public renderer: Renderer,
-    public drawHandler: any extends DrawHandler ? DrawHandler : never,
-    public resizeHandler: ResizeHandler,
+    public handler: DrawEventHandler,
+    public resizeListener: ResizeHandler,
     { penColor, penWidth, curve, close, delay, fill }: DrawingOption = {}
   ) {
     /**
@@ -74,7 +75,7 @@ export class SvgDrawing {
      * Setup ResizeHandler
      */
     this._resize = this._resize.bind(this)
-    this.resizeHandler.resize = this._resize.bind(this)
+    this.resizeListener.resize = this._resize.bind(this)
     /**
      * Setup EventDrawHandler
      */
@@ -83,13 +84,15 @@ export class SvgDrawing {
     this._drawMoveThrottle = throttle(this.drawMove, this.delay)
     this.drawEnd = this.drawEnd.bind(this)
 
-    this.drawHandler.start = this.drawStart
-    this.drawHandler.move = this._drawMoveThrottle
-    this.drawHandler.end = this.drawEnd
+    this.handler.start = this.drawStart
+    this.handler.move = this._drawMoveThrottle
+    this.handler.end = this.drawEnd
+
     /**
      * Start exec
      */
-    this.on()
+    this.handler.on()
+    this.resizeListener.on()
   }
 
   public update() {
@@ -110,18 +113,8 @@ export class SvgDrawing {
 
   public changeDelay(delay: number): void {
     this.delay = delay
-    this.drawHandler.move = throttle(this.drawMove, this.delay)
-    this.drawHandler.on()
-  }
-
-  public on(): void {
-    this.drawHandler.on()
-    this.resizeHandler.on()
-  }
-
-  public off(): void {
-    this.drawHandler.off()
-    this.resizeHandler.off()
+    this.handler.move = throttle(this.drawMove, this.delay)
+    this.handler.on()
   }
 
   public drawStart(): void {
@@ -189,16 +182,19 @@ export class SvgDrawing {
     width,
     height,
   }: Parameters<ResizeHandlerOption['resize']>[0]) {
-    if (!isAlmostSameNumber(this.svg.width, width)) {
-      this.svg.resize({ width, height })
-      this.update()
-    }
+    if (isAlmostSameNumber(this.svg.width, width)) return
+
+    this.svg.resize({ width, height })
+    this.update()
   }
 
   public download(opt?: DownloadOption): void {
     download(this.svg, opt)
   }
 
+  /**
+   * @todo remove dummy handler
+   */
   public static init(el: HTMLElement, opts: DrawingOption = {}): SvgDrawing {
     const { width, height } = el.getBoundingClientRect()
 

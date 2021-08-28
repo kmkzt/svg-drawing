@@ -63,5 +63,7 @@ describe('drawing.ts', () => {
       const el = svgObjectToElement(draw.svg.toJson())
       expect(el).toMatchSnapshot()
     })
+    it.todo('draw.handler')
+    it.todo('draw.resizeListener')
   })
 })
