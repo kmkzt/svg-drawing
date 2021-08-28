@@ -55,14 +55,14 @@ export const useDraw = <T extends HTMLElement>({
     onUpdate()
   }, [converter, onUpdate])
 
-  const handleDrawStart = useCallback<DrawHandlerOption['start']>(() => {
+  const handleDrawStart = useCallback<DrawHandlerOption['drawStart']>(() => {
     if (drawPathRef.current) return
     drawPathRef.current = createDrawPath()
     svg.addPath(drawPathRef.current)
   }, [createDrawPath, svg])
 
-  const handleDrawMove = useMemo<DrawHandlerOption['move']>(() => {
-    const move: DrawHandlerOption['move'] = (po) => {
+  const handleDrawMove = useMemo<DrawHandlerOption['drawMove']>(() => {
+    const move: DrawHandlerOption['drawMove'] = (po) => {
       if (!drawPathRef.current) return
       drawPointsRef.current = [...drawPointsRef.current, po]
       updateCommands()
@@ -70,7 +70,7 @@ export const useDraw = <T extends HTMLElement>({
     return throttle(move, DRAW_DELAY)
   }, [updateCommands])
 
-  const handleDrawEnd = useCallback<DrawHandlerOption['end']>(() => {
+  const handleDrawEnd = useCallback<DrawHandlerOption['drawEnd']>(() => {
     drawPathRef.current = null
   }, [])
 
@@ -82,16 +82,16 @@ export const useDraw = <T extends HTMLElement>({
       const Handler = CustomDrawHandler ?? PencilHandler
       return new Handler({
         el: elRef.current,
-        start: handleDrawStart,
-        move: handleDrawMove,
-        end: handleDrawEnd,
+        drawStart: handleDrawStart,
+        drawMove: handleDrawMove,
+        drawEnd: handleDrawEnd,
       })
     })()
   )
   useEffect(() => {
-    handler.current.start = handleDrawStart
-    handler.current.move = handleDrawMove
-    handler.current.end = handleDrawEnd
+    handler.current.drawStart = handleDrawStart
+    handler.current.drawMove = handleDrawMove
+    handler.current.drawEnd = handleDrawEnd
   }, [handleDrawStart, handleDrawMove, handleDrawEnd])
 
   const setDrawHandler = useCallback(
@@ -103,9 +103,9 @@ export const useDraw = <T extends HTMLElement>({
       handler.current.off()
       handler.current = new Handler({
         el: elRef.current,
-        start: handleDrawStart,
-        move: handleDrawMove,
-        end: handleDrawEnd,
+        drawStart: handleDrawStart,
+        drawMove: handleDrawMove,
+        drawEnd: handleDrawEnd,
       })
       if (active) handler.current.on()
     },

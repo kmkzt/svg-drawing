@@ -127,14 +127,14 @@ export interface DrawEventHandler {
   isActive: boolean
   on: () => void
   off: () => void
-  start: () => void
-  end: () => void
-  move: (po: PointObject) => void
+  drawStart: () => void
+  drawEnd: () => void
+  drawMove: (po: PointObject) => void
 }
 
 export type DrawHandlerOption = {
   el: HTMLElement | null
-} & Pick<DrawEventHandler, 'start' | 'move' | 'end'>
+} & Pick<DrawEventHandler, 'drawStart' | 'drawMove' | 'drawEnd'>
 /**
  * Control Point
  */

@@ -48,16 +48,16 @@ export class DrawHandler implements DrawEventHandler {
   /**
    * EventHandler
    */
-  public end: DrawHandlerOption['end']
-  public start: DrawHandlerOption['start']
-  public move: DrawHandlerOption['move']
-  constructor({ el, end, start, move }: DrawHandlerOption) {
+  public drawEnd: DrawHandlerOption['drawEnd']
+  public drawStart: DrawHandlerOption['drawStart']
+  public drawMove: DrawHandlerOption['drawMove']
+  constructor({ el, drawEnd, drawStart, drawMove }: DrawHandlerOption) {
     /**
      * Bind property from arguments.
      */
-    this.end = end
-    this.start = start
-    this.move = move
+    this.drawEnd = drawEnd
+    this.drawStart = drawStart
+    this.drawMove = drawMove
     /**
      * Bind method
      */
@@ -101,13 +101,13 @@ export class DrawHandler implements DrawEventHandler {
   }
 
   public setHandler({
-    start,
-    move,
-    end,
-  }: Pick<DrawHandlerOption, 'start' | 'move' | 'end'>) {
-    this.end = end
-    this.start = start
-    this.move = move
+    drawStart,
+    drawMove,
+    drawEnd,
+  }: Pick<DrawHandlerOption, 'drawStart' | 'drawMove' | 'drawEnd'>) {
+    this.drawEnd = drawEnd
+    this.drawStart = drawStart
+    this.drawMove = drawMove
     if (this.isActive) this.on()
   }
 
@@ -164,7 +164,7 @@ export class DrawHandler implements DrawEventHandler {
   }
 }
 
-export class PencilHandler extends DrawHandler implements DrawHandler {
+export class PencilHandler extends DrawHandler implements DrawEventHandler {
   constructor(option: DrawHandlerOption) {
     super(option)
     /**
@@ -185,17 +185,17 @@ export class PencilHandler extends DrawHandler implements DrawHandler {
 
   private _handleStart(ev: TouchEvent | MouseEvent | PointerEvent) {
     ev.preventDefault()
-    this.start()
+    this.drawStart()
   }
 
   private _handleEnd(ev: TouchEvent | MouseEvent | PointerEvent) {
     ev.preventDefault()
-    this.end()
+    this.drawEnd()
   }
 
   private _handleMove(ev: MouseEvent | PointerEvent | TouchEvent) {
     ev.preventDefault()
-    this.move(this.getPointObjectFromDrawEvent(ev))
+    this.drawMove(this.getPointObjectFromDrawEvent(ev))
   }
 
   private _setupDrawListener(type: DrawListenerType): Array<() => void> {
@@ -258,7 +258,7 @@ export class PencilHandler extends DrawHandler implements DrawHandler {
   }
 }
 
-export class PenHandler extends DrawHandler implements DrawHandler {
+export class PenHandler extends DrawHandler implements DrawEventHandler {
   private _editing: boolean
   constructor(option: DrawHandlerOption) {
     super(option)
@@ -281,20 +281,20 @@ export class PenHandler extends DrawHandler implements DrawHandler {
     ev.preventDefault()
     const isFrameIn = this._isContainElement(ev)
     if (!this._editing && isFrameIn) {
-      this.start()
-      this.move(this.getPointObjectFromDrawEvent(ev))
+      this.drawStart()
+      this.drawMove(this.getPointObjectFromDrawEvent(ev))
       this._editing = true
       return
     }
 
     if (isFrameIn) {
-      this.move(this.getPointObjectFromDrawEvent(ev))
+      this.drawMove(this.getPointObjectFromDrawEvent(ev))
       return
     }
 
     // end
     this._editing = false
-    this.end()
+    this.drawEnd()
   }
 
   private _isContainElement(
@@ -308,7 +308,7 @@ export class PenHandler extends DrawHandler implements DrawHandler {
     const stopId = setInterval(() => {
       if (!document.hasFocus()) {
         this._editing = false
-        this.end()
+        this.drawEnd()
       }
     }, 1000)
     return [() => clearInterval(stopId)]
