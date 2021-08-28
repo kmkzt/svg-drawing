@@ -27,7 +27,7 @@ export type UseSvg<T extends HTMLElement> = [RefObject<T>, SvgObject, SvgAction]
  */
 export type SvgAction = {
   svg: Svg
-  resize: ResizeHandler
+  resizeListener: ResizeHandler
   onUpdate: () => void
   onClear: () => void
 }

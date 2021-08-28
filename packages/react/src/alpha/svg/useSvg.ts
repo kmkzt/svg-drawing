@@ -8,7 +8,7 @@ const RENDER_INTERVAL = 0
 export const useSvg = <T extends HTMLElement>({
   sharedSvg,
 }: UseSvgOptions = {}): UseSvg<T> => {
-  const renderRef = useRef<T>(null)
+  const targetRef = useRef<T>(null)
   const svg = useMemo(() => sharedSvg || new Svg({ width: 0, height: 0 }), [
     sharedSvg,
   ])
@@ -37,7 +37,7 @@ export const useSvg = <T extends HTMLElement>({
   /**
    * Setup ResizeHandler
    */
-  const resize = useMemo<ResizeHandler>(() => {
+  const resizeListener = useMemo<ResizeHandler>(() => {
     const resizeCallback: ResizeHandlerOption['resize'] = ({
       width,
       height,
@@ -49,18 +49,18 @@ export const useSvg = <T extends HTMLElement>({
     return new ResizeHandler({ resize: resizeCallback })
   }, [svg])
   useEffect(() => {
-    if (!renderRef.current) return
-    resize.setElement(renderRef.current)
-    resize.on()
-    return () => resize.off()
-  }, [resize, renderRef])
+    if (!targetRef.current) return
+    resizeListener.setElement(targetRef.current)
+    resizeListener.on()
+    return () => resizeListener.off()
+  }, [resizeListener, targetRef])
 
   return [
-    renderRef,
+    targetRef,
     svgObj,
     {
       svg,
-      resize,
+      resizeListener,
       onUpdate,
       onClear,
     },
