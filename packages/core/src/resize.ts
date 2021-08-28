@@ -1,7 +1,7 @@
-import type { ResizeHandlerOption } from './types'
+import type { ResizeEventHandler, ResizeHandlerOption } from './types'
 
 const SUPPORT_RESIZE_OBSERVER = typeof ResizeObserver !== 'undefined'
-export class ResizeHandler {
+export class ResizeHandler implements ResizeEventHandler {
   /**
    * Remove EventList
    */

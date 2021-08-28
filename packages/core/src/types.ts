@@ -86,15 +86,21 @@ export type DownloadOption = {
   extension: 'svg' | 'png' | 'jpg'
   filename?: string
 }
+
+export interface ResizeEventHandler {
+  resize: (
+    rect: DOMRect | { width: number; height: number; left: number; top: number }
+  ) => void
+  on: () => void
+  off: () => void
+}
 /**
  * ResizeHandler callback
  */
 export type ResizeHandlerOption = {
   el?: HTMLElement
-  resize: (
-    rect: DOMRect | { width: number; height: number; left: number; top: number }
-  ) => void
-}
+} & Pick<ResizeEventHandler, 'resize'>
+
 export type DrawListenerType = 'pointer' | 'touch' | 'mouse'
 
 export type DrawEventName = Extract<

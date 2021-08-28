@@ -14,6 +14,7 @@ import {
   DrawEventHandler,
   DrawingOption,
   PointObject,
+  ResizeEventHandler,
   ResizeHandlerOption,
 } from './types'
 import { isAlmostSameNumber } from './utils'
@@ -53,7 +54,7 @@ export class SvgDrawing {
     public svg: Svg,
     public renderer: Renderer,
     public handler: DrawEventHandler,
-    public resizeListener: ResizeHandler,
+    public resizeListener: ResizeEventHandler,
     { penColor, penWidth, curve, close, delay, fill }: DrawingOption = {}
   ) {
     /**
