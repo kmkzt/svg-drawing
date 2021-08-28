@@ -1,45 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`svg.ts Path commands parameter and getCommandString Normal 1`] = `
-Array [
-  Command {
-    "type": "M",
-    "value": Array [
-      0,
-      0,
-    ],
-  },
-  Command {
-    "type": "L",
-    "value": Array [
-      1,
-      1,
-    ],
-  },
-  Command {
-    "type": "L",
-    "value": Array [
-      -1,
-      -1,
-    ],
-  },
-]
-`;
-
-exports[`svg.ts Path commands parameter and getCommandString Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
-
-exports[`svg.ts Path toJson and toElement toElement 1`] = `
-<path
-  d="M 0 0 L 1 1 L 2 1 L 3 0"
-/>
-`;
-
-exports[`svg.ts Path toJson and toElement toJson 1`] = `
-Object {
-  "d": "M 0 0 L 1 1 L 2 1 L 3 0",
-}
-`;
-
 exports[`svg.ts Svg download svg download 1`] = `
 Object {
   "data": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PHBhdGggZD0iTSA0IDQgTCA5IDQgTCA5IDggTCAzIDAgWiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXR0ZXIiPjwvcGF0aD48L3N2Zz4=",
@@ -180,5 +140,45 @@ Object {
     },
   ],
   "width": 500,
+}
+`;
+
+exports[`svg.ts new Path() commands parameter and getCommandString Normal 1`] = `
+Array [
+  Command {
+    "type": "M",
+    "value": Array [
+      0,
+      0,
+    ],
+  },
+  Command {
+    "type": "L",
+    "value": Array [
+      1,
+      1,
+    ],
+  },
+  Command {
+    "type": "L",
+    "value": Array [
+      -1,
+      -1,
+    ],
+  },
+]
+`;
+
+exports[`svg.ts new Path() commands parameter and getCommandString Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
+
+exports[`svg.ts new Path() toJson and toElement toElement 1`] = `
+<path
+  d="M 0 0 L 1 1 L 2 1 L 3 0"
+/>
+`;
+
+exports[`svg.ts new Path() toJson and toElement toJson 1`] = `
+Object {
+  "d": "M 0 0 L 1 1 L 2 1 L 3 0",
 }
 `;
