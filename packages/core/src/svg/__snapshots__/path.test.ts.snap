@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`svg/path.ts Path commands parameter and getCommandString Normal 1`] = `
+Array [
+  Command {
+    "type": "M",
+    "value": Array [
+      0,
+      0,
+    ],
+  },
+  Command {
+    "type": "L",
+    "value": Array [
+      1,
+      1,
+    ],
+  },
+  Command {
+    "type": "L",
+    "value": Array [
+      -1,
+      -1,
+    ],
+  },
+]
+`;
+
+exports[`svg/path.ts Path commands parameter and getCommandString Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
+
+exports[`svg/path.ts Path toJson and toElement toElement 1`] = `
+<path
+  d="M 0 0 L 1 1 L 2 1 L 3 0"
+/>
+`;
+
+exports[`svg/path.ts Path toJson and toElement toJson 1`] = `
+Object {
+  "d": "M 0 0 L 1 1 L 2 1 L 3 0",
+}
+`;

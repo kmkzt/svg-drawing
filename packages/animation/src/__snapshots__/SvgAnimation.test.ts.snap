@@ -1,93 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`animation.ts Animation init 1`] = `
-Animation {
+exports[`SvgAnimation.ts SvgAnimation init 1`] = `
+SvgAnimation {
   "_anim": null,
   "_repeatCount": "indefinite",
+  "_resize": [Function],
+  "_restorePaths": Array [],
+  "_stopAnimation": null,
+  "_stopId": 0,
   "ms": 60,
-  "originPaths": Array [
-    Path {
-      "attrs": Object {
-        "fill": "#f00",
-        "id": "t0",
-        "stroke": "#00f",
-        "strokeWidth": "4",
-      },
-      "commands": Array [
-        Command {
-          "type": "M",
-          "value": Array [
-            1,
-            1,
-          ],
-        },
-        Command {
-          "type": "L",
-          "value": Array [
-            2,
-            2,
-          ],
-        },
-        Command {
-          "type": "C",
-          "value": Array [
-            3,
-            3,
-            5,
-            3,
-            7,
-            3,
-          ],
-        },
-        Command {
-          "type": "Z",
-          "value": Array [],
-        },
-      ],
-    },
-    Path {
-      "attrs": Object {
-        "fill": "#ff0",
-        "id": "t1",
-        "stroke": "#f0f",
-        "strokeWidth": "2",
-      },
-      "commands": Array [
-        Command {
-          "type": "M",
-          "value": Array [
-            2,
-            2,
-          ],
-        },
-        Command {
-          "type": "L",
-          "value": Array [
-            4,
-            4,
-          ],
-        },
-        Command {
-          "type": "C",
-          "value": Array [
-            6,
-            6,
-            10,
-            6,
-            14,
-            6,
-          ],
-        },
-        Command {
-          "type": "Z",
-          "value": Array [],
-        },
-      ],
-    },
-  ],
+  "renderer": Renderer {
+    "el": <div>
+      <svg
+        height="0"
+        version="1.1"
+        width="0"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      />
+    </div>,
+  },
+  "resizeHandler": ResizeHandler {
+    "_clearEventList": Array [
+      [Function],
+    ],
+    "_el": <div>
+      <svg
+        height="0"
+        version="1.1"
+        width="0"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      />
+    </div>,
+    "resize": [Function],
+  },
   "svg": Svg {
     "background": undefined,
-    "height": 200,
+    "height": 0,
     "paths": Array [
       Path {
         "attrs": Object {
@@ -166,16 +116,16 @@ Animation {
         ],
       },
     ],
-    "width": 200,
+    "width": 0,
   },
 }
 `;
 
-exports[`animation.ts Animation toAnimationElement 1`] = `
+exports[`SvgAnimation.ts SvgAnimation toAnimationElement 1`] = `
 <svg
-  height="200"
+  height="0"
   version="1.1"
-  width="200"
+  width="0"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink"
 >
