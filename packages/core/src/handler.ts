@@ -1,5 +1,4 @@
 import type {
-  DrawHandlerOption,
   DrawListenerType,
   DrawEventHandler,
   ClearListener,
@@ -27,10 +26,6 @@ const getPassiveOptions = (passive = true): false | { passive: boolean } =>
 
 export class DrawHandler implements DrawEventHandler {
   /**
-   *
-   */
-  protected _el: DrawHandlerOption['el']
-  /**
    * Remove EventList
    */
   protected _clearEventList: Array<ClearListener>
@@ -48,30 +43,27 @@ export class DrawHandler implements DrawEventHandler {
   /**
    * EventHandler
    */
-  public drawEnd: DrawHandlerOption['drawEnd']
-  public drawStart: DrawHandlerOption['drawStart']
-  public drawMove: DrawHandlerOption['drawMove']
-  constructor({ el, drawEnd, drawStart, drawMove }: DrawHandlerOption) {
-    /**
-     * Bind property from arguments.
-     */
-    this.drawEnd = drawEnd
-    this.drawStart = drawStart
-    this.drawMove = drawMove
+  public drawEnd: DrawEventHandler['drawEnd']
+  public drawStart: DrawEventHandler['drawStart']
+  public drawMove: DrawEventHandler['drawMove']
+  constructor(protected el: HTMLElement | null) {
     /**
      * Bind method
      */
     this.on = this.on.bind(this)
     this.off = this.off.bind(this)
+
     /**
      * Set offset coordinates
      */
-    this._el = el
     const { left, top } = el ? el.getBoundingClientRect() : { left: 0, top: 0 }
     this._offset = { left, top }
     /**
      * Setup property.
      */
+    this.drawStart = () => void 0
+    this.drawMove = () => void 0
+    this.drawEnd = () => void 0
     this._clearEventList = []
     this._listenerOption = getPassiveOptions(false)
   }
@@ -95,8 +87,8 @@ export class DrawHandler implements DrawEventHandler {
     ]
   }
 
-  public setElement(el: Exclude<DrawHandlerOption['el'], undefined>) {
-    this._el = el
+  public setElement(el: HTMLElement) {
+    this.el = el
     if (this.isActive) this.on()
   }
 
@@ -104,7 +96,7 @@ export class DrawHandler implements DrawEventHandler {
     drawStart,
     drawMove,
     drawEnd,
-  }: Pick<DrawHandlerOption, 'drawStart' | 'drawMove' | 'drawEnd'>) {
+  }: Parameters<DrawEventHandler['setHandler']>[0]) {
     this.drawEnd = drawEnd
     this.drawStart = drawStart
     this.drawMove = drawMove
@@ -145,7 +137,7 @@ export class DrawHandler implements DrawEventHandler {
    * Set left, top property when scroll or resize event
    */
   private _setupCoordinatesListener(): Array<ClearListener> {
-    const el = this._el
+    const el = this.el
     if (!el) return []
     const setOffsetPosition = () => {
       const { left, top } = el.getBoundingClientRect()
@@ -164,9 +156,9 @@ export class DrawHandler implements DrawEventHandler {
   }
 }
 
-export class PencilHandler extends DrawHandler implements DrawEventHandler {
-  constructor(option: DrawHandlerOption) {
-    super(option)
+export class PencilHandler extends DrawHandler {
+  constructor(...[el]: ConstructorParameters<typeof DrawHandler>) {
+    super(el)
     /**
      * Bind methods
      */
@@ -199,7 +191,7 @@ export class PencilHandler extends DrawHandler implements DrawEventHandler {
   }
 
   private _setupDrawListener(type: DrawListenerType): Array<() => void> {
-    const el = this._el
+    const el = this.el
     if (!el) return []
     const eventMap: Record<
       DrawListenerType,
@@ -258,10 +250,10 @@ export class PencilHandler extends DrawHandler implements DrawEventHandler {
   }
 }
 
-export class PenHandler extends DrawHandler implements DrawEventHandler {
+export class PenHandler extends DrawHandler {
   private _editing: boolean
-  constructor(option: DrawHandlerOption) {
-    super(option)
+  constructor(...[el]: ConstructorParameters<typeof DrawHandler>) {
+    super(el)
     this._editing = false
     this._handleProt = this._handleProt.bind(this)
   }
@@ -300,8 +292,8 @@ export class PenHandler extends DrawHandler implements DrawEventHandler {
   private _isContainElement(
     ev: MouseEvent | PointerEvent | TouchEvent
   ): boolean {
-    if (!this._el) return false
-    return this._el.contains(ev.target as any)
+    if (!this.el) return false
+    return this.el.contains(ev.target as any)
   }
 
   private _setupCancelListener() {

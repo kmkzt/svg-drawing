@@ -6,13 +6,10 @@ import {
   BezierCurve,
   CommandsConverter,
   throttle,
+  DrawEventHandler,
 } from '@svg-drawing/core'
 import { useSvg } from '../svg/useSvg'
-import type {
-  DrawHandlerOption,
-  PathObject,
-  PointObject,
-} from '@svg-drawing/core'
+import type { PathObject, PointObject } from '@svg-drawing/core'
 import type { UseDrawOptions, UseDraw, DrawAction, KeyboardMap } from '../types'
 
 const DRAW_DELAY = 20
@@ -55,14 +52,14 @@ export const useDraw = <T extends HTMLElement>({
     onUpdate()
   }, [converter, onUpdate])
 
-  const handleDrawStart = useCallback<DrawHandlerOption['drawStart']>(() => {
+  const handleDrawStart = useCallback<DrawEventHandler['drawStart']>(() => {
     if (drawPathRef.current) return
     drawPathRef.current = createDrawPath()
     svg.addPath(drawPathRef.current)
   }, [createDrawPath, svg])
 
-  const handleDrawMove = useMemo<DrawHandlerOption['drawMove']>(() => {
-    const move: DrawHandlerOption['drawMove'] = (po) => {
+  const handleDrawMove = useMemo<DrawEventHandler['drawMove']>(() => {
+    const move: DrawEventHandler['drawMove'] = (po) => {
       if (!drawPathRef.current) return
       drawPointsRef.current = [...drawPointsRef.current, po]
       updateCommands()
@@ -70,7 +67,7 @@ export const useDraw = <T extends HTMLElement>({
     return throttle(move, DRAW_DELAY)
   }, [updateCommands])
 
-  const handleDrawEnd = useCallback<DrawHandlerOption['drawEnd']>(() => {
+  const handleDrawEnd = useCallback<DrawEventHandler['drawEnd']>(() => {
     drawPathRef.current = null
   }, [])
 
@@ -80,19 +77,16 @@ export const useDraw = <T extends HTMLElement>({
   const handler = useRef<DrawHandler>(
     (() => {
       const Handler = CustomDrawHandler ?? PencilHandler
-      return new Handler({
-        el: elRef.current,
-        drawStart: handleDrawStart,
-        drawMove: handleDrawMove,
-        drawEnd: handleDrawEnd,
-      })
+      return new Handler(elRef.current)
     })()
   )
   useEffect(() => {
-    handler.current.drawStart = handleDrawStart
-    handler.current.drawMove = handleDrawMove
-    handler.current.drawEnd = handleDrawEnd
-  }, [handleDrawStart, handleDrawMove, handleDrawEnd])
+    handler.current.setHandler({
+      drawStart: handleDrawStart,
+      drawMove: handleDrawMove,
+      drawEnd: handleDrawEnd,
+    })
+  }, [handler, handleDrawStart, handleDrawMove, handleDrawEnd])
 
   const setDrawHandler = useCallback(
     (Handler: typeof DrawHandler) => {
@@ -101,8 +95,8 @@ export const useDraw = <T extends HTMLElement>({
       const { width, height } = drawEl.getBoundingClientRect()
       svg.resize({ width, height })
       handler.current.off()
-      handler.current = new Handler({
-        el: elRef.current,
+      handler.current = new Handler(elRef.current)
+      handler.current.setHandler({
         drawStart: handleDrawStart,
         drawMove: handleDrawMove,
         drawEnd: handleDrawEnd,

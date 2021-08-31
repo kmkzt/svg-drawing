@@ -85,9 +85,11 @@ export class SvgDrawing {
     this._drawMoveThrottle = throttle(this.drawMove, this.delay)
     this.drawEnd = this.drawEnd.bind(this)
 
-    this.handler.drawStart = this.drawStart
-    this.handler.drawMove = this._drawMoveThrottle
-    this.handler.drawEnd = this.drawEnd
+    this.handler.setHandler({
+      drawStart: this.drawStart,
+      drawMove: this.drawMove,
+      drawEnd: this.drawEnd,
+    })
 
     /**
      * Start exec
@@ -204,12 +206,7 @@ export class SvgDrawing {
     return new SvgDrawing(
       new Svg({ width, height, background: opts.background }),
       new Renderer(el, { background: opts.background }),
-      new PencilHandler({
-        el,
-        drawStart: dummyHandler,
-        drawMove: dummyHandler,
-        drawEnd: dummyHandler,
-      }),
+      new PencilHandler(el),
       new ResizeHandler({
         el,
         resize: dummyHandler,

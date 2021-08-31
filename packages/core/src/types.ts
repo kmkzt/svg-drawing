@@ -123,18 +123,22 @@ export type DrawEventName = Extract<
 
 export type ClearListener = () => void
 
+export type DrawStart = () => void
+export type DrawEnd = () => void
+export type DrawMove = (po: PointObject) => void
 export interface DrawEventHandler {
   isActive: boolean
   on: () => void
   off: () => void
-  drawStart: () => void
-  drawEnd: () => void
-  drawMove: (po: PointObject) => void
+  drawStart: DrawStart
+  drawEnd: DrawEnd
+  drawMove: DrawMove
+  setHandler: (handler: {
+    drawStart: DrawStart
+    drawMove: DrawMove
+    drawEnd: DrawEnd
+  }) => void
 }
-
-export type DrawHandlerOption = {
-  el: HTMLElement | null
-} & Pick<DrawEventHandler, 'drawStart' | 'drawMove' | 'drawEnd'>
 /**
  * Control Point
  */

@@ -3,7 +3,7 @@ import { roundUp } from '../utils'
 import { Point } from './point'
 
 export class Command {
-  public static Types = {
+  static Types = {
     /**
      * move
      * @description
