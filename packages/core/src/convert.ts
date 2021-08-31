@@ -1,4 +1,4 @@
-import { Point, Command, Vector, COMMAND_TYPE } from './svg'
+import { Point, Command, Vector } from './svg'
 import { PointObject, ConvertOption } from './types'
 
 // TODO: move types.ts
@@ -8,10 +8,7 @@ export interface GenerateCommandsConverter {
 }
 
 export const convertLineCommands: CommandsConverter = (points) =>
-  points.map(
-    (p, i) =>
-      new Command(i === 0 ? COMMAND_TYPE.MOVE : COMMAND_TYPE.LINE, [p.x, p.y])
-  )
+  points.map((p, i) => new Command(i === 0 ? 'M' : 'L', [p.x, p.y]))
 
 const genVector = ({
   prev,
@@ -50,14 +47,7 @@ export class BezierCurve implements GenerateCommandsConverter {
 
     const cPrev = new Point(p2.x, p2.y).add(vPrev.toPoint())
     const cNext = new Point(p3.x, p3.y).add(vNext.toPoint())
-    return new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-      cPrev.x,
-      cPrev.y,
-      cNext.x,
-      cNext.y,
-      p3.x,
-      p3.y,
-    ])
+    return new Command('C', [cPrev.x, cPrev.y, cNext.x, cNext.y, p3.x, p3.y])
   }
 
   public convert(p: PointObject[]): Command[] {
@@ -67,7 +57,7 @@ export class BezierCurve implements GenerateCommandsConverter {
     }
     for (let i = 0; i < p.length; i += 1) {
       if (i === 0) {
-        commands.push(new Command(COMMAND_TYPE.MOVE, [p[i].x, p[i].y]))
+        commands.push(new Command('M', [p[i].x, p[i].y]))
         continue
       }
       commands.push(
@@ -85,5 +75,5 @@ export class BezierCurve implements GenerateCommandsConverter {
 
 export const closeCommands = (commands: Command[]): Command[] => [
   ...commands,
-  new Command(COMMAND_TYPE.CLOSE),
+  new Command('Z'),
 ]

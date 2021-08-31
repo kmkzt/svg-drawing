@@ -1,6 +1,6 @@
 import { CommandType, PathObject, PointObject } from '../types'
 import { kebab2camel } from '../utils'
-import { Command, COMMAND_TYPE } from './command'
+import { Command } from './command'
 
 /**
  * TODO: refactor command.
@@ -61,12 +61,10 @@ export class Path {
     let type: CommandType | null = null
     let value: number[] = []
     const c = d.split(' ')
-    const checkType = (c: any): CommandType | null =>
-      Object.values(COMMAND_TYPE).includes(c) ? c : null
     for (let i = 0; i < c.length; i += 1) {
-      const t = checkType(c[i])
+      const t = c[i]
       // COMMAND Parse
-      if (t) {
+      if (Command.validTypes(t)) {
         if (!type) {
           type = t
           continue

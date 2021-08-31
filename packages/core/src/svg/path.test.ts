@@ -1,6 +1,6 @@
 import { Path } from './path'
 import { Point } from './point'
-import { Command, COMMAND_TYPE } from './command'
+import { Command } from './command'
 import { pathObjectToElement } from '../renderer'
 
 describe('svg/path.ts', () => {
@@ -8,19 +8,19 @@ describe('svg/path.ts', () => {
     let path: Path
     beforeEach(() => {
       path = new Path({ strokeWidth: '1' })
-        .addCommand(new Command(COMMAND_TYPE.MOVE, [1, 1]))
-        .addCommand(new Command(COMMAND_TYPE.LINE, [2, 2]))
+        .addCommand(new Command('M', [1, 1]))
+        .addCommand(new Command('L', [2, 2]))
     })
     it('addCommand', () => {
       expect(path.commands.length).toBe(2)
-      expect(path.commands[0].type).toBe(COMMAND_TYPE.MOVE)
+      expect(path.commands[0].type).toBe('M')
       expect(path.commands[0].point.x).toBe(1)
       expect(path.commands[0].point.y).toBe(1)
     })
     it('scale', () => {
       path.scale(2)
       expect(path.attrs.strokeWidth).toBe('2')
-      expect(path.commands[0].type).toBe(COMMAND_TYPE.MOVE)
+      expect(path.commands[0].type).toBe('M')
       expect(path.commands[0].point.x).toBe(2)
       expect(path.commands[0].point.y).toBe(2)
     })
@@ -49,11 +49,9 @@ describe('svg/path.ts', () => {
     })
     it('clone', () => {
       const origin = new Path({ strokeWidth: '1' }).addCommand(
-        new Command(COMMAND_TYPE.MOVE, [1, 1])
+        new Command('M', [1, 1])
       )
-      const clone = origin
-        .clone()
-        .addCommand(new Command(COMMAND_TYPE.LINE, [2, 2]))
+      const clone = origin.clone().addCommand(new Command('L', [2, 2]))
       clone.commands[0].point = new Point(3, clone.commands[0].point.y)
       expect(origin.commands.length).toBe(1)
       expect(clone.commands.length).toBe(2)
@@ -62,10 +60,10 @@ describe('svg/path.ts', () => {
     })
     describe('toJson and toElement', () => {
       const path = new Path()
-        .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
-        .addCommand(new Command(COMMAND_TYPE.LINE, [1, 1]))
-        .addCommand(new Command(COMMAND_TYPE.LINE, [2, 1]))
-        .addCommand(new Command(COMMAND_TYPE.LINE, [3, 0]))
+        .addCommand(new Command('M', [0, 0]))
+        .addCommand(new Command('L', [1, 1]))
+        .addCommand(new Command('L', [2, 1]))
+        .addCommand(new Command('L', [3, 0]))
       it('toJson', () => {
         expect(path.toJson()).toMatchSnapshot()
       })
@@ -75,9 +73,9 @@ describe('svg/path.ts', () => {
     })
     describe('commands parameter and getCommandString', () => {
       const path = new Path()
-        .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
-        .addCommand(new Command(COMMAND_TYPE.LINE, [1, 1]))
-        .addCommand(new Command(COMMAND_TYPE.LINE, [-1, -1]))
+        .addCommand(new Command('M', [0, 0]))
+        .addCommand(new Command('L', [1, 1]))
+        .addCommand(new Command('L', [-1, -1]))
       it('Normal', () => {
         expect(path.commands).toMatchSnapshot()
         expect(path.getCommandString()).toMatchSnapshot()

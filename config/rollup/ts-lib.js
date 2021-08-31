@@ -24,6 +24,7 @@ export default build({
         '@babel/plugin-transform-runtime',
         { useESModules: esm, regenerator: false },
       ],
+      '@babel/plugin-proposal-class-properties',
     ],
   }),
 })

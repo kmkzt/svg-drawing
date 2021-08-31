@@ -1,40 +1,24 @@
-import { Command, COMMAND_TYPE } from './command'
+import { Command } from './command'
 import { Point } from './point'
 
 describe('svg/command.ts', () => {
   describe('Command', () => {
-    it('MOVE', () => {
-      const cmd = new Command(COMMAND_TYPE.MOVE, [0, 0])
-      expect(cmd.toString()).toBe('M 0 0')
-    })
-    it('LINE', () => {
-      const cmd = new Command(COMMAND_TYPE.LINE, [1, 1])
-      expect(cmd.toString()).toBe('L 1 1')
-    })
-    it('CURVE', () => {
-      const cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-        0.25,
-        0.25,
-        0.75,
-        0.25,
-        1,
-        1,
-      ])
-      expect(cmd.toString()).toBe('C 0.25 0.25 0.75 0.25 1 1')
+    describe('new Command()', () => {
+      it('Absolute', () => {
+        expect(new Command('M', [0, 0]).toString()).toBe('M 0 0')
+        expect(new Command('L', [1, 1]).toString()).toBe('L 1 1')
+        expect(
+          new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1]).toString()
+        ).toBe('C 0.25 0.25 0.75 0.25 1 1')
+      })
+      it.todo('Relative')
     })
 
     describe('clone', () => {
       let cmd: Command
       let clone: Command
       beforeEach(() => {
-        cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-          0.25,
-          0.25,
-          0.75,
-          0.25,
-          1,
-          1,
-        ])
+        cmd = new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1])
         clone = cmd.clone()
       })
       it('point is not overwritten', () => {
@@ -55,69 +39,54 @@ describe('svg/command.ts', () => {
     })
 
     describe('scale', () => {
-      it('MOVE', () => {
-        const cmd = new Command(COMMAND_TYPE.MOVE, [1, 1]).scale(2)
-        expect(cmd.toString()).toBe('M 2 2')
+      it('Absolute', () => {
+        expect(new Command('M', [1, 1]).scale(2).toString()).toBe('M 2 2')
+        expect(new Command('L', [1, 1]).scale(2).toString()).toBe('L 2 2')
+        expect(
+          new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1]).scale(2).toString()
+        ).toBe('C 0.5 0.5 1.5 0.5 2 2')
       })
-      it('LINE', () => {
-        const cmd = new Command(COMMAND_TYPE.LINE, [1, 1]).scale(2)
-        expect(cmd.toString()).toBe('L 2 2')
-      })
-      it('CURVE', () => {
-        const cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-          0.25,
-          0.25,
-          0.75,
-          0.25,
-          1,
-          1,
-        ]).scale(2)
-        expect(cmd.toString()).toBe('C 0.5 0.5 1.5 0.5 2 2')
-      })
+      it.todo('Relative')
     })
 
     describe('scaleX', () => {
-      it('MOVE', () => {
-        const cmd = new Command(COMMAND_TYPE.MOVE, [1, 1]).scaleX(2)
-        expect(cmd.toString()).toBe('M 2 1')
+      it('Absolute', () => {
+        expect(new Command('M', [1, 1]).scaleX(2).toString()).toBe('M 2 1')
+        expect(new Command('L', [1, 1]).scaleX(2).toString()).toBe('L 2 1')
+        expect(
+          new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1]).scaleX(2).toString()
+        ).toBe('C 0.5 0.25 1.5 0.25 2 1')
       })
-      it('LINE', () => {
-        const cmd = new Command(COMMAND_TYPE.LINE, [1, 1]).scaleX(2)
-        expect(cmd.toString()).toBe('L 2 1')
-      })
-      it('CURVE', () => {
-        const cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-          0.25,
-          0.25,
-          0.75,
-          0.25,
-          1,
-          1,
-        ]).scaleX(2)
-        expect(cmd.toString()).toBe('C 0.5 0.25 1.5 0.25 2 1')
-      })
+
+      it.todo('Relative')
     })
 
     describe('scaleY', () => {
-      it('MOVE', () => {
-        const cmd = new Command(COMMAND_TYPE.MOVE, [1, 1]).scaleY(2)
-        expect(cmd.toString()).toBe('M 1 2')
+      it('Absolute', () => {
+        expect(new Command('M', [1, 1]).scaleY(2).toString()).toBe('M 1 2')
+        expect(new Command('L', [1, 1]).scaleY(2).toString()).toBe('L 1 2')
+        expect(
+          new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1]).scaleY(2).toString()
+        ).toBe('C 0.25 0.5 0.75 0.5 1 2')
       })
-      it('LINE', () => {
-        const cmd = new Command(COMMAND_TYPE.LINE, [1, 1]).scaleY(2)
-        expect(cmd.toString()).toBe('L 1 2')
-      })
-      it('CURVE', () => {
-        const cmd = new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-          0.25,
-          0.25,
-          0.75,
-          0.25,
-          1,
-          1,
-        ]).scaleY(2)
-        expect(cmd.toString()).toBe('C 0.25 0.5 0.75 0.5 1 2')
-      })
+
+      it.todo('Relative')
+    })
+    it('validTypes', () => {
+      expect(Command.validTypes('M')).toBe(true)
+      expect(Command.validTypes('m')).toBe(true)
+      expect(Command.validTypes('L')).toBe(true)
+      expect(Command.validTypes('l')).toBe(true)
+      expect(Command.validTypes('C')).toBe(true)
+      expect(Command.validTypes('c')).toBe(true)
+      expect(Command.validTypes('Z')).toBe(true)
+      expect(Command.validTypes('z')).toBe(true)
+      expect(Command.validTypes('A')).toBe(true)
+      expect(Command.validTypes('a')).toBe(true)
+      expect(Command.validTypes('Q')).toBe(true)
+      expect(Command.validTypes('q')).toBe(true)
+      expect(Command.validTypes('S')).toBe(true)
+      expect(Command.validTypes('s')).toBe(true)
     })
   })
 })

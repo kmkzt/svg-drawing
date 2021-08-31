@@ -2,28 +2,118 @@ import { CommandType, PointObject } from '../types'
 import { roundUp } from '../utils'
 import { Point } from './point'
 
-export const COMMAND_TYPE: { [name: string]: CommandType } = {
-  MOVE: 'M', // M 0 0
-  MOVE_RELATIVE: 'm', // m 0 0
-  LINE: 'L', // L 1 1
-  LINE_RELATIVE: 'l', // l 1 1
-  CUBIC_BEZIER_CURVE: 'C', // C 1 1 2 2 3 3
-  CUBIC_BEZIER_CURVE_RELATIVE: 'c', // c 1 1 2 2 3 3
-  CLOSE: 'Z', // Z, z
-  HORIZONTAL: 'H', // H 10
-  HORIZONTAL_RELATIVE: 'h', // h 10
-  VERTICAL: 'V', // V 20
-  VERTICAL_RELATIVE: 'v', // v 20
-  ARC_CURVE: 'A', // A 6 4 10 0 1 14 10
-  ARC_CURVE_RELATIVE: 'a', // A 6 4 10 0 1 14 10
-  QUADRATIC_CURVE: 'Q', // Q 10 60 10 30
-  QUADRATIC_CURVE_RELATIVE: 'q', // q 10 60 10 30
-  SHORTCUT_CURVE: 'S', // S 10 60 10 30
-  SHORTCUT_CURVE_RELATIVE: 's', // s 10 60 10 30
-} as const
-
-// TODO: compatible COMMAND_TYPE
 export class Command {
+  public static Types = {
+    /**
+     * move
+     * @description
+     * M 0 0
+     */
+    M: 'M',
+    /**
+     * move relative
+     * @description
+     * m 0 0
+     */
+    m: 'm',
+    /**
+     * Line
+     * @description
+     * L 0 0
+     */
+    L: 'L',
+    /**
+     * Line relative
+     * @description
+     * l 0 0
+     */
+    l: 'l',
+    /**
+     * Cubic bezier curve
+     * @description
+     * C 1 1 2 2 3 3
+     */
+    C: 'C',
+    /**
+     * Cubic bezier curve relative
+     * @description
+     * c 1 1 2 2 3 3
+     */
+    c: 'c',
+    /**
+     * Close
+     * @description
+     * 'Z'
+     */
+    Z: 'Z',
+    /**
+     * Close
+     * @description
+     * 'z'
+     */
+    z: 'z',
+    /**
+     * Horizontal
+     * @description
+     * H 10
+     */
+    H: 'H',
+    /**
+     * Horizontal relative
+     * @description
+     * h 10
+     */
+    h: 'h',
+    /**
+     * Vertical
+     * @description
+     * V 10
+     */
+    V: 'V',
+    /**
+     * Vertical relative
+     * @description
+     * v 10
+     */
+    v: 'v',
+    /**
+     * Arc curve
+     * @description
+     *  A 6 4 10 0 1 14 10
+     */
+    A: 'A',
+    /**
+     * Arc curve relative
+     * @description
+     * a 6 4 10 0 1 14 10
+     */
+    a: 'a',
+    /**
+     * Quadratic curve
+     * @description
+     * Q 10 60 10 30
+     */
+    Q: 'Q',
+    /**
+     * Quadratic curve relative
+     * @description
+     *  q 10 60 10 30
+     */
+    q: 'q',
+    /**
+     * Shortcut curve
+     * @description
+     *  S 10 60 10 30
+     */
+    S: 'S',
+    /**
+     * Shortcut curve relative
+     * @description
+     * s 10 60 10 30
+     */
+    s: 's',
+  } as const
+
   public type: CommandType
   public value: number[]
   // TODO: Convert data format to number array.
@@ -32,6 +122,9 @@ export class Command {
     this.type = type
   }
 
+  /**
+   * @deprecated
+   */
   public set cr(po: Point | undefined) {
     if (!po) return
     if (!this.isCubicBezierCurve) {
@@ -40,6 +133,10 @@ export class Command {
     this.value.splice(2, 1, po.x)
     this.value.splice(3, 1, po.y)
   }
+
+  /**
+   * @deprecated
+   */
   public get cr(): Point | undefined {
     if (!this.isCubicBezierCurve) {
       return undefined
@@ -47,6 +144,10 @@ export class Command {
     const [x, y] = this.value.slice(2, 4)
     return new Point(x, y)
   }
+
+  /**
+   * @deprecated
+   */
   public set cl(po: Point | undefined) {
     if (!po) return
     if (!this.isCurve) {
@@ -55,6 +156,10 @@ export class Command {
     this.value.splice(0, 1, po.x)
     this.value.splice(1, 1, po.y)
   }
+
+  /**
+   * @deprecated
+   */
   public get cl(): Point | undefined {
     if (!this.isCurve) {
       return undefined
@@ -74,7 +179,7 @@ export class Command {
   }
 
   public toString(): string {
-    if (this.type === COMMAND_TYPE.CLOSE) return COMMAND_TYPE.CLOSE
+    if (this.type === Command.Types.Z) return Command.Types.Z
     return `${this.type} ${this.value.map((v) => roundUp(v)).join(' ')}`
   }
 
@@ -118,45 +223,60 @@ export class Command {
     return new Command(this.type, this.value.slice())
   }
 
+  /**
+   * @deprecated
+   * */
   public get isCubicBezierCurve(): boolean {
     switch (this.type) {
-      case COMMAND_TYPE.CUBIC_BEZIER_CURVE:
-      case COMMAND_TYPE.CUBIC_BEZIER_CURVE_RELATIVE:
+      case Command.Types.C:
+      case Command.Types.c:
         return this.value.length === 6
       default:
         return false
     }
   }
+
+  /**
+   * @deprecated
+   */
   public get isCurve(): boolean {
     switch (this.type) {
-      case COMMAND_TYPE.CUBIC_BEZIER_CURVE:
-      case COMMAND_TYPE.CUBIC_BEZIER_CURVE_RELATIVE:
+      case Command.Types.C:
+      case Command.Types.c:
         return this.value.length === 6
-      case COMMAND_TYPE.QUADRATIC_CURVE:
-      case COMMAND_TYPE.QUADRATIC_CURVE_RELATIVE:
-      case COMMAND_TYPE.SHORTCUT_CURVE:
-      case COMMAND_TYPE.SHORTCUT_CURVE_RELATIVE:
+      case Command.Types.Q:
+      case Command.Types.q:
+      case Command.Types.S:
+      case Command.Types.s:
         return this.value.length === 4
       default:
         return false
     }
   }
 
+  /**
+   * @deprecated
+   */
   public get isAbsolute(): boolean {
     return [
-      COMMAND_TYPE.MOVE,
-      COMMAND_TYPE.LINE,
-      COMMAND_TYPE.CUBIC_BEZIER_CURVE,
-      COMMAND_TYPE.ARC_CURVE,
-      COMMAND_TYPE.QUADRATIC_CURVE,
-      COMMAND_TYPE.SHORTCUT_CURVE_RELATIVE,
-    ].includes(this.type)
+      Command.Types.M,
+      Command.Types.L,
+      Command.Types.C,
+      Command.Types.A,
+      Command.Types.Q,
+      Command.Types.S,
+    ].some((type) => type === this.type)
   }
+
   public translate(p: PointObject) {
     if (!this.isAbsolute) return
     const po = new Point(p.x, p.y)
     this.point = this.point?.add(po)
     this.cr = this.cr?.add(po)
     this.cl = this.cl?.add(po)
+  }
+
+  public static validTypes(t: any): t is CommandType {
+    return Object.values(Command.Types).some((arg) => arg === t)
   }
 }
