@@ -87,7 +87,7 @@ export class SvgDrawing {
 
     this.handler.setHandler({
       drawStart: this.drawStart,
-      drawMove: this.drawMove,
+      drawMove: this._drawMoveThrottle,
       drawEnd: this.drawEnd,
     })
 
@@ -116,8 +116,12 @@ export class SvgDrawing {
 
   public changeDelay(delay: number): void {
     this.delay = delay
-    this.handler.drawMove = throttle(this.drawMove, this.delay)
-    this.handler.on()
+    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
+    this.handler.setHandler({
+      drawStart: this.drawStart,
+      drawMove: this._drawMoveThrottle,
+      drawEnd: this.drawEnd,
+    })
   }
 
   public drawStart(): void {

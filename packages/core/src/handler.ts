@@ -43,9 +43,9 @@ export class DrawHandler implements DrawEventHandler {
   /**
    * EventHandler
    */
-  public drawEnd: DrawEventHandler['drawEnd']
-  public drawStart: DrawEventHandler['drawStart']
-  public drawMove: DrawEventHandler['drawMove']
+  protected drawEnd: Parameters<DrawHandler['setHandler']>[0]['drawEnd']
+  protected drawStart: Parameters<DrawHandler['setHandler']>[0]['drawStart']
+  protected drawMove: Parameters<DrawHandler['setHandler']>[0]['drawMove']
   constructor(protected el: HTMLElement | null) {
     /**
      * Bind method

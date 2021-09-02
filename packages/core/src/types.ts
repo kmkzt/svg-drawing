@@ -130,9 +130,6 @@ export interface DrawEventHandler {
   isActive: boolean
   on: () => void
   off: () => void
-  drawStart: DrawStart
-  drawEnd: DrawEnd
-  drawMove: DrawMove
   setHandler: (handler: {
     drawStart: DrawStart
     drawMove: DrawMove
