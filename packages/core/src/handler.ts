@@ -4,6 +4,9 @@ import type {
   ClearListener,
   PointObject,
   DrawEventName,
+  DrawEnd,
+  DrawStart,
+  DrawMove,
 } from './types'
 
 const SUPPORT_POINTER_EVENT = typeof PointerEvent !== 'undefined'
@@ -43,9 +46,9 @@ export class DrawHandler implements DrawEventHandler {
   /**
    * EventHandler
    */
-  protected drawEnd: Parameters<DrawHandler['setHandler']>[0]['drawEnd']
-  protected drawStart: Parameters<DrawHandler['setHandler']>[0]['drawStart']
-  protected drawMove: Parameters<DrawHandler['setHandler']>[0]['drawMove']
+  protected drawEnd: DrawEnd
+  protected drawStart: DrawStart
+  protected drawMove: DrawMove
   constructor(protected el: HTMLElement | null) {
     /**
      * Bind method
@@ -157,7 +160,7 @@ export class DrawHandler implements DrawEventHandler {
 }
 
 export class PencilHandler extends DrawHandler {
-  constructor(...[el]: ConstructorParameters<typeof DrawHandler>) {
+  constructor(el: HTMLElement) {
     super(el)
     /**
      * Bind methods
@@ -252,7 +255,7 @@ export class PencilHandler extends DrawHandler {
 
 export class PenHandler extends DrawHandler {
   private _editing: boolean
-  constructor(...[el]: ConstructorParameters<typeof DrawHandler>) {
+  constructor(el: HTMLElement) {
     super(el)
     this._editing = false
     this._handleProt = this._handleProt.bind(this)
@@ -312,6 +315,7 @@ export class PenHandler extends DrawHandler {
       pointer: 'pointerup',
       mouse: 'mouseup',
     }
+
     addEventListener(eventMap[type], this._handleProt)
     return [
       () => {

@@ -1,13 +1,11 @@
 import { Point, Command, Vector } from './svg'
-import { PointObject, ConvertOption } from './types'
+import { PointObject, ConvertOption, CreateCommand } from './types'
 
-// TODO: move types.ts
-export type CommandsConverter = (points: PointObject[]) => Command[]
 export interface GenerateCommandsConverter {
-  convert: CommandsConverter
+  create: CreateCommand
 }
 
-export const convertLineCommands: CommandsConverter = (points) =>
+export const createLineCommands: CreateCommand = (points) =>
   points.map((p, i) => new Command(i === 0 ? 'M' : 'L', [p.x, p.y]))
 
 const genVector = ({
@@ -32,7 +30,7 @@ export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number
   constructor({ ratio }: ConvertOption = {}) {
     this.ratio = ratio ?? 0.4
-    this.convert = this.convert.bind(this)
+    this.create = this.create.bind(this)
   }
 
   public genCommand(
@@ -50,10 +48,10 @@ export class BezierCurve implements GenerateCommandsConverter {
     return new Command('C', [cPrev.x, cPrev.y, cNext.x, cNext.y, p3.x, p3.y])
   }
 
-  public convert(p: PointObject[]): Command[] {
+  public create(p: PointObject[]): Command[] {
     const commands: Command[] = []
     if (p.length < 3) {
-      return convertLineCommands(p)
+      return createLineCommands(p)
     }
     for (let i = 0; i < p.length; i += 1) {
       if (i === 0) {

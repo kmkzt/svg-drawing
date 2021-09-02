@@ -1,3 +1,5 @@
+import type { Command, Path } from './svg'
+
 /**
  * Svg Path JSON
  * TODO: improve key types
@@ -176,3 +178,10 @@ export type FixedPositionType =
   | 'RightTop'
   | 'RightBottom'
   | 'LeftBottom'
+
+export type CreateCommand = (points: PointObject[]) => Command[]
+
+export interface PathFactory {
+  create: () => Path
+  createCommand: CreateCommand
+}

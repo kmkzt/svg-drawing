@@ -1,17 +1,17 @@
 import {
   BezierCurve,
   closeCommands,
-  CommandsConverter,
-  convertLineCommands,
+  CreateCommand,
+  createLineCommands,
 } from '@svg-drawing/core'
 import { useMemo } from 'react'
-import { UseCommandsConverterOptions } from '../types'
+import type { UseCommandsConverterOptions } from '../types'
 
 export const useCommandsConverter = ({
   curve,
   close,
 }: UseCommandsConverterOptions) =>
-  useMemo<CommandsConverter>(() => {
-    const converter = curve ? new BezierCurve().convert : convertLineCommands
+  useMemo<CreateCommand>(() => {
+    const converter = curve ? new BezierCurve().create : createLineCommands
     return (po) => (close ? closeCommands(converter(po)) : converter(po))
   }, [close, curve])

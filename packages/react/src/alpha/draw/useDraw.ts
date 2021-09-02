@@ -4,9 +4,10 @@ import {
   DrawHandler,
   PencilHandler,
   BezierCurve,
-  CommandsConverter,
+  CreateCommand,
   throttle,
-  DrawEventHandler,
+  DrawMove,
+  DrawStart,
 } from '@svg-drawing/core'
 import { useSvg } from '../svg/useSvg'
 import type { PathObject, PointObject } from '@svg-drawing/core'
@@ -31,8 +32,8 @@ export const useDraw = <T extends HTMLElement>({
   })
   const drawPathRef = useRef<Path | null>(null)
   const drawPointsRef = useRef<PointObject[]>([])
-  const converter = useMemo<CommandsConverter>(
-    () => commandsConverter ?? new BezierCurve().convert,
+  const converter = useMemo<CreateCommand>(
+    () => commandsConverter ?? new BezierCurve().create,
     [commandsConverter]
   )
   /**
@@ -52,14 +53,14 @@ export const useDraw = <T extends HTMLElement>({
     onUpdate()
   }, [converter, onUpdate])
 
-  const handleDrawStart = useCallback<DrawEventHandler['drawStart']>(() => {
+  const handleDrawStart = useCallback<DrawStart>(() => {
     if (drawPathRef.current) return
     drawPathRef.current = createDrawPath()
     svg.addPath(drawPathRef.current)
   }, [createDrawPath, svg])
 
-  const handleDrawMove = useMemo<DrawEventHandler['drawMove']>(() => {
-    const move: DrawEventHandler['drawMove'] = (po) => {
+  const handleDrawMove = useMemo<DrawMove>(() => {
+    const move: DrawMove = (po) => {
       if (!drawPathRef.current) return
       drawPointsRef.current = [...drawPointsRef.current, po]
       updateCommands()
@@ -67,7 +68,7 @@ export const useDraw = <T extends HTMLElement>({
     return throttle(move, DRAW_DELAY)
   }, [updateCommands])
 
-  const handleDrawEnd = useCallback<DrawEventHandler['drawEnd']>(() => {
+  const handleDrawEnd = useCallback<DrawStart>(() => {
     drawPathRef.current = null
   }, [])
 

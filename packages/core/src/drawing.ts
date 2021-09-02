@@ -1,49 +1,31 @@
 import { Renderer } from './renderer'
 import { Path, Svg } from './svg'
-import {
-  BezierCurve,
-  CommandsConverter,
-  convertLineCommands,
-  closeCommands,
-} from './convert'
 import { throttle } from './throttle'
 import { PencilHandler } from './handler'
 import { ResizeHandler } from './resize'
-import {
+import { BasicPathFactory } from './pathFactory'
+import { isAlmostSameNumber } from './utils'
+import { download } from './download'
+import type {
   DownloadOption,
   DrawEventHandler,
   DrawingOption,
   PointObject,
   ResizeEventHandler,
   ResizeHandlerOption,
+  PathFactory,
 } from './types'
-import { isAlmostSameNumber } from './utils'
-import { download } from './download'
 
-export class SvgDrawing {
-  /**
-   * @deprecated
-   */
-  public penColor: string
-  /**
-   * @deprecated
-   */
-  public penWidth: number
-  /**
-   * @deprecated
-   */
-  public fill: string
-  /**
-   * @deprecated
-   */
-  public curve: boolean
-  /**
-   * @deprecated
-   */
-  public close: boolean
-
+export class SvgDrawing<
+  S extends Svg,
+  P extends PathFactory,
+  RN extends Renderer,
+  H extends DrawEventHandler,
+  RS extends ResizeEventHandler
+> {
   /**
    * throttle delay
+   * @deprecated
    */
   public delay: number
 
@@ -51,24 +33,20 @@ export class SvgDrawing {
   private _drawPoints: PointObject[]
   private _drawMoveThrottle: this['drawMove']
   constructor(
-    public svg: Svg,
-    public renderer: Renderer,
-    public handler: DrawEventHandler,
-    public resizeListener: ResizeEventHandler,
-    { penColor, penWidth, curve, close, delay, fill }: DrawingOption = {}
+    public svg: S,
+    public pathFactory: P,
+    public renderer: RN,
+    public handler: H,
+    public resizeListener: RS,
+    { delay }: Required<Pick<DrawingOption, 'delay'>>
   ) {
     /**
      * Setup Config
      */
-    this.penColor = penColor ?? '#000'
-    this.penWidth = penWidth ?? 1
-    this.curve = curve ?? true
-    this.close = close ?? false
-    this.fill = fill ?? 'none'
+    this.delay = delay
     /**
      * Setup property
      */
-    this.delay = delay ?? 0
     this._drawPath = null
     this._drawPoints = []
 
@@ -151,19 +129,9 @@ export class SvgDrawing {
     this.update()
   }
 
-  /**
-   * @TODO Allow the conversion part to be passed from the outside.
-   */
-  private get _converter(): CommandsConverter {
-    const converter = this.curve
-      ? new BezierCurve().convert
-      : convertLineCommands
-    return (po) => (this.close ? closeCommands(converter(po)) : converter(po))
-  }
-
   private _createCommand() {
     if (!this._drawPath) return
-    this._drawPath.commands = this._converter(this._drawPoints)
+    this._drawPath.commands = this.pathFactory.createCommand(this._drawPoints)
   }
 
   private _addDrawPoint(p4: PointObject) {
@@ -174,13 +142,7 @@ export class SvgDrawing {
   private _createDrawPath(): Path {
     // this._resize(this.el.getBoundingClientRect())
     this._drawPoints = []
-    return new Path({
-      stroke: this.penColor,
-      strokeWidth: String(this.penWidth),
-      fill: this.fill,
-      strokeLinecap: this.curve ? 'round' : 'mitter',
-      strokeLinejoin: this.curve ? 'round' : 'square',
-    })
+    return this.pathFactory.create()
   }
 
   /**
@@ -202,20 +164,45 @@ export class SvgDrawing {
   /**
    * @todo remove dummy handler
    */
-  public static init(el: HTMLElement, opts: DrawingOption = {}): SvgDrawing {
+  public static init(
+    el: HTMLElement,
+    {
+      curve = true,
+      close = false,
+      delay = 0,
+      penColor,
+      penWidth,
+      fill,
+      background,
+    }: DrawingOption
+  ) {
     const { width, height } = el.getBoundingClientRect()
 
     const dummyHandler = () => undefined
 
-    return new SvgDrawing(
-      new Svg({ width, height, background: opts.background }),
-      new Renderer(el, { background: opts.background }),
+    return new SvgDrawing<
+      Svg,
+      BasicPathFactory,
+      Renderer,
+      PencilHandler,
+      ResizeHandler
+    >(
+      new Svg({ width, height, background }),
+      new BasicPathFactory(
+        {
+          stroke: penColor ?? '#000',
+          strokeWidth: penWidth || penWidth === 0 ? String(penWidth) : '1',
+          fill: fill ?? 'none',
+        },
+        { curve, close }
+      ),
+      new Renderer(el, { background }),
       new PencilHandler(el),
       new ResizeHandler({
         el,
         resize: dummyHandler,
       }),
-      opts
+      { delay }
     )
   }
 }

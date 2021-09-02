@@ -1,4 +1,4 @@
-import { PathObject, RendererOption, SvgObject } from './types'
+import type { PathObject, RendererOption, SvgObject } from './types'
 import { camel2kebab } from './utils'
 
 const VERSION = '1.1'
