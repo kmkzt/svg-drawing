@@ -1,6 +1,5 @@
 import { Renderer } from './renderer'
 import { Path, Svg } from './svg'
-import { throttle } from './throttle'
 import { PencilHandler } from './handler'
 import { BasicPathFactory } from './pathFactory'
 import { isAlmostSameNumber } from './utils'
@@ -20,26 +19,14 @@ export class SvgDrawing<
   RN extends Renderer,
   H extends DrawEventHandler
 > {
-  /**
-   * throttle delay
-   * @deprecated
-   */
-  public delay: number
-
   private _drawPath: Path | null
   private _drawPoints: PointObject[]
-  private _drawMoveThrottle: this['drawMove']
   constructor(
     public svg: S,
     public pathFactory: P,
     public renderer: RN,
-    public handler: H,
-    { delay }: Required<Pick<DrawingOption, 'delay'>>
+    public handler: H
   ) {
-    /**
-     * Setup Config
-     */
-    this.delay = delay
     /**
      * Setup property
      */
@@ -56,12 +43,11 @@ export class SvgDrawing<
      */
     this.drawStart = this.drawStart.bind(this)
     this.drawMove = this.drawMove.bind(this)
-    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
     this.drawEnd = this.drawEnd.bind(this)
 
     this.handler.setHandler({
       drawStart: this.drawStart,
-      drawMove: this._drawMoveThrottle,
+      drawMove: this.drawMove,
       drawEnd: this.drawEnd,
     })
 
@@ -86,16 +72,6 @@ export class SvgDrawing<
     const path = this.svg.paths.pop()
     this.update()
     return path
-  }
-
-  public changeDelay(delay: number): void {
-    this.delay = delay
-    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
-    this.handler.setHandler({
-      drawStart: this.drawStart,
-      drawMove: this._drawMoveThrottle,
-      drawEnd: this.drawEnd,
-    })
   }
 
   public drawStart(): void {
@@ -136,13 +112,10 @@ export class SvgDrawing<
   }
 
   private _createDrawPath(): Path {
-    // this._resize(this.el.getBoundingClientRect())
     this._drawPoints = []
     return this.pathFactory.create()
   }
 
-  /**
-   */
   public resize({ width, height }: Parameters<ResizeCallback>[0]) {
     if (isAlmostSameNumber(this.svg.width, width)) return
 
@@ -182,8 +155,7 @@ export class SvgDrawing<
         { curve, close }
       ),
       new Renderer(el, { background }),
-      new PencilHandler(el),
-      { delay }
+      new PencilHandler(el, delay)
     )
   }
 }

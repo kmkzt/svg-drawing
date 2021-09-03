@@ -7,14 +7,14 @@ import type {
   Svg,
   Renderer,
   ResizeEventHandler,
-  DrawEventHandler,
+  PencilHandler,
 } from 'packages/core/lib'
 
 export type SvgDrawingObject = SvgDrawing<
   Svg,
   BasicPathFactory,
   Renderer,
-  DrawEventHandler
+  PencilHandler
 >
 
 export type UseSvgDrawing = {

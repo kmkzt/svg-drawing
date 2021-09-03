@@ -1,3 +1,4 @@
+import { throttle } from './throttle'
 import type {
   DrawListenerType,
   DrawEventHandler,
@@ -160,7 +161,9 @@ export class DrawHandler implements DrawEventHandler {
 }
 
 export class PencilHandler extends DrawHandler {
-  constructor(el: HTMLElement) {
+  private _drawMoveThrottle: DrawMove
+
+  constructor(el: HTMLElement, private delay: number = 0) {
     super(el)
     /**
      * Bind methods
@@ -168,6 +171,28 @@ export class PencilHandler extends DrawHandler {
     this._handleStart = this._handleStart.bind(this)
     this._handleMove = this._handleMove.bind(this)
     this._handleEnd = this._handleEnd.bind(this)
+
+    this._drawMoveThrottle = throttle(this.drawMove, this.delay).bind(this)
+  }
+
+  public changeDelay(delay: number): void {
+    this.delay = delay
+    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
+
+    if (this.isActive) this.on()
+  }
+
+  public setHandler({
+    drawStart,
+    drawMove,
+    drawEnd,
+  }: Parameters<DrawEventHandler['setHandler']>[0]) {
+    this.drawEnd = drawEnd
+    this.drawStart = drawStart
+    this.drawMove = drawMove
+    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
+
+    if (this.isActive) this.on()
   }
 
   protected _setupListener(): Array<ClearListener> {
@@ -190,12 +215,13 @@ export class PencilHandler extends DrawHandler {
 
   private _handleMove(ev: MouseEvent | PointerEvent | TouchEvent) {
     ev.preventDefault()
-    this.drawMove(this.getPointObjectFromDrawEvent(ev))
+    this._drawMoveThrottle(this.getPointObjectFromDrawEvent(ev))
   }
 
   private _setupDrawListener(type: DrawListenerType): Array<() => void> {
     const el = this.el
     if (!el) return []
+
     const eventMap: Record<
       DrawListenerType,
       {
@@ -224,31 +250,37 @@ export class PencilHandler extends DrawHandler {
         flameout: ['mouseup'],
       },
     }
+
     const { start, move, end, flameout } = eventMap[type]
+
     const startClear = start.map(
       (evname): ClearListener => {
         el.addEventListener(evname, this._handleStart, this._listenerOption)
         return () => el.removeEventListener(evname, this._handleStart)
       }
     )
+
     const moveClear = move.map(
       (evname): ClearListener => {
         el.addEventListener(evname, this._handleMove, this._listenerOption)
         return () => el.removeEventListener(evname, this._handleMove)
       }
     )
+
     const endClear = end.map(
       (evname): ClearListener => {
         el.addEventListener(evname, this._handleEnd, this._listenerOption)
         return () => el.removeEventListener(evname, this._handleEnd)
       }
     )
+
     const flameoutClear = flameout.map(
       (evname): ClearListener => {
         addEventListener(evname, this._handleEnd, this._listenerOption)
         return () => removeEventListener(evname, this._handleEnd)
       }
     )
+
     return [...startClear, ...moveClear, ...endClear, ...flameoutClear]
   }
 }

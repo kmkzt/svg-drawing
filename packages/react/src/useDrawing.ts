@@ -49,7 +49,7 @@ export const useSvgDrawing = (
   const changeDelay = useCallback((param: DrawingOption['delay']) => {
     if (!drawingRef.current || !param) return
 
-    drawingRef.current.changeDelay(param)
+    drawingRef.current.handler.changeDelay(param)
   }, [])
 
   const changePenWidth = useCallback((param: DrawingOption['penWidth']) => {
