@@ -2,11 +2,14 @@ import { useEffect, useRef, useCallback, useState, ChangeEvent } from 'react'
 import { NextPage } from 'next'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Slider, Input, Label } from '@rebass/forms/styled-components'
-import { Command, Point } from '@svg-drawing/core'
+import { Command, Point, ResizeHandler } from '@svg-drawing/core'
 import { SvgAnimation, FrameAnimation } from '@svg-drawing/animation'
 import Layout from '../../components/Layout'
 import { example } from '../../lib/example-svg'
+import { useMemo } from 'react'
+
 const size = 30
+
 const shake: FrameAnimation = (paths) => {
   const range = 5
   const randomShaking = (): number => Math.random() * range - range / 2
@@ -66,26 +69,35 @@ const drawingAnimation: FrameAnimation = (paths, fid) => {
 interface Props {
   isSp: boolean
 }
+
 const Animation: NextPage<Props> = ({ isSp }) => {
   const aniDivRef = useRef<HTMLDivElement | null>(null)
   const animationRef = useRef<SvgAnimation | null>(null)
+  const resizeHandler = useMemo(() => new ResizeHandler(), [])
   const [animMs, setAnimMs] = useState(20)
 
   const handleChangeAnimMs = useCallback((e: ChangeEvent<any>) => {
-    if (!animationRef.current) return
     const num = Number(e.target.value)
-    if (Number.isNaN(num)) return
+    if (Number.isNaN(num) || !animationRef.current) return
+
     animationRef.current.ms = num
     setAnimMs(num)
   }, [])
 
+  // SvgAnimation initialize
   useEffect(() => {
     if (animationRef.current) return
     if (!aniDivRef.current) return
+
     animationRef.current = SvgAnimation.init(aniDivRef.current, {
       ms: animMs,
       background: '#fff',
     })
+
+    // Setup resizeHandler
+    resizeHandler.setElement(aniDivRef.current)
+    resizeHandler.setHandler(animationRef.current.resize)
+    resizeHandler.on()
 
     // SET EXAMPLE
     animationRef.current.svg.parseSVGString(example)
@@ -93,53 +105,73 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   })
 
   const handleFiles = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target?.files) return
+
     const reader = new FileReader()
     reader.onload = function (ev: ProgressEvent<FileReader>) {
-      if (!ev.target || typeof ev.target.result !== 'string') return
+      if (
+        !ev.target ||
+        typeof ev.target.result !== 'string' ||
+        !animationRef.current
+      )
+        return
+
       const [type, data] = ev.target.result.split(',')
-      if (type === 'data:image/svg+xml;base64') {
-        const svgxml = atob(data)
-        if (!animationRef.current) return
-        animationRef.current.svg.parseSVGString(svgxml)
-        animationRef.current.update()
-      }
+      if (type !== 'data:image/svg+xml;base64') return
+
+      const svgxml = atob(data)
+      animationRef.current.svg.parseSVGString(svgxml)
+      animationRef.current.update()
     }
-    if (!e.target?.files) return
+
     reader.readAsDataURL(e.target.files[0])
   }, [])
+
   const handleShake = useCallback(() => {
     if (!animationRef.current) return
+
     animationRef.current.setAnimation(shake, {
       frames: 3,
     })
     animationRef.current.start()
   }, [])
+
   const handleDrawingAnimation = useCallback(() => {
     if (!animationRef.current) return
+
     animationRef.current.setAnimation(drawingAnimation, {
       repeatCount: 1,
     })
     animationRef.current.start()
   }, [])
+
   const handleColorfulAnimation = useCallback(() => {
     if (!animationRef.current) return
+
     animationRef.current.setAnimation(colorfulAnimation, {
       frames: colorfulList.length,
     })
     animationRef.current.start()
   }, [])
+
   const handleStop = useCallback(() => {
     if (!animationRef.current) return
+
     animationRef.current.stop()
   }, [])
+
   const handleRestore = useCallback(() => {
     if (!animationRef.current) return
+
     animationRef.current.restore()
   }, [])
+
   const handleDownloadAnimation = useCallback(() => {
     if (!animationRef.current) return
+
     animationRef.current.download()
   }, [])
+
   return (
     <Layout>
       <Box as="fieldset">

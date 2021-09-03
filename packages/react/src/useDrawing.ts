@@ -1,29 +1,27 @@
-import React, { useRef, useEffect, useCallback, MutableRefObject } from 'react'
-import type { DrawingOption } from '@svg-drawing/core/lib/types'
-import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
-import { SvgDrawing } from '@svg-drawing/core/lib/drawing'
-import { UseSvgDrawing } from './types'
 import {
-  BasicPathFactory,
-  Svg,
-  Renderer,
-  ResizeEventHandler,
-  DrawEventHandler,
-} from 'packages/core/lib'
+  useRef,
+  useEffect,
+  useCallback,
+  MutableRefObject,
+  useMemo,
+} from 'react'
+import {
+  SvgDrawing,
+  ResizeHandler,
+  svgObjectToElement,
+} from '@svg-drawing/core/'
+import { UseSvgDrawing, SvgDrawingObject } from './types'
+import type { DrawingOption } from '@svg-drawing/core'
 
 export const useSvgDrawing = (
   option?: Partial<DrawingOption>
 ): [MutableRefObject<HTMLDivElement | null>, UseSvgDrawing] => {
   const renderRef = useRef<HTMLDivElement | null>(null)
-  const drawingRef = useRef<SvgDrawing<
-    Svg,
-    BasicPathFactory,
-    Renderer,
-    DrawEventHandler,
-    ResizeEventHandler
-  > | null>(null)
+  const drawingRef = useRef<SvgDrawingObject | null>(null)
+
   const getSvgXML = useCallback(() => {
     if (!drawingRef.current) return null
+
     return svgObjectToElement(drawingRef.current.svg.toJson()).outerHTML
   }, [])
 
@@ -34,6 +32,7 @@ export const useSvgDrawing = (
 
   const changePenColor = useCallback((penColor: DrawingOption['penColor']) => {
     if (!drawingRef.current || !penColor) return
+
     drawingRef.current.pathFactory.updateAttributes({
       stroke: penColor,
     })
@@ -41,6 +40,7 @@ export const useSvgDrawing = (
 
   const changeFill = useCallback((fill: DrawingOption['fill']) => {
     if (!drawingRef.current || !fill) return
+
     drawingRef.current.pathFactory.updateAttributes({
       fill,
     })
@@ -48,6 +48,7 @@ export const useSvgDrawing = (
 
   const changeDelay = useCallback((param: DrawingOption['delay']) => {
     if (!drawingRef.current || !param) return
+
     drawingRef.current.changeDelay(param)
   }, [])
 
@@ -78,12 +79,19 @@ export const useSvgDrawing = (
     drawingRef.current.undo()
   }, [])
 
+  const resizeHandler = useMemo(() => new ResizeHandler(renderRef.current), [])
+
   useEffect(() => {
     if (drawingRef.current) return
     if (!renderRef.current) return
+
     drawingRef.current = SvgDrawing.init(renderRef.current, {
       ...option,
     })
+
+    resizeHandler.setElement(renderRef.current)
+    resizeHandler.setHandler(drawingRef.current.resize)
+    resizeHandler.on()
   })
 
   return [
@@ -100,6 +108,7 @@ export const useSvgDrawing = (
       undo,
       getSvgXML,
       download,
+      resizeHandler,
     },
   ]
 }

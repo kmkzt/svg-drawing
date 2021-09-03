@@ -5,7 +5,6 @@ import {
   pathObjectToElement,
   Path,
   Svg,
-  ResizeHandler,
   downloadBlob,
   svg2base64,
   camel2kebab,
@@ -40,7 +39,6 @@ export class SvgAnimation {
   constructor(
     public svg: Svg,
     public renderer: Renderer,
-    public resizeHandler: ResizeHandler,
     { ms }: AnimationOption
   ) {
     this.ms = ms
@@ -50,12 +48,7 @@ export class SvgAnimation {
     this._stopId = 0
     this._repeatCount = 'indefinite'
 
-    /**
-     * Setup resize handler
-     */
-    this._resize = this._resize.bind(this)
-    this.resizeHandler.setHandler(this._resize)
-    this.resizeHandler.on()
+    this.resize = this.resize.bind(this)
   }
 
   /**
@@ -265,7 +258,7 @@ export class SvgAnimation {
     })
   }
 
-  private _resize({ width, height }: Parameters<ResizeCallback>[0]): void {
+  public resize({ width, height }: Parameters<ResizeCallback>[0]): void {
     this.stop()
     this.svg.resize({ width, height })
     this.start()
@@ -282,7 +275,6 @@ export class SvgAnimation {
     return new SvgAnimation(
       new Svg({ width, height, background }),
       new Renderer(el, { background }),
-      new ResizeHandler(el),
       { ms }
     )
   }

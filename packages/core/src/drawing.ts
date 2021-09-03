@@ -2,7 +2,6 @@ import { Renderer } from './renderer'
 import { Path, Svg } from './svg'
 import { throttle } from './throttle'
 import { PencilHandler } from './handler'
-import { ResizeHandler } from './resize'
 import { BasicPathFactory } from './pathFactory'
 import { isAlmostSameNumber } from './utils'
 import { download } from './download'
@@ -11,7 +10,6 @@ import type {
   DrawEventHandler,
   DrawingOption,
   PointObject,
-  ResizeEventHandler,
   PathFactory,
   ResizeCallback,
 } from './types'
@@ -20,8 +18,7 @@ export class SvgDrawing<
   S extends Svg,
   P extends PathFactory,
   RN extends Renderer,
-  H extends DrawEventHandler,
-  RS extends ResizeEventHandler
+  H extends DrawEventHandler
 > {
   /**
    * throttle delay
@@ -37,7 +34,6 @@ export class SvgDrawing<
     public pathFactory: P,
     public renderer: RN,
     public handler: H,
-    public resizeListener: RS,
     { delay }: Required<Pick<DrawingOption, 'delay'>>
   ) {
     /**
@@ -51,10 +47,10 @@ export class SvgDrawing<
     this._drawPoints = []
 
     /**
-     * Setup ResizeHandler
+     * Setup methods
      */
-    this._resize = this._resize.bind(this)
-    this.resizeListener.setHandler(this._resize)
+    this.resize = this.resize.bind(this)
+
     /**
      * Setup EventDrawHandler
      */
@@ -73,12 +69,12 @@ export class SvgDrawing<
      * Start exec
      */
     this.handler.on()
-    this.resizeListener.on()
   }
 
   public update() {
     this.renderer.update(this.svg.toJson())
   }
+
   public clear(): Path[] {
     const paths = this.svg.paths
     this.svg.paths = []
@@ -147,7 +143,7 @@ export class SvgDrawing<
 
   /**
    */
-  private _resize({ width, height }: Parameters<ResizeCallback>[0]) {
+  public resize({ width, height }: Parameters<ResizeCallback>[0]) {
     if (isAlmostSameNumber(this.svg.width, width)) return
 
     this.svg.resize({ width, height })
@@ -175,13 +171,7 @@ export class SvgDrawing<
   ) {
     const { width, height } = el.getBoundingClientRect()
 
-    return new SvgDrawing<
-      Svg,
-      BasicPathFactory,
-      Renderer,
-      PencilHandler,
-      ResizeHandler
-    >(
+    return new SvgDrawing<Svg, BasicPathFactory, Renderer, PencilHandler>(
       new Svg({ width, height, background }),
       new BasicPathFactory(
         {
@@ -193,7 +183,6 @@ export class SvgDrawing<
       ),
       new Renderer(el, { background }),
       new PencilHandler(el),
-      new ResizeHandler(el),
       { delay }
     )
   }
