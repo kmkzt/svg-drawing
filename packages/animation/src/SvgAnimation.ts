@@ -11,9 +11,9 @@ import {
   camel2kebab,
   roundUp,
   RendererOption,
+  ResizeCallback,
 } from '@svg-drawing/core'
 import { AnimationOption, FrameAnimation } from './types'
-import type { ResizeHandlerOption } from '@svg-drawing/core'
 
 export class SvgAnimation {
   /**
@@ -21,7 +21,7 @@ export class SvgAnimation {
    */
   public ms: number
   /**
-   * Private prorperty
+   * Private property
    */
   private _stopId: number
   private _stopAnimation: (() => void) | null
@@ -54,7 +54,7 @@ export class SvgAnimation {
      * Setup resize handler
      */
     this._resize = this._resize.bind(this)
-    this.resizeHandler.resize = this._resize.bind(this)
+    this.resizeHandler.setHandler(this._resize)
     this.resizeHandler.on()
   }
 
@@ -265,10 +265,7 @@ export class SvgAnimation {
     })
   }
 
-  private _resize({
-    width,
-    height,
-  }: Parameters<ResizeHandlerOption['resize']>[0]): void {
+  private _resize({ width, height }: Parameters<ResizeCallback>[0]): void {
     this.stop()
     this.svg.resize({ width, height })
     this.start()
@@ -285,7 +282,7 @@ export class SvgAnimation {
     return new SvgAnimation(
       new Svg({ width, height, background }),
       new Renderer(el, { background }),
-      new ResizeHandler({ el, resize: () => undefined }),
+      new ResizeHandler(el),
       { ms }
     )
   }

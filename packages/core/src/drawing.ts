@@ -12,8 +12,8 @@ import type {
   DrawingOption,
   PointObject,
   ResizeEventHandler,
-  ResizeHandlerOption,
   PathFactory,
+  ResizeCallback,
 } from './types'
 
 export class SvgDrawing<
@@ -54,7 +54,7 @@ export class SvgDrawing<
      * Setup ResizeHandler
      */
     this._resize = this._resize.bind(this)
-    this.resizeListener.resize = this._resize.bind(this)
+    this.resizeListener.setHandler(this._resize)
     /**
      * Setup EventDrawHandler
      */
@@ -147,10 +147,7 @@ export class SvgDrawing<
 
   /**
    */
-  private _resize({
-    width,
-    height,
-  }: Parameters<ResizeHandlerOption['resize']>[0]) {
+  private _resize({ width, height }: Parameters<ResizeCallback>[0]) {
     if (isAlmostSameNumber(this.svg.width, width)) return
 
     this.svg.resize({ width, height })
@@ -178,8 +175,6 @@ export class SvgDrawing<
   ) {
     const { width, height } = el.getBoundingClientRect()
 
-    const dummyHandler = () => undefined
-
     return new SvgDrawing<
       Svg,
       BasicPathFactory,
@@ -198,10 +193,7 @@ export class SvgDrawing<
       ),
       new Renderer(el, { background }),
       new PencilHandler(el),
-      new ResizeHandler({
-        el,
-        resize: dummyHandler,
-      }),
+      new ResizeHandler(el),
       { delay }
     )
   }

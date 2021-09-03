@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Svg, ResizeHandler, isAlmostSameNumber } from '@svg-drawing/core'
-import type { ResizeHandlerOption } from '@svg-drawing/core'
+import type { ResizeCallback } from '@svg-drawing/core'
 import type { UseSvgOptions, UseSvg } from '../types'
 
 const RENDER_INTERVAL = 0
@@ -13,6 +13,7 @@ export const useSvg = <T extends HTMLElement>({
     sharedSvg,
   ])
   const [svgObj, setSvgObj] = useState(svg.toJson())
+
   /**
    * A variable called shouldUpdateRef manages whether to update to reduce the number of times setState is executed.
    */
@@ -20,12 +21,15 @@ export const useSvg = <T extends HTMLElement>({
   const onUpdate = useCallback(() => {
     shouldUpdateRef.current = true
   }, [])
+
   useEffect(() => {
     const stopId = setInterval(() => {
       if (!shouldUpdateRef.current) return
+
       shouldUpdateRef.current = false
       setSvgObj(svg.toJson())
     }, RENDER_INTERVAL)
+
     return () => clearInterval(stopId)
   }, [svg])
 
@@ -37,23 +41,27 @@ export const useSvg = <T extends HTMLElement>({
   /**
    * Setup ResizeHandler
    */
-  const resizeListener = useMemo<ResizeHandler>(() => {
-    const resizeCallback: ResizeHandlerOption['resize'] = ({
-      width,
-      height,
-    }) => {
+  const resizeListener = useMemo<ResizeHandler>(() => new ResizeHandler(), [])
+
+  const resizeCallback = useCallback<ResizeCallback>(
+    ({ width, height }) => {
       if (isAlmostSameNumber(svg.width, width)) return
+
       svg.resize({ width, height })
       shouldUpdateRef.current = true
-    }
-    return new ResizeHandler({ resize: resizeCallback })
-  }, [svg])
+    },
+    [svg]
+  )
+
   useEffect(() => {
     if (!targetRef.current) return
+
     resizeListener.setElement(targetRef.current)
+    resizeListener.setHandler(resizeCallback)
     resizeListener.on()
+
     return () => resizeListener.off()
-  }, [resizeListener, targetRef])
+  }, [resizeCallback, resizeListener, targetRef])
 
   return [
     targetRef,

@@ -75,8 +75,10 @@ export class Renderer {
     /**
      * Setup parameter
      */
-    const { width, height } = el.getBoundingClientRect()
-    el.appendChild(svgObjectToElement({ background, width, height, paths: [] }))
+    const { width, height } = this.el.getBoundingClientRect()
+    this.el.appendChild(
+      svgObjectToElement({ background, width, height, paths: [] })
+    )
   }
   /**
    * render

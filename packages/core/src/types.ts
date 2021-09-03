@@ -89,19 +89,20 @@ export type DownloadOption = {
   filename?: string
 }
 
+export type ResizeCallback = (arg: {
+  width: number
+  height: number
+  left: number
+  top: number
+}) => void
+
 export interface ResizeEventHandler {
-  resize: (
-    rect: DOMRect | { width: number; height: number; left: number; top: number }
-  ) => void
+  active: boolean
   on: () => void
   off: () => void
+  setElement: (el: HTMLElement) => void
+  setHandler: (callback: ResizeCallback) => void
 }
-/**
- * ResizeHandler callback
- */
-export type ResizeHandlerOption = {
-  el?: HTMLElement
-} & Pick<ResizeEventHandler, 'resize'>
 
 export type DrawListenerType = 'pointer' | 'touch' | 'mouse'
 

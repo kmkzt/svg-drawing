@@ -1,4 +1,4 @@
-import type { ResizeEventHandler, ResizeHandlerOption } from './types'
+import type { ResizeEventHandler, ResizeCallback } from './types'
 
 const SUPPORT_RESIZE_OBSERVER = typeof ResizeObserver !== 'undefined'
 export class ResizeHandler implements ResizeEventHandler {
@@ -6,12 +6,15 @@ export class ResizeHandler implements ResizeEventHandler {
    * Remove EventList
    */
   private _clearEventList: Array<() => void>
-  public resize: ResizeHandlerOption['resize']
-  private _el?: ResizeHandlerOption['el']
-  constructor({ el, resize }: ResizeHandlerOption) {
-    this._el = el
-    this.resize = resize
+  private resize: ResizeCallback
+  constructor(private el: HTMLElement | null = null) {
+    this.el = el
+    this.resize = () => void 0
     this._clearEventList = []
+  }
+
+  public get active(): boolean {
+    return this._clearEventList.length > 0
   }
 
   public off() {
@@ -24,33 +27,38 @@ export class ResizeHandler implements ResizeEventHandler {
     this._setupListener()
   }
 
-  public get isActive(): boolean {
-    return this._clearEventList.length > 0
-  }
-
   public setElement(el: HTMLElement) {
-    this._el = el
-    if (this.isActive) this.on()
+    this.el = el
+    if (this.active) this.on()
     return this
   }
 
+  public setHandler(resize: ResizeCallback) {
+    this.resize = resize
+  }
+
   private _setupListener(): void {
-    if (!this._el) return
+    if (!this.el) return
 
     // ResizeObserver
     if (SUPPORT_RESIZE_OBSERVER) {
-      const resizeObserver: any = new ResizeObserver(([entry]: any[]) => {
-        this.resize(entry.contentRect)
+      const resizeObserver = new ResizeObserver(([entry]) => {
+        const { width, height, left, top } = entry.contentRect
+        this.resize({ width, height, left, top })
       })
-      resizeObserver.observe(this._el)
+      resizeObserver.observe(this.el)
+
       this._clearEventList.push(() => resizeObserver.disconnect())
       return
     }
 
     const handleResizeEvent = () => {
-      if (!this._el) return
-      this.resize(this._el.getBoundingClientRect())
+      if (!this.el) return
+
+      const { width, height, left, top } = this.el.getBoundingClientRect()
+      this.resize({ width, height, left, top })
     }
+
     addEventListener('resize', handleResizeEvent)
     this._clearEventList.push(() =>
       removeEventListener('resize', handleResizeEvent)

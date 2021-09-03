@@ -15,14 +15,11 @@ export class Animation {
    */
   public ms: number
   /**
-   * Private prorperty
+   * Private property
    */
   private _anim: FrameAnimation | null
   private originPaths: Path[]
   private _framesNumber: number | undefined
-  /**
-   * Modules
-   */
 
   /**
    * Relation animate element
