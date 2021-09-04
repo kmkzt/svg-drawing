@@ -16,7 +16,6 @@ import type {
 export class SvgDrawing<
   S extends Svg,
   P extends PathFactory,
-  RN extends Renderer,
   H extends DrawEventHandler
 > {
   private _drawPath: Path | null
@@ -24,8 +23,8 @@ export class SvgDrawing<
   constructor(
     public svg: S,
     public pathFactory: P,
-    public renderer: RN,
-    public handler: H
+    public handler: H,
+    private update: (svg: Svg) => void
   ) {
     /**
      * Setup property
@@ -57,20 +56,16 @@ export class SvgDrawing<
     this.handler.on()
   }
 
-  public update() {
-    this.renderer.update(this.svg.toJson())
-  }
-
   public clear(): Path[] {
     const paths = this.svg.paths
     this.svg.paths = []
-    this.update()
+    this.update(this.svg)
     return paths
   }
 
   public undo(): Path | undefined {
     const path = this.svg.paths.pop()
-    this.update()
+    this.update(this.svg)
     return path
   }
 
@@ -83,7 +78,7 @@ export class SvgDrawing<
   public drawMove(po: PointObject): void {
     if (!this._drawPath) return
     this._addDrawPoint(po)
-    this.update()
+    this.update(this.svg)
   }
 
   public switchPath() {
@@ -98,7 +93,7 @@ export class SvgDrawing<
 
   public drawEnd(): void {
     this._drawPath = null
-    this.update()
+    this.update(this.svg)
   }
 
   private _createCommand() {
@@ -120,7 +115,7 @@ export class SvgDrawing<
     if (isAlmostSameNumber(this.svg.width, width)) return
 
     this.svg.resize({ width, height })
-    this.update()
+    this.update(this.svg)
   }
 
   public download(opt?: DownloadOption): void {
@@ -144,7 +139,7 @@ export class SvgDrawing<
   ) {
     const { width, height } = el.getBoundingClientRect()
 
-    return new SvgDrawing<Svg, BasicPathFactory, Renderer, PencilHandler>(
+    return new SvgDrawing<Svg, BasicPathFactory, PencilHandler>(
       new Svg({ width, height, background }),
       new BasicPathFactory(
         {
@@ -154,8 +149,8 @@ export class SvgDrawing<
         },
         { curve, close }
       ),
-      new Renderer(el, { background }),
-      new PencilHandler(el, delay)
+      new PencilHandler(el, delay),
+      new Renderer(el, { background }).update
     )
   }
 }

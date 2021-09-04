@@ -5,17 +5,11 @@ import type { download } from '@svg-drawing/core/lib/download'
 import type {
   BasicPathFactory,
   Svg,
-  Renderer,
   ResizeEventHandler,
   PencilHandler,
 } from 'packages/core/lib'
 
-export type SvgDrawingObject = SvgDrawing<
-  Svg,
-  BasicPathFactory,
-  Renderer,
-  PencilHandler
->
+export type SvgDrawingObject = SvgDrawing<Svg, BasicPathFactory, PencilHandler>
 
 export type UseSvgDrawing = {
   ref: RefObject<SvgDrawingObject | null>

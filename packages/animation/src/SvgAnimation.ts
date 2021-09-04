@@ -38,7 +38,7 @@ export class SvgAnimation {
   private _repeatCount: string
   constructor(
     public svg: Svg,
-    public renderer: Renderer,
+    private update: (svg: Svg) => void,
     { ms }: AnimationOption
   ) {
     this.ms = ms
@@ -82,7 +82,7 @@ export class SvgAnimation {
 
   public restore(): void {
     this.svg.paths = this._restorePaths
-    this.update()
+    this.update(this.svg)
   }
 
   public generateFrame(index?: number): Path[] {
@@ -114,7 +114,7 @@ export class SvgAnimation {
       if (!start || timestamp - start > ms) {
         start = timestamp
         this.svg.paths = this.generateFrame(index)
-        this.update()
+        this.update(this.svg)
         index = index > loopCount ? 0 : index + 1
       }
       this._stopId = requestAnimationFrame(frame)
@@ -124,10 +124,6 @@ export class SvgAnimation {
       cancelAnimationFrame(this._stopId)
       this._stopAnimation = null
     }
-  }
-
-  public update() {
-    this.renderer.update(this.svg.toJson())
   }
 
   public toElement(): SVGSVGElement {
@@ -274,7 +270,7 @@ export class SvgAnimation {
     const { width, height } = el.getBoundingClientRect()
     return new SvgAnimation(
       new Svg({ width, height, background }),
-      new Renderer(el, { background }),
+      new Renderer(el, { background }).update,
       { ms }
     )
   }

@@ -1,3 +1,4 @@
+import { Svg } from './svg'
 import type { PathObject, RendererOption, SvgObject } from './types'
 import { camel2kebab } from './utils'
 
@@ -79,13 +80,18 @@ export class Renderer {
     this.el.appendChild(
       svgObjectToElement({ background, width, height, paths: [] })
     )
+
+    this.update = this.update.bind(this)
   }
   /**
    * render
    * TODO: XSS test
    * TODO: Partially render
    */
-  public update(svgObj: SvgObject): void {
-    this.el.replaceChild(svgObjectToElement(svgObj), this.el.childNodes[0])
+  public update(svg: Svg): void {
+    this.el.replaceChild(
+      svgObjectToElement(svg.toJson()),
+      this.el.childNodes[0]
+    )
   }
 }
