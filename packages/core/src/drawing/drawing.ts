@@ -1,9 +1,9 @@
-import { Renderer } from './renderer'
-import { Path, Svg } from './svg'
+import { Renderer } from '../renderer'
+import { Path, Svg } from '../svg'
 import { PencilHandler } from './handler'
 import { BasicPathFactory } from './pathFactory'
-import { isAlmostSameNumber } from './utils'
-import { download } from './download'
+import { isAlmostSameNumber } from '../utils'
+import { download } from '../download'
 import type {
   DownloadOption,
   DrawEventHandler,
@@ -11,7 +11,7 @@ import type {
   PointObject,
   PathFactory,
   ResizeCallback,
-} from './types'
+} from '../types'
 
 export class SvgDrawing<
   S extends Svg,
@@ -135,7 +135,7 @@ export class SvgDrawing<
       penWidth,
       fill,
       background,
-    }: DrawingOption
+    }: DrawingOption = {}
   ) {
     const { width, height } = el.getBoundingClientRect()
 

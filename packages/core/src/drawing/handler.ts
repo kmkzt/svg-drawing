@@ -1,4 +1,4 @@
-import { throttle } from './throttle'
+import { throttle } from '../throttle'
 import type {
   DrawListenerType,
   DrawEventHandler,
@@ -8,7 +8,7 @@ import type {
   DrawEnd,
   DrawStart,
   DrawMove,
-} from './types'
+} from '../types'
 
 const SUPPORT_POINTER_EVENT = typeof PointerEvent !== 'undefined'
 

@@ -1,4 +1,4 @@
-import { EditSvg, EditPath } from './edit'
+import { EditSvg } from './edit'
 import { Svg } from './svg'
 
 const testSvgData =

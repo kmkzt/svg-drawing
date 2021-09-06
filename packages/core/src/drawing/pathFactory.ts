@@ -1,6 +1,6 @@
 import { BezierCurve, closeCommands, createLineCommands } from './convert'
-import { Path } from './svg'
-import type { CreateCommand, PathFactory, PathObject } from './types'
+import { Path } from '../svg'
+import type { CreateCommand, PathFactory, PathObject } from '../types'
 
 export class BasicPathFactory implements PathFactory {
   constructor(

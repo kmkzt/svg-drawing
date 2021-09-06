@@ -1,5 +1,5 @@
-import { Point, Command, Vector } from './svg'
-import { PointObject, ConvertOption, CreateCommand } from './types'
+import { Point, Command, Vector } from '../svg'
+import type { PointObject, ConvertOption, CreateCommand } from '../types'
 
 export interface GenerateCommandsConverter {
   create: CreateCommand
