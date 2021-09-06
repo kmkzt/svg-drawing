@@ -5,14 +5,27 @@ import type { CreateCommand, PathFactory, PathObject } from '../types'
 export class BasicPathFactory implements PathFactory {
   constructor(
     private attrs: PathObject,
-    private opts: { curve: boolean; close: boolean }
-  ) {}
+    private opts: { curve?: boolean; close?: boolean } = {}
+  ) {
+    this.opts = {
+      curve: true,
+      close: false,
+      ...opts,
+    }
+  }
 
   create(): Path {
     return new Path({
       ...this.attrs,
       ...this.curveAttribute,
     })
+  }
+
+  get createCommand(): CreateCommand {
+    const create = this.opts.curve
+      ? new BezierCurve().create
+      : createLineCommands
+    return (po) => (this.opts.close ? closeCommands(create(po)) : create(po))
   }
 
   setAttributes(attrs: PathObject) {
@@ -38,13 +51,6 @@ export class BasicPathFactory implements PathFactory {
       ...this.opts,
       curve,
     }
-  }
-
-  get createCommand(): CreateCommand {
-    const create = this.opts.curve
-      ? new BezierCurve().create
-      : createLineCommands
-    return (po) => (this.opts.close ? closeCommands(create(po)) : create(po))
   }
 
   get curveAttribute() {

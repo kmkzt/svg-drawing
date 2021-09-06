@@ -7,12 +7,16 @@ import {
   EditSvg,
   useDrawHandler,
   useCommandsConverter,
-  usePathOptions,
   useParseFile,
   DrawHandlerMap,
   useKeyboard,
 } from '@svg-drawing/react/lib/alpha'
-import { download, PenHandler, PencilHandler } from '@svg-drawing/core'
+import {
+  download,
+  PenHandler,
+  PencilHandler,
+  PathObject,
+} from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
@@ -75,10 +79,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   /**
    * pathOptions
    */
-  const [
-    pathOptions,
-    { changeStrokeWidth, changeFill, changeStroke },
-  ] = usePathOptions({
+  const [pathOptions, setPathOptions] = useState<PathObject>({
     fill: 'none',
     stroke: 'black',
     strokeWidth: '5',
@@ -152,54 +153,70 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     (e) => {
       const num = e.target.valueAsNumber
       if (Number.isNaN(num)) return
-      changeStrokeWidth(num)
+
+      setPathOptions((opts) => ({
+        ...opts,
+        strokeWidth: `${num}`,
+      }))
       edit.onChangeAttributes({
         strokeWidth: num + '',
       })
     },
-    [changeStrokeWidth, edit]
+    [edit]
   )
 
   const handleChangePenColor = useCallback<
     ChangeEventHandler<HTMLInputElement>
   >(
     (e) => {
-      changeStroke(e.target.value)
+      setPathOptions((opts) => ({
+        ...opts,
+        stroke: e.target.value,
+      }))
       edit.onChangeAttributes({
         stroke: e.target.value,
       })
     },
-    [changeStroke, edit]
+    [edit]
   )
 
   const handleClickPenColor = useCallback(
     (col: string) => () => {
-      changeStroke(col)
+      setPathOptions((opts) => ({
+        ...opts,
+        stroke: col,
+      }))
       edit.onChangeAttributes({
         stroke: col,
       })
     },
-    [changeStroke, edit]
+    [edit]
   )
 
   const handleChangeFill = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
-      changeFill(e.target.value)
+      setPathOptions((opts) => ({
+        ...opts,
+        fill: e.target.value,
+      }))
       edit.onChangeAttributes({
         fill: e.target.value,
       })
     },
-    [changeFill, edit]
+    [edit]
   )
 
   const handleClickFill = useCallback(
     (col: string) => () => {
-      changeFill(col)
+      setPathOptions((opts) => ({
+        ...opts,
+        fill: col,
+      }))
       edit.onChangeAttributes({
         fill: col,
       })
     },
-    [changeFill, edit]
+    [edit]
   )
 
   const parseFile = useParseFile({

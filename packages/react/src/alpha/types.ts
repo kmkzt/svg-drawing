@@ -1,4 +1,4 @@
-import type { RefObject, Dispatch, SetStateAction } from 'react'
+import type { RefObject } from 'react'
 import type {
   SvgObject,
   Svg,
@@ -68,14 +68,6 @@ export type SvgAction = {
   onUpdate: () => void
   onClear: () => void
 }
-
-export type UsePathOptionsMethods = {
-  changeFill: (fill: string) => void
-  changeStroke: (stroke: string) => void
-  changeStrokeWidth: (strokeWidth: number) => void
-  setPathOptions: Dispatch<SetStateAction<PathObject>>
-}
-export type UsePathOptions = [PathObject, UsePathOptionsMethods]
 
 export type KeyboardMap = {
   [key: string]: (() => void) | undefined

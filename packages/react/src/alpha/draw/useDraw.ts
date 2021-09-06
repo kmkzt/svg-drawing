@@ -3,22 +3,22 @@ import {
   Path,
   DrawHandler,
   PencilHandler,
-  BezierCurve,
   CreateCommand,
   throttle,
   DrawMove,
   DrawStart,
+  BasicPathFactory,
 } from '@svg-drawing/core'
 import { useSvg } from '../svg/useSvg'
-import type { PathObject, PointObject } from '@svg-drawing/core'
+import type { PointObject } from '@svg-drawing/core'
 import type { UseDrawOptions, UseDraw, DrawAction, KeyboardMap } from '../types'
 
 const DRAW_DELAY = 20
-const defaultPathOptions: PathObject = {
+
+const defaultPathFactory = new BasicPathFactory({
+  stroke: 'black',
   fill: 'none',
-  strokeLinecap: 'round',
-  strokeLinejoin: 'round',
-}
+})
 
 export const useDraw = <T extends HTMLElement>({
   active = true,
@@ -32,8 +32,9 @@ export const useDraw = <T extends HTMLElement>({
   })
   const drawPathRef = useRef<Path | null>(null)
   const drawPointsRef = useRef<PointObject[]>([])
+
   const converter = useMemo<CreateCommand>(
-    () => commandsConverter ?? new BezierCurve().create,
+    () => commandsConverter ?? defaultPathFactory.createCommand,
     [commandsConverter]
   )
   /**
@@ -41,10 +42,8 @@ export const useDraw = <T extends HTMLElement>({
    */
   const createDrawPath = useCallback((): Path => {
     drawPointsRef.current = []
-    return new Path({
-      ...defaultPathOptions,
-      ...pathOptions,
-    })
+    defaultPathFactory.setAttributes(pathOptions)
+    return defaultPathFactory.create()
   }, [pathOptions])
 
   const updateCommands = useCallback(() => {
