@@ -139,6 +139,9 @@ export class SvgDrawing<
   ) {
     const { width, height } = el.getBoundingClientRect()
 
+    const handler = new PencilHandler(el)
+    handler.changeDelay(delay)
+
     return new SvgDrawing<Svg, BasicPathFactory, PencilHandler>(
       new Svg({ width, height, background }),
       new BasicPathFactory(
@@ -149,7 +152,7 @@ export class SvgDrawing<
         },
         { curve, close }
       ),
-      new PencilHandler(el, delay),
+      handler,
       new Renderer(el, { background }).update
     )
   }

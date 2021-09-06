@@ -13,15 +13,52 @@ import type {
 } from '@svg-drawing/core'
 
 /**
+ * useSvg
+ */
+export type UseSvg<T extends HTMLElement> = [RefObject<T>, SvgObject, SvgAction]
+
+/**
+ * useDraw
+ */
+export type UseDraw<T extends HTMLElement> = [
+  RefObject<T>,
+  SvgObject,
+  DrawAction
+]
+
+/**
+ * useEdit
+ */
+export type UseEdit<T extends HTMLElement> = [
+  RefObject<T>,
+  EditSvgProps,
+  EditSvgAction
+]
+
+/**
  * useSvg options
  */
 export type UseSvgOptions = {
   sharedSvg?: Svg
 }
+
 /**
- * useSvg
+ * useEdit options
  */
-export type UseSvg<T extends HTMLElement> = [RefObject<T>, SvgObject, SvgAction]
+export type UseEditOptions = UseSvgOptions & {
+  multipleSelectBindKey?: string
+}
+
+/**
+ * useDraw options
+ */
+export type UseDrawOptions = UseSvgOptions & {
+  active?: boolean
+  pathOptions: PathObject
+  commandsConverter?: CreateCommand
+  drawHandler?: typeof DrawHandler
+}
+
 /**
  * useSvg Return type
  */
@@ -46,18 +83,6 @@ export type KeyboardMap = {
 
 export type UseParseFile = (opts: { svg: Svg }) => (file: File) => Promise<void>
 
-export type UseEditOptions = UseSvgOptions & {
-  multipleSelectBindKey?: string
-}
-
-/**
- * useEdit
- */
-export type UseEdit<T extends HTMLElement> = [
-  RefObject<T>,
-  EditSvgProps,
-  EditSvgAction
-]
 export type SelectingHandler = (selectIndex: Selecting) => void
 export type MovePathsHandler = (move: PointObject) => void
 export type ChangeAttributesHandler = (pathAttrs: PathObject) => void
@@ -87,31 +112,12 @@ export type EditSvgProps = SvgObject & {
 }
 
 /**
- * useDraw options
- */
-export type UseDrawOptions = UseSvgOptions & {
-  active?: boolean
-  pathOptions: PathObject
-  commandsConverter?: CreateCommand
-  drawHandler?: typeof DrawHandler
-}
-
-/**
  * useDraw return type
  */
 export type DrawAction = SvgAction & {
   onUndoDraw: () => void
   keyboardMap: KeyboardMap
 }
-
-/**
- * useDraw
- */
-export type UseDraw<T extends HTMLElement> = [
-  RefObject<T>,
-  SvgObject,
-  DrawAction
-]
 
 /**
  * DrawHandlerMap

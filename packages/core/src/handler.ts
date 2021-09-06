@@ -50,7 +50,7 @@ export class DrawHandler implements DrawEventHandler {
   protected drawEnd: DrawEnd
   protected drawStart: DrawStart
   protected drawMove: DrawMove
-  constructor(protected el: HTMLElement | null) {
+  constructor(protected el: HTMLElement | null = null) {
     /**
      * Bind method
      */
@@ -162,8 +162,8 @@ export class DrawHandler implements DrawEventHandler {
 
 export class PencilHandler extends DrawHandler {
   private _drawMoveThrottle: DrawMove
-
-  constructor(el: HTMLElement, private delay: number = 0) {
+  private delay = 0
+  constructor(el: HTMLElement | null = null) {
     super(el)
     /**
      * Bind methods
@@ -287,7 +287,7 @@ export class PencilHandler extends DrawHandler {
 
 export class PenHandler extends DrawHandler {
   private _editing: boolean
-  constructor(el: HTMLElement) {
+  constructor(el: HTMLElement | null = null) {
     super(el)
     this._editing = false
     this._handleProt = this._handleProt.bind(this)
