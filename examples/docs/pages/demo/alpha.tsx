@@ -6,10 +6,10 @@ import {
   Svg,
   EditSvg,
   useDrawHandler,
-  useCommandsConverter,
   useParseFile,
   DrawHandlerMap,
   useKeyboard,
+  usePathFactory,
 } from '@svg-drawing/react/lib/alpha'
 import {
   download,
@@ -96,7 +96,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
    */
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
-  const commandsConverter = useCommandsConverter({ curve, close })
+  const pathFactory = usePathFactory(pathOptions, { curve, close })
 
   /**
    * Setup draw
@@ -105,7 +105,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     active: drawActive,
     pathOptions,
     drawHandler,
-    commandsConverter,
+    pathFactory,
   })
 
   const sharedSvg = draw.svg

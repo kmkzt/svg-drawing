@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 import { Animation } from '@svg-drawing/animation'
-import { Svg } from '@svg-drawing/core/lib'
+import type { Svg } from '@svg-drawing/core'
 
 export const useAnimation = ({
   ms,

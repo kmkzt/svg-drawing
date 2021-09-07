@@ -185,4 +185,5 @@ export type CreateCommand = (points: PointObject[]) => Command[]
 export interface PathFactory {
   create: () => Path
   createCommand: CreateCommand
+  setPathAttributes: (attrs: PathObject) => void
 }

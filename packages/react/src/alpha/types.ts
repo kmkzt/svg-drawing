@@ -9,7 +9,7 @@ import type {
   EditSvgObject,
   FixedPositionType,
   DrawHandler,
-  CreateCommand,
+  PathFactory,
 } from '@svg-drawing/core'
 
 /**
@@ -55,7 +55,7 @@ export type UseEditOptions = UseSvgOptions & {
 export type UseDrawOptions = UseSvgOptions & {
   active?: boolean
   pathOptions: PathObject
-  commandsConverter?: CreateCommand
+  pathFactory: PathFactory
   drawHandler?: typeof DrawHandler
 }
 
@@ -116,17 +116,4 @@ export type DrawAction = SvgAction & {
  */
 export type DrawHandlerMap<T extends string> = {
   [key in T]: typeof DrawHandler
-}
-
-/**
- * UseDrawHandler
- */
-export type UseDrawHandler = typeof DrawHandler | undefined
-
-/**
- * UseCreateCommandOptions
- */
-export type UseCommandsConverterOptions = {
-  curve: boolean
-  close: boolean
 }

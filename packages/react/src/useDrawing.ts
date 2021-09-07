@@ -33,7 +33,7 @@ export const useSvgDrawing = (
   const changePenColor = useCallback((penColor: DrawingOption['penColor']) => {
     if (!drawingRef.current || !penColor) return
 
-    drawingRef.current.pathFactory.updateAttributes({
+    drawingRef.current.pathFactory.updatePathAttributes({
       stroke: penColor,
     })
   }, [])
@@ -41,7 +41,7 @@ export const useSvgDrawing = (
   const changeFill = useCallback((fill: DrawingOption['fill']) => {
     if (!drawingRef.current || !fill) return
 
-    drawingRef.current.pathFactory.updateAttributes({
+    drawingRef.current.pathFactory.updatePathAttributes({
       fill,
     })
   }, [])
@@ -54,28 +54,33 @@ export const useSvgDrawing = (
 
   const changePenWidth = useCallback((param: DrawingOption['penWidth']) => {
     if (!drawingRef.current) return
-    drawingRef.current.pathFactory.updateAttributes({
+
+    drawingRef.current.pathFactory.updatePathAttributes({
       strokeWidth: String(param),
     })
   }, [])
 
   const changeClose = useCallback((param: DrawingOption['close']) => {
     if (!drawingRef.current) return
+
     drawingRef.current.pathFactory.changeClose(param ?? false)
   }, [])
 
   const changeCurve = useCallback((param: DrawingOption['curve']) => {
     if (!drawingRef.current) return
+
     drawingRef.current.pathFactory.changeCurve(param ?? true)
   }, [])
 
   const clear = useCallback(() => {
     if (!drawingRef.current) return
+
     drawingRef.current.clear()
   }, [])
 
   const undo = useCallback(() => {
     if (!drawingRef.current) return
+
     drawingRef.current.undo()
   }, [])
 

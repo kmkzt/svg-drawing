@@ -1,1 +1,1 @@
-export { useParseFile } from './useParseFile'
+export * from './useParseFile'

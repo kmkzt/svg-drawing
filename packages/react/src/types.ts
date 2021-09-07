@@ -1,13 +1,13 @@
 import type { RefObject } from 'react'
-import type { SvgDrawing } from '@svg-drawing/core/lib/drawing'
-import type { DrawingOption } from '@svg-drawing/core/lib/types'
-import type { download } from '@svg-drawing/core/lib/download'
 import type {
   BasicPathFactory,
   Svg,
   ResizeEventHandler,
   PencilHandler,
-} from 'packages/core/lib'
+  SvgDrawing,
+  DrawingOption,
+  download,
+} from '@svg-drawing/core'
 
 export type SvgDrawingObject = SvgDrawing<Svg, BasicPathFactory, PencilHandler>
 

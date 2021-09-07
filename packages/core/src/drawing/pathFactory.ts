@@ -28,11 +28,11 @@ export class BasicPathFactory implements PathFactory {
     return (po) => (this.opts.close ? closeCommands(create(po)) : create(po))
   }
 
-  setAttributes(attrs: PathObject) {
+  setPathAttributes(attrs: PathObject) {
     this.attrs = attrs
   }
 
-  updateAttributes(attrs: PathObject) {
+  updatePathAttributes(attrs: PathObject) {
     this.attrs = {
       ...this.attrs,
       ...attrs,

@@ -1,2 +1,2 @@
-export { Svg } from './Svg'
-export { useSvg } from './useSvg'
+export * from './Svg'
+export * from './useSvg'
