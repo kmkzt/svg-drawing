@@ -20,6 +20,9 @@ const defaultPathFactory = new BasicPathFactory({
   fill: 'none',
 })
 
+/**
+ * @todo Fix drawHandler type. change to DrawEventHandler
+ */
 export const useDraw: UseDraw = (
   ref,
   {

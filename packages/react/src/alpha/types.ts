@@ -25,6 +25,7 @@ export type UseEdit = (opts: UseEditOptions) => [EditSvgProps, EditSvgAction]
 
 /**
  * useDraw
+ * @todo Remove ref.
  */
 export type UseDraw<T extends HTMLElement = HTMLElement> = (
   ref: RefObject<T>,
@@ -57,6 +58,9 @@ export type UseDrawOptions = UseSvgOptions & {
   active?: boolean
   pathOptions: PathObject
   pathFactory: PathFactory
+  /**
+   * @todo Change DrawEventHandler
+   */
   drawHandler?: typeof DrawHandler
 }
 
