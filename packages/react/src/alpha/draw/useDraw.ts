@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useMemo } from 'react'
+import { useRef, useEffect, useCallback, useMemo, RefObject } from 'react'
 import {
   Path,
   DrawHandler,
@@ -11,7 +11,7 @@ import {
 } from '@svg-drawing/core'
 import { useSvg } from '../svg/useSvg'
 import type { PointObject } from '@svg-drawing/core'
-import type { UseDrawOptions, UseDraw, DrawAction, KeyboardMap } from '../types'
+import type { UseDraw, DrawAction, KeyboardMap } from '../types'
 
 const DRAW_DELAY = 20
 
@@ -20,14 +20,17 @@ const defaultPathFactory = new BasicPathFactory({
   fill: 'none',
 })
 
-export const useDraw = <T extends HTMLElement>({
-  active = true,
-  pathOptions,
-  pathFactory: argPathFactory,
-  drawHandler: CustomDrawHandler,
-  sharedSvg,
-}: UseDrawOptions): UseDraw<T> => {
-  const [elRef, svgObj, { svg, onUpdate, ...rest }] = useSvg<T>({
+export const useDraw: UseDraw = (
+  ref,
+  {
+    active = true,
+    pathOptions,
+    pathFactory: argPathFactory,
+    drawHandler: CustomDrawHandler,
+    sharedSvg,
+  }
+) => {
+  const [svgObj, { svg, onUpdate, ...rest }] = useSvg({
     sharedSvg,
   })
   const drawPathRef = useRef<Path | null>(null)
@@ -86,7 +89,7 @@ export const useDraw = <T extends HTMLElement>({
   const handler = useRef<DrawHandler>(
     (() => {
       const Handler = CustomDrawHandler ?? PencilHandler
-      return new Handler(elRef.current)
+      return new Handler(ref.current)
     })()
   )
 
@@ -100,13 +103,13 @@ export const useDraw = <T extends HTMLElement>({
 
   const setDrawHandler = useCallback(
     (Handler: typeof DrawHandler) => {
-      if (!elRef.current) return
-      const drawEl = elRef.current
+      if (!ref.current) return
+      const drawEl = ref.current
       const { width, height } = drawEl.getBoundingClientRect()
       svg.resize({ width, height })
       handler.current.off()
 
-      handler.current = new Handler(elRef.current)
+      handler.current = new Handler(ref.current)
       handler.current.setHandler({
         drawStart: handleDrawStart,
         drawMove: handleDrawMove,
@@ -115,7 +118,7 @@ export const useDraw = <T extends HTMLElement>({
 
       if (active) handler.current.on()
     },
-    [elRef, handleDrawEnd, handleDrawMove, handleDrawStart, svg, active]
+    [ref, handleDrawEnd, handleDrawMove, handleDrawStart, svg, active]
   )
 
   useEffect(() => {
@@ -124,15 +127,15 @@ export const useDraw = <T extends HTMLElement>({
 
   useEffect(() => {
     const drawInstance = handler.current
-    if (!elRef.current) {
+    if (!ref.current) {
       drawInstance.off()
       return
     }
 
-    drawInstance.setElement(elRef.current)
+    drawInstance.setElement(ref.current)
 
     if (active) drawInstance.on()
-  }, [elRef.current]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [ref.current]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!active) return
@@ -155,7 +158,6 @@ export const useDraw = <T extends HTMLElement>({
   )
 
   return [
-    elRef,
     svgObj,
     {
       svg,

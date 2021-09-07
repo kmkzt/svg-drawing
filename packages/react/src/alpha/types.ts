@@ -10,30 +10,31 @@ import type {
   FixedPositionType,
   DrawHandler,
   PathFactory,
+  ResizeCallback,
 } from '@svg-drawing/core'
 
 /**
  * useSvg
  */
-export type UseSvg<T extends HTMLElement> = [RefObject<T>, SvgObject, SvgAction]
-
-/**
- * useDraw
- */
-export type UseDraw<T extends HTMLElement> = [
-  RefObject<T>,
-  SvgObject,
-  DrawAction
-]
+export type UseSvg = (opts: UseSvgOptions) => [SvgObject, SvgAction]
 
 /**
  * useEdit
  */
-export type UseEdit<T extends HTMLElement> = [
-  RefObject<T>,
-  EditSvgProps,
-  EditSvgAction
-]
+export type UseEdit = (opts: UseEditOptions) => [EditSvgProps, EditSvgAction]
+
+/**
+ * useDraw
+ */
+export type UseDraw<T extends HTMLElement = HTMLElement> = (
+  ref: RefObject<T>,
+  opts: UseDrawOptions
+) => [SvgObject, DrawAction]
+
+export type UseResize<T extends HTMLElement = HTMLElement> = (
+  ref: RefObject<T>,
+  onResize: ResizeCallback
+) => ResizeHandler
 
 /**
  * useSvg options
@@ -64,9 +65,9 @@ export type UseDrawOptions = UseSvgOptions & {
  */
 export type SvgAction = {
   svg: Svg
-  resizeListener: ResizeHandler
   onUpdate: () => void
   onClear: () => void
+  onResize: ResizeCallback
 }
 
 export type KeyboardMap = {

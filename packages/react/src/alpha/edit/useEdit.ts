@@ -10,11 +10,11 @@ import type {
 } from '../types'
 import { useMultipleSelect } from './useMultipleSelect'
 
-export const useEdit = <T extends HTMLElement>({
+export const useEdit: UseEdit = ({
   sharedSvg,
   multipleSelectBindKey,
-}: UseEditOptions = {}): UseEdit<T> => {
-  const [ref, originObj, { svg, onUpdate, ...rest }] = useSvg<T>({ sharedSvg })
+}: UseEditOptions = {}) => {
+  const [originObj, { svg, onUpdate, ...rest }] = useSvg({ sharedSvg })
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
 
   const [editInfo, setEditInfo] = useState(editSvg.toJson({}))
@@ -127,7 +127,6 @@ export const useEdit = <T extends HTMLElement>({
   ])
 
   return [
-    ref,
     {
       ...svgProps,
       edit: editInfo,

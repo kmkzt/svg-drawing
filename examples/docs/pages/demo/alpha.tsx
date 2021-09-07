@@ -10,16 +10,20 @@ import {
   DrawHandlerMap,
   useKeyboard,
   usePathFactory,
+  useResize,
 } from '@svg-drawing/react/lib/alpha'
 import {
   download,
   PenHandler,
   PencilHandler,
   PathObject,
+  ResizeCallback,
 } from '@svg-drawing/core'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
+import { useRef } from 'react'
+import { useEffect } from 'react'
 
 const size = 30
 const colorList = [
@@ -98,11 +102,12 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [close, switchClose] = useState(false)
   const pathFactory = usePathFactory(pathOptions, { curve, close })
 
+  const targetRef = useRef<HTMLDivElement>(null)
   /**
    * Setup draw
    */
-  const [drawElRef, svgProps, draw] = useDraw<HTMLDivElement>({
-    active: drawActive,
+  const [svgProps, draw] = useDraw(targetRef, {
+    active: drawActive && mode === 'draw',
     pathOptions,
     drawHandler,
     pathFactory,
@@ -112,7 +117,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   /**
    * Setup edit
    */
-  const [editElRef, editSvgProps, edit] = useEdit<HTMLDivElement>({
+  const [editSvgProps, edit] = useEdit({
     sharedSvg,
   })
   const clickDownload = useCallback(
@@ -125,6 +130,19 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     },
     [draw]
   )
+
+  /**
+   * Setup resize
+   */
+  const handleResize = useCallback<ResizeCallback>(
+    (arg) => {
+      draw.onResize(arg)
+      edit.onResize(arg)
+    },
+    [draw, edit]
+  )
+
+  const resizeHandler = useResize(targetRef, handleResize)
 
   /**
    * Setup keyboardBind
@@ -471,7 +489,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       </div>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
-          ref={mode === 'draw' ? drawElRef : editElRef}
+          ref={targetRef}
           style={{
             backgroundImage: lattice(size),
             backgroundSize: `${size}px ${size}px`,

@@ -1,14 +1,11 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
-import { Svg, ResizeHandler, isAlmostSameNumber } from '@svg-drawing/core'
+import { Svg, isAlmostSameNumber } from '@svg-drawing/core'
 import type { ResizeCallback } from '@svg-drawing/core'
-import type { UseSvgOptions, UseSvg } from '../types'
+import type { UseSvg } from '../types'
 
 const RENDER_INTERVAL = 0
 
-export const useSvg = <T extends HTMLElement>({
-  sharedSvg,
-}: UseSvgOptions = {}): UseSvg<T> => {
-  const targetRef = useRef<T>(null)
+export const useSvg: UseSvg = ({ sharedSvg }) => {
   const svg = useMemo(() => sharedSvg || new Svg({ width: 0, height: 0 }), [
     sharedSvg,
   ])
@@ -39,11 +36,9 @@ export const useSvg = <T extends HTMLElement>({
   }, [svg, onUpdate])
 
   /**
-   * Setup ResizeHandler
+   * @todo Fix useEdit resize.
    */
-  const resizeListener = useMemo<ResizeHandler>(() => new ResizeHandler(), [])
-
-  const resizeCallback = useCallback<ResizeCallback>(
+  const onResize = useCallback<ResizeCallback>(
     ({ width, height }) => {
       if (isAlmostSameNumber(svg.width, width)) return
 
@@ -53,24 +48,13 @@ export const useSvg = <T extends HTMLElement>({
     [svg]
   )
 
-  useEffect(() => {
-    if (!targetRef.current) return
-
-    resizeListener.setElement(targetRef.current)
-    resizeListener.setHandler(resizeCallback)
-    resizeListener.on()
-
-    return () => resizeListener.off()
-  }, [resizeCallback, resizeListener, targetRef])
-
   return [
-    targetRef,
     svgObj,
     {
       svg,
-      resizeListener,
       onUpdate,
       onClear,
+      onResize,
     },
   ]
 }

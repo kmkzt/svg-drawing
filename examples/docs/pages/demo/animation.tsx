@@ -121,7 +121,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
 
       const svgxml = atob(data)
       animationRef.current.svg.parseSVGString(svgxml)
-      animationRef.current.update()
+      animationRef.current.start()
     }
 
     reader.readAsDataURL(e.target.files[0])
