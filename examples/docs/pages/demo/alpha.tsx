@@ -1,4 +1,10 @@
-import { useCallback, useState, ChangeEventHandler, useMemo } from 'react'
+import {
+  useCallback,
+  useState,
+  ChangeEventHandler,
+  useMemo,
+  useRef,
+} from 'react'
 import { NextPage } from 'next'
 import {
   useDraw,
@@ -7,7 +13,6 @@ import {
   EditSvg,
   useDrawHandler,
   useParseFile,
-  DrawHandlerMap,
   useKeyboard,
   usePathFactory,
   useResize,
@@ -22,8 +27,6 @@ import {
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
-import { useRef } from 'react'
-import { useEffect } from 'react'
 
 const size = 30
 const colorList = [
@@ -71,14 +74,14 @@ interface Props {
 }
 
 type DrawHandlerType = 'pen' | 'pencil'
-const drawHandlerMap: DrawHandlerMap<DrawHandlerType> = {
-  pencil: PencilHandler,
-  pen: PenHandler,
-} as const
 
 type Mode = 'edit' | 'draw'
+
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
+  const targetRef = useRef<HTMLDivElement>(null)
+
   const [mode, setMode] = useState<Mode>('draw')
+  const [type, changeType] = useState<DrawHandlerType>('pencil')
   const [drawActive, setDrawActive] = useState(true)
   /**
    * pathOptions
@@ -90,24 +93,38 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   })
 
   /**
-   * drawHandler
-   */
-  const [type, changeType] = useState<DrawHandlerType>('pencil')
-  const drawHandler = useDrawHandler(drawHandlerMap, type)
-
-  /**
    * commandConverter
    */
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
   const pathFactory = usePathFactory(pathOptions, { curve, close })
 
-  const targetRef = useRef<HTMLDivElement>(null)
   /**
    * Setup draw
    */
-  const [svgProps, draw] = useDraw(targetRef, {
-    active: drawActive && mode === 'draw',
+  const pencilHandler = useDrawHandler(
+    targetRef,
+    PencilHandler,
+    drawActive && mode === 'draw' && type === 'pencil'
+  )
+
+  const penHandler = useDrawHandler(
+    targetRef,
+    PenHandler,
+    drawActive && mode === 'draw' && type === 'pen'
+  )
+
+  const drawHandler = useMemo(() => {
+    switch (type) {
+      case 'pen':
+        return penHandler
+      case 'pencil':
+      default:
+        return pencilHandler
+    }
+  }, [penHandler, pencilHandler, type])
+
+  const [svgProps, draw] = useDraw({
     pathOptions,
     drawHandler,
     pathFactory,
@@ -120,6 +137,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [editSvgProps, edit] = useEdit({
     sharedSvg,
   })
+
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (
       e: React.MouseEvent<HTMLElement>

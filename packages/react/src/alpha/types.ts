@@ -11,6 +11,7 @@ import type {
   DrawHandler,
   PathFactory,
   ResizeCallback,
+  DrawEventHandler,
 } from '@svg-drawing/core'
 
 /**
@@ -25,13 +26,20 @@ export type UseEdit = (opts: UseEditOptions) => [EditSvgProps, EditSvgAction]
 
 /**
  * useDraw
- * @todo Remove ref.
  */
-export type UseDraw<T extends HTMLElement = HTMLElement> = (
-  ref: RefObject<T>,
-  opts: UseDrawOptions
-) => [SvgObject, DrawAction]
+export type UseDraw = (opts: UseDrawOptions) => [SvgObject, DrawAction]
 
+/**
+ * useDrawHandler
+ */
+export type UseDrawHandler<
+  T extends HTMLElement = HTMLElement,
+  U extends DrawHandler = any
+> = (ref: RefObject<T>, Handler: U, active: boolean) => U
+
+/**
+ * useResize
+ */
 export type UseResize<T extends HTMLElement = HTMLElement> = (
   ref: RefObject<T>,
   onResize: ResizeCallback
@@ -55,13 +63,9 @@ export type UseEditOptions = UseSvgOptions & {
  * useDraw options
  */
 export type UseDrawOptions = UseSvgOptions & {
-  active?: boolean
   pathOptions: PathObject
   pathFactory: PathFactory
-  /**
-   * @todo Change DrawEventHandler
-   */
-  drawHandler?: typeof DrawHandler
+  drawHandler: DrawEventHandler
 }
 
 /**
@@ -114,11 +118,4 @@ export type EditSvgProps = SvgObject & {
 export type DrawAction = SvgAction & {
   onUndoDraw: () => void
   keyboardMap: KeyboardMap
-}
-
-/**
- * DrawHandlerMap
- */
-export type DrawHandlerMap<T extends string> = {
-  [key in T]: typeof DrawHandler
 }

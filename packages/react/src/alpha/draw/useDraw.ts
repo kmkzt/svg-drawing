@@ -1,8 +1,6 @@
-import { useRef, useEffect, useCallback, useMemo, RefObject } from 'react'
+import { useRef, useEffect, useCallback, useMemo } from 'react'
 import {
   Path,
-  DrawHandler,
-  PencilHandler,
   throttle,
   DrawMove,
   DrawStart,
@@ -23,16 +21,12 @@ const defaultPathFactory = new BasicPathFactory({
 /**
  * @todo Fix drawHandler type. change to DrawEventHandler
  */
-export const useDraw: UseDraw = (
-  ref,
-  {
-    active = true,
-    pathOptions,
-    pathFactory: argPathFactory,
-    drawHandler: CustomDrawHandler,
-    sharedSvg,
-  }
-) => {
+export const useDraw: UseDraw = ({
+  pathOptions,
+  pathFactory: argPathFactory,
+  drawHandler,
+  sharedSvg,
+}) => {
   const [svgObj, { svg, onUpdate, ...rest }] = useSvg({
     sharedSvg,
   })
@@ -86,67 +80,13 @@ export const useDraw: UseDraw = (
     drawPathRef.current = null
   }, [])
 
-  /**
-   * Setup DrawHandler
-   */
-  const handler = useRef<DrawHandler>(
-    (() => {
-      const Handler = CustomDrawHandler ?? PencilHandler
-      return new Handler(ref.current)
-    })()
-  )
-
   useEffect(() => {
-    handler.current.setHandler({
+    drawHandler.setHandler({
       drawStart: handleDrawStart,
       drawMove: handleDrawMove,
       drawEnd: handleDrawEnd,
     })
-  }, [handler, handleDrawStart, handleDrawMove, handleDrawEnd])
-
-  const setDrawHandler = useCallback(
-    (Handler: typeof DrawHandler) => {
-      if (!ref.current) return
-      const drawEl = ref.current
-      const { width, height } = drawEl.getBoundingClientRect()
-      svg.resize({ width, height })
-      handler.current.off()
-
-      handler.current = new Handler(ref.current)
-      handler.current.setHandler({
-        drawStart: handleDrawStart,
-        drawMove: handleDrawMove,
-        drawEnd: handleDrawEnd,
-      })
-
-      if (active) handler.current.on()
-    },
-    [ref, handleDrawEnd, handleDrawMove, handleDrawStart, svg, active]
-  )
-
-  useEffect(() => {
-    setDrawHandler(CustomDrawHandler ?? PencilHandler)
-  }, [CustomDrawHandler]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    const drawInstance = handler.current
-    if (!ref.current) {
-      drawInstance.off()
-      return
-    }
-
-    drawInstance.setElement(ref.current)
-
-    if (active) drawInstance.on()
-  }, [ref.current]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (!active) return
-
-    const drawInstance = handler.current
-    drawInstance.on()
-    return () => drawInstance.off()
-  }, [active])
+  }, [drawHandler, handleDrawStart, handleDrawMove, handleDrawEnd])
 
   const onUndoDraw = useCallback<DrawAction['onUndoDraw']>(() => {
     svg.paths.pop()

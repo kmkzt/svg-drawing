@@ -56,6 +56,7 @@ export class DrawHandler implements DrawEventHandler {
      */
     this.on = this.on.bind(this)
     this.off = this.off.bind(this)
+    this.setHandler = this.setHandler.bind(this)
 
     /**
      * Set offset coordinates
@@ -168,6 +169,8 @@ export class PencilHandler extends DrawHandler {
     /**
      * Bind methods
      */
+    this.setHandler = this.setHandler.bind(this)
+
     this._handleStart = this._handleStart.bind(this)
     this._handleMove = this._handleMove.bind(this)
     this._handleEnd = this._handleEnd.bind(this)
