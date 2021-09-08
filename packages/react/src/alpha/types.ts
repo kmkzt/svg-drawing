@@ -63,7 +63,6 @@ export type UseEditOptions = UseSvgOptions & {
  * useDraw options
  */
 export type UseDrawOptions = UseSvgOptions & {
-  pathOptions: PathObject
   pathFactory: PathFactory
   drawHandler: DrawEventHandler
 }

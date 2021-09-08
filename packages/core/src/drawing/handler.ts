@@ -163,7 +163,7 @@ export class DrawHandler implements DrawEventHandler {
 
 export class PencilHandler extends DrawHandler {
   private _drawMoveThrottle: DrawMove
-  private delay = 0
+  private delay = 20
   constructor(el: HTMLElement | null = null) {
     super(el)
     /**
