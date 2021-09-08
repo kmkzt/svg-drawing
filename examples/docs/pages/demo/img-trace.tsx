@@ -111,7 +111,7 @@ export default () => {
       const renderer = new Renderer(renderRef.current)
       const { width, height } = renderRef.current.getBoundingClientRect()
       svg.resize({ width, height })
-      renderer.update(svg.toJson())
+      renderer.update(svg)
     }
     renderSvg()
     addEventListener('resize', renderSvg)
