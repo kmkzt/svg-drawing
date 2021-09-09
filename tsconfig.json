@@ -13,7 +13,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmitOnError": true,
     "noUnusedLocals": false,
-    "removeComments": true,
+    "removeComments": false,
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
