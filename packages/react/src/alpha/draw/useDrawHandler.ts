@@ -3,7 +3,12 @@ import { DrawHandler } from '@svg-drawing/core'
 import { UseDrawHandler } from '../types'
 
 /**
- * @todo Fix drawHandler type. change to DrawEventHandler
+ * @example
+ * import { PencilHandler } from '@svg-drawing/core'
+ *
+ * const ref = useRef(null)
+ * const drawHandler = useDrawHandler(ref, PencilHandler, true)
+ *
  */
 export const useDrawHandler: UseDrawHandler = (
   ref,
