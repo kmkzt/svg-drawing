@@ -4,7 +4,28 @@ import { useSvg } from '../svg/useSvg'
 import type { UseDraw, DrawAction, KeyboardMap } from '../types'
 
 /**
- * @todo Fix drawHandler type. change to DrawEventHandler
+ * @example
+ * import { PencilHandler } from '@svg-drawing/core'
+ * import { Svg, usePathFactory, useDrawHandler } from '@svg-drawing/react'
+ *
+ * const DrawArea = () => {
+ *   const ref = useRef(null)
+ *   const drawHandler = useDrawHandler(ref, PencilHandler, true)
+ *   const pathFactory = usePathFactory(
+ *     { stroke: '#000', fill: 'none' },
+ *     { curve: true, close: false }
+ *   )
+ *   const [svgProps, draw] = useDraw({
+ *     drawHandler,
+ *     pathFactory
+ *   })
+ *
+ *   return (
+ *     <div ref={ref}>
+ *       <Svg {...svgProps} />
+ *     </div>
+ *   )
+ * }
  */
 export const useDraw: UseDraw = ({
   pathFactory: pathFactory,
