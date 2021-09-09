@@ -125,7 +125,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   }, [penHandler, pencilHandler, type])
 
   const [svgProps, draw] = useDraw({
-    pathOptions,
     drawHandler,
     pathFactory,
   })
