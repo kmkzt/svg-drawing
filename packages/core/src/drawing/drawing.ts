@@ -49,11 +49,6 @@ export class SvgDrawing<
       drawMove: this.drawMove,
       drawEnd: this.drawEnd,
     })
-
-    /**
-     * Start exec
-     */
-    this.handler.on()
   }
 
   public clear(): Path[] {
@@ -141,6 +136,7 @@ export class SvgDrawing<
 
     const handler = new PencilHandler(el)
     handler.changeDelay(delay)
+    handler.on()
 
     return new SvgDrawing<Svg, BasicPathFactory, PencilHandler>(
       new Svg({ width, height, background }),
