@@ -42,8 +42,9 @@ export type UseDrawHandler<
  */
 export type UseResize<T extends HTMLElement = HTMLElement> = (
   ref: RefObject<T>,
-  onResize: ResizeCallback
-) => ResizeHandler
+  onResize: ResizeCallback,
+  active: boolean
+) => void
 
 /**
  * useSvg options

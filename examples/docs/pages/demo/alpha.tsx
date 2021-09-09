@@ -159,7 +159,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [draw, edit]
   )
 
-  const resizeHandler = useResize(targetRef, handleResize)
+  useResize(targetRef, handleResize)
 
   /**
    * Setup keyboardBind

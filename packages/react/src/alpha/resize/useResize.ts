@@ -2,21 +2,19 @@ import { useEffect, useMemo } from 'react'
 import { ResizeHandler } from '@svg-drawing/core'
 import { UseResize } from '../types'
 
-export const useResize: UseResize = (ref, onResize) => {
-  /**
-   * Setup ResizeHandler
-   */
+export const useResize: UseResize = (ref, onResize, active = true) => {
   const resizeListener = useMemo<ResizeHandler>(() => new ResizeHandler(), [])
 
   useEffect(() => {
-    if (!ref.current) return
+    const cleanup = () => resizeListener.off()
 
-    resizeListener.setElement(ref.current)
+    if (!ref.current) return cleanup
+
+    const el = ref.current
+    resizeListener.setElement(el)
     resizeListener.setHandler(onResize)
-    resizeListener.on()
+    if (active) resizeListener.on()
 
-    return () => resizeListener.off()
-  }, [onResize, resizeListener, ref])
-
-  return resizeListener
+    return cleanup
+  }, [onResize, resizeListener, ref, active])
 }
