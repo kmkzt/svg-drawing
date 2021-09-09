@@ -12,24 +12,21 @@ export const useDrawHandler: UseDrawHandler = (
 ) => {
   const handler = useMemo(() => new Handler(), [Handler])
 
-  // Setup
   useEffect(() => {
-    const el = ref.current
-    if (!el) {
-      handler.off()
-      return
+    const cleanup = () => handler.off()
+
+    // Fallback
+    if (!ref.current) {
+      return cleanup
     }
 
+    // Setup
+    const el = ref.current
     handler.setElement(el)
-
     if (active) handler.on()
-    else handler.off()
-  }, [active, handler, ref])
 
-  // Clean up
-  useEffect(() => {
-    return () => handler.off()
-  }, [handler])
+    return cleanup
+  }, [active, handler, ref])
 
   return handler
 }
