@@ -10,19 +10,25 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+
+    // import
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+
+    // react
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',
-    'plugin:prettier/recommended',
-    'prettier/babel',
-    'prettier/react',
 
     // TypeScript
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
 
     // Test
     'plugin:jest/recommended',
+
+    // prettier
+    'plugin:prettier/recommended',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   settings: {
