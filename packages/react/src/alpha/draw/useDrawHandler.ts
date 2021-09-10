@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from 'react'
-import { DrawHandler } from '@svg-drawing/core'
 import { UseDrawHandler } from '../types'
 
 /**
@@ -7,13 +6,16 @@ import { UseDrawHandler } from '../types'
  *   import { PencilHandler } from '@svg-drawing/core'
  *
  *   const ref = useRef(null)
- *   const drawHandler = useDrawHandler(ref, PencilHandler, true)
+ *   const drawHandler = useDrawHandler(ref, PencilHandler)
+ *
+ * @example <caption>Switch active status</caption>
+ *   import { PencilHandler } from '@svg-drawing/core'
+ *
+ *   const ref = useRef(null)
+ *   const [active, setActive] = useState(true)
+ *   const drawHandler = useDrawHandler(ref, PencilHandler, active)
  */
-export const useDrawHandler: UseDrawHandler = (
-  ref,
-  Handler: typeof DrawHandler,
-  active: boolean
-) => {
+export const useDrawHandler: UseDrawHandler = (ref, Handler, active = true) => {
   const handler = useMemo(() => new Handler(), [Handler])
 
   useEffect(() => {
