@@ -22,8 +22,8 @@ export type UseEdit = (opts: UseEditOptions) => [EditSvgProps, EditSvgAction]
 /** UseDraw */
 export type UseDraw = (opts: UseDrawOptions) => [SvgObject, DrawAction]
 
-/** UseDrawHandler */
-export type UseDrawHandler<
+/** UseDrawEventHandler */
+export type UseDrawEventHandler<
   T extends HTMLElement = HTMLElement,
   U extends DrawEventHandler = any
 > = (ref: RefObject<T>, Handler: U, active?: boolean) => U

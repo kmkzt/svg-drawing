@@ -6,11 +6,11 @@ import type { UseDraw, DrawAction, KeyboardMap } from '../types'
 /**
  * @example
  *   import { PencilHandler } from '@svg-drawing/core'
- *   import { Svg, useDrawFactory, useDrawHandler } from '@svg-drawing/react'
+ *   import { Svg, useDrawFactory, useDrawEventHandler } from '@svg-drawing/react'
  *
  *   const DrawArea = () => {
  *     const ref = useRef(null)
- *     const handler = useDrawHandler(ref, PencilHandler, true)
+ *     const handler = useDrawEventHandler(ref, PencilHandler, true)
  *
  *     const factory = useDrawFactory(
  *       { stroke: '#000', fill: 'none' },

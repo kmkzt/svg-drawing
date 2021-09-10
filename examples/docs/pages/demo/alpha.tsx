@@ -11,7 +11,7 @@ import {
   useEdit,
   Svg,
   EditSvg,
-  useDrawHandler,
+  useDrawEventHandler,
   useParseFile,
   useKeyboard,
   useDrawFactory,
@@ -96,13 +96,13 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const factory = useDrawFactory(pathOptions, { curve, close })
 
   /** Setup draw */
-  const pencilHandler = useDrawHandler(
+  const pencilHandler = useDrawEventHandler(
     targetRef,
     PencilHandler,
     drawActive && mode === 'draw' && type === 'pencil'
   )
 
-  const penHandler = useDrawHandler(
+  const penHandler = useDrawEventHandler(
     targetRef,
     PenHandler,
     drawActive && mode === 'draw' && type === 'pen'
