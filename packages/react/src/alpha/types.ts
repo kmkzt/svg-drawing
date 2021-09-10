@@ -2,14 +2,13 @@ import type { RefObject } from 'react'
 import type {
   SvgObject,
   Svg,
-  ResizeHandler,
   PathObject,
   PointObject,
   Selecting,
   EditSvgObject,
   FixedPositionType,
   DrawHandler,
-  PathFactory,
+  DrawFactory,
   ResizeCallback,
   DrawEventHandler,
 } from '@svg-drawing/core'
@@ -26,7 +25,7 @@ export type UseDraw = (opts: UseDrawOptions) => [SvgObject, DrawAction]
 /** UseDrawHandler */
 export type UseDrawHandler<
   T extends HTMLElement = HTMLElement,
-  U extends DrawHandler = any
+  U extends DrawEventHandler = any
 > = (ref: RefObject<T>, Handler: U, active?: boolean) => U
 
 /** UseResize */
@@ -48,8 +47,8 @@ export type UseEditOptions = UseSvgOptions & {
 
 /** UseDraw options */
 export type UseDrawOptions = UseSvgOptions & {
-  pathFactory: PathFactory
-  drawHandler: DrawEventHandler
+  factory: DrawFactory
+  handler: DrawHandler
 }
 
 /** UseSvg Return type */

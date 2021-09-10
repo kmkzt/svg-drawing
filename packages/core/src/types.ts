@@ -108,10 +108,16 @@ export type DrawEventName = Extract<
 
 export type ClearListener = () => void
 
+export interface DrawFactory {
+  createPath: () => Path
+  createCommand: CreateCommand
+  setPathAttributes: (attrs: PathObject) => void
+}
+
 export type DrawStart = () => void
 export type DrawEnd = () => void
 export type DrawMove = (po: PointObject) => void
-export interface DrawEventHandler {
+export interface DrawHandler {
   isActive: boolean
   on: () => void
   off: () => void
@@ -121,6 +127,7 @@ export interface DrawEventHandler {
     drawEnd: DrawEnd
   }) => void
 }
+
 /** Control Point */
 export type ControlPoint = {
   points: PointObject[]
@@ -159,9 +166,3 @@ export type FixedPositionType =
   | 'LeftBottom'
 
 export type CreateCommand = (points: PointObject[]) => Command[]
-
-export interface PathFactory {
-  create: () => Path
-  createCommand: CreateCommand
-  setPathAttributes: (attrs: PathObject) => void
-}

@@ -1,7 +1,7 @@
 import { throttle } from '../throttle'
 import type {
   DrawListenerType,
-  DrawEventHandler,
+  DrawHandler,
   ClearListener,
   PointObject,
   DrawEventName,
@@ -28,7 +28,7 @@ const SUPPORT_EVENT_LISTENER_PASSIVE_OPTION = (() => {
 const getPassiveOptions = (passive = true): false | { passive: boolean } =>
   SUPPORT_EVENT_LISTENER_PASSIVE_OPTION ? { passive } : false
 
-export class DrawHandler implements DrawEventHandler {
+export class DrawEventHandler implements DrawHandler {
   /** Remove EventList */
   protected _clearEventList: Array<ClearListener>
   /** AddEventListener Options */
@@ -85,7 +85,7 @@ export class DrawHandler implements DrawEventHandler {
     drawStart,
     drawMove,
     drawEnd,
-  }: Parameters<DrawEventHandler['setHandler']>[0]) {
+  }: Parameters<DrawHandler['setHandler']>[0]) {
     this.drawEnd = drawEnd
     this.drawStart = drawStart
     this.drawMove = drawMove
@@ -143,7 +143,7 @@ export class DrawHandler implements DrawEventHandler {
   }
 }
 
-export class PencilHandler extends DrawHandler {
+export class PencilHandler extends DrawEventHandler {
   private _drawMoveThrottle: DrawMove
   private delay = 20
   constructor(el: HTMLElement | null = null) {
@@ -169,7 +169,7 @@ export class PencilHandler extends DrawHandler {
     drawStart,
     drawMove,
     drawEnd,
-  }: Parameters<DrawEventHandler['setHandler']>[0]) {
+  }: Parameters<DrawHandler['setHandler']>[0]) {
     this.drawEnd = drawEnd
     this.drawStart = drawStart
     this.drawMove = drawMove
@@ -260,7 +260,7 @@ export class PencilHandler extends DrawHandler {
   }
 }
 
-export class PenHandler extends DrawHandler {
+export class PenHandler extends DrawEventHandler {
   private _editing: boolean
   constructor(el: HTMLElement | null = null) {
     super(el)

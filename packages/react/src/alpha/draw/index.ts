@@ -1,3 +1,3 @@
 export * from './useDraw'
 export * from './useDrawHandler'
-export * from './usePathFactory'
+export * from './useDrawFactory'

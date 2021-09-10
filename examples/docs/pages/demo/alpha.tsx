@@ -14,7 +14,7 @@ import {
   useDrawHandler,
   useParseFile,
   useKeyboard,
-  usePathFactory,
+  useDrawFactory,
   useResize,
 } from '@svg-drawing/react/lib/alpha'
 import {
@@ -93,7 +93,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   /** CommandConverter */
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
-  const pathFactory = usePathFactory(pathOptions, { curve, close })
+  const factory = useDrawFactory(pathOptions, { curve, close })
 
   /** Setup draw */
   const pencilHandler = useDrawHandler(
@@ -108,7 +108,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     drawActive && mode === 'draw' && type === 'pen'
   )
 
-  const drawHandler = useMemo(() => {
+  const handler = useMemo(() => {
     switch (type) {
       case 'pen':
         return penHandler
@@ -119,8 +119,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   }, [penHandler, pencilHandler, type])
 
   const [svgProps, draw] = useDraw({
-    drawHandler,
-    pathFactory,
+    handler,
+    factory,
   })
 
   const sharedSvg = draw.svg

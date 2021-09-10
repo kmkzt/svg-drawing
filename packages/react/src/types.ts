@@ -1,15 +1,12 @@
 import type { RefObject } from 'react'
 import type {
-  BasicPathFactory,
-  Svg,
   ResizeEventHandler,
-  PencilHandler,
   SvgDrawing,
   DrawingOption,
   download,
 } from '@svg-drawing/core'
 
-export type SvgDrawingObject = SvgDrawing<Svg, BasicPathFactory, PencilHandler>
+export type SvgDrawingObject = ReturnType<typeof SvgDrawing['init']>
 
 export type UseSvgDrawing = {
   ref: RefObject<SvgDrawingObject | null>

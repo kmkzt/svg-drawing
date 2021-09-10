@@ -1,22 +1,62 @@
 import { Renderer } from '../renderer'
 import { Path, Svg } from '../svg'
 import { PencilHandler } from './handler'
-import { BasicPathFactory } from './pathFactory'
+import { BasicDrawFactory } from './factory'
 import { isAlmostSameNumber } from '../utils'
 import { download } from '../download'
 import type {
   DownloadOption,
-  DrawEventHandler,
+  DrawHandler,
   DrawingOption,
   PointObject,
-  PathFactory,
+  DrawFactory,
   ResizeCallback,
 } from '../types'
 
+/**
+ * @example <caption>Default.</caption>
+ *   import { SvgDrawing } from '@svg-drawing/core'
+ *
+ *   const el = document.getElementById('draw')
+ *
+ *   SvgDrawing.init(el)
+ *
+ *   // Otptions
+ *   SvgDrawing.init({
+ *     curve: true,
+ *     close: false,
+ *     penColor: '#00f',
+ *     penWidth: 10,
+ *     fill: '#F00',
+ *     background: '#ff0',
+ *   })
+ *
+ * @example <caption>Customize.</caption>
+ *   import {
+ *     Svg,
+ *     SvgDrawing,
+ *     PenHandler,
+ *     Renderer,
+ *     BasicDrawFactory,
+ *   } from '@svg-drawing/core'
+ *
+ *   const el = document.getElementById('draw')
+ *   const { width, height } = el.getBoundingClientRect()
+ *
+ *   new SvgDrawing(
+ *     new Svg({ width, height }),
+ *     new BasicDrawFactory({ stroke: '#000' }),
+ *     new PenHandler(el),
+ *     new Renderer(el).update
+ *   )
+ *
+ * @class SvgDrawing
+ * @export
+ */
 export class SvgDrawing<
   S extends Svg,
-  P extends PathFactory,
-  H extends DrawEventHandler
+  P extends DrawFactory,
+  H extends DrawHandler
 > {
   private _drawPath: Path | null
   private _drawPoints: PointObject[]
@@ -98,7 +138,7 @@ export class SvgDrawing<
 
   private _createDrawPath(): Path {
     this._drawPoints = []
-    return this.pathFactory.create()
+    return this.pathFactory.createPath()
   }
 
   public resize({ width, height }: Parameters<ResizeCallback>[0]) {
@@ -112,7 +152,6 @@ export class SvgDrawing<
     download(this.svg, opt)
   }
 
-  /** @todo Remove dummy handler */
   public static init(
     el: HTMLElement,
     {
@@ -131,9 +170,9 @@ export class SvgDrawing<
     handler.changeDelay(delay)
     handler.on()
 
-    return new SvgDrawing<Svg, BasicPathFactory, PencilHandler>(
+    return new SvgDrawing<Svg, BasicDrawFactory, PencilHandler>(
       new Svg({ width, height, background }),
-      new BasicPathFactory(
+      new BasicDrawFactory(
         {
           stroke: penColor ?? '#000',
           strokeWidth: penWidth || penWidth === 0 ? String(penWidth) : '1',
