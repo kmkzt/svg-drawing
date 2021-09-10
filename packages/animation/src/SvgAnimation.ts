@@ -15,26 +15,13 @@ import {
 import { AnimationOption, FrameAnimation } from './types'
 
 export class SvgAnimation {
-  /**
-   * Options
-   */
   public ms: number
-  /**
-   * Private property
-   */
+
   private _stopId: number
   private _stopAnimation: (() => void) | null
   private _anim: FrameAnimation | null
   private _restorePaths: Path[]
   private _framesNumber: number | undefined
-  /**
-   * Modules
-   */
-
-  /**
-   * Relation animate element
-   * TODO: add easing option
-   */
   private _repeatCount: string
   constructor(
     public svg: Svg,
@@ -52,10 +39,11 @@ export class SvgAnimation {
   }
 
   /**
+   * `frame` is the number of frames to animate `repeat` is related for
+   * repeatCount of animate element attribute.
+   *
    * @param {FramaAnimation} fn
    * @param {{ frame?: number; repeat?: number }} opts
-   * `frame` is the number of frames to animate
-   * `repeat` is related for repeatCount of animate element attribute.
    */
   public setAnimation(
     fn: FrameAnimation,
@@ -227,7 +215,7 @@ export class SvgAnimation {
 
   /**
    * @param filename
-   * TODO: Support gif and apng
+   * @todo Support gif and apng
    */
   public download(filename?: string): void {
     downloadBlob({
@@ -237,10 +225,7 @@ export class SvgAnimation {
     })
   }
 
-  /**
-   * @return {number}
-   * Default value is total of commands length.
-   */
+  /** @returns {number} Default value is total of commands length. */
   private _getFramesNumber(): number {
     return this._framesNumber && this._framesNumber > 0
       ? this._framesNumber
@@ -260,9 +245,7 @@ export class SvgAnimation {
     this.start()
   }
 
-  /**
-   * @todo improve resize handler
-   */
+  /** @todo Improve resize handler */
   public static init(
     el: HTMLElement,
     { ms, background }: AnimationOption & RendererOption = { ms: 60 }

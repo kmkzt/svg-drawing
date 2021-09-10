@@ -1,5 +1,5 @@
 import { Svg } from '@svg-drawing/core'
-import { Animation } from './Animation'
+import { Animation } from './animation'
 import { FrameAnimation } from './types'
 
 const defaultTestData = `<svg width="200" height="200">

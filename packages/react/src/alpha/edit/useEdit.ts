@@ -20,9 +20,10 @@ export const useEdit: UseEdit = ({
   const [editInfo, setEditInfo] = useState(editSvg.toJson({}))
   const [previewObj, setPreviewObj] = useState(svg.toJson())
 
-  const editing = useMemo(() => Object.keys(editInfo.index).length !== 0, [
-    editInfo.index,
-  ])
+  const editing = useMemo(
+    () => Object.keys(editInfo.index).length !== 0,
+    [editInfo.index]
+  )
 
   const multipleSelect = useMultipleSelect(multipleSelectBindKey)
 
@@ -120,11 +121,10 @@ export const useEdit: UseEdit = ({
     }
   }, [editInfo.index, onCancelSelecting, onDeletePaths, onMovePaths])
 
-  const svgProps = useMemo(() => (editing ? previewObj : originObj), [
-    editing,
-    previewObj,
-    originObj,
-  ])
+  const svgProps = useMemo(
+    () => (editing ? previewObj : originObj),
+    [editing, previewObj, originObj]
+  )
 
   return [
     {

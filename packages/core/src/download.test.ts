@@ -1,4 +1,4 @@
-import { Svg, Path, Command, COMMAND_TYPE } from './svg'
+import { Svg, Path, Command } from './svg'
 import { download, toBase64 } from './download'
 
 describe('download.ts', () => {
@@ -19,7 +19,7 @@ describe('download.ts', () => {
         .addCommand(new Command('L', [9, 4]))
         .addCommand(new Command('L', [9, 8]))
         .addCommand(new Command('L', [3, 0]))
-        .addCommand(new Command('Z')
+        .addCommand(new Command('Z'))
     )
 
   it('toBase64', () => {
@@ -33,15 +33,16 @@ describe('download.ts', () => {
     }
     download(svg, { extension: 'svg' }, testDownload)
   })
-  // TODO: Fix download test
-  it.skip('jpg download', (done) => {
+
+  it.skip('jpg download', (done) => { // eslint-disable-line
     expect.assertions(1)
     const testDownload = (param: any): void => {
       expect(param).toMatchSnapshot()
     }
     download(svg, { extension: 'jpg' }, testDownload)
   }, 30000)
-  it.skip('png download', (done) => {
+
+  it.skip('png download', (done) => { // eslint-disable-line
     expect.assertions(1)
     const testDownload = (param: any): void => {
       expect(param).toMatchSnapshot()

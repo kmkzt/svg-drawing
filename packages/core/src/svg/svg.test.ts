@@ -1,6 +1,6 @@
 import { Svg } from './svg'
 import { Path } from './path'
-import { Command, COMMAND_TYPE } from './command'
+import { Command } from './command'
 import { download, toBase64 } from '../download'
 import { svgObjectToElement } from '../renderer'
 
@@ -12,36 +12,15 @@ describe('svg/svg.ts', () => {
         // TODO: rewrite bezier curve test
         .addPath(
           new Path()
-            .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
+            .addCommand(new Command(Command.Types.M, [0, 0]))
             .addCommand(
-              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-                0.2,
-                0.2,
-                0.6,
-                0.8,
-                1,
-                1,
-              ])
+              new Command(Command.Types.C, [0.2, 0.2, 0.6, 0.8, 1, 1])
             )
             .addCommand(
-              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-                1.4,
-                1.2,
-                1.6,
-                1.2,
-                2,
-                1,
-              ])
+              new Command(Command.Types.C, [1.4, 1.2, 1.6, 1.2, 2, 1])
             )
             .addCommand(
-              new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-                2.4,
-                0.8,
-                2.8,
-                0.2,
-                3,
-                0,
-              ])
+              new Command(Command.Types.C, [2.4, 0.8, 2.8, 0.2, 3, 0])
             )
         )
         .addPath(
@@ -49,11 +28,11 @@ describe('svg/svg.ts', () => {
             strokeLinecap: 'square',
             strokeLinejoin: 'mitter',
           })
-            .addCommand(new Command(COMMAND_TYPE.MOVE, [4, 4]))
-            .addCommand(new Command(COMMAND_TYPE.LINE, [9, 4]))
-            .addCommand(new Command(COMMAND_TYPE.LINE, [9, 8]))
-            .addCommand(new Command(COMMAND_TYPE.LINE, [3, 0]))
-            .addCommand(new Command(COMMAND_TYPE.CLOSE))
+            .addCommand(new Command(Command.Types.M, [4, 4]))
+            .addCommand(new Command(Command.Types.L, [9, 4]))
+            .addCommand(new Command(Command.Types.L, [9, 8]))
+            .addCommand(new Command(Command.Types.L, [3, 0]))
+            .addCommand(new Command(Command.Types.Z))
         )
     })
 
@@ -104,36 +83,15 @@ describe('svg/svg.ts', () => {
         svg = new Svg({ width: 4, height: 4 })
           .addPath(
             new Path()
-              .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
+              .addCommand(new Command(Command.Types.M, [0, 0]))
               .addCommand(
-                new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-                  0.2,
-                  0.2,
-                  0.6,
-                  0.8,
-                  1,
-                  1,
-                ])
+                new Command(Command.Types.C, [0.2, 0.2, 0.6, 0.8, 1, 1])
               )
               .addCommand(
-                new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-                  1.4,
-                  1.2,
-                  1.6,
-                  1.2,
-                  2,
-                  1,
-                ])
+                new Command(Command.Types.C, [1.4, 1.2, 1.6, 1.2, 2, 1])
               )
               .addCommand(
-                new Command(COMMAND_TYPE.CUBIC_BEZIER_CURVE, [
-                  2.4,
-                  0.8,
-                  2.8,
-                  0.2,
-                  3,
-                  0,
-                ])
+                new Command(Command.Types.C, [2.4, 0.8, 2.8, 0.2, 3, 0])
               )
           )
           .addPath(
@@ -141,11 +99,11 @@ describe('svg/svg.ts', () => {
               strokeLinecap: 'square',
               strokeLinejoin: 'mitter',
             })
-              .addCommand(new Command(COMMAND_TYPE.MOVE, [4, 4]))
-              .addCommand(new Command(COMMAND_TYPE.LINE, [9, 4]))
-              .addCommand(new Command(COMMAND_TYPE.LINE, [9, 8]))
-              .addCommand(new Command(COMMAND_TYPE.LINE, [3, 0]))
-              .addCommand(new Command(COMMAND_TYPE.CLOSE))
+              .addCommand(new Command(Command.Types.M, [4, 4]))
+              .addCommand(new Command(Command.Types.L, [9, 4]))
+              .addCommand(new Command(Command.Types.L, [9, 8]))
+              .addCommand(new Command(Command.Types.L, [3, 0]))
+              .addCommand(new Command(Command.Types.Z))
           )
       })
 
@@ -157,14 +115,14 @@ describe('svg/svg.ts', () => {
         download(svg, { extension: 'svg' }, testDownload)
       })
       // TODO: Fix download test
-      it.skip('jpg download', (done) => {
+      it.skip('jpg download', (done) => { // eslint-disable-line
         expect.assertions(1)
         const testDownload = (param: any): void => {
           expect(param).toMatchSnapshot()
         }
         download(svg, { extension: 'jpg' }, testDownload)
       }, 30000)
-      it.skip('png download', (done) => {
+      it.skip('png download', (done) => { // eslint-disable-line
         expect.assertions(1)
         const testDownload = (param: any): void => {
           expect(param).toMatchSnapshot()

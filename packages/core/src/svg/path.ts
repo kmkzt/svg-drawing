@@ -3,9 +3,9 @@ import { kebab2camel } from '../utils'
 import { Command } from './command'
 
 /**
- * TODO: refactor command.
- * The following commands are not supported. Cannot support commands that use `M` or` z` more than once
- * `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
+ * @todo: refactor command. The following commands are not supported.
+ *
+ * Cannot support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
  */
 export class Path {
   public attrs: PathObject

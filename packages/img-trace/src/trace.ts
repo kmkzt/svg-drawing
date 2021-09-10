@@ -258,7 +258,8 @@ export class ImgTrace {
 
   /**
    * Find similar color from palette and return ID
-   * @param {Rgba} color pixel color
+   *
+   * @param {Rgba} color Pixel color
    */
   private _findPaletteIndex({ r, g, b, a }: Rgba): number {
     let cdl = 1024 // 4 * 256 is the maximum RGBA distance
@@ -456,14 +457,13 @@ export class ImgTrace {
           )
         ) {
           if (ins[pacnt].points.length > 0) {
-            ins[pacnt].points[
-              ins[pacnt].points.length - 1
-            ].direction = this._getdirection(
-              ins[pacnt].points[ins[pacnt].points.length - 1].x,
-              ins[pacnt].points[ins[pacnt].points.length - 1].y,
-              paths[pacnt].points[pcnt].x,
-              paths[pacnt].points[pcnt].y
-            )
+            ins[pacnt].points[ins[pacnt].points.length - 1].direction =
+              this._getdirection(
+                ins[pacnt].points[ins[pacnt].points.length - 1].x,
+                ins[pacnt].points[ins[pacnt].points.length - 1].y,
+                paths[pacnt].points[pcnt].x,
+                paths[pacnt].points[pcnt].y
+              )
           }
 
           ins[pacnt].points.push({

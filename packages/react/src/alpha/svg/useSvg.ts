@@ -6,13 +6,15 @@ import type { UseSvg } from '../types'
 const RENDER_INTERVAL = 0
 
 export const useSvg: UseSvg = ({ sharedSvg }) => {
-  const svg = useMemo(() => sharedSvg || new Svg({ width: 0, height: 0 }), [
-    sharedSvg,
-  ])
+  const svg = useMemo(
+    () => sharedSvg || new Svg({ width: 0, height: 0 }),
+    [sharedSvg]
+  )
   const [svgObj, setSvgObj] = useState(svg.toJson())
 
   /**
-   * A variable called shouldUpdateRef manages whether to update to reduce the number of times setState is executed.
+   * A variable called shouldUpdateRef manages whether to update to reduce the
+   * number of times setState is executed.
    */
   const shouldUpdateRef = useRef<boolean>(false)
   const onUpdate = useCallback(() => {
@@ -35,9 +37,7 @@ export const useSvg: UseSvg = ({ sharedSvg }) => {
     onUpdate()
   }, [svg, onUpdate])
 
-  /**
-   * @todo Fix useEdit resize.
-   */
+  /** @todo Fix useEdit resize. */
   const onResize = useCallback<ResizeCallback>(
     ({ width, height }) => {
       if (isAlmostSameNumber(svg.width, width)) return

@@ -48,9 +48,7 @@ describe('drawing.ts', () => {
       expect(el).toMatchSnapshot()
     })
 
-    /**
-     * TODO: Fix NaN
-     */
+    /** TODO: Fix NaN */
     it('undo()', () => {
       const draw = SvgDrawing.init(document.createElement('div'))
       draw.drawStart()

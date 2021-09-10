@@ -39,7 +39,7 @@ describe('trace.ts', () => {
           }).load(png)
 
           const data = svgObjectToElement(svg.toJson()).outerHTML
-          /** DEBUG **/
+          /** DEBUG */
           if (process.env.DEBUG === 'debug') {
             writeFileSync(
               resolve(__dirname, `__debug__/${testname}-${Date.now()}.svg`),

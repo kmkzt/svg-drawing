@@ -83,25 +83,19 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [mode, setMode] = useState<Mode>('draw')
   const [type, changeType] = useState<DrawHandlerType>('pencil')
   const [drawActive, setDrawActive] = useState(true)
-  /**
-   * pathOptions
-   */
+  /** PathOptions */
   const [pathOptions, setPathOptions] = useState<PathObject>({
     fill: 'none',
     stroke: 'black',
     strokeWidth: '5',
   })
 
-  /**
-   * commandConverter
-   */
+  /** CommandConverter */
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
   const pathFactory = usePathFactory(pathOptions, { curve, close })
 
-  /**
-   * Setup draw
-   */
+  /** Setup draw */
   const pencilHandler = useDrawHandler(
     targetRef,
     PencilHandler,
@@ -130,17 +124,13 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   })
 
   const sharedSvg = draw.svg
-  /**
-   * Setup edit
-   */
+  /** Setup edit */
   const [editSvgProps, edit] = useEdit({
     sharedSvg,
   })
 
   const clickDownload = useCallback(
-    (extension: 'png' | 'jpg' | 'svg') => (
-      e: React.MouseEvent<HTMLElement>
-    ) => {
+    (extension: 'png' | 'jpg' | 'svg') => (e: React.MouseEvent<HTMLElement>) => {
       download(draw.svg, {
         extension,
       })
@@ -148,9 +138,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [draw]
   )
 
-  /**
-   * Setup resize
-   */
+  /** Setup resize */
   const handleResize = useCallback<ResizeCallback>(
     (arg) => {
       draw.onResize(arg)
@@ -161,9 +149,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
 
   useResize(targetRef, handleResize)
 
-  /**
-   * Setup keyboardBind
-   */
+  /** Setup keyboardBind */
   const keyboardMap = useMemo(
     () => (mode === 'edit' ? edit.keyboardMap : draw.keyboardMap),
     [mode, edit.keyboardMap, draw.keyboardMap]

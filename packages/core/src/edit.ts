@@ -84,9 +84,7 @@ const getResizeEditObject = (
   }
 }
 
-/**
- * @todo Rename SvgEditing or Editing or SvgEdit ?
- */
+/** @todo Rename SvgEditing or Editing or SvgEdit ? */
 export class EditSvg {
   constructor(public svg: Svg) {}
 
@@ -196,9 +194,7 @@ export class EditSvg {
     })
   }
 
-  /**
-   * @todo delete points
-   */
+  /** @todo Delete points */
   public delete(selecting: Selecting) {
     this.exec(
       selecting,
@@ -249,15 +245,11 @@ export class EditSvg {
   }
 }
 
-/**
- * @todo Rename PathEdit ?
- */
+/** @todo Rename PathEdit ? */
 export class EditPath {
   constructor(public path: Path) {}
 
-  /**
-   * @todo compatible relative point
-   */
+  /** @todo Compatible relative point */
   public get points(): Point[] {
     return this.path.commands.reduce(
       (p: Point[], com) => (com.point ? [...p, com.point] : p),

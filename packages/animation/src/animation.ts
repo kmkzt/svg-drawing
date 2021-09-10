@@ -10,21 +10,10 @@ import {
 import { AnimationOption, FrameAnimation } from './types'
 
 export class Animation {
-  /**
-   * Options
-   */
   public ms: number
-  /**
-   * Private property
-   */
   private _anim: FrameAnimation | null
   private originPaths: Path[]
   private _framesNumber: number | undefined
-
-  /**
-   * Relation animate element
-   * TODO: add easing option
-   */
   private _repeatCount: string
   constructor(public svg: Svg, { ms }: AnimationOption = { ms: 60 }) {
     this.ms = ms
@@ -34,10 +23,11 @@ export class Animation {
   }
 
   /**
+   * `frame` is the number of frames to animate `repeat` is related for
+   * repeatCount of animate element attribute.
+   *
    * @param {FramaAnimation} fn
    * @param {{ frame?: number; repeat?: number }} opts
-   * `frame` is the number of frames to animate
-   * `repeat` is related for repeatCount of animate element attribute.
    */
   public setAnimation(
     fn: FrameAnimation,
@@ -156,10 +146,7 @@ export class Animation {
     )
   }
 
-  /**
-   * @return {number}
-   * Default value is total of commands length.
-   */
+  /** @returns {number} Default value is total of commands length. */
   private get framesNumber(): number {
     return this._framesNumber && this._framesNumber > 0
       ? this._framesNumber

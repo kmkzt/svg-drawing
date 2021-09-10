@@ -4,11 +4,10 @@ import { UseDrawHandler } from '../types'
 
 /**
  * @example
- * import { PencilHandler } from '@svg-drawing/core'
+ *   import { PencilHandler } from '@svg-drawing/core'
  *
- * const ref = useRef(null)
- * const drawHandler = useDrawHandler(ref, PencilHandler, true)
- *
+ *   const ref = useRef(null)
+ *   const drawHandler = useDrawHandler(ref, PencilHandler, true)
  */
 export const useDrawHandler: UseDrawHandler = (
   ref,

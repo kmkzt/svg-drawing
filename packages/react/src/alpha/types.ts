@@ -14,63 +14,45 @@ import type {
   DrawEventHandler,
 } from '@svg-drawing/core'
 
-/**
- * useSvg
- */
+/** UseSvg */
 export type UseSvg = (opts: UseSvgOptions) => [SvgObject, SvgAction]
 
-/**
- * useEdit
- */
+/** UseEdit */
 export type UseEdit = (opts: UseEditOptions) => [EditSvgProps, EditSvgAction]
 
-/**
- * useDraw
- */
+/** UseDraw */
 export type UseDraw = (opts: UseDrawOptions) => [SvgObject, DrawAction]
 
-/**
- * useDrawHandler
- */
+/** UseDrawHandler */
 export type UseDrawHandler<
   T extends HTMLElement = HTMLElement,
   U extends DrawHandler = any
 > = (ref: RefObject<T>, Handler: U, active: boolean) => U
 
-/**
- * useResize
- */
+/** UseResize */
 export type UseResize<T extends HTMLElement = HTMLElement> = (
   ref: RefObject<T>,
   onResize: ResizeCallback,
-  active: boolean
+  active?: boolean
 ) => void
 
-/**
- * useSvg options
- */
+/** UseSvg options */
 export type UseSvgOptions = {
   sharedSvg?: Svg
 }
 
-/**
- * useEdit options
- */
+/** UseEdit options */
 export type UseEditOptions = UseSvgOptions & {
   multipleSelectBindKey?: string
 }
 
-/**
- * useDraw options
- */
+/** UseDraw options */
 export type UseDrawOptions = UseSvgOptions & {
   pathFactory: PathFactory
   drawHandler: DrawEventHandler
 }
 
-/**
- * useSvg Return type
- */
+/** UseSvg Return type */
 export type SvgAction = {
   svg: Svg
   onUpdate: () => void
@@ -100,9 +82,7 @@ export type EditSvgAction = SvgAction & {
   onChangeAttributes: ChangeAttributesHandler
 }
 
-/**
- * EditSvg components
- */
+/** EditSvg components */
 export type EditSvgProps = SvgObject & {
   edit: EditSvgObject
   onSelecting: SelectingHandler
@@ -112,9 +92,7 @@ export type EditSvgProps = SvgObject & {
   onResizePathsPreview: ResizePathsHandler
 }
 
-/**
- * useDraw return type
- */
+/** UseDraw return type */
 export type DrawAction = SvgAction & {
   onUndoDraw: () => void
   keyboardMap: KeyboardMap

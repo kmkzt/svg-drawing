@@ -26,20 +26,14 @@ export class SvgDrawing<
     public handler: H,
     private update: (svg: Svg) => void
   ) {
-    /**
-     * Setup property
-     */
+    /** Setup property */
     this._drawPath = null
     this._drawPoints = []
 
-    /**
-     * Setup methods
-     */
+    /** Setup methods */
     this.resize = this.resize.bind(this)
 
-    /**
-     * Setup EventDrawHandler
-     */
+    /** Setup EventDrawHandler */
     this.drawStart = this.drawStart.bind(this)
     this.drawMove = this.drawMove.bind(this)
     this.drawEnd = this.drawEnd.bind(this)
@@ -77,9 +71,10 @@ export class SvgDrawing<
   }
 
   public switchPath() {
-    const po = this._drawPath?.commands[
-      this._drawPath.commands.length - 1
-    ].point?.clone()
+    const po =
+      this._drawPath?.commands[
+        this._drawPath.commands.length - 1
+      ].point?.clone()
     if (!po) return
     this._drawPath = this._createDrawPath()
     this._addDrawPoint(po.toJson())
@@ -117,9 +112,7 @@ export class SvgDrawing<
     download(this.svg, opt)
   }
 
-  /**
-   * @todo remove dummy handler
-   */
+  /** @todo Remove dummy handler */
   public static init(
     el: HTMLElement,
     {

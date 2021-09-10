@@ -73,9 +73,7 @@ export const svgObjectToElement = ({
 
 export class Renderer {
   constructor(public el: HTMLElement, { background }: RendererOption = {}) {
-    /**
-     * Setup parameter
-     */
+    /** Setup parameter */
     const { width, height } = this.el.getBoundingClientRect()
     this.el.appendChild(
       svgObjectToElement({ background, width, height, paths: [] })
@@ -84,9 +82,11 @@ export class Renderer {
     this.update = this.update.bind(this)
   }
   /**
-   * render
-   * TODO: XSS test
-   * TODO: Partially render
+   * Update render.
+   *
+   * @todo XSS test.
+   *
+   * @todo Partially render.
    */
   public update(svg: Svg): void {
     this.el.replaceChild(

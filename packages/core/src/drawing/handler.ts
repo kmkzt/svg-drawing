@@ -29,43 +29,29 @@ const getPassiveOptions = (passive = true): false | { passive: boolean } =>
   SUPPORT_EVENT_LISTENER_PASSIVE_OPTION ? { passive } : false
 
 export class DrawHandler implements DrawEventHandler {
-  /**
-   * Remove EventList
-   */
+  /** Remove EventList */
   protected _clearEventList: Array<ClearListener>
-  /**
-   * addEventListener Options
-   */
+  /** AddEventListener Options */
   protected _listenerOption: ReturnType<typeof getPassiveOptions>
-  /**
-   * Offset coordinates
-   */
+  /** Offset coordinates */
   protected _offset: {
     left: number
     top: number
   }
-  /**
-   * EventHandler
-   */
+  /** EventHandler */
   protected drawEnd: DrawEnd
   protected drawStart: DrawStart
   protected drawMove: DrawMove
   constructor(protected el: HTMLElement | null = null) {
-    /**
-     * Bind method
-     */
+    /** Bind method */
     this.on = this.on.bind(this)
     this.off = this.off.bind(this)
     this.setHandler = this.setHandler.bind(this)
 
-    /**
-     * Set offset coordinates
-     */
+    /** Set offset coordinates */
     const { left, top } = el ? el.getBoundingClientRect() : { left: 0, top: 0 }
     this._offset = { left, top }
-    /**
-     * Setup property.
-     */
+    /** Setup property. */
     this.drawStart = () => void 0
     this.drawMove = () => void 0
     this.drawEnd = () => void 0
@@ -76,9 +62,7 @@ export class DrawHandler implements DrawEventHandler {
   public get isActive(): boolean {
     return this._clearEventList.length > 0
   }
-  /**
-   * Exec removeEventListener
-   */
+  /** Exec removeEventListener */
   public off() {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []
@@ -138,9 +122,7 @@ export class DrawHandler implements DrawEventHandler {
     return []
   }
 
-  /**
-   * Set left, top property when scroll or resize event
-   */
+  /** Set left, top property when scroll or resize event */
   private _setupCoordinatesListener(): Array<ClearListener> {
     const el = this.el
     if (!el) return []
@@ -166,9 +148,7 @@ export class PencilHandler extends DrawHandler {
   private delay = 20
   constructor(el: HTMLElement | null = null) {
     super(el)
-    /**
-     * Bind methods
-     */
+    /** Bind methods */
     this.setHandler = this.setHandler.bind(this)
 
     this._handleStart = this._handleStart.bind(this)
@@ -256,33 +236,25 @@ export class PencilHandler extends DrawHandler {
 
     const { start, move, end, flameout } = eventMap[type]
 
-    const startClear = start.map(
-      (evname): ClearListener => {
-        el.addEventListener(evname, this._handleStart, this._listenerOption)
-        return () => el.removeEventListener(evname, this._handleStart)
-      }
-    )
+    const startClear = start.map((evname): ClearListener => {
+      el.addEventListener(evname, this._handleStart, this._listenerOption)
+      return () => el.removeEventListener(evname, this._handleStart)
+    })
 
-    const moveClear = move.map(
-      (evname): ClearListener => {
-        el.addEventListener(evname, this._handleMove, this._listenerOption)
-        return () => el.removeEventListener(evname, this._handleMove)
-      }
-    )
+    const moveClear = move.map((evname): ClearListener => {
+      el.addEventListener(evname, this._handleMove, this._listenerOption)
+      return () => el.removeEventListener(evname, this._handleMove)
+    })
 
-    const endClear = end.map(
-      (evname): ClearListener => {
-        el.addEventListener(evname, this._handleEnd, this._listenerOption)
-        return () => el.removeEventListener(evname, this._handleEnd)
-      }
-    )
+    const endClear = end.map((evname): ClearListener => {
+      el.addEventListener(evname, this._handleEnd, this._listenerOption)
+      return () => el.removeEventListener(evname, this._handleEnd)
+    })
 
-    const flameoutClear = flameout.map(
-      (evname): ClearListener => {
-        addEventListener(evname, this._handleEnd, this._listenerOption)
-        return () => removeEventListener(evname, this._handleEnd)
-      }
-    )
+    const flameoutClear = flameout.map((evname): ClearListener => {
+      addEventListener(evname, this._handleEnd, this._listenerOption)
+      return () => removeEventListener(evname, this._handleEnd)
+    })
 
     return [...startClear, ...moveClear, ...endClear, ...flameoutClear]
   }

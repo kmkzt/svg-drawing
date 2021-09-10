@@ -40,7 +40,7 @@ describe('svg/path.ts', () => {
         expect(path.getCommandString()).toBe(testData)
       })
       // TODO: Validate command
-      it.skip('failed pattern', () => {
+      it.skip('failed pattern', () => { // eslint-disable-line
         path.parseCommandString('M a b')
         expect(path.getCommandString()).toBe('')
         path.parseCommandString('M 0 0 C 0 1 2')

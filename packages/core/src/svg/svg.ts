@@ -14,9 +14,7 @@ export class Svg {
     this.background = background
   }
 
-  /**
-   * @todo check height
-   */
+  /** @todo Check height */
   public resize({ width, height }: { width: number; height: number }) {
     this.scale(width / this.width)
     this.width = width

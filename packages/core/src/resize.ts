@@ -2,9 +2,7 @@ import type { ResizeEventHandler, ResizeCallback } from './types'
 
 const SUPPORT_RESIZE_OBSERVER = typeof ResizeObserver !== 'undefined'
 export class ResizeHandler implements ResizeEventHandler {
-  /**
-   * Remove EventList
-   */
+  /** Remove EventList */
   private _clearEventList: Array<() => void>
   private resize: ResizeCallback
   constructor(private el: HTMLElement | null = null) {

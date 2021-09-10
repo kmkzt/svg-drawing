@@ -40,10 +40,8 @@ export const EditSvg = ({
     null
   )
 
-  const [
-    resizeBasePoint,
-    setResizeBasePoint,
-  ] = useState<ResizeBasePoint | null>(null)
+  const [resizeBasePoint, setResizeBasePoint] =
+    useState<ResizeBasePoint | null>(null)
 
   const isSelectedBoundingBox = useMemo(() => {
     if (Object.keys(selecting).length < 1) return false
@@ -74,32 +72,34 @@ export const EditSvg = ({
     []
   )
   const handleMoveStartPoint = useCallback(
-    ({ path, command, point }: EditPointIndex) => (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      handleSelect({
-        [path]: {
-          [command]: [point],
-        },
-      })
-      handleMoveStart(ev)
-    },
+    ({ path, command, point }: EditPointIndex) =>
+      (
+        ev:
+          | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+          | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+      ) => {
+        handleSelect({
+          [path]: {
+            [command]: [point],
+          },
+        })
+        handleMoveStart(ev)
+      },
     [handleMoveStart, handleSelect]
   )
 
   const handleMoveStartPath = useCallback(
-    (i: number) => (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      handleSelect({
-        [i]: {},
-      })
-      handleMoveStart(ev)
-    },
+    (i: number) =>
+      (
+        ev:
+          | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+          | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+      ) => {
+        handleSelect({
+          [i]: {},
+        })
+        handleMoveStart(ev)
+      },
     [handleMoveStart, handleSelect]
   )
 
@@ -131,19 +131,20 @@ export const EditSvg = ({
   )
 
   const handleResizeStart = useCallback(
-    (type: FixedPositionType) => (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      ev.preventDefault()
-      const { x, y } = getPointFromEvent(ev)
-      setResizeBasePoint({
-        type,
-        x,
-        y,
-      })
-    },
+    (type: FixedPositionType) =>
+      (
+        ev:
+          | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+          | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+      ) => {
+        ev.preventDefault()
+        const { x, y } = getPointFromEvent(ev)
+        setResizeBasePoint({
+          type,
+          x,
+          y,
+        })
+      },
     []
   )
 
