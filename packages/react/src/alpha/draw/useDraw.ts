@@ -6,7 +6,11 @@ import type { UseDraw, DrawAction, KeyboardMap } from '../types'
 /**
  * @example
  *   import { PencilHandler } from '@svg-drawing/core'
- *   import { Svg, useDrawFactory, useDrawEventHandler } from '@svg-drawing/react'
+ *   import {
+ *     Svg,
+ *     useDrawFactory,
+ *     useDrawEventHandler,
+ *   } from '@svg-drawing/react'
  *
  *   const DrawArea = () => {
  *     const ref = useRef(null)

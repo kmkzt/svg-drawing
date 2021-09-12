@@ -21,7 +21,7 @@ import type {
  *
  *   SvgDrawing.init(el)
  *
- *   // Otptions
+ *   // Options
  *   SvgDrawing.init({
  *     curve: true,
  *     close: false,
@@ -126,21 +126,6 @@ export class SvgDrawing<
     this.update(this.svg)
   }
 
-  private _createCommand() {
-    if (!this._drawPath) return
-    this._drawPath.commands = this.pathFactory.createCommand(this._drawPoints)
-  }
-
-  private _addDrawPoint(p4: PointObject) {
-    this._drawPoints.push(p4)
-    this._createCommand()
-  }
-
-  private _createDrawPath(): Path {
-    this._drawPoints = []
-    return this.pathFactory.createPath()
-  }
-
   public resize({ width, height }: Parameters<ResizeCallback>[0]) {
     if (isAlmostSameNumber(this.svg.width, width)) return
 
@@ -183,5 +168,20 @@ export class SvgDrawing<
       handler,
       new Renderer(el, { background }).update
     )
+  }
+
+  private _createCommand() {
+    if (!this._drawPath) return
+    this._drawPath.commands = this.pathFactory.createCommand(this._drawPoints)
+  }
+
+  private _addDrawPoint(p4: PointObject) {
+    this._drawPoints.push(p4)
+    this._createCommand()
+  }
+
+  private _createDrawPath(): Path {
+    this._drawPoints = []
+    return this.pathFactory.createPath()
   }
 }
