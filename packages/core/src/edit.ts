@@ -22,14 +22,14 @@ const fallbackBoundingBox: BoundingBox = {
 }
 
 const getResizeEditObject = (
-  type: FixedPositionType,
+  fixedPosition: FixedPositionType,
   boundingBox: BoundingBox,
   movePoint: PointObject
 ): { scale: PointObject; move: PointObject } => {
   const width = boundingBox.max[0] - boundingBox.min[0]
   const height = boundingBox.max[1] - boundingBox.min[1]
 
-  switch (type) {
+  switch (fixedPosition) {
     case 'LeftTop': {
       const scale = {
         x: (width - movePoint.x) / width,
@@ -180,12 +180,19 @@ export class EditSvg {
     )
   }
 
-  public resizeFixedPosition(
-    { type, move: argMove }: { type: FixedPositionType; move: PointObject },
+  public resizeBoundingBox(
+    {
+      fixedPosition,
+      move: argMove,
+    }: { fixedPosition: FixedPositionType; move: PointObject },
     selecting: Selecting
   ) {
     const { boundingBox } = this.toJson(selecting)
-    const { move, scale } = getResizeEditObject(type, boundingBox, argMove)
+    const { move, scale } = getResizeEditObject(
+      fixedPosition,
+      boundingBox,
+      argMove
+    )
 
     this.exec(selecting, (path) => {
       path.scaleX(scale.x)

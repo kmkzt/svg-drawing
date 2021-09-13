@@ -7,6 +7,7 @@ import type {
   UseEdit,
   EditSvgAction,
   EditSvgProps,
+  ResizeBoundingBoxBase,
 } from '../types'
 import { useMultipleSelect } from './useMultipleSelect'
 
@@ -18,6 +19,8 @@ export const useEdit: UseEdit = ({
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
 
   const [moveBasePoint, setMoveBasePoint] = useState<PointObject | null>(null)
+  const [resizeBoundingBoxBase, setResizeBasePoint] =
+    useState<ResizeBoundingBoxBase | null>(null)
   const [editInfo, setEditInfo] = useState(editSvg.toJson({}))
   const [previewObj, setPreviewObj] = useState(svg.toJson())
 
@@ -65,22 +68,27 @@ export const useEdit: UseEdit = ({
     [editing, editSvg, editInfo.index, onSelectPaths]
   )
 
-  const onResizePaths = useCallback<EditSvgProps['onResizePaths']>(
-    (type, movePoint) => {
+  const onResizeBoundingBoxStart = useCallback<
+    EditSvgProps['onResizeBoundingBoxStart']
+  >((resizeBoundingBoxBase) => {
+    setResizeBasePoint(resizeBoundingBoxBase)
+  }, [])
+
+  const onResizeBoundingBox = useCallback(
+    (arg: Parameters<EditSvg['resizeBoundingBox']>[0]) => {
       if (!editing) return
-      editSvg.resizeFixedPosition({ type, move: movePoint }, editInfo.index)
+      editSvg.resizeBoundingBox(arg, editInfo.index)
       onSelectPaths(editInfo.index)
     },
     [editSvg, editing, editInfo.index, onSelectPaths]
   )
 
-  const onResizePathsPreview = useCallback<
-    EditSvgProps['onResizePathsPreview']
-  >(
-    (type, movePoint) => {
+  const onResizeBoundingBoxPreview = useCallback(
+    (arg: Parameters<EditSvg['resizeBoundingBox']>[0]) => {
       if (!editing) return
       const preview = editSvg.preview()
-      preview.resizeFixedPosition({ type, move: movePoint }, editInfo.index)
+
+      preview.resizeBoundingBox(arg, editInfo.index)
       setEditInfo(preview.toJson(editInfo.index))
       setPreviewObj(preview.svg.toJson())
     },
@@ -180,14 +188,66 @@ export const useEdit: UseEdit = ({
     }
   }, [handleMoveEnd, handleMoveEdit])
 
+  const handleResizePreview = useCallback(
+    (ev: MouseEvent | TouchEvent) => {
+      if (!resizeBoundingBoxBase) return
+      const { x, y } = getPointFromEvent(ev)
+      const { fixedPosition, basePoint } = resizeBoundingBoxBase
+
+      onResizeBoundingBoxPreview({
+        fixedPosition,
+        move: { x: x - basePoint.x, y: y - basePoint.y },
+      })
+    },
+    [onResizeBoundingBoxPreview, resizeBoundingBoxBase]
+  )
+
+  // resize edit
+  const handleResizeEnd = useCallback(
+    (ev: MouseEvent | TouchEvent) => {
+      if (!resizeBoundingBoxBase) return
+      const { x, y } = getPointFromEvent(ev)
+      const { fixedPosition, basePoint } = resizeBoundingBoxBase
+
+      onResizeBoundingBox({
+        fixedPosition,
+        move: {
+          x: x - basePoint.x,
+          y: y - basePoint.y,
+        },
+      })
+      setResizeBasePoint(null)
+    },
+    [onResizeBoundingBox, resizeBoundingBoxBase]
+  )
+
+  useEffect(() => {
+    // resizeEdit
+    addEventListener('mouseup', handleResizeEnd)
+    addEventListener('touchcancel', handleResizeEnd)
+
+    // resizePreview
+    addEventListener('mousemove', handleResizePreview)
+    addEventListener('touchmove', handleResizePreview)
+
+    return () => {
+      // resizeEdit
+      removeEventListener('mouseup', handleResizeEnd)
+      removeEventListener('touchcancel', handleResizeEnd)
+
+      // resizePreview
+      removeEventListener('mousemove', handleResizePreview)
+      removeEventListener('touchmove', handleResizePreview)
+    }
+  }, [handleResizeEnd, handleResizePreview])
+
   return [
     {
       ...svgProps,
       edit: editInfo,
       onSelectPaths,
       onMovePathsStart,
-      onResizePaths,
-      onResizePathsPreview,
+      onResizeBoundingBoxStart,
     },
     {
       svg,
@@ -196,6 +256,7 @@ export const useEdit: UseEdit = ({
       onDeletePaths,
       onSelectPaths,
       onCancelSelect,
+      onResizeBoundingBox,
       keyboardMap,
       ...rest,
     },
@@ -203,12 +264,7 @@ export const useEdit: UseEdit = ({
 }
 
 const getPointFromEvent = (
-  ev:
-    | MouseEvent
-    | TouchEvent
-    | PointerEvent
-    | React.MouseEvent<any>
-    | React.TouchEvent<any>
+  ev: MouseEvent | TouchEvent | PointerEvent
 ): PointObject => {
   if ('touches' in ev) {
     const touche = ev.touches[0]

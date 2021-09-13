@@ -70,10 +70,6 @@ export type MovePathsHandler = (move: PointObject) => void
 export type ChangeAttributesHandler = (pathAttrs: PathObject) => void
 export type DeletePathsHandler = () => void
 export type CancelSelectHandler = () => void
-export type ResizePathsHandler = (
-  type: FixedPositionType,
-  move: PointObject
-) => void
 export type EditSvgAction = SvgAction & {
   keyboardMap: KeyboardMap
   onSelectPaths: SelectPathsHandler
@@ -82,12 +78,16 @@ export type EditSvgAction = SvgAction & {
   onChangeAttributes: ChangeAttributesHandler
 }
 
+export type ResizeBoundingBoxBase = {
+  fixedPosition: FixedPositionType
+  basePoint: PointObject
+}
+
 /** EditSvg components */
 export type EditSvgProps = SvgObject & {
   edit: EditSvgObject
   onMovePathsStart: (basePoint: PointObject, sel?: Selecting) => void
-  onResizePaths: ResizePathsHandler
-  onResizePathsPreview: ResizePathsHandler
+  onResizeBoundingBoxStart: (base: ResizeBoundingBoxBase) => void
 }
 
 /** UseDraw return type */
