@@ -18,9 +18,12 @@ export const useEdit: UseEdit = ({
   const [originObj, { svg, onUpdate, ...rest }] = useSvg({ sharedSvg })
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
 
+  /** @todo Move to core/EditSvg */
   const [moveBasePoint, setMoveBasePoint] = useState<PointObject | null>(null)
+  /** @todo Move to core/EditSvg */
   const [resizeBoundingBoxBase, setResizeBasePoint] =
     useState<ResizeBoundingBoxBase | null>(null)
+
   const [editInfo, setEditInfo] = useState(editSvg.toJson({}))
   const [previewObj, setPreviewObj] = useState(svg.toJson())
 

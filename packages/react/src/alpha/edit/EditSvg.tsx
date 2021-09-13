@@ -24,6 +24,7 @@ export const EditSvg = ({
   onResizeBoundingBoxStart,
   ...rest
 }: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
+  /** @todo Move to core/EditSvg */
   const isSelectedPoint = useCallback(
     ({ path, command, point }: EditPointIndex): boolean => {
       if (!(path in selecting)) return false
@@ -34,6 +35,7 @@ export const EditSvg = ({
     [selecting]
   )
 
+  /** @todo Move to core/EditSvg */
   const selectedBoundingBox = useMemo(() => {
     if (Object.keys(selecting).length < 1) return false
     return Object.keys(selecting).every((pKey: string) => {

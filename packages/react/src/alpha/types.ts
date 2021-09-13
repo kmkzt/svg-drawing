@@ -40,7 +40,11 @@ export type UseSvgOptions = {
   sharedSvg?: Svg
 }
 
-/** UseEdit options */
+/**
+ * UseEdit options
+ *
+ * @todo Active status.
+ */
 export type UseEditOptions = UseSvgOptions & {
   multipleSelectBindKey?: string
 }

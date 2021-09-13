@@ -58,6 +58,7 @@ const defaultOpts: DownloadOption = {
   extension: 'svg',
 }
 
+/** @todo Make class object */
 export const download = (
   svg: Svg,
   opt: DownloadOption = defaultOpts,

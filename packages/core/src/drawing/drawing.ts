@@ -133,6 +133,7 @@ export class SvgDrawing<
     this.update(this.svg)
   }
 
+  /** @deprecated */
   public download(opt?: DownloadOption): void {
     download(this.svg, opt)
   }
