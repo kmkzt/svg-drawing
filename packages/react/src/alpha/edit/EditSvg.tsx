@@ -24,18 +24,11 @@ export const EditSvg = ({
   width,
   height,
   edit: { index: selecting, boundingBox, paths: selectedPaths },
-  onSelecting: handleSelect,
-  onMovePaths: handleMove,
-  onMovePathsPreview: handleMovePreview,
+  onMovePathsStart,
   onResizePaths,
   onResizePathsPreview,
   ...rest
 }: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
-  /** @todo Move to useEdit. */
-  const [currentPosition, setCurrentPosition] = useState<PointObject | null>(
-    null
-  )
-
   const isSelectedPoint = useCallback(
     ({ path, command, point }: EditPointIndex): boolean => {
       if (!(path in selecting)) return false
@@ -54,31 +47,19 @@ export const EditSvg = ({
     })
   }, [selecting])
 
-  const handleMoveStart = useCallback(
-    (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      setCurrentPosition(getPointFromEvent(ev))
-    },
-    []
-  )
   const handleMoveStartPoint = useCallback(
     ({ path, command, point }: EditPointIndex) =>
       (
         ev:
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-      ) => {
-        handleSelect({
+      ) =>
+        onMovePathsStart(getPointFromEvent(ev), {
           [path]: {
             [command]: [point],
           },
-        })
-        handleMoveStart(ev)
-      },
-    [handleMoveStart, handleSelect]
+        }),
+    [onMovePathsStart]
   )
 
   const handleMoveStartPath = useCallback(
@@ -88,61 +69,12 @@ export const EditSvg = ({
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
       ) => {
-        handleSelect({
+        onMovePathsStart(getPointFromEvent(ev), {
           [i]: {},
         })
-        handleMoveStart(ev)
       },
-    [handleMoveStart, handleSelect]
+    [onMovePathsStart]
   )
-
-  // move preview
-  const handleMoveEdit = useCallback(
-    (ev: MouseEvent | TouchEvent) => {
-      if (!currentPosition) return
-      const { x, y } = getPointFromEvent(ev)
-      handleMovePreview({
-        x: x - currentPosition.x,
-        y: y - currentPosition.y,
-      })
-    },
-    [currentPosition, handleMovePreview]
-  )
-
-  // move
-  const handleMoveEnd = useCallback(
-    (ev: MouseEvent | TouchEvent) => {
-      if (!currentPosition) return
-      const { x, y } = getPointFromEvent(ev)
-      handleMove({
-        x: x - currentPosition.x,
-        y: y - currentPosition.y,
-      })
-      setCurrentPosition(null)
-    },
-    [currentPosition, handleMove]
-  )
-
-  useEffect(() => {
-    // move
-    addEventListener('mouseup', handleMoveEnd)
-    addEventListener('touchcancel', handleMoveEnd)
-
-    // movePreview
-    addEventListener('mousemove', handleMoveEdit)
-    addEventListener('touchmove', handleMoveEdit)
-
-    return () => {
-      // move
-      removeEventListener('mouseup', handleMoveEnd)
-      removeEventListener('touchcancel', handleMoveEnd)
-
-      // movePreview
-      removeEventListener('mousemove', handleMoveEdit)
-      removeEventListener('touchmove', handleMoveEdit)
-    }
-  }, [handleMoveEnd, handleMoveEdit])
-
   return (
     <svg width={width} height={height} {...rest}>
       {background && <rect width={width} height={height} fill={background} />}
@@ -150,7 +82,7 @@ export const EditSvg = ({
         selected={selectedBoundingBox}
         min={boundingBox.min}
         max={boundingBox.max}
-        onMoveStart={handleMoveStart}
+        onMovePathsStart={onMovePathsStart}
         onResizePaths={onResizePaths}
         onResizePathsPreview={onResizePathsPreview}
       />
@@ -218,21 +150,30 @@ export const EditBoundingBox = ({
   selected,
   min,
   max,
-  onMoveStart,
+  onMovePathsStart,
   onResizePaths,
   onResizePathsPreview,
-}: Pick<EditSvgProps, 'onResizePaths' | 'onResizePathsPreview'> & {
+}: Pick<
+  EditSvgProps,
+  'onMovePathsStart' | 'onResizePaths' | 'onResizePathsPreview'
+> & {
   selected: boolean
   min: BoundingBox['min']
   max: BoundingBox['max']
-  onMoveStart: (
-    ev:
-      | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-      | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-  ) => void
 }) => {
   const [resizeBasePoint, setResizeBasePoint] =
     useState<ResizeBasePoint | null>(null)
+
+  const handleMovePathsStart = useCallback(
+    (
+      ev:
+        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+    ) => {
+      onMovePathsStart(getPointFromEvent(ev))
+    },
+    [onMovePathsStart]
+  )
 
   const handleResizeStart = useCallback(
     (type: FixedPositionType) =>
@@ -313,8 +254,8 @@ export const EditBoundingBox = ({
         fill={
           selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
         }
-        onMouseDown={onMoveStart}
-        onTouchStart={onMoveStart}
+        onMouseDown={handleMovePathsStart}
+        onTouchStart={handleMovePathsStart}
       />
       <circle
         cx={min[0]}
