@@ -17,8 +17,8 @@ const genOutline = (points: PointObject[]) =>
   )
 
 const fallbackBoundingBox: BoundingBox = {
-  min: [0, 0],
-  max: [0, 0],
+  min: { x: 0, y: 0 },
+  max: { x: 0, y: 0 },
 }
 
 const getResizeEditObject = (
@@ -26,8 +26,8 @@ const getResizeEditObject = (
   boundingBox: BoundingBox,
   movePoint: PointObject
 ): { scale: PointObject; move: PointObject } => {
-  const width = boundingBox.max[0] - boundingBox.min[0]
-  const height = boundingBox.max[1] - boundingBox.min[1]
+  const width = boundingBox.max.x - boundingBox.min.x
+  const height = boundingBox.max.y - boundingBox.min.y
 
   switch (fixedPosition) {
     case 'LeftTop': {
@@ -36,8 +36,8 @@ const getResizeEditObject = (
         y: (height - movePoint.y) / height,
       }
       const move = {
-        x: -(boundingBox.max[0] * scale.x - boundingBox.max[0]),
-        y: -(boundingBox.max[1] * scale.y - boundingBox.max[1]),
+        x: -(boundingBox.max.x * scale.x - boundingBox.max.x),
+        y: -(boundingBox.max.y * scale.y - boundingBox.max.y),
       }
       return { scale, move }
     }
@@ -49,8 +49,8 @@ const getResizeEditObject = (
       return {
         scale,
         move: {
-          x: -(boundingBox.min[0] * scale.x - boundingBox.min[0]),
-          y: -(boundingBox.max[1] * scale.y - boundingBox.max[1]),
+          x: -(boundingBox.min.x * scale.x - boundingBox.min.x),
+          y: -(boundingBox.max.y * scale.y - boundingBox.max.y),
         },
       }
     }
@@ -63,8 +63,8 @@ const getResizeEditObject = (
       return {
         scale,
         move: {
-          x: -(boundingBox.max[0] * scale.x - boundingBox.max[0]),
-          y: -(boundingBox.min[1] * scale.y - boundingBox.min[1]),
+          x: -(boundingBox.max.x * scale.x - boundingBox.max.x),
+          y: -(boundingBox.min.y * scale.y - boundingBox.min.y),
         },
       }
     }
@@ -76,8 +76,8 @@ const getResizeEditObject = (
       return {
         scale,
         move: {
-          x: -(boundingBox.min[0] * scale.x - boundingBox.min[0]),
-          y: -(boundingBox.min[1] * scale.y - boundingBox.min[1]),
+          x: -(boundingBox.min.x * scale.x - boundingBox.min.x),
+          y: -(boundingBox.min.y * scale.y - boundingBox.min.y),
         },
       }
     }
@@ -187,10 +187,9 @@ export class EditSvg {
     }: { fixedPosition: FixedPositionType; move: PointObject },
     selecting: Selecting
   ) {
-    const { boundingBox } = this.toJson(selecting)
     const { move, scale } = getResizeEditObject(
       fixedPosition,
-      boundingBox,
+      this.boundingBox(selecting),
       argMove
     )
 
@@ -217,6 +216,31 @@ export class EditSvg {
     return new EditSvg(this.svg.clone())
   }
 
+  public boundingBox(selecting: Selecting) {
+    const listX: number[] = []
+    const listY: number[] = []
+
+    this.exec(selecting, (path) => {
+      const editPath = new EditPath(path.clone())
+
+      const {
+        boundingBox: {
+          min: { x: cMinX, y: cMinY },
+          max: { x: cMaxX, y: cMaxY },
+        },
+      } = editPath
+      listX.push(cMinX, cMaxX)
+      listY.push(cMinY, cMaxY)
+    })
+
+    return listX.length !== 0 && listY.length !== 0
+      ? {
+          min: { x: Math.min(...listX), y: Math.min(...listY) },
+          max: { x: Math.max(...listX), y: Math.max(...listY) },
+        }
+      : fallbackBoundingBox
+  }
+
   public toJson(selecting: Selecting): EditSvgObject {
     const listX: number[] = []
     const listY: number[] = []
@@ -229,25 +253,36 @@ export class EditSvg {
 
       const {
         boundingBox: {
-          min: [cMinX, cMinY],
-          max: [cMaxX, cMaxY],
+          min: { x: cMinX, y: cMinY },
+          max: { x: cMaxX, y: cMaxY },
         },
       } = editPath
       listX.push(cMinX, cMaxX)
       listY.push(cMinY, cMaxY)
     })
 
-    const boundingBox: BoundingBox =
+    const { min, max }: BoundingBox =
       listX.length !== 0 && listY.length !== 0
         ? {
-            min: [Math.min(...listX), Math.min(...listY)],
-            max: [Math.max(...listX), Math.max(...listY)],
+            min: { x: Math.min(...listX), y: Math.min(...listY) },
+            max: { x: Math.max(...listX), y: Math.max(...listY) },
           }
         : fallbackBoundingBox
     return {
       index: selecting,
       paths,
-      boundingBox,
+      boundingBox: {
+        x: min.x,
+        y: min.y,
+        width: max.x - min.x,
+        height: max.y - min.y,
+        vertex: {
+          ['LeftTop']: { x: min.x, y: min.y },
+          ['RightTop']: { x: max.x, y: min.y },
+          ['RightBottom']: { x: max.x, y: max.y },
+          ['LeftBottom']: { x: min.x, y: max.y },
+        },
+      },
     }
   }
 }
@@ -304,8 +339,8 @@ export class EditPath {
     }
 
     return {
-      min: [minX, minY],
-      max: [maxX, maxY],
+      min: { x: minX, y: minY },
+      max: { x: maxX, y: maxY },
     }
   }
 

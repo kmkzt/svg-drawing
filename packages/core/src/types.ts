@@ -136,8 +136,8 @@ export type ControlPoint = {
 
 /** BoundingBox */
 export type BoundingBox = {
-  min: [number, number]
-  max: [number, number]
+  min: PointObject
+  max: PointObject
 }
 
 export type Selecting = {
@@ -156,7 +156,15 @@ export type EditSvgObject = {
   paths: {
     [pathIndex: number]: EditPathObject
   }
-  boundingBox: BoundingBox
+  boundingBox: {
+    x: number
+    y: number
+    width: number
+    height: number
+    vertex: {
+      [fixedPosition in FixedPositionType]: PointObject
+    }
+  }
 }
 
 export type FixedPositionType =

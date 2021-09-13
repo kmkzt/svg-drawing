@@ -85,7 +85,9 @@ export type ResizeBoundingBoxBase = {
 
 /** EditSvg components */
 export type EditSvgProps = SvgObject & {
-  edit: EditSvgObject
+  editIndex: EditSvgObject['index']
+  editPaths: EditSvgObject['paths']
+  boundingBox: EditSvgObject['boundingBox']
   onMovePathsStart: (basePoint: PointObject, sel?: Selecting) => void
   onResizeBoundingBoxStart: (base: ResizeBoundingBoxBase) => void
 }

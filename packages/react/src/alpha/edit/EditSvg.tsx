@@ -1,11 +1,9 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-  useEffect,
-  HTMLAttributes,
-} from 'react'
-import { PointObject, FixedPositionType, BoundingBox } from '@svg-drawing/core'
+import React, { useCallback, useMemo, HTMLAttributes } from 'react'
+import {
+  PointObject,
+  FixedPositionType,
+  EditSvgObject,
+} from '@svg-drawing/core'
 import { EditSvgProps } from '../types'
 
 type EditPointIndex = {
@@ -19,7 +17,9 @@ export const EditSvg = ({
   paths,
   width,
   height,
-  edit: { index: selecting, boundingBox, paths: selectedPaths },
+  editIndex: selecting,
+  editPaths: selectedPaths,
+  boundingBox,
   onMovePathsStart,
   onResizeBoundingBoxStart,
   ...rest
@@ -75,8 +75,7 @@ export const EditSvg = ({
       {background && <rect width={width} height={height} fill={background} />}
       <EditBoundingBox
         selected={selectedBoundingBox}
-        min={boundingBox.min}
-        max={boundingBox.max}
+        {...boundingBox}
         onMovePathsStart={onMovePathsStart}
         onResizeBoundingBoxStart={onResizeBoundingBoxStart}
       />
@@ -141,16 +140,18 @@ export const EditSvg = ({
 }
 
 export const EditBoundingBox = ({
+  x,
+  y,
+  width,
+  height,
+  vertex,
   selected,
-  min,
-  max,
   onMovePathsStart,
   onResizeBoundingBoxStart,
-}: Pick<EditSvgProps, 'onMovePathsStart' | 'onResizeBoundingBoxStart'> & {
-  selected: boolean
-  min: BoundingBox['min']
-  max: BoundingBox['max']
-}) => {
+}: Pick<EditSvgProps, 'onMovePathsStart' | 'onResizeBoundingBoxStart'> &
+  EditSvgObject['boundingBox'] & {
+    selected: boolean
+  }) => {
   const handleMovePathsStart = useCallback(
     (
       ev:
@@ -181,10 +182,10 @@ export const EditBoundingBox = ({
   return (
     <>
       <rect
-        x={min[0]}
-        y={min[1]}
-        width={max[0] - min[0]}
-        height={max[1] - min[1]}
+        x={x}
+        y={y}
+        width={width}
+        height={height}
         stroke={EDIT_CONFIG.color.main}
         fill={
           selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
@@ -192,50 +193,20 @@ export const EditBoundingBox = ({
         onMouseDown={handleMovePathsStart}
         onTouchStart={handleMovePathsStart}
       />
-      <circle
-        cx={min[0]}
-        cy={min[1]}
-        r={EDIT_CONFIG.point}
-        stroke={EDIT_CONFIG.color.main}
-        fill={
-          selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
-        }
-        onMouseDown={handleResizeStart('LeftTop')}
-        onTouchStart={handleResizeStart('LeftTop')}
-      />
-      <circle
-        cx={max[0]}
-        cy={min[1]}
-        r={EDIT_CONFIG.point}
-        stroke={EDIT_CONFIG.color.main}
-        fill={
-          selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
-        }
-        onMouseDown={handleResizeStart('RightTop')}
-        onTouchStart={handleResizeStart('RightTop')}
-      />
-      <circle
-        cx={min[0]}
-        cy={max[1]}
-        r={EDIT_CONFIG.point}
-        stroke={EDIT_CONFIG.color.main}
-        fill={
-          selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
-        }
-        onMouseDown={handleResizeStart('LeftBottom')}
-        onTouchStart={handleResizeStart('LeftBottom')}
-      />
-      <circle
-        cx={max[0]}
-        cy={max[1]}
-        r={EDIT_CONFIG.point}
-        stroke={EDIT_CONFIG.color.main}
-        fill={
-          selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
-        }
-        onMouseDown={handleResizeStart('RightBottom')}
-        onTouchStart={handleResizeStart('RightBottom')}
-      />
+      {Object.entries(vertex).map(([key, point]) => (
+        <circle
+          key={key}
+          cx={point.x}
+          cy={point.y}
+          r={EDIT_CONFIG.point}
+          stroke={EDIT_CONFIG.color.main}
+          fill={
+            selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
+          }
+          onMouseDown={handleResizeStart(key as FixedPositionType)}
+          onTouchStart={handleResizeStart(key as FixedPositionType)}
+        />
+      ))}
     </>
   )
 }

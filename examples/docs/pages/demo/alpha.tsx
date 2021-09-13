@@ -341,7 +341,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         )}
         {mode === 'edit' && (
           <Flex pt={3} justifyContent="start">
-            <Button mr={1} mb={1} onClick={edit.onCancelSelecting}>
+            <Button mr={1} mb={1} onClick={edit.onCancelSelect}>
               Cancel
             </Button>
             <Button mr={1} mb={1} onClick={edit.onClear}>
@@ -487,8 +487,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         )}
       </Box>
       <div>
-        {JSON.stringify(editSvgProps.edit.index)}
-        {JSON.stringify(editSvgProps.edit.boundingBox)}
+        {JSON.stringify(editSvgProps.editIndex)}
+        {JSON.stringify(editSvgProps.boundingBox)}
       </div>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
