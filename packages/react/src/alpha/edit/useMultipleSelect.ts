@@ -1,5 +1,6 @@
 import { MutableRefObject, useEffect, useRef } from 'react'
 
+/** @todo Change to name that pressing key. */
 export const useMultipleSelect = (
   bindKey = 'Shift'
 ): MutableRefObject<boolean> => {

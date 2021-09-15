@@ -6,8 +6,8 @@ import type {
   PathObject,
   Selecting,
   EditSvgObject,
-  FixedPositionType,
   EditPathObject,
+  ResizeBoundingBoxBase,
 } from './types'
 
 const genOutline = (points: PointObject[]) =>
@@ -22,14 +22,19 @@ const fallbackBoundingBox: BoundingBox = {
 }
 
 const getResizeEditObject = (
-  fixedPosition: FixedPositionType,
+  resizeBase: ResizeBoundingBoxBase,
   boundingBox: BoundingBox,
-  movePoint: PointObject
+  translatePoint: PointObject
 ): { scale: PointObject; move: PointObject } => {
+  const movePoint = {
+    x: translatePoint.x - resizeBase.point.x,
+    y: translatePoint.y - resizeBase.point.y,
+  }
+
   const width = boundingBox.max.x - boundingBox.min.x
   const height = boundingBox.max.y - boundingBox.min.y
 
-  switch (fixedPosition) {
+  switch (resizeBase.fixedType) {
     case 'LeftTop': {
       const scale = {
         x: (width - movePoint.x) / width,
@@ -87,6 +92,7 @@ const getResizeEditObject = (
 /** @todo Rename SvgEditing or Editing or SvgEdit ? */
 export class EditSvg {
   public translateBasePoint: PointObject | null = null
+  public resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(public svg: Svg) {}
 
   private exec(
@@ -189,18 +195,17 @@ export class EditSvg {
       (point) => point.scaleY(r)
     )
   }
+  public setupResizeBoundingBox(base: ResizeBoundingBoxBase | null) {
+    this.resizeBoundingBoxBase = base
+  }
 
-  public resizeBoundingBox(
-    {
-      fixedPosition,
-      move: argMove,
-    }: { fixedPosition: FixedPositionType; move: PointObject },
-    selecting: Selecting
-  ) {
+  public resizeBoundingBox(po: PointObject, selecting: Selecting) {
+    if (!this.resizeBoundingBoxBase) return
+
     const { move, scale } = getResizeEditObject(
-      fixedPosition,
+      this.resizeBoundingBoxBase,
       this.boundingBox(selecting),
-      argMove
+      po
     )
 
     this.exec(selecting, (path) => {
@@ -225,6 +230,7 @@ export class EditSvg {
   public preview(): EditSvg {
     const preview = new EditSvg(this.svg.clone())
     preview.setupTranslateBsePoint(this.translateBasePoint)
+    preview.setupResizeBoundingBox(this.resizeBoundingBoxBase)
     return preview
   }
 

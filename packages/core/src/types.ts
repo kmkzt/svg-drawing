@@ -162,15 +162,16 @@ export type EditSvgObject = {
     width: number
     height: number
     vertex: {
-      [fixedPosition in FixedPositionType]: PointObject
+      [fixedPosition in FixedType]: PointObject
     }
   }
 }
 
-export type FixedPositionType =
-  | 'LeftTop'
-  | 'RightTop'
-  | 'RightBottom'
-  | 'LeftBottom'
+export type FixedType = 'LeftTop' | 'RightTop' | 'RightBottom' | 'LeftBottom'
+
+export type ResizeBoundingBoxBase = {
+  fixedType: FixedType
+  point: PointObject
+}
 
 export type CreateCommand = (points: PointObject[]) => Command[]

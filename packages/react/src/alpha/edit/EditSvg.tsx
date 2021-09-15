@@ -1,9 +1,5 @@
 import React, { useCallback, useMemo, HTMLAttributes } from 'react'
-import {
-  PointObject,
-  FixedPositionType,
-  EditSvgObject,
-} from '@svg-drawing/core'
+import { PointObject, FixedType, EditSvgObject } from '@svg-drawing/core'
 import { EditSvgProps } from '../types'
 
 type EditPointIndex = {
@@ -166,16 +162,15 @@ export const EditBoundingBox = ({
   )
 
   const handleResizeStart = useCallback(
-    (fixedPosition: FixedPositionType) =>
+    (fixedType: FixedType) =>
       (
         ev:
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
       ) => {
-        ev.preventDefault()
         onResizeBoundingBoxStart({
-          fixedPosition,
-          basePoint: getPointFromEvent(ev),
+          fixedType,
+          point: getPointFromEvent(ev),
         })
       },
     [onResizeBoundingBoxStart]
@@ -205,8 +200,8 @@ export const EditBoundingBox = ({
           fill={
             selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
           }
-          onMouseDown={handleResizeStart(key as FixedPositionType)}
-          onTouchStart={handleResizeStart(key as FixedPositionType)}
+          onMouseDown={handleResizeStart(key as FixedType)}
+          onTouchStart={handleResizeStart(key as FixedType)}
         />
       ))}
     </>

@@ -7,10 +7,10 @@ import type {
   UseEdit,
   EditSvgAction,
   EditSvgProps,
-  ResizeBoundingBoxBase,
 } from '../types'
 import { useMultipleSelect } from './useMultipleSelect'
 
+/** @todo Move event handler to core package */
 export const useEdit: UseEdit = ({
   sharedSvg,
   multipleSelectBindKey,
@@ -18,12 +18,11 @@ export const useEdit: UseEdit = ({
   const [originObj, { svg, onUpdate, ...rest }] = useSvg({ sharedSvg })
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
 
-  /** @todo Move to core/EditSvg */
-  const [resizeBoundingBoxBase, setResizeBasePoint] =
-    useState<ResizeBoundingBoxBase | null>(null)
-
   const [editInfo, setEditInfo] = useState(editSvg.toJson({}))
   const [previewObj, setPreviewObj] = useState(svg.toJson())
+
+  const [moving, setMoving] = useState(false)
+  const [resizing, setResizing] = useState(false)
 
   const editing = useMemo(
     () => Object.keys(editInfo.index).length !== 0,
@@ -31,11 +30,6 @@ export const useEdit: UseEdit = ({
   )
 
   const multipleSelect = useMultipleSelect(multipleSelectBindKey)
-
-  useEffect(() => {
-    if (!editing) return
-    setPreviewObj(svg.toJson())
-  }, [editing, svg])
 
   const onSelectPaths = useCallback<EditSvgAction['onSelectPaths']>(
     (sel: Selecting) => {
@@ -49,54 +43,129 @@ export const useEdit: UseEdit = ({
     [multipleSelect, editInfo.index, onUpdate, editSvg, svg]
   )
 
+  const onMovePathsStart = useCallback<EditSvgProps['onMovePathsStart']>(
+    (po, sel) => {
+      if (sel) onSelectPaths(sel)
+      editSvg.setupTranslateBsePoint(po)
+      setMoving(true)
+    },
+    [editSvg, onSelectPaths]
+  )
+
   const onMovePathsPreview = useCallback(
     (move: PointObject) => {
-      if (!editing) return
       const preview = editSvg.preview()
       preview.translate(move, editInfo.index)
       setEditInfo(preview.toJson(editInfo.index))
       setPreviewObj(preview.svg.toJson())
     },
-    [editSvg, editing, editInfo.index]
+    [editSvg, editInfo.index]
   )
 
   const onMovePaths = useCallback(
     (movePoint: PointObject) => {
-      if (!editing) return
       editSvg.translate(movePoint, editInfo.index)
       editSvg.setupTranslateBsePoint(null)
 
       onSelectPaths(editInfo.index)
     },
-    [editing, editSvg, editInfo.index, onSelectPaths]
+    [editSvg, editInfo.index, onSelectPaths]
   )
+
+  useEffect(() => {
+    if (!moving || !editing) {
+      return
+    }
+    const handleMoveEdit = (ev: MouseEvent | TouchEvent) => {
+      onMovePathsPreview(getPointFromEvent(ev))
+    }
+
+    const handleMoveEnd = (ev: MouseEvent | TouchEvent) => {
+      onMovePaths(getPointFromEvent(ev))
+      setMoving(false)
+    }
+
+    // move
+    addEventListener('mouseup', handleMoveEnd)
+    addEventListener('touchcancel', handleMoveEnd)
+
+    // movePreview
+    addEventListener('mousemove', handleMoveEdit)
+    addEventListener('touchmove', handleMoveEdit)
+    return () => {
+      // move
+      removeEventListener('mouseup', handleMoveEnd)
+      removeEventListener('touchcancel', handleMoveEnd)
+
+      // movePreview
+      removeEventListener('mousemove', handleMoveEdit)
+      removeEventListener('touchmove', handleMoveEdit)
+    }
+  }, [editing, moving, onMovePaths, onMovePathsPreview])
 
   const onResizeBoundingBoxStart = useCallback<
     EditSvgProps['onResizeBoundingBoxStart']
-  >((resizeBoundingBoxBase) => {
-    setResizeBasePoint(resizeBoundingBoxBase)
-  }, [])
-
-  const onResizeBoundingBox = useCallback(
-    (arg: Parameters<EditSvg['resizeBoundingBox']>[0]) => {
-      if (!editing) return
-      editSvg.resizeBoundingBox(arg, editInfo.index)
-      onSelectPaths(editInfo.index)
+  >(
+    (base) => {
+      editSvg.setupResizeBoundingBox(base)
+      setResizing(true)
     },
-    [editSvg, editing, editInfo.index, onSelectPaths]
+    [editSvg]
   )
 
   const onResizeBoundingBoxPreview = useCallback(
     (arg: Parameters<EditSvg['resizeBoundingBox']>[0]) => {
-      if (!editing) return
       const preview = editSvg.preview()
-
       preview.resizeBoundingBox(arg, editInfo.index)
+
       setEditInfo(preview.toJson(editInfo.index))
       setPreviewObj(preview.svg.toJson())
     },
-    [editSvg, editing, editInfo.index]
+    [editSvg, editInfo.index]
   )
+
+  const onResizeBoundingBox = useCallback(
+    (arg: Parameters<EditSvg['resizeBoundingBox']>[0]) => {
+      editSvg.resizeBoundingBox(arg, editInfo.index)
+      editSvg.setupResizeBoundingBox(null)
+
+      onSelectPaths(editInfo.index)
+    },
+    [editSvg, editInfo.index, onSelectPaths]
+  )
+
+  useEffect(() => {
+    if (!resizing || !editing) {
+      return
+    }
+
+    const handleResizePreview = (ev: MouseEvent | TouchEvent) => {
+      onResizeBoundingBoxPreview(getPointFromEvent(ev))
+    }
+
+    const handleResizeEnd = (ev: MouseEvent | TouchEvent) => {
+      onResizeBoundingBox(getPointFromEvent(ev))
+      setResizing(false)
+    }
+
+    // resizeEdit
+    addEventListener('mouseup', handleResizeEnd)
+    addEventListener('touchcancel', handleResizeEnd)
+
+    // resizePreview
+    addEventListener('mousemove', handleResizePreview)
+    addEventListener('touchmove', handleResizePreview)
+
+    return () => {
+      // resizeEdit
+      removeEventListener('mouseup', handleResizeEnd)
+      removeEventListener('touchcancel', handleResizeEnd)
+
+      // resizePreview
+      removeEventListener('mousemove', handleResizePreview)
+      removeEventListener('touchmove', handleResizePreview)
+    }
+  }, [resizing, onResizeBoundingBox, onResizeBoundingBoxPreview, editing])
 
   const onChangeAttributes = useCallback<EditSvgAction['onChangeAttributes']>(
     (arg) => {
@@ -135,105 +204,6 @@ export const useEdit: UseEdit = ({
     () => (editing ? previewObj : originObj),
     [editing, previewObj, originObj]
   )
-
-  const onMovePathsStart = useCallback<EditSvgProps['onMovePathsStart']>(
-    (po, sel) => {
-      if (sel) onSelectPaths(sel)
-      editSvg.setupTranslateBsePoint(po)
-    },
-    [editSvg, onSelectPaths]
-  )
-
-  // move preview
-  const handleMoveEdit = useCallback(
-    (ev: MouseEvent | TouchEvent) => {
-      if (!editSvg.translateBasePoint) return
-      onMovePathsPreview(getPointFromEvent(ev))
-    },
-    [editSvg.translateBasePoint, onMovePathsPreview]
-  )
-
-  // move
-  const handleMoveEnd = useCallback(
-    (ev: MouseEvent | TouchEvent) => {
-      if (!editSvg.translateBasePoint) return
-      onMovePaths(getPointFromEvent(ev))
-    },
-    [editSvg, onMovePaths]
-  )
-
-  useEffect(() => {
-    // move
-    addEventListener('mouseup', handleMoveEnd)
-    addEventListener('touchcancel', handleMoveEnd)
-
-    // movePreview
-    addEventListener('mousemove', handleMoveEdit)
-    addEventListener('touchmove', handleMoveEdit)
-
-    return () => {
-      // move
-      removeEventListener('mouseup', handleMoveEnd)
-      removeEventListener('touchcancel', handleMoveEnd)
-
-      // movePreview
-      removeEventListener('mousemove', handleMoveEdit)
-      removeEventListener('touchmove', handleMoveEdit)
-    }
-  }, [handleMoveEnd, handleMoveEdit])
-
-  const handleResizePreview = useCallback(
-    (ev: MouseEvent | TouchEvent) => {
-      if (!resizeBoundingBoxBase) return
-      const { x, y } = getPointFromEvent(ev)
-      const { fixedPosition, basePoint } = resizeBoundingBoxBase
-
-      onResizeBoundingBoxPreview({
-        fixedPosition,
-        move: { x: x - basePoint.x, y: y - basePoint.y },
-      })
-    },
-    [onResizeBoundingBoxPreview, resizeBoundingBoxBase]
-  )
-
-  // resize edit
-  const handleResizeEnd = useCallback(
-    (ev: MouseEvent | TouchEvent) => {
-      if (!resizeBoundingBoxBase) return
-      const { x, y } = getPointFromEvent(ev)
-      const { fixedPosition, basePoint } = resizeBoundingBoxBase
-
-      onResizeBoundingBox({
-        fixedPosition,
-        move: {
-          x: x - basePoint.x,
-          y: y - basePoint.y,
-        },
-      })
-      setResizeBasePoint(null)
-    },
-    [onResizeBoundingBox, resizeBoundingBoxBase]
-  )
-
-  useEffect(() => {
-    // resizeEdit
-    addEventListener('mouseup', handleResizeEnd)
-    addEventListener('touchcancel', handleResizeEnd)
-
-    // resizePreview
-    addEventListener('mousemove', handleResizePreview)
-    addEventListener('touchmove', handleResizePreview)
-
-    return () => {
-      // resizeEdit
-      removeEventListener('mouseup', handleResizeEnd)
-      removeEventListener('touchcancel', handleResizeEnd)
-
-      // resizePreview
-      removeEventListener('mousemove', handleResizePreview)
-      removeEventListener('touchmove', handleResizePreview)
-    }
-  }, [handleResizeEnd, handleResizePreview])
 
   return [
     {

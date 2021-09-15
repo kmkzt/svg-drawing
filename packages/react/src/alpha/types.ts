@@ -6,11 +6,11 @@ import type {
   PointObject,
   Selecting,
   EditSvgObject,
-  FixedPositionType,
   DrawHandler,
   DrawFactory,
   ResizeCallback,
   DrawEventHandler,
+  ResizeBoundingBoxBase,
 } from '@svg-drawing/core'
 
 /** UseSvg */
@@ -80,11 +80,6 @@ export type EditSvgAction = SvgAction & {
   onCancelSelect: CancelSelectHandler
   onDeletePaths: DeletePathsHandler
   onChangeAttributes: ChangeAttributesHandler
-}
-
-export type ResizeBoundingBoxBase = {
-  fixedPosition: FixedPositionType
-  basePoint: PointObject
 }
 
 /** EditSvg components */
