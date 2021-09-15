@@ -86,6 +86,7 @@ const getResizeEditObject = (
 
 /** @todo Rename SvgEditing or Editing or SvgEdit ? */
 export class EditSvg {
+  public translateBasePoint: PointObject | null = null
   constructor(public svg: Svg) {}
 
   private exec(
@@ -144,12 +145,21 @@ export class EditSvg {
     })
   }
 
+  public setupTranslateBsePoint(base: PointObject | null) {
+    this.translateBasePoint = base
+  }
+
   public translate(po: PointObject, selecting: Selecting) {
+    const move: PointObject = {
+      x: po.x - (this.translateBasePoint?.x ?? 0),
+      y: po.y - (this.translateBasePoint?.y ?? 0),
+    }
+
     this.exec(
       selecting,
-      (path) => path.translate(po),
-      (command) => command.translate(po),
-      (point) => point.translate(new Point(po.x, po.y))
+      (path) => path.translate(move),
+      (command) => command.translate(move),
+      (point) => point.translate(new Point(move.x, move.y))
     )
   }
 
@@ -213,7 +223,9 @@ export class EditSvg {
   }
 
   public preview(): EditSvg {
-    return new EditSvg(this.svg.clone())
+    const preview = new EditSvg(this.svg.clone())
+    preview.setupTranslateBsePoint(this.translateBasePoint)
+    return preview
   }
 
   public boundingBox(selecting: Selecting) {

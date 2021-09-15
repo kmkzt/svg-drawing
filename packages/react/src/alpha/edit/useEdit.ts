@@ -19,8 +19,6 @@ export const useEdit: UseEdit = ({
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
 
   /** @todo Move to core/EditSvg */
-  const [moveBasePoint, setMoveBasePoint] = useState<PointObject | null>(null)
-  /** @todo Move to core/EditSvg */
   const [resizeBoundingBoxBase, setResizeBasePoint] =
     useState<ResizeBoundingBoxBase | null>(null)
 
@@ -66,6 +64,8 @@ export const useEdit: UseEdit = ({
     (movePoint: PointObject) => {
       if (!editing) return
       editSvg.translate(movePoint, editInfo.index)
+      editSvg.setupTranslateBsePoint(null)
+
       onSelectPaths(editInfo.index)
     },
     [editing, editSvg, editInfo.index, onSelectPaths]
@@ -139,36 +139,27 @@ export const useEdit: UseEdit = ({
   const onMovePathsStart = useCallback<EditSvgProps['onMovePathsStart']>(
     (po, sel) => {
       if (sel) onSelectPaths(sel)
-      setMoveBasePoint(po)
+      editSvg.setupTranslateBsePoint(po)
     },
-    [onSelectPaths]
+    [editSvg, onSelectPaths]
   )
 
   // move preview
   const handleMoveEdit = useCallback(
     (ev: MouseEvent | TouchEvent) => {
-      if (!moveBasePoint) return
-      const { x, y } = getPointFromEvent(ev)
-      onMovePathsPreview({
-        x: x - moveBasePoint.x,
-        y: y - moveBasePoint.y,
-      })
+      if (!editSvg.translateBasePoint) return
+      onMovePathsPreview(getPointFromEvent(ev))
     },
-    [moveBasePoint, onMovePathsPreview]
+    [editSvg.translateBasePoint, onMovePathsPreview]
   )
 
   // move
   const handleMoveEnd = useCallback(
     (ev: MouseEvent | TouchEvent) => {
-      if (!moveBasePoint) return
-      const { x, y } = getPointFromEvent(ev)
-      onMovePaths({
-        x: x - moveBasePoint.x,
-        y: y - moveBasePoint.y,
-      })
-      setMoveBasePoint(null)
+      if (!editSvg.translateBasePoint) return
+      onMovePaths(getPointFromEvent(ev))
     },
-    [moveBasePoint, onMovePaths]
+    [editSvg, onMovePaths]
   )
 
   useEffect(() => {
