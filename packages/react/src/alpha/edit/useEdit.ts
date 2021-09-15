@@ -241,7 +241,6 @@ export const useEdit: UseEdit = ({
       editIndex: editInfo.index,
       editPaths: editInfo.paths,
       boundingBox: editInfo.boundingBox,
-      onSelectPaths,
       onMovePathsStart,
       onResizeBoundingBoxStart,
     },
