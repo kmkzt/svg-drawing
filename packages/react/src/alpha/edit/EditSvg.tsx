@@ -23,9 +23,11 @@ export const EditSvg = ({
   /** @todo Move to core/EditSvg */
   const isSelectedPoint = useCallback(
     ({ path, command, point }: EditPointIndex): boolean => {
-      if (!(path in selecting)) return false
+      if (!selecting || !(path in selecting)) return false
+
       const selectingCommand = selecting[path]
       if (!(command in selectingCommand)) return false
+
       return selectingCommand[command].includes(point)
     },
     [selecting]
@@ -33,11 +35,11 @@ export const EditSvg = ({
 
   /** @todo Move to core/EditSvg */
   const selectedBoundingBox = useMemo(() => {
-    if (Object.keys(selecting).length < 1) return false
-    return Object.keys(selecting).every((pKey: string) => {
-      const selectingCommand = selecting[+pKey]
-      return Object.keys(selectingCommand).length === 0
-    })
+    if (!selecting || Object.keys(selecting).length < 1) return false
+
+    return Object.keys(selecting).every(
+      (pKey: string) => Object.keys(selecting[+pKey]).length === 0
+    )
   }, [selecting])
 
   const handleMoveStartPoint = useCallback(
@@ -71,12 +73,14 @@ export const EditSvg = ({
   return (
     <svg width={width} height={height} {...rest}>
       {background && <rect width={width} height={height} fill={background} />}
-      <EditBoundingBox
-        selected={selectedBoundingBox}
-        {...boundingBox}
-        onMovePathsStart={onMovePathsStart}
-        onResizeBoundingBoxStart={onResizeBoundingBoxStart}
-      />
+      {boundingBox && (
+        <EditBoundingBox
+          selected={selectedBoundingBox}
+          {...boundingBox}
+          onMovePathsStart={onMovePathsStart}
+          onResizeBoundingBoxStart={onResizeBoundingBoxStart}
+        />
+      )}
       {paths.map((pathAttr, pathIndex) => (
         <path
           key={pathIndex}
@@ -85,54 +89,55 @@ export const EditSvg = ({
           onTouchStart={handleMoveStartPath(pathIndex)}
         />
       ))}
-      {Object.entries(selectedPaths).map(([key, editPath]) => {
-        const pathIndex = +key
-        const { controlPoints, d } = editPath
-        return (
-          <g key={pathIndex}>
-            <path
-              d={d}
-              strokeWidth={EDIT_CONFIG.line}
-              stroke={EDIT_CONFIG.color.main}
-              fill={EDIT_CONFIG.fill.boundingBox}
-              onMouseDown={handleMoveStartPath(pathIndex)}
-              onTouchStart={handleMoveStartPath(pathIndex)}
-            />
-            {controlPoints.map(({ points, d }, commandIndex) => (
-              <g key={commandIndex}>
-                <path
-                  d={d}
-                  strokeWidth={EDIT_CONFIG.line}
-                  stroke={EDIT_CONFIG.color.main}
-                  fill={EDIT_CONFIG.fill.default}
-                />
-                {points.map((po, k) => {
-                  const editPathIndex = {
-                    path: pathIndex,
-                    command: commandIndex,
-                    point: k * 2,
-                  }
-                  return (
-                    <circle
-                      key={k}
-                      cx={po.x}
-                      cy={po.y}
-                      onMouseDown={handleMoveStartPoint(editPathIndex)}
-                      onTouchStart={handleMoveStartPoint(editPathIndex)}
-                      r={EDIT_CONFIG.point}
-                      style={{
-                        fill: isSelectedPoint(editPathIndex)
-                          ? EDIT_CONFIG.color.selected
-                          : EDIT_CONFIG.color.sub,
-                      }}
-                    />
-                  )
-                })}
-              </g>
-            ))}
-          </g>
-        )
-      })}
+      {selectedPaths &&
+        Object.entries(selectedPaths).map(([key, editPath]) => {
+          const pathIndex = +key
+          const { controlPoints, d } = editPath
+          return (
+            <g key={pathIndex}>
+              <path
+                d={d}
+                strokeWidth={EDIT_CONFIG.line}
+                stroke={EDIT_CONFIG.color.main}
+                fill={EDIT_CONFIG.fill.boundingBox}
+                onMouseDown={handleMoveStartPath(pathIndex)}
+                onTouchStart={handleMoveStartPath(pathIndex)}
+              />
+              {controlPoints.map(({ points, d }, commandIndex) => (
+                <g key={commandIndex}>
+                  <path
+                    d={d}
+                    strokeWidth={EDIT_CONFIG.line}
+                    stroke={EDIT_CONFIG.color.main}
+                    fill={EDIT_CONFIG.fill.default}
+                  />
+                  {points.map((po, k) => {
+                    const editPathIndex = {
+                      path: pathIndex,
+                      command: commandIndex,
+                      point: k * 2,
+                    }
+                    return (
+                      <circle
+                        key={k}
+                        cx={po.x}
+                        cy={po.y}
+                        onMouseDown={handleMoveStartPoint(editPathIndex)}
+                        onTouchStart={handleMoveStartPoint(editPathIndex)}
+                        r={EDIT_CONFIG.point}
+                        style={{
+                          fill: isSelectedPoint(editPathIndex)
+                            ? EDIT_CONFIG.color.selected
+                            : EDIT_CONFIG.color.sub,
+                        }}
+                      />
+                    )
+                  })}
+                </g>
+              ))}
+            </g>
+          )
+        })}
     </svg>
   )
 }

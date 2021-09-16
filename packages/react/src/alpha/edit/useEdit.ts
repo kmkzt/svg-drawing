@@ -1,5 +1,10 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { EditSvg, PointObject, Selecting } from '@svg-drawing/core'
+import {
+  EditSvg,
+  EditSvgObject,
+  PointObject,
+  Selecting,
+} from '@svg-drawing/core'
 import { useSvg } from '../svg/useSvg'
 import type {
   KeyboardMap,
@@ -18,33 +23,37 @@ export const useEdit: UseEdit = ({
   const [originObj, { svg, onUpdate, ...rest }] = useSvg({ sharedSvg })
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
 
-  const [editInfo, setEditInfo] = useState(editSvg.toJson({}))
+  const [editInfo, setEditInfo] = useState<EditSvgObject | null>(
+    editSvg.toJson()
+  )
   const [previewObj, setPreviewObj] = useState(svg.toJson())
 
   const [moving, setMoving] = useState(false)
   const [resizing, setResizing] = useState(false)
 
-  const editing = useMemo(
-    () => Object.keys(editInfo.index).length !== 0,
-    [editInfo.index]
-  )
+  const editing = useMemo(() => !!editInfo, [editInfo])
 
   const multipleSelect = useMultipleSelect(multipleSelectBindKey)
 
+  const updateRender = useCallback((eSvg: EditSvg) => {
+    setEditInfo(eSvg.toJson())
+    setPreviewObj(eSvg.svg.toJson())
+  }, [])
+
   const onSelectPaths = useCallback<EditSvgAction['onSelectPaths']>(
-    (sel: Selecting) => {
-      const updateSelecting = multipleSelect.current
-        ? { ...editInfo.index, ...sel }
-        : sel
+    (sel: Selecting | null = null) => {
+      const updateSelecting =
+        multipleSelect.current && editInfo ? { ...editInfo.index, ...sel } : sel
+      editSvg.setupSelecting(updateSelecting)
+
       onUpdate()
-      setEditInfo(editSvg.toJson(updateSelecting))
-      setPreviewObj(svg.toJson())
+      updateRender(editSvg)
     },
-    [multipleSelect, editInfo.index, onUpdate, editSvg, svg]
+    [multipleSelect, editInfo, editSvg, onUpdate, updateRender]
   )
 
   const onMovePathsStart = useCallback<EditSvgProps['onMovePathsStart']>(
-    (po, sel) => {
+    (po, sel = null) => {
       if (sel) onSelectPaths(sel)
       editSvg.setupTranslateBsePoint(po)
       setMoving(true)
@@ -55,21 +64,21 @@ export const useEdit: UseEdit = ({
   const onMovePathsPreview = useCallback(
     (move: PointObject) => {
       const preview = editSvg.preview()
-      preview.translate(move, editInfo.index)
-      setEditInfo(preview.toJson(editInfo.index))
-      setPreviewObj(preview.svg.toJson())
+      preview.translate(move)
+
+      updateRender(preview)
     },
-    [editSvg, editInfo.index]
+    [editSvg, updateRender]
   )
 
   const onMovePaths = useCallback(
     (movePoint: PointObject) => {
-      editSvg.translate(movePoint, editInfo.index)
+      editSvg.translate(movePoint)
       editSvg.setupTranslateBsePoint(null)
 
-      onSelectPaths(editInfo.index)
+      onSelectPaths(editInfo?.index ?? null)
     },
-    [editSvg, editInfo.index, onSelectPaths]
+    [editInfo, editSvg, onSelectPaths]
   )
 
   useEffect(() => {
@@ -116,22 +125,21 @@ export const useEdit: UseEdit = ({
   const onResizeBoundingBoxPreview = useCallback(
     (arg: Parameters<EditSvg['resizeBoundingBox']>[0]) => {
       const preview = editSvg.preview()
-      preview.resizeBoundingBox(arg, editInfo.index)
+      preview.resizeBoundingBox(arg)
 
-      setEditInfo(preview.toJson(editInfo.index))
-      setPreviewObj(preview.svg.toJson())
+      updateRender(preview)
     },
-    [editSvg, editInfo.index]
+    [editSvg, updateRender]
   )
 
   const onResizeBoundingBox = useCallback(
     (arg: Parameters<EditSvg['resizeBoundingBox']>[0]) => {
-      editSvg.resizeBoundingBox(arg, editInfo.index)
+      editSvg.resizeBoundingBox(arg)
       editSvg.setupResizeBoundingBox(null)
 
-      onSelectPaths(editInfo.index)
+      onSelectPaths(editInfo?.index ?? null)
     },
-    [editSvg, editInfo.index, onSelectPaths]
+    [editSvg, editInfo, onSelectPaths]
   )
 
   useEffect(() => {
@@ -170,26 +178,26 @@ export const useEdit: UseEdit = ({
   const onChangeAttributes = useCallback<EditSvgAction['onChangeAttributes']>(
     (arg) => {
       if (!editing) return
-      editSvg.changeAttributes(arg, editInfo.index)
-      onSelectPaths(editInfo.index)
+      editSvg.changeAttributes(arg)
+      onSelectPaths(editInfo?.index ?? null)
     },
-    [editSvg, editing, editInfo.index, onSelectPaths]
+    [editSvg, editing, editInfo, onSelectPaths]
   )
 
   const onCancelSelect = useCallback<EditSvgAction['onCancelSelect']>(() => {
-    setEditInfo(editSvg.toJson({}))
-    setPreviewObj(svg.toJson())
-  }, [editSvg, svg])
+    editSvg.setupSelecting(null)
+
+    updateRender(editSvg)
+  }, [editSvg, updateRender])
 
   const onDeletePaths = useCallback<EditSvgAction['onDeletePaths']>(() => {
-    if (!editInfo.index) return
-    editSvg.delete(editInfo.index)
+    editSvg.delete()
     onUpdate()
     onCancelSelect()
-  }, [onCancelSelect, editSvg, editInfo.index, onUpdate])
+  }, [onCancelSelect, editSvg, onUpdate])
 
   const keyboardMap = useMemo<KeyboardMap>(() => {
-    if (!editInfo.index) return {}
+    if (!editing) return {}
     return {
       ['Escape']: onCancelSelect,
       ['ArrowRight']: () => onMovePaths({ x: 0.5, y: 0 }),
@@ -198,7 +206,7 @@ export const useEdit: UseEdit = ({
       ['ArrowDown']: () => onMovePaths({ x: 0, y: 0.5 }),
       ['Backspace']: onDeletePaths,
     }
-  }, [editInfo.index, onCancelSelect, onDeletePaths, onMovePaths])
+  }, [editing, onCancelSelect, onDeletePaths, onMovePaths])
 
   const svgProps = useMemo(
     () => (editing ? previewObj : originObj),
@@ -208,9 +216,9 @@ export const useEdit: UseEdit = ({
   return [
     {
       ...svgProps,
-      editIndex: editInfo.index,
-      editPaths: editInfo.paths,
-      boundingBox: editInfo.boundingBox,
+      editIndex: editInfo?.index ?? null,
+      editPaths: editInfo?.paths ?? null,
+      boundingBox: editInfo?.boundingBox ?? null,
       onMovePathsStart,
       onResizeBoundingBoxStart,
     },

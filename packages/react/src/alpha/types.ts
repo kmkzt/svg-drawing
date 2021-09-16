@@ -69,7 +69,7 @@ export type KeyboardMap = {
 
 export type UseParseFile = (opts: { svg: Svg }) => (file: File) => Promise<void>
 
-export type SelectPathsHandler = (selectIndex: Selecting) => void
+export type SelectPathsHandler = (selectIndex: Selecting | null) => void
 export type MovePathsHandler = (move: PointObject) => void
 export type ChangeAttributesHandler = (pathAttrs: PathObject) => void
 export type DeletePathsHandler = () => void
@@ -84,10 +84,10 @@ export type EditSvgAction = SvgAction & {
 
 /** EditSvg components */
 export type EditSvgProps = SvgObject & {
-  editIndex: EditSvgObject['index']
-  editPaths: EditSvgObject['paths']
-  boundingBox: EditSvgObject['boundingBox']
-  onMovePathsStart: (basePoint: PointObject, sel?: Selecting) => void
+  editIndex: EditSvgObject['index'] | null
+  editPaths: EditSvgObject['paths'] | null
+  boundingBox: EditSvgObject['boundingBox'] | null
+  onMovePathsStart: (basePoint: PointObject, sel?: Selecting | null) => void
   onResizeBoundingBoxStart: (base: ResizeBoundingBoxBase) => void
 }
 

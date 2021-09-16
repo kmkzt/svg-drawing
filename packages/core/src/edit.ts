@@ -91,12 +91,24 @@ const getResizeEditObject = (
 
 /** @todo Rename SvgEditing or Editing or SvgEdit ? */
 export class EditSvg {
+  public selecting: Selecting | null = null
   public translateBasePoint: PointObject | null = null
   public resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(public svg: Svg) {}
 
+  public setupSelecting(sel: Selecting | null) {
+    this.selecting = sel
+  }
+
+  public setupTranslateBsePoint(base: PointObject | null) {
+    this.translateBasePoint = base
+  }
+
+  public setupResizeBoundingBox(base: ResizeBoundingBoxBase | null) {
+    this.resizeBoundingBoxBase = base
+  }
+
   private exec(
-    selecting: Selecting,
     pathExec: (path: Path, i: { path: number }) => void,
     commandExec?: (
       command: Command,
@@ -107,9 +119,9 @@ export class EditSvg {
       i: { path: number; command: number; point: number }
     ) => void
   ): void {
-    for (const pathKey in selecting) {
+    for (const pathKey in this.selecting) {
       const path = this.svg.paths[+pathKey]
-      const selectingCommand = selecting[pathKey]
+      const selectingCommand = this.selecting[pathKey]
 
       if (Object.keys(selectingCommand).length === 0 || !commandExec) {
         pathExec(path, { path: +pathKey })
@@ -141,8 +153,8 @@ export class EditSvg {
     }
   }
 
-  public changeAttributes({ d, ...attrs }: PathObject, selecting: Selecting) {
-    this.exec(selecting, (path) => {
+  public changeAttributes({ d, ...attrs }: PathObject) {
+    this.exec((path) => {
       path.attrs = {
         ...path.attrs,
         ...attrs,
@@ -151,64 +163,53 @@ export class EditSvg {
     })
   }
 
-  public setupTranslateBsePoint(base: PointObject | null) {
-    this.translateBasePoint = base
-  }
-
-  public translate(po: PointObject, selecting: Selecting) {
+  public translate(po: PointObject) {
     const move: PointObject = {
       x: po.x - (this.translateBasePoint?.x ?? 0),
       y: po.y - (this.translateBasePoint?.y ?? 0),
     }
 
     this.exec(
-      selecting,
       (path) => path.translate(move),
       (command) => command.translate(move),
       (point) => point.translate(new Point(move.x, move.y))
     )
   }
 
-  public scale(r: number, selecting: Selecting) {
+  public scale(r: number) {
     this.exec(
-      selecting,
       (path) => path.scale(r),
       (command) => command.scale(r),
       (point) => point.scale(r)
     )
   }
 
-  public scaleX(r: number, selecting: Selecting) {
+  public scaleX(r: number) {
     this.exec(
-      selecting,
       (path) => path.scaleX(r),
       (command) => command.scaleX(r),
       (point) => point.scaleX(r)
     )
   }
 
-  public scaleY(r: number, selecting: Selecting) {
+  public scaleY(r: number) {
     this.exec(
-      selecting,
       (path) => path.scaleY(r),
       (command) => command.scaleY(r),
       (point) => point.scaleY(r)
     )
   }
-  public setupResizeBoundingBox(base: ResizeBoundingBoxBase | null) {
-    this.resizeBoundingBoxBase = base
-  }
 
-  public resizeBoundingBox(po: PointObject, selecting: Selecting) {
+  public resizeBoundingBox(po: PointObject) {
     if (!this.resizeBoundingBoxBase) return
 
     const { move, scale } = getResizeEditObject(
       this.resizeBoundingBoxBase,
-      this.boundingBox(selecting),
+      this.boundingBox,
       po
     )
 
-    this.exec(selecting, (path) => {
+    this.exec((path) => {
       path.scaleX(scale.x)
       path.scaleY(scale.y)
       path.translate(move)
@@ -216,9 +217,8 @@ export class EditSvg {
   }
 
   /** @todo Delete points */
-  public delete(selecting: Selecting) {
+  public delete() {
     this.exec(
-      selecting,
       (_p, index) => this.svg.deletePath(index.path),
       (_c, index) => {
         const path = this.svg.paths[+index.path]
@@ -229,16 +229,17 @@ export class EditSvg {
 
   public preview(): EditSvg {
     const preview = new EditSvg(this.svg.clone())
+    preview.setupSelecting(this.selecting)
     preview.setupTranslateBsePoint(this.translateBasePoint)
     preview.setupResizeBoundingBox(this.resizeBoundingBoxBase)
     return preview
   }
 
-  public boundingBox(selecting: Selecting) {
+  public get boundingBox() {
     const listX: number[] = []
     const listY: number[] = []
 
-    this.exec(selecting, (path) => {
+    this.exec((path) => {
       const editPath = new EditPath(path.clone())
 
       const {
@@ -259,13 +260,15 @@ export class EditSvg {
       : fallbackBoundingBox
   }
 
-  public toJson(selecting: Selecting): EditSvgObject {
+  public toJson(): EditSvgObject | null {
+    if (!this.selecting) return null
+
     const listX: number[] = []
     const listY: number[] = []
 
     const paths: EditSvgObject['paths'] = {}
 
-    this.exec(selecting, (path, index) => {
+    this.exec((path, index) => {
       const editPath = new EditPath(path.clone())
       paths[index.path] = editPath.toJson()
 
@@ -287,7 +290,7 @@ export class EditSvg {
           }
         : fallbackBoundingBox
     return {
-      index: selecting,
+      index: this.selecting,
       paths,
       boundingBox: {
         x: min.x,
