@@ -87,7 +87,7 @@ export type EditSvgProps = SvgObject & {
   editIndex: EditSvgObject['index'] | null
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
-  onMovePathsStart: (basePoint: PointObject, sel?: Selecting | null) => void
+  onMovePathsStart: (basePoint: PointObject, sel?: Selecting) => void
   onResizeBoundingBoxStart: (base: ResizeBoundingBoxBase) => void
 }
 

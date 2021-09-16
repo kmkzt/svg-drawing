@@ -129,8 +129,8 @@ export class SvgEditing {
     this.updater(this.editSvg)
   }
 
-  public startTranslate(po: PointObject, sel: Selecting) {
-    this.editSvg.setupSelecting(sel)
+  public startTranslate(po: PointObject, sel?: Selecting) {
+    if (sel) this.editSvg.setupSelecting(sel)
     this.editSvg.setupTranslateBsePoint(po)
 
     this.addTranslateListener()

@@ -51,9 +51,8 @@ export const useEdit: UseEdit = ({
   )
 
   const onMovePathsStart = useCallback<EditSvgProps['onMovePathsStart']>(
-    (po, sel = null) => {
-      if (sel) svgEditing.startTranslate(po, sel)
-      else svgEditing.cancelSelect()
+    (po, sel) => {
+      svgEditing.startTranslate(po, sel)
     },
     [svgEditing]
   )
