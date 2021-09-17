@@ -1,11 +1,11 @@
+import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import {
-  useCallback,
-  useState,
-  ChangeEventHandler,
-  useMemo,
-  useRef,
-} from 'react'
-import { NextPage } from 'next'
+  download,
+  PenHandler,
+  PencilHandler,
+  PathObject,
+  ResizeCallback,
+} from '@svg-drawing/core'
 import {
   useDraw,
   useEdit,
@@ -17,15 +17,15 @@ import {
   useDrawFactory,
   useResize,
 } from '@svg-drawing/react/lib/alpha'
+import { NextPage } from 'next'
 import {
-  download,
-  PenHandler,
-  PencilHandler,
-  PathObject,
-  ResizeCallback,
-} from '@svg-drawing/core'
+  useCallback,
+  useState,
+  ChangeEventHandler,
+  useMemo,
+  useRef,
+} from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
-import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'
 
 const size = 30

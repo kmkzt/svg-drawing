@@ -1,10 +1,10 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
+import styled from 'styled-components'
 import Layout from '../components/Layout'
 import { markdownToHtml } from '../lib/markdownToHtml'
 // @ts-ignore
 import readme from '!!raw-loader!../../../README.md'
-import styled from 'styled-components'
 
 const MarkdownWrap = styled.div`
   h1,

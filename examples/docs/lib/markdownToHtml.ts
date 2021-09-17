@@ -1,8 +1,8 @@
 import remark from 'remark'
-import html from 'remark-html'
 import basepath from 'remark-basepath'
 // @ts-expect-error
 import highlight from 'remark-highlight.js'
+import html from 'remark-html'
 export async function markdownToHtml(
   markdown: string,
   basePathOption: Parameters<typeof basepath>[0]
