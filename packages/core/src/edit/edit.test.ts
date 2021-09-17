@@ -1,5 +1,5 @@
 import { EditSvg } from './edit'
-import { Svg } from './svg'
+import { Svg } from '../svg'
 
 const testSvgData =
   '<svg width="200" height="200">' +
@@ -17,7 +17,8 @@ describe('edit.ts', () => {
     })
     describe('changeAttributes', () => {
       it('Change attributes of selected paths', () => {
-        edit.changeAttributes({ fill: '#ff0' }, { ['0']: {} })
+        edit.select({ ['0']: {} })
+        edit.changeAttributes({ fill: '#ff0' })
         expect(edit.svg.paths[0].attrs.fill).toBe('#ff0')
       })
       it.todo('Selecting commands')
@@ -62,7 +63,8 @@ describe('edit.ts', () => {
 
     describe('delete', () => {
       it('Delete Selected path', () => {
-        edit.delete({ ['0']: {} })
+        edit.select({ ['0']: {} })
+        edit.delete()
         expect(edit.svg.paths.length).toBe(2)
         expect(edit.svg.paths[0].attrs.id).toBe('path_1')
         expect(edit.svg.paths[1].attrs.id).toBe('path_2')

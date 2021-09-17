@@ -85,7 +85,7 @@ export const useEdit: UseEdit = ({
   )
 
   const onCancelSelect = useCallback<EditSvgAction['onCancelSelect']>(() => {
-    svgEditing.cancelSelect()
+    svgEditing.cancel()
   }, [svgEditing])
 
   const onDeletePaths = useCallback<EditSvgAction['onDeletePaths']>(() => {
