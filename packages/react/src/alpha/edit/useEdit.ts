@@ -6,7 +6,7 @@ import {
   SvgEditing,
 } from '@svg-drawing/core'
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { usePressedKey } from '../keyboard/usePressed'
+import { usePressedKey } from '../keyboard/usePressedKey'
 import { useSvg } from '../svg/useSvg'
 import type {
   KeyboardMap,
