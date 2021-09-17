@@ -14,9 +14,13 @@ export type SvgObject = {
 }
 
 /** Point Object */
-export type PointObject = {
+export interface PointObject {
   x: number
   y: number
+}
+
+/** @todo Be used `factory.createCommand` */
+export interface DrawPoint extends PointObject {
   pressure?: number
 }
 

@@ -3,7 +3,7 @@ import type {
   DrawListenerType,
   DrawHandler,
   ClearListener,
-  PointObject,
+  DrawPoint,
   DrawEventName,
   DrawEnd,
   DrawStart,
@@ -94,7 +94,7 @@ export class DrawEventHandler implements DrawHandler {
 
   public getPointObjectFromDrawEvent(
     ev: MouseEvent | TouchEvent | PointerEvent
-  ): PointObject {
+  ): DrawPoint {
     if (ev instanceof TouchEvent) {
       const touch = ev.touches[0]
       return {

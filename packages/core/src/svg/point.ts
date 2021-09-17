@@ -1,7 +1,7 @@
 import { Vector } from './vector'
 import { PointObject } from '../types'
 
-export class Point {
+export class Point implements PointObject {
   constructor(private _x: number, private _y: number) {}
 
   public get x(): number {
@@ -30,20 +30,20 @@ export class Point {
     return new Point(this._x, this._y * r)
   }
 
-  public add(p: Point): Point {
+  public add(p: PointObject): Point {
     return new Point(this._x + p.x, this._y + p.y)
   }
 
-  public sub(p: Point): Point {
+  public sub(p: PointObject): Point {
     return new Point(this._x - p.x, this._y - p.y)
   }
 
-  public translate(p: Point): void {
+  public translate(p: PointObject): void {
     this._x += p.x
     this._y += p.y
   }
 
-  public eql(p: Point): boolean {
+  public eql(p: PointObject): boolean {
     return this._x === p.x && this._y === p.y
   }
 
