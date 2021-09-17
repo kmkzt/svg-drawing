@@ -33,15 +33,6 @@ export const EditSvg = ({
     [selecting]
   )
 
-  /** @todo Move to core/EditSvg */
-  const selectedBoundingBox = useMemo(() => {
-    if (!selecting || Object.keys(selecting).length < 1) return false
-
-    return Object.keys(selecting).every(
-      (pKey: string) => Object.keys(selecting[+pKey]).length === 0
-    )
-  }, [selecting])
-
   const handleMoveStartPoint = useCallback(
     ({ path, command, point }: EditPointIndex) =>
       (
@@ -75,7 +66,6 @@ export const EditSvg = ({
       {background && <rect width={width} height={height} fill={background} />}
       {boundingBox && (
         <EditBoundingBox
-          selected={selectedBoundingBox}
           {...boundingBox}
           onMovePathsStart={onMovePathsStart}
           onResizeBoundingBoxStart={onResizeBoundingBoxStart}
@@ -152,9 +142,7 @@ export const EditBoundingBox = ({
   onMovePathsStart,
   onResizeBoundingBoxStart,
 }: Pick<EditSvgProps, 'onMovePathsStart' | 'onResizeBoundingBoxStart'> &
-  EditSvgObject['boundingBox'] & {
-    selected: boolean
-  }) => {
+  EditSvgObject['boundingBox']) => {
   const handleMovePathsStart = useCallback(
     (
       ev:

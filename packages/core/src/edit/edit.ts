@@ -260,6 +260,15 @@ export class EditSvg {
       : fallbackBoundingBox
   }
 
+  private selectedBoundingBox() {
+    if (!this.selecting || Object.keys(this.selecting).length < 1) return false
+
+    return Object.keys(this.selecting).every(
+      (pKey: string) =>
+        this.selecting && Object.keys(this.selecting[+pKey]).length === 0
+    )
+  }
+
   public toJson(): EditSvgObject | null {
     if (!this.selecting) return null
 
@@ -289,6 +298,7 @@ export class EditSvg {
             max: { x: Math.max(...listX), y: Math.max(...listY) },
           }
         : fallbackBoundingBox
+
     return {
       index: this.selecting,
       paths,
@@ -303,6 +313,7 @@ export class EditSvg {
           ['RightBottom']: { x: max.x, y: max.y },
           ['LeftBottom']: { x: min.x, y: max.y },
         },
+        selected: this.selectedBoundingBox(),
       },
     }
   }

@@ -168,6 +168,7 @@ export type EditSvgObject = {
     vertex: {
       [fixedPosition in FixedType]: PointObject
     }
+    selected: boolean
   }
 }
 
