@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import type { KeyboardMap } from '../types'
 
-export const useKeyboard = (keyboardMap: KeyboardMap = {}) => {
+export const useKeyboardBind = (keyboardMap: KeyboardMap = {}) => {
   useEffect(() => {
     const handleKeyboardEvent = (ev: KeyboardEvent) => {
       const fn = keyboardMap[ev.key]

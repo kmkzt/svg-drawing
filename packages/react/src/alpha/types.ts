@@ -69,17 +69,13 @@ export type KeyboardMap = {
 
 export type UseParseFile = (opts: { svg: Svg }) => (file: File) => Promise<void>
 
-export type SelectPathsHandler = (selectIndex: Selecting | null) => void
-export type MovePathsHandler = (move: PointObject) => void
-export type ChangeAttributesHandler = (pathAttrs: PathObject) => void
-export type DeletePathsHandler = () => void
-export type CancelSelectHandler = () => void
 export type EditSvgAction = SvgAction & {
   keyboardMap: KeyboardMap
-  onSelectPaths: SelectPathsHandler
-  onCancelSelect: CancelSelectHandler
-  onDeletePaths: DeletePathsHandler
-  onChangeAttributes: ChangeAttributesHandler
+  onSelectPaths: (selectIndex: Selecting | null) => void
+  onCancelSelect: () => void
+  onMovePaths: (move: PointObject) => void
+  onDeletePaths: () => void
+  onChangeAttributes: (pathAttrs: PathObject) => void
 }
 
 /** EditSvg components */

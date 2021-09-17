@@ -14,11 +14,11 @@ import type {
   EditSvgAction,
   EditSvgProps,
 } from '../types'
-import { useMultipleSelect } from './useMultipleSelect'
+import { usePressedKey } from '../keyboard/usePressed'
 
 export const useEdit: UseEdit = ({
   sharedSvg,
-  multipleSelectBindKey,
+  multipleSelectBindKey = 'shift',
 }: UseEditOptions = {}) => {
   const [originObj, { svg, onUpdate, ...rest }] = useSvg({ sharedSvg })
 
@@ -38,8 +38,12 @@ export const useEdit: UseEdit = ({
   useEffect(() => () => svgEditing.cleanup(), [svgEditing])
 
   const editing = useMemo(() => !!editInfo, [editInfo])
-  const multipleSelect = useMultipleSelect(multipleSelectBindKey)
+  const svgProps = useMemo(
+    () => (editing ? previewObj : originObj),
+    [editing, previewObj, originObj]
+  )
 
+  const multipleSelect = usePressedKey(multipleSelectBindKey)
   const onSelectPaths = useCallback<EditSvgAction['onSelectPaths']>(
     (sel: Selecting | null = null) => {
       const updateSelecting =
@@ -100,11 +104,6 @@ export const useEdit: UseEdit = ({
     }
   }, [editing, onCancelSelect, onDeletePaths, onMovePaths])
 
-  const svgProps = useMemo(
-    () => (editing ? previewObj : originObj),
-    [editing, previewObj, originObj]
-  )
-
   return [
     {
       ...svgProps,
@@ -118,6 +117,7 @@ export const useEdit: UseEdit = ({
       svg,
       onUpdate,
       onChangeAttributes,
+      onMovePaths,
       onDeletePaths,
       onSelectPaths,
       onCancelSelect,

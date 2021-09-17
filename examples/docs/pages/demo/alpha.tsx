@@ -13,7 +13,7 @@ import {
   EditSvg,
   useDrawEventHandler,
   useParseFile,
-  useKeyboard,
+  useKeyboardBind,
   useDrawFactory,
   useResize,
 } from '@svg-drawing/react/lib/alpha'
@@ -154,7 +154,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     () => (mode === 'edit' ? edit.keyboardMap : draw.keyboardMap),
     [mode, edit.keyboardMap, draw.keyboardMap]
   )
-  useKeyboard?.(keyboardMap)
+  useKeyboardBind?.(keyboardMap)
 
   const handleChangeCurve = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (ev) => {

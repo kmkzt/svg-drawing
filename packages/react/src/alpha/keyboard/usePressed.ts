@@ -1,19 +1,16 @@
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-/** @todo Change to name that pressing key. */
-export const useMultipleSelect = (
-  bindKey = 'Shift'
-): MutableRefObject<boolean> => {
+export const usePressedKey = (key: string): MutableRefObject<boolean> => {
   const multipleSelect = useRef(false)
 
   useEffect(() => {
     const handleOn = (ev: KeyboardEvent) => {
-      if (ev.key !== bindKey) return
+      if (ev.key !== key) return
       multipleSelect.current = true
     }
 
     const handleOff = (ev: KeyboardEvent) => {
-      if (ev.key !== bindKey) return
+      if (ev.key !== key) return
       multipleSelect.current = false
     }
     addEventListener('keydown', handleOn)
@@ -22,6 +19,6 @@ export const useMultipleSelect = (
       removeEventListener('keydown', handleOn)
       removeEventListener('keyup', handleOff)
     }
-  }, [bindKey])
+  }, [key])
   return multipleSelect
 }
