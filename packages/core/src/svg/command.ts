@@ -1,6 +1,6 @@
+import { Point } from './point'
 import { CommandType, PointObject } from '../types'
 import { roundUp } from '../utils'
-import { Point } from './point'
 
 export class Command {
   static Types = {

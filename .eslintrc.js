@@ -44,6 +44,27 @@ module.exports = {
     'no-empty-interface': 'off',
     'no-unused-vars': 'off',
 
+    // import
+    'import/order': [
+      'warn',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'index',
+          'sibling',
+          'parent',
+          'object',
+          'type',
+        ],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
+
     // React
     'react/jsx-uses-react': 'error',
     'react/jsx-uses-vars': 'error',

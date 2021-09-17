@@ -1,15 +1,15 @@
 import {
+  SvgDrawing,
+  ResizeHandler,
+  svgObjectToElement,
+} from '@svg-drawing/core/'
+import {
   useRef,
   useEffect,
   useCallback,
   MutableRefObject,
   useMemo,
 } from 'react'
-import {
-  SvgDrawing,
-  ResizeHandler,
-  svgObjectToElement,
-} from '@svg-drawing/core/'
 import { UseSvgDrawing, SvgDrawingObject } from './types'
 import type { DrawingOption } from '@svg-drawing/core'
 

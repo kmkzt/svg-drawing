@@ -1,6 +1,6 @@
 import React from 'react'
-import type { HTMLAttributes } from 'react'
 import type { SvgObject } from '@svg-drawing/core'
+import type { HTMLAttributes } from 'react'
 
 export const Svg = ({
   background,

@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, HTMLAttributes } from 'react'
 import { PointObject, FixedType, EditSvgObject } from '@svg-drawing/core'
+import React, { useCallback, useMemo, HTMLAttributes } from 'react'
 import { EditSvgProps } from '../types'
 
 type EditPointIndex = {

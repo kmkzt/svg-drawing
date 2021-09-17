@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
 import { ImgLoader, ImgTrace, Palette } from '@svg-drawing/img-trace'
+import { useCallback } from 'react'
 import type { UseParseFile } from '../types'
 
 /** @todo Added cancel event handler. */

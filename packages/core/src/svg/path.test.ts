@@ -1,6 +1,6 @@
+import { Command } from './command'
 import { Path } from './path'
 import { Point } from './point'
-import { Command } from './command'
 import { pathObjectToElement } from '../renderer'
 
 describe('svg/path.ts', () => {

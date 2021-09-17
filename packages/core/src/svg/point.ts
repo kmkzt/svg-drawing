@@ -1,5 +1,5 @@
-import { PointObject } from '../types'
 import { Vector } from './vector'
+import { PointObject } from '../types'
 
 export class Point {
   constructor(private _x: number, private _y: number) {}

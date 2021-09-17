@@ -1,5 +1,5 @@
-import { Svg, Path, Command } from './svg'
 import { svgObjectToElement } from './renderer'
+import { Svg, Path, Command } from './svg'
 
 describe('renderer.ts', () => {
   const svg = new Svg({ width: 500, height: 500 })

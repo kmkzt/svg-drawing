@@ -1,9 +1,9 @@
+import { BasicDrawFactory } from './factory'
+import { PencilHandler } from './handler'
+import { download } from '../download'
 import { Renderer } from '../renderer'
 import { Path, Svg } from '../svg'
-import { PencilHandler } from './handler'
-import { BasicDrawFactory } from './factory'
 import { isAlmostSameNumber } from '../utils'
-import { download } from '../download'
 import type {
   DownloadOption,
   DrawHandler,

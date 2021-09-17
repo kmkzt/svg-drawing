@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Svg, isAlmostSameNumber } from '@svg-drawing/core'
-import type { ResizeCallback } from '@svg-drawing/core'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import type { UseSvg } from '../types'
+import type { ResizeCallback } from '@svg-drawing/core'
 
 const RENDER_INTERVAL = 0
 

@@ -1,4 +1,3 @@
-import type { RefObject } from 'react'
 import type {
   SvgObject,
   Svg,
@@ -12,6 +11,7 @@ import type {
   DrawEventHandler,
   ResizeBoundingBoxBase,
 } from '@svg-drawing/core'
+import type { RefObject } from 'react'
 
 /** UseSvg */
 export type UseSvg = (opts: UseSvgOptions) => [SvgObject, SvgAction]

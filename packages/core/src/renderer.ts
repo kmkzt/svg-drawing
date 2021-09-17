@@ -1,6 +1,6 @@
 import { Svg } from './svg'
-import type { PathObject, RendererOption, SvgObject } from './types'
 import { camel2kebab } from './utils'
+import type { PathObject, RendererOption, SvgObject } from './types'
 
 const VERSION = '1.1'
 const SVG_NS = 'http://www.w3.org/2000/svg'

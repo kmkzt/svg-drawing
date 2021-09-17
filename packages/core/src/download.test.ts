@@ -1,5 +1,5 @@
-import { Svg, Path, Command } from './svg'
 import { download, toBase64 } from './download'
+import { Svg, Path, Command } from './svg'
 
 describe('download.ts', () => {
   const svg = new Svg({ width: 4, height: 4 })

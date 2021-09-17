@@ -1,6 +1,6 @@
-import { Svg } from './svg'
-import { Path } from './path'
 import { Command } from './command'
+import { Path } from './path'
+import { Svg } from './svg'
 import { download, toBase64 } from '../download'
 import { svgObjectToElement } from '../renderer'
 

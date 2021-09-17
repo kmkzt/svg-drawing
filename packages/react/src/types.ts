@@ -1,10 +1,10 @@
-import type { RefObject } from 'react'
 import type {
   ResizeEventHandler,
   SvgDrawing,
   DrawingOption,
   download,
 } from '@svg-drawing/core'
+import type { RefObject } from 'react'
 
 export type SvgDrawingObject = ReturnType<typeof SvgDrawing['init']>
 

@@ -1,4 +1,3 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
 import {
   EditSvg,
   EditSvgObject,
@@ -6,6 +5,8 @@ import {
   Selecting,
   SvgEditing,
 } from '@svg-drawing/core'
+import { useState, useCallback, useMemo, useEffect } from 'react'
+import { usePressedKey } from '../keyboard/usePressed'
 import { useSvg } from '../svg/useSvg'
 import type {
   KeyboardMap,
@@ -14,7 +15,6 @@ import type {
   EditSvgAction,
   EditSvgProps,
 } from '../types'
-import { usePressedKey } from '../keyboard/usePressed'
 
 export const useEdit: UseEdit = ({
   sharedSvg,
