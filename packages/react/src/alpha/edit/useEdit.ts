@@ -107,7 +107,6 @@ export const useEdit: UseEdit = ({
   return [
     {
       ...svgProps,
-      editIndex: editInfo?.index ?? null,
       editPaths: editInfo?.paths ?? null,
       boundingBox: editInfo?.boundingBox ?? null,
       onMovePathsStart,

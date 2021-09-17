@@ -80,7 +80,6 @@ export type EditSvgAction = SvgAction & {
 
 /** EditSvg components */
 export type EditSvgProps = SvgObject & {
-  editIndex: EditSvgObject['index'] | null
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
   onMovePathsStart: (basePoint: PointObject, sel?: Selecting) => void

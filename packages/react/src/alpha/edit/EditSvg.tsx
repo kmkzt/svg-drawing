@@ -1,5 +1,5 @@
 import { PointObject, FixedType, EditSvgObject } from '@svg-drawing/core'
-import React, { useCallback, useMemo, HTMLAttributes } from 'react'
+import React, { useCallback, HTMLAttributes } from 'react'
 import { EditSvgProps } from '../types'
 
 type EditPointIndex = {
@@ -13,26 +13,12 @@ export const EditSvg = ({
   paths,
   width,
   height,
-  editIndex: selecting,
   editPaths: selectedPaths,
   boundingBox,
   onMovePathsStart,
   onResizeBoundingBoxStart,
   ...rest
 }: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
-  /** @todo Move to core/EditSvg */
-  const isSelectedPoint = useCallback(
-    ({ path, command, point }: EditPointIndex): boolean => {
-      if (!selecting || !(path in selecting)) return false
-
-      const selectingCommand = selecting[path]
-      if (!(command in selectingCommand)) return false
-
-      return selectingCommand[command].includes(point)
-    },
-    [selecting]
-  )
-
   const handleMoveStartPoint = useCallback(
     ({ path, command, point }: EditPointIndex) =>
       (
@@ -110,13 +96,13 @@ export const EditSvg = ({
                     return (
                       <circle
                         key={k}
-                        cx={po.x}
-                        cy={po.y}
+                        cx={po.value.x}
+                        cy={po.value.y}
                         onMouseDown={handleMoveStartPoint(editPathIndex)}
                         onTouchStart={handleMoveStartPoint(editPathIndex)}
                         r={EDIT_CONFIG.point}
                         style={{
-                          fill: isSelectedPoint(editPathIndex)
+                          fill: po.selected
                             ? EDIT_CONFIG.color.selected
                             : EDIT_CONFIG.color.sub,
                         }}

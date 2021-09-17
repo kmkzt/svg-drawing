@@ -134,7 +134,10 @@ export interface DrawHandler {
 
 /** Control Point */
 export type ControlPoint = {
-  points: PointObject[]
+  points: {
+    selected: boolean
+    value: PointObject
+  }[]
   d: string
 }
 
@@ -155,6 +158,7 @@ export type EditPathObject = {
   controlPoints: ControlPoint[]
   boundingBox: BoundingBox
 }
+
 export type EditSvgObject = {
   index: Selecting
   paths: {

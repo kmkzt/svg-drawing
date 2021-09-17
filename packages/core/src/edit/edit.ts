@@ -8,6 +8,8 @@ import type {
   EditSvgObject,
   EditPathObject,
   ResizeBoundingBoxBase,
+  SelectingCommands,
+  SelectingPoints,
 } from '../types'
 
 const genOutline = (points: PointObject[]) =>
@@ -278,7 +280,7 @@ export class EditSvg {
     const paths: EditSvgObject['paths'] = {}
 
     this.exec((path, index) => {
-      const editPath = new EditPath(path.clone())
+      const editPath = new EditPath(path.clone(), this.selecting?.[index.path])
       paths[index.path] = editPath.toJson()
 
       const {
@@ -321,7 +323,7 @@ export class EditSvg {
 
 /** @todo Rename PathEdit ? */
 export class EditPath {
-  constructor(public path: Path) {}
+  constructor(public path: Path, public selecting?: SelectingCommands) {}
 
   /** @todo Compatible relative point */
   public get points(): Point[] {
@@ -337,18 +339,27 @@ export class EditPath {
     for (let i = 0; i < commands.length; i += 1) {
       const curr = commands[i]
       const next = commands[i + 1]
+
       const outlinePoints = [
         curr.cr?.toJson(),
         curr.point?.toJson(),
         next?.cl?.toJson(),
       ].filter(Boolean) as PointObject[]
-      const points: PointObject[] = [
+
+      const points = [
         curr.cl?.toJson(),
         curr.cr?.toJson(),
         curr.point?.toJson(),
       ].filter(Boolean) as PointObject[]
+
+      const selectingPoints: SelectingPoints | null =
+        this.selecting?.[i] ?? null
+
       controlPoints.push({
-        points,
+        points: points.map((value, i) => ({
+          value,
+          selected: selectingPoints?.includes(i * 2) ?? false,
+        })),
         d: genOutline(outlinePoints),
       })
     }
