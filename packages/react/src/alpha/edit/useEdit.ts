@@ -17,6 +17,7 @@ import type {
   EditSvgProps,
 } from '../types'
 
+/** @todo Fix onClear and onResize. */
 export const useEdit: UseEdit = ({
   sharedSvg,
   multipleSelectBindKey = 'Shift',
