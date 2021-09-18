@@ -4,6 +4,7 @@ import {
   PointObject,
   Selecting,
   SvgEditing,
+  SvgObject,
 } from '@svg-drawing/core'
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { usePressedKey } from '../keyboard/usePressedKey'
@@ -18,79 +19,87 @@ import type {
 
 export const useEdit: UseEdit = ({
   sharedSvg,
-  multipleSelectBindKey = 'shift',
+  multipleSelectBindKey = 'Shift',
 }: UseEditOptions = {}) => {
-  const [originObj, { svg, onUpdate, ...rest }] = useSvg({ sharedSvg })
+  const [origin, { svg, onUpdate, ...rest }] = useSvg({ sharedSvg })
 
-  const svgEditing = useMemo(() => SvgEditing.init(svg), [svg])
-  const [editInfo, setEditInfo] = useState<EditSvgObject | null>(
-    svgEditing.editSvg.toJson()
-  )
-  const [previewObj, setPreviewObj] = useState(svg.toJson())
+  const [{ editInfo, preview }, setEditObj] = useState<{
+    editInfo: EditSvgObject | null
+    preview: SvgObject
+  }>({
+    editInfo: null,
+    preview: svg.toJson(),
+  })
 
+  const core = useMemo(() => SvgEditing.init(svg), [svg])
   useEffect(() => {
-    svgEditing.setupUpdater((eSvg: EditSvg) => {
-      setEditInfo(eSvg.toJson())
-      setPreviewObj(eSvg.svg.toJson())
+    core.setupUpdater((eSvg: EditSvg) => {
+      setEditObj({
+        editInfo: eSvg.toJson(),
+        preview: eSvg.svg.toJson(),
+      })
       onUpdate()
     })
-  }, [onUpdate, svgEditing])
-  useEffect(() => () => svgEditing.cleanup(), [svgEditing])
+  }, [onUpdate, core])
+  useEffect(() => () => core.cleanup(), [core])
 
   const editing = useMemo(() => !!editInfo, [editInfo])
   const svgProps = useMemo(
-    () => (editing ? previewObj : originObj),
-    [editing, previewObj, originObj]
+    () => (editing ? preview : origin),
+    [editing, preview, origin]
   )
 
   const multipleSelect = usePressedKey(multipleSelectBindKey)
-  const onSelectPaths = useCallback<EditSvgAction['onSelectPaths']>(
-    (sel: Selecting | null = null) => {
-      const updateSelecting =
-        multipleSelect.current && editInfo ? { ...editInfo.index, ...sel } : sel
+  const getUpdateSelecting = useCallback(
+    (sel: Selecting): Selecting =>
+      editInfo && multipleSelect.current ? { ...editInfo.index, ...sel } : sel,
+    [editInfo, multipleSelect]
+  )
 
-      svgEditing.select(updateSelecting)
+  const onSelectPaths = useCallback<EditSvgAction['onSelectPaths']>(
+    (sel: Selecting) => {
+      core.select(getUpdateSelecting(sel))
     },
-    [multipleSelect, editInfo, svgEditing]
+    [core, getUpdateSelecting]
   )
 
   const onMovePathsStart = useCallback<EditSvgProps['onMovePathsStart']>(
     (po, sel) => {
-      svgEditing.startTranslate(po, sel)
+      core.startTranslate(po, sel ? getUpdateSelecting(sel) : undefined)
     },
-    [svgEditing]
+    [getUpdateSelecting, core]
   )
 
   const onMovePaths = useCallback(
     (po: PointObject) => {
-      svgEditing.translate(po)
+      core.translate(po)
     },
-    [svgEditing]
+    [core]
   )
 
   const onResizeBoundingBoxStart = useCallback<
     EditSvgProps['onResizeBoundingBoxStart']
   >(
     (base) => {
-      svgEditing.startResizeBoundingBox(base)
+      core.startResizeBoundingBox(base)
     },
-    [svgEditing]
+    [core]
   )
 
   const onChangeAttributes = useCallback<EditSvgAction['onChangeAttributes']>(
     (arg) => {
-      svgEditing.changeAttributes(arg)
+      core.changeAttributes(arg)
     },
-    [svgEditing]
+    [core]
   )
 
   const onCancelSelect = useCallback<EditSvgAction['onCancelSelect']>(() => {
-    svgEditing.cancel()
-  }, [svgEditing])
+    core.cancel()
+  }, [core])
 
   const onDeletePaths = useCallback<EditSvgAction['onDeletePaths']>(() => {
-    svgEditing.deletePaths()
-  }, [svgEditing])
+    core.deletePaths()
+  }, [core])
 
   const keyboardMap = useMemo<KeyboardMap>(() => {
     if (!editing) return {}

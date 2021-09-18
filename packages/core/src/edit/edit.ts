@@ -93,21 +93,33 @@ const getResizeEditObject = (
 
 /** @todo Rename SvgEditing or Editing or SvgEdit ? */
 export class EditSvg {
-  public selecting: Selecting | null = null
-  public translateBasePoint: PointObject | null = null
-  public resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
+  private selecting: Selecting | null = null
+  private translateBasePoint: PointObject | null = null
+  private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(public svg: Svg) {}
 
-  public select(sel: Selecting | null) {
+  public select(sel: Selecting) {
     this.selecting = sel
   }
 
-  public setupTranslateBsePoint(base: PointObject | null) {
+  public cancel() {
+    this.selecting = null
+  }
+
+  public setupTranslateBsePoint(base: PointObject) {
     this.translateBasePoint = base
   }
 
-  public setupResizeBoundingBox(base: ResizeBoundingBoxBase | null) {
+  public resetTranslateBsePoint() {
+    this.translateBasePoint = null
+  }
+
+  public setupResizeBoundingBox(base: ResizeBoundingBoxBase) {
     this.resizeBoundingBoxBase = base
+  }
+
+  public resetResizeBoundingBox() {
+    this.resizeBoundingBoxBase = null
   }
 
   private exec(
@@ -231,9 +243,9 @@ export class EditSvg {
 
   public preview(): EditSvg {
     const preview = new EditSvg(this.svg.clone())
-    preview.select(this.selecting)
-    preview.setupTranslateBsePoint(this.translateBasePoint)
-    preview.setupResizeBoundingBox(this.resizeBoundingBoxBase)
+    preview.selecting = this.selecting
+    preview.translateBasePoint = this.translateBasePoint
+    preview.resizeBoundingBoxBase = this.resizeBoundingBoxBase
     return preview
   }
 

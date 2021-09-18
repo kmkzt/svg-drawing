@@ -1,15 +1,12 @@
 import type {
   SvgObject,
   Svg,
-  PathObject,
-  PointObject,
-  Selecting,
   EditSvgObject,
   DrawHandler,
   DrawFactory,
   ResizeCallback,
   DrawEventHandler,
-  ResizeBoundingBoxBase,
+  SvgEditing,
 } from '@svg-drawing/core'
 import type { RefObject } from 'react'
 
@@ -71,19 +68,19 @@ export type UseParseFile = (opts: { svg: Svg }) => (file: File) => Promise<void>
 
 export type EditSvgAction = SvgAction & {
   keyboardMap: KeyboardMap
-  onSelectPaths: (selectIndex: Selecting | null) => void
-  onCancelSelect: () => void
-  onMovePaths: (move: PointObject) => void
-  onDeletePaths: () => void
-  onChangeAttributes: (pathAttrs: PathObject) => void
+  onSelectPaths: SvgEditing['select']
+  onCancelSelect: SvgEditing['cancel']
+  onMovePaths: SvgEditing['translate']
+  onDeletePaths: SvgEditing['deletePaths']
+  onChangeAttributes: SvgEditing['changeAttributes']
 }
 
 /** EditSvg components */
 export type EditSvgProps = SvgObject & {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
-  onMovePathsStart: (basePoint: PointObject, sel?: Selecting) => void
-  onResizeBoundingBoxStart: (base: ResizeBoundingBoxBase) => void
+  onMovePathsStart: SvgEditing['startTranslate']
+  onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
 }
 
 /** UseDraw return type */

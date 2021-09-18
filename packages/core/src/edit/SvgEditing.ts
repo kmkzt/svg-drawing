@@ -29,11 +29,11 @@ export class SvgEditing {
   }
 
   public cancel() {
-    this.editSvg.select(null)
+    this.editSvg.cancel()
     this.updater(this.editSvg)
   }
 
-  public select(sel: Selecting | null) {
+  public select(sel: Selecting) {
     this.editSvg.select(sel)
     this.updater(this.editSvg)
   }
@@ -64,7 +64,7 @@ export class SvgEditing {
 
   public translate(move: PointObject) {
     this.editSvg.translate(move)
-    this.editSvg.setupTranslateBsePoint(null)
+    this.editSvg.resetTranslateBsePoint()
 
     this.updater(this.editSvg)
   }
@@ -98,17 +98,18 @@ export class SvgEditing {
     this.editSvg.setupResizeBoundingBox(base)
     this.addResizeBoundingBoxListener()
   }
+
   public resizeBoundingBox(po: PointObject) {
     this.editSvg.resizeBoundingBox(po)
     this.updater(this.editSvg)
 
+    this.editSvg.resetTranslateBsePoint()
     this.removeResizeBoundingBoxListener()
   }
 
   public resizeBoundingBoxPreview(po: PointObject) {
     const preview = this.editSvg.preview()
     preview.resizeBoundingBox(po)
-
     this.updater(preview)
   }
 
