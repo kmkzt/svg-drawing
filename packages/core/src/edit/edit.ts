@@ -98,8 +98,8 @@ export class EditSvg {
   private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(public svg: Svg) {}
 
-  public select(sel: Selecting) {
-    this.selecting = sel
+  public select(sel: Selecting, multipleSelect?: boolean) {
+    this.selecting = multipleSelect ? { ...this.selecting, ...sel } : sel
   }
 
   public cancel() {

@@ -1,12 +1,11 @@
-import { PointObject, FixedType, EditSvgObject } from '@svg-drawing/core'
+import {
+  PointObject,
+  FixedType,
+  EditSvgObject,
+  SelectIndex,
+} from '@svg-drawing/core'
 import React, { useCallback, HTMLAttributes } from 'react'
 import { EditSvgProps } from '../types'
-
-type EditPointIndex = {
-  path: number
-  command: number
-  point: number
-}
 
 export const EditSvg = ({
   background,
@@ -20,30 +19,24 @@ export const EditSvg = ({
   ...rest
 }: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
   const handleMoveStartPoint = useCallback(
-    ({ path, command, point }: EditPointIndex) =>
+    (selectIndex: SelectIndex) =>
       (
         ev:
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
       ) =>
-        onTranslateStart(getPointFromEvent(ev), {
-          [path]: {
-            [command]: [point],
-          },
-        }),
+        onTranslateStart(getPointFromEvent(ev), selectIndex),
     [onTranslateStart]
   )
 
   const handleMoveStartPath = useCallback(
-    (i: number) =>
+    (path: number) =>
       (
         ev:
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
       ) => {
-        onTranslateStart(getPointFromEvent(ev), {
-          [i]: {},
-        })
+        onTranslateStart(getPointFromEvent(ev), { path })
       },
     [onTranslateStart]
   )

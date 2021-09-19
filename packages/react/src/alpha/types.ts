@@ -7,6 +7,8 @@ import type {
   ResizeCallback,
   DrawEventHandler,
   SvgEditing,
+  PointObject,
+  SelectIndex,
 } from '@svg-drawing/core'
 import type { RefObject } from 'react'
 
@@ -68,7 +70,7 @@ export type UseParseFile = (opts: { svg: Svg }) => (file: File) => Promise<void>
 
 export type EditSvgAction = SvgAction & {
   keyboardMap: KeyboardMap
-  onSelectPaths: SvgEditing['select']
+  onSelectPaths: (sel: SelectIndex) => void
   onCancelSelect: SvgEditing['cancel']
   onTranslate: SvgEditing['translate']
   onDeletePaths: SvgEditing['deletePaths']
@@ -79,7 +81,7 @@ export type EditSvgAction = SvgAction & {
 export type EditSvgProps = SvgObject & {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
-  onTranslateStart: SvgEditing['startTranslate']
+  onTranslateStart: (po: PointObject, sel?: SelectIndex) => void
   onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
 }
 

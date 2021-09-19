@@ -2,7 +2,6 @@ import {
   EditSvg,
   EditSvgObject,
   PointObject,
-  Selecting,
   SvgEditing,
   SvgObject,
 } from '@svg-drawing/core'
@@ -55,24 +54,20 @@ export const useEdit: UseEdit = ({
   )
 
   const multipleSelect = usePressedKey(multipleSelectBindKey)
-  const getUpdateSelecting = useCallback(
-    (sel: Selecting): Selecting =>
-      editInfo && multipleSelect.current ? { ...editInfo.index, ...sel } : sel,
-    [editInfo, multipleSelect]
-  )
 
   const onSelectPaths = useCallback<EditSvgAction['onSelectPaths']>(
-    (sel: Selecting) => {
-      core.select(getUpdateSelecting(sel))
+    (sel) => {
+      core.select(sel, multipleSelect.current)
     },
-    [core, getUpdateSelecting]
+    [core, multipleSelect]
   )
 
   const onTranslateStart = useCallback<EditSvgProps['onTranslateStart']>(
     (po, sel) => {
-      core.startTranslate(po, sel ? getUpdateSelecting(sel) : undefined)
+      if (sel) core.select(sel, multipleSelect.current)
+      core.startTranslate(po)
     },
-    [getUpdateSelecting, core]
+    [core, multipleSelect]
   )
 
   const onTranslate = useCallback(

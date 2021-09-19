@@ -147,6 +147,12 @@ export type BoundingBox = {
   max: PointObject
 }
 
+export type SelectIndex = {
+  path: number
+  command?: number
+  point?: number
+}
+
 export type Selecting = {
   [path: number]: SelectingCommands
 }

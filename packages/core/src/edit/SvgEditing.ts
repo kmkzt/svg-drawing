@@ -5,6 +5,7 @@ import type {
   PathObject,
   Selecting,
   ResizeBoundingBoxBase,
+  SelectIndex,
 } from '../types'
 
 export class SvgEditing {
@@ -33,8 +34,13 @@ export class SvgEditing {
     this.updater(this.editSvg)
   }
 
-  public select(sel: Selecting) {
-    this.editSvg.select(sel)
+  public select(index: SelectIndex, multipleSelect?: boolean) {
+    const updateSelecting: Selecting = index.command
+      ? {
+          [index.path]: { [index.command]: index.point ? [index.point] : [] },
+        }
+      : { [index.path]: {} }
+    this.editSvg.select(updateSelecting, multipleSelect)
     this.updater(this.editSvg)
   }
 
@@ -48,8 +54,7 @@ export class SvgEditing {
     this.updater(this.editSvg)
   }
 
-  public startTranslate(po: PointObject, sel?: Selecting) {
-    if (sel) this.editSvg.select(sel)
+  public startTranslate(po: PointObject) {
     this.editSvg.setupTranslateBsePoint(po)
 
     this.addTranslateListener()
