@@ -15,7 +15,7 @@ export const EditSvg = ({
   height,
   editPaths: selectedPaths,
   boundingBox,
-  onMovePathsStart,
+  onTranslateStart,
   onResizeBoundingBoxStart,
   ...rest
 }: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
@@ -26,12 +26,12 @@ export const EditSvg = ({
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
       ) =>
-        onMovePathsStart(getPointFromEvent(ev), {
+        onTranslateStart(getPointFromEvent(ev), {
           [path]: {
             [command]: [point],
           },
         }),
-    [onMovePathsStart]
+    [onTranslateStart]
   )
 
   const handleMoveStartPath = useCallback(
@@ -41,11 +41,11 @@ export const EditSvg = ({
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
       ) => {
-        onMovePathsStart(getPointFromEvent(ev), {
+        onTranslateStart(getPointFromEvent(ev), {
           [i]: {},
         })
       },
-    [onMovePathsStart]
+    [onTranslateStart]
   )
   return (
     <svg width={width} height={height} {...rest}>
@@ -53,7 +53,7 @@ export const EditSvg = ({
       {boundingBox && (
         <EditBoundingBox
           {...boundingBox}
-          onMovePathsStart={onMovePathsStart}
+          onTranslateStart={onTranslateStart}
           onResizeBoundingBoxStart={onResizeBoundingBoxStart}
         />
       )}
@@ -125,9 +125,9 @@ export const EditBoundingBox = ({
   height,
   vertex,
   selected,
-  onMovePathsStart,
+  onTranslateStart,
   onResizeBoundingBoxStart,
-}: Pick<EditSvgProps, 'onMovePathsStart' | 'onResizeBoundingBoxStart'> &
+}: Pick<EditSvgProps, 'onTranslateStart' | 'onResizeBoundingBoxStart'> &
   EditSvgObject['boundingBox']) => {
   const handleMovePathsStart = useCallback(
     (
@@ -135,9 +135,9 @@ export const EditBoundingBox = ({
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
-      onMovePathsStart(getPointFromEvent(ev))
+      onTranslateStart(getPointFromEvent(ev))
     },
-    [onMovePathsStart]
+    [onTranslateStart]
   )
 
   const handleResizeStart = useCallback(

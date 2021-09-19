@@ -64,14 +64,14 @@ export const useEdit: UseEdit = ({
     [core, getUpdateSelecting]
   )
 
-  const onMovePathsStart = useCallback<EditSvgProps['onMovePathsStart']>(
+  const onTranslateStart = useCallback<EditSvgProps['onTranslateStart']>(
     (po, sel) => {
       core.startTranslate(po, sel ? getUpdateSelecting(sel) : undefined)
     },
     [getUpdateSelecting, core]
   )
 
-  const onMovePaths = useCallback(
+  const onTranslate = useCallback(
     (po: PointObject) => {
       core.translate(po)
     },
@@ -106,27 +106,27 @@ export const useEdit: UseEdit = ({
     if (!editing) return {}
     return {
       ['Escape']: onCancelSelect,
-      ['ArrowRight']: () => onMovePaths({ x: 0.5, y: 0 }),
-      ['ArrowLeft']: () => onMovePaths({ x: -0.5, y: 0 }),
-      ['ArrowUp']: () => onMovePaths({ x: 0, y: -0.5 }),
-      ['ArrowDown']: () => onMovePaths({ x: 0, y: 0.5 }),
+      ['ArrowRight']: () => onTranslate({ x: 0.5, y: 0 }),
+      ['ArrowLeft']: () => onTranslate({ x: -0.5, y: 0 }),
+      ['ArrowUp']: () => onTranslate({ x: 0, y: -0.5 }),
+      ['ArrowDown']: () => onTranslate({ x: 0, y: 0.5 }),
       ['Backspace']: onDeletePaths,
     }
-  }, [editing, onCancelSelect, onDeletePaths, onMovePaths])
+  }, [editing, onCancelSelect, onDeletePaths, onTranslate])
 
   return [
     {
       ...svgProps,
       editPaths: editInfo?.paths ?? null,
       boundingBox: editInfo?.boundingBox ?? null,
-      onMovePathsStart,
+      onTranslateStart,
       onResizeBoundingBoxStart,
     },
     {
       svg,
       onUpdate,
       onChangeAttributes,
-      onMovePaths,
+      onTranslate,
       onDeletePaths,
       onSelectPaths,
       onCancelSelect,

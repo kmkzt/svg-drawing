@@ -70,7 +70,7 @@ export type EditSvgAction = SvgAction & {
   keyboardMap: KeyboardMap
   onSelectPaths: SvgEditing['select']
   onCancelSelect: SvgEditing['cancel']
-  onMovePaths: SvgEditing['translate']
+  onTranslate: SvgEditing['translate']
   onDeletePaths: SvgEditing['deletePaths']
   onChangeAttributes: SvgEditing['changeAttributes']
 }
@@ -79,7 +79,7 @@ export type EditSvgAction = SvgAction & {
 export type EditSvgProps = SvgObject & {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
-  onMovePathsStart: SvgEditing['startTranslate']
+  onTranslateStart: SvgEditing['startTranslate']
   onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
 }
 
