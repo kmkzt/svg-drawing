@@ -22,7 +22,9 @@ export const useEdit: UseEdit = ({
   sharedSvg,
   multipleSelectBindKey = 'Shift',
 }: UseEditOptions = {}) => {
-  const [origin, { svg, onUpdate, ...rest }] = useSvg({ sharedSvg })
+  const [origin, { svg, onUpdate, onClear: onClearOrigin, ...rest }] = useSvg({
+    sharedSvg,
+  })
 
   const [{ editInfo, preview }, setEditObj] = useState<{
     editInfo: EditSvgObject | null
@@ -32,16 +34,18 @@ export const useEdit: UseEdit = ({
     preview: svg.toJson(),
   })
 
-  const core = useMemo(() => SvgEditing.init(svg), [svg])
-  useEffect(() => {
-    core.setupUpdater((eSvg: EditSvg) => {
-      setEditObj({
-        editInfo: eSvg.toJson(),
-        preview: eSvg.svg.toJson(),
-      })
-      onUpdate()
-    })
-  }, [onUpdate, core])
+  const core = useMemo(
+    () =>
+      new SvgEditing(new EditSvg(svg), (eSvg: EditSvg) => {
+        setEditObj({
+          editInfo: eSvg.toJson(),
+          preview: eSvg.svg.toJson(),
+        })
+        onUpdate()
+      }),
+    [onUpdate, svg]
+  )
+
   useEffect(() => () => core.cleanup(), [core])
 
   const editing = useMemo(() => !!editInfo, [editInfo])
@@ -102,6 +106,15 @@ export const useEdit: UseEdit = ({
     core.deletePaths()
   }, [core])
 
+  const onClear = useCallback<EditSvgAction['onClear']>(() => {
+    core.cancel()
+    onClearOrigin()
+    setEditObj({
+      editInfo: core.editSvg.toJson(),
+      preview: core.editSvg.svg.toJson(),
+    })
+  }, [core, onClearOrigin])
+
   const keyboardMap = useMemo<KeyboardMap>(() => {
     if (!editing) return {}
     return {
@@ -131,6 +144,7 @@ export const useEdit: UseEdit = ({
       onSelectPaths,
       onCancelSelect,
       keyboardMap,
+      onClear,
       ...rest,
     },
   ]
