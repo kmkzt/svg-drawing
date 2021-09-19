@@ -486,10 +486,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           </Label>
         )}
       </Box>
-      <div>
-        {JSON.stringify(editSvgProps.editIndex)}
-        {JSON.stringify(editSvgProps.boundingBox)}
-      </div>
+      <div>{JSON.stringify(editSvgProps.boundingBox)}</div>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
           ref={targetRef}
