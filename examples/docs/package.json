@@ -8,6 +8,7 @@
     "dev": "next",
     "build": "next build; next export",
     "lint": "eslint . --ext .js,.ts,.tsx",
+    "fmt": "yarn lint --fix",
     "prepare": "build"
   },
   "dependencies": {

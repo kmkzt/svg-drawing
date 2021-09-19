@@ -1,3 +1,12 @@
+import { Input } from '@rebass/forms/styled-components'
+import { Renderer, Svg, download } from '@svg-drawing/core'
+import {
+  ImgTrace,
+  Rgba,
+  Palette,
+  // Blur,
+  ImgLoader,
+} from '@svg-drawing/img-trace'
 import {
   useState,
   useCallback,
@@ -14,15 +23,6 @@ import {
   Image,
   Heading,
 } from 'rebass/styled-components'
-import { Input } from '@rebass/forms/styled-components'
-import { Renderer, Svg, download } from '@svg-drawing/core'
-import {
-  ImgTrace,
-  Rgba,
-  Palette,
-  // Blur,
-  ImgLoader,
-} from '@svg-drawing/img-trace'
 import Layout from '../../components/Layout'
 
 const IMAGE_LIST = [
@@ -101,9 +101,7 @@ export default () => {
     }
   }, [imageUrl, imageData, palettes, traceOption])
 
-  /**
-   * Update Svg Render
-   */
+  /** Update Svg Render */
   useEffect(() => {
     if (!renderRef.current) return
     const renderSvg = () => {

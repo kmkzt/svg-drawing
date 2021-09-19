@@ -1,12 +1,18 @@
-import { useEffect, useRef, useCallback, useState, ChangeEvent } from 'react'
-import { NextPage } from 'next'
-import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Slider, Input, Label } from '@rebass/forms/styled-components'
-import { Command, Point, ResizeHandler } from '@svg-drawing/core'
 import { SvgAnimation, FrameAnimation } from '@svg-drawing/animation'
+import { Command, Point, ResizeHandler } from '@svg-drawing/core'
+import { NextPage } from 'next'
+import {
+  useEffect,
+  useRef,
+  useCallback,
+  useState,
+  ChangeEvent,
+  useMemo,
+} from 'react'
+import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../../components/Layout'
 import { example } from '../../lib/example-svg'
-import { useMemo } from 'react'
 
 const size = 30
 
