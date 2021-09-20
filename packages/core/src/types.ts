@@ -132,9 +132,16 @@ export interface DrawHandler {
   }) => void
 }
 
+export type SelectIndex = {
+  path: number
+  command?: number
+  point?: number
+}
+
 /** Control Point */
 export type ControlPoint = {
   points: {
+    index: Required<SelectIndex>
     selected: boolean
     value: PointObject
   }[]
@@ -147,12 +154,6 @@ export type BoundingBox = {
   max: PointObject
 }
 
-export type SelectIndex = {
-  path: number
-  command?: number
-  point?: number
-}
-
 export type Selecting = {
   [path: number]: SelectingCommands
 }
@@ -160,6 +161,7 @@ export type SelectingCommands = { [command: number]: SelectingPoints }
 export type SelectingPoints = Array<number>
 
 export type EditPathObject = {
+  index: number
   d: string
   controlPoints: ControlPoint[]
   boundingBox: BoundingBox

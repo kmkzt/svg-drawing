@@ -253,8 +253,8 @@ export class EditSvg {
     const listX: number[] = []
     const listY: number[] = []
 
-    this.exec((path) => {
-      const editPath = new EditPath(path.clone())
+    this.exec((path, index) => {
+      const editPath = new EditPath(path.clone(), index.path)
 
       const {
         boundingBox: {
@@ -274,12 +274,14 @@ export class EditSvg {
       : fallbackBoundingBox
   }
 
-  private selectedBoundingBox() {
-    if (!this.selecting || Object.keys(this.selecting).length < 1) return false
-
-    return Object.keys(this.selecting).every(
-      (pKey: string) =>
-        this.selecting && Object.keys(this.selecting[+pKey]).length === 0
+  private selectedBoundingBox(): boolean {
+    return !!(
+      this.selecting &&
+      Object.keys(this.selecting).length > 0 &&
+      Object.keys(this.selecting).every(
+        (pKey: string) =>
+          this.selecting && Object.keys(this.selecting[+pKey]).length === 0
+      )
     )
   }
 
@@ -292,7 +294,11 @@ export class EditSvg {
     const paths: EditSvgObject['paths'] = {}
 
     this.exec((path, index) => {
-      const editPath = new EditPath(path.clone(), this.selecting?.[index.path])
+      const editPath = new EditPath(
+        path.clone(),
+        index.path,
+        this.selecting?.[index.path]
+      )
       paths[index.path] = editPath.toJson()
 
       const {
@@ -335,7 +341,11 @@ export class EditSvg {
 
 /** @todo Rename PathEdit ? */
 export class EditPath {
-  constructor(public path: Path, public selecting?: SelectingCommands) {}
+  constructor(
+    public path: Path,
+    public index: number,
+    public selecting?: SelectingCommands
+  ) {}
 
   /** @todo Compatible relative point */
   public get points(): Point[] {
@@ -348,9 +358,9 @@ export class EditPath {
   public get controlPoints(): ControlPoint[] {
     const controlPoints: ControlPoint[] = []
     const commands = this.path.commands
-    for (let i = 0; i < commands.length; i += 1) {
-      const curr = commands[i]
-      const next = commands[i + 1]
+    for (let c = 0; c < commands.length; c += 1) {
+      const curr = commands[c]
+      const next = commands[c + 1]
 
       const outlinePoints = [
         curr.cr?.toJson(),
@@ -365,12 +375,17 @@ export class EditPath {
       ].filter(Boolean) as PointObject[]
 
       const selectingPoints: SelectingPoints | null =
-        this.selecting?.[i] ?? null
+        this.selecting?.[c] ?? null
 
       controlPoints.push({
-        points: points.map((value, i) => ({
+        points: points.map((value, p) => ({
+          index: {
+            path: this.index,
+            command: c,
+            point: p * 2,
+          },
           value,
-          selected: selectingPoints?.includes(i * 2) ?? false,
+          selected: selectingPoints?.includes(p * 2) ?? false,
         })),
         d: genOutline(outlinePoints),
       })
@@ -401,6 +416,7 @@ export class EditPath {
 
   public toJson(): EditPathObject {
     return {
+      index: this.index,
       d: this.path.getCommandString(),
       boundingBox: this.boundingBox,
       controlPoints: this.controlPoints,

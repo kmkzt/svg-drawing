@@ -19,7 +19,7 @@ export const EditSvg = ({
   ...rest
 }: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
   const handleMoveStartPoint = useCallback(
-    (selectIndex: SelectIndex) =>
+    (selectIndex: Required<SelectIndex>) =>
       (
         ev:
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
@@ -59,54 +59,43 @@ export const EditSvg = ({
         />
       ))}
       {selectedPaths &&
-        Object.entries(selectedPaths).map(([key, editPath]) => {
-          const pathIndex = +key
-          const { controlPoints, d } = editPath
-          return (
-            <g key={pathIndex}>
-              <path
-                d={d}
-                strokeWidth={EDIT_CONFIG.line}
-                stroke={EDIT_CONFIG.color.main}
-                fill={EDIT_CONFIG.fill.boundingBox}
-                onMouseDown={handleMoveStartPath(pathIndex)}
-                onTouchStart={handleMoveStartPath(pathIndex)}
-              />
-              {controlPoints.map(({ points, d }, commandIndex) => (
-                <g key={commandIndex}>
-                  <path
-                    d={d}
-                    strokeWidth={EDIT_CONFIG.line}
-                    stroke={EDIT_CONFIG.color.main}
-                    fill={EDIT_CONFIG.fill.default}
+        Object.entries(selectedPaths).map(([, { index, controlPoints, d }]) => (
+          <g key={index}>
+            <path
+              d={d}
+              strokeWidth={EDIT_CONFIG.line}
+              stroke={EDIT_CONFIG.color.main}
+              fill={EDIT_CONFIG.fill.boundingBox}
+              onMouseDown={handleMoveStartPath(index)}
+              onTouchStart={handleMoveStartPath(index)}
+            />
+            {controlPoints.map(({ points, d }, commandIndex) => (
+              <g key={commandIndex}>
+                <path
+                  d={d}
+                  strokeWidth={EDIT_CONFIG.line}
+                  stroke={EDIT_CONFIG.color.main}
+                  fill={EDIT_CONFIG.fill.default}
+                />
+                {points.map((po, k) => (
+                  <circle
+                    key={k}
+                    cx={po.value.x}
+                    cy={po.value.y}
+                    onMouseDown={handleMoveStartPoint(po.index)}
+                    onTouchStart={handleMoveStartPoint(po.index)}
+                    r={EDIT_CONFIG.point}
+                    style={{
+                      fill: po.selected
+                        ? EDIT_CONFIG.color.selected
+                        : EDIT_CONFIG.color.sub,
+                    }}
                   />
-                  {points.map((po, k) => {
-                    const editPathIndex = {
-                      path: pathIndex,
-                      command: commandIndex,
-                      point: k * 2,
-                    }
-                    return (
-                      <circle
-                        key={k}
-                        cx={po.value.x}
-                        cy={po.value.y}
-                        onMouseDown={handleMoveStartPoint(editPathIndex)}
-                        onTouchStart={handleMoveStartPoint(editPathIndex)}
-                        r={EDIT_CONFIG.point}
-                        style={{
-                          fill: po.selected
-                            ? EDIT_CONFIG.color.selected
-                            : EDIT_CONFIG.color.sub,
-                        }}
-                      />
-                    )
-                  })}
-                </g>
-              ))}
-            </g>
-          )
-        })}
+                ))}
+              </g>
+            ))}
+          </g>
+        ))}
     </svg>
   )
 }
