@@ -21,7 +21,10 @@ export const useEdit: UseEdit = ({
   sharedSvg,
   multipleSelectBindKey = 'Shift',
 }: UseEditOptions = {}) => {
-  const [origin, { svg, onUpdate, onClear: onClearOrigin, ...rest }] = useSvg({
+  const [
+    origin,
+    { svg, onUpdate, onClear: onClearOrigin, onResize: onResizeOrigin },
+  ] = useSvg({
     sharedSvg,
   })
 
@@ -48,6 +51,7 @@ export const useEdit: UseEdit = ({
   useEffect(() => () => core.cleanup(), [core])
 
   const editing = useMemo(() => !!editInfo, [editInfo])
+
   const svgProps = useMemo(
     () => (editing ? preview : origin),
     [editing, preview, origin]
@@ -110,6 +114,17 @@ export const useEdit: UseEdit = ({
     })
   }, [core, onClearOrigin])
 
+  const onResize = useCallback<EditSvgAction['onResize']>(
+    (arg) => {
+      onResizeOrigin(arg)
+      setEditObj({
+        editInfo: core.editSvg.toJson(),
+        preview: core.editSvg.svg.toJson(),
+      })
+    },
+    [core.editSvg, onResizeOrigin]
+  )
+
   const keyboardMap = useMemo<KeyboardMap>(() => {
     if (!editing) return {}
     return {
@@ -132,15 +147,15 @@ export const useEdit: UseEdit = ({
     },
     {
       svg,
+      keyboardMap,
       onUpdate,
       onChangeAttributes,
       onTranslate,
       onDeletePaths,
       onSelectPaths,
       onCancelSelect,
-      keyboardMap,
       onClear,
-      ...rest,
+      onResize,
     },
   ]
 }

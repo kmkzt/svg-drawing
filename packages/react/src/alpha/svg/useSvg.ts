@@ -1,4 +1,4 @@
-import { Svg, isAlmostSameNumber } from '@svg-drawing/core'
+import { Svg } from '@svg-drawing/core'
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import type { UseSvg } from '../types'
 import type { ResizeCallback } from '@svg-drawing/core'
@@ -40,8 +40,6 @@ export const useSvg: UseSvg = ({ sharedSvg }) => {
   /** @todo Fix useEdit resize. */
   const onResize = useCallback<ResizeCallback>(
     ({ width, height }) => {
-      if (isAlmostSameNumber(svg.width, width)) return
-
       svg.resize({ width, height })
       shouldUpdateRef.current = true
     },
