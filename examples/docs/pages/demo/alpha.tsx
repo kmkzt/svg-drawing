@@ -96,13 +96,13 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const factory = useDrawFactory(pathOptions, { curve, close })
 
   /** Setup draw */
-  const pencilHandler = useDrawEventHandler(
+  const pencilHandler = useDrawEventHandler<PencilHandler>(
     targetRef,
     PencilHandler,
     drawActive && mode === 'draw' && type === 'pencil'
   )
 
-  const penHandler = useDrawEventHandler(
+  const penHandler = useDrawEventHandler<PenHandler>(
     targetRef,
     PenHandler,
     drawActive && mode === 'draw' && type === 'pen'

@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
-import { UseDrawEventHandler } from '../types'
+import type { UseDrawEventHandler } from '../types'
+import type { DrawEventHandler } from '@svg-drawing/core'
 
 /**
  * @example
@@ -15,11 +16,12 @@ import { UseDrawEventHandler } from '../types'
  *   const [active, setActive] = useState(true)
  *   const drawHandler = useDrawEventHandler(ref, PencilHandler, active)
  */
-export const useDrawEventHandler: UseDrawEventHandler = (
-  ref,
-  Handler,
-  active = true
-) => {
+export const useDrawEventHandler = <
+  D extends DrawEventHandler = any,
+  E extends HTMLElement = HTMLElement
+>(
+  ...[ref, Handler, active = true]: Parameters<UseDrawEventHandler<D, E>>
+): D => {
   const handler = useMemo(() => new Handler(), [Handler])
 
   useEffect(() => {
@@ -38,5 +40,5 @@ export const useDrawEventHandler: UseDrawEventHandler = (
     return cleanup
   }, [active, handler, ref])
 
-  return handler
+  return handler as D
 }
