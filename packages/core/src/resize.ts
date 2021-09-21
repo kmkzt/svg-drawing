@@ -4,10 +4,13 @@ const SUPPORT_RESIZE_OBSERVER = typeof ResizeObserver !== 'undefined'
 export class ResizeHandler implements ResizeEventHandler {
   /** Remove EventList */
   private _clearEventList: Array<() => void>
-  private resize: ResizeCallback
+  private resizeCallback: ResizeCallback
+  private width = 0
+  private height = 0
+  private threshold = 1
   constructor(private el: HTMLElement | null = null) {
     this.el = el
-    this.resize = () => void 0
+    this.resizeCallback = () => void 0
     this._clearEventList = []
   }
 
@@ -31,11 +34,27 @@ export class ResizeHandler implements ResizeEventHandler {
     return this
   }
 
-  public setHandler(resize: ResizeCallback) {
-    this.resize = resize
+  public setHandler(resizeCallback: ResizeCallback) {
+    this.resizeCallback = resizeCallback
   }
 
-  private sizeCheck({ width, height }: { width: number; height: number }) {
+  private resize({ width, height }: { width: number; height: number }) {
+    this.width = width
+    this.height = height
+    this.resizeCallback({ width, height })
+  }
+
+  private handleResize() {
+    if (!this.el) return
+    const { width, height } = this.el.getBoundingClientRect()
+
+    if (
+      Math.abs(this.width - width) < this.threshold &&
+      Math.abs(this.height - height) < this.threshold
+    ) {
+      return
+    }
+
     this.resize({ width, height })
   }
 
@@ -43,15 +62,12 @@ export class ResizeHandler implements ResizeEventHandler {
     if (!this.el) return
 
     // Initialize size
-    const { width, height } = this.el.getBoundingClientRect()
-    this.resize({ width, height })
+    this.handleResize()
 
     // ResizeObserver
+    // Use `getBoundingClientRect` because it is not fit when the size is obtained from `contentRect` of resize observe entry.
     if (SUPPORT_RESIZE_OBSERVER) {
-      const resizeObserver = new ResizeObserver(([entry]) => {
-        const { width, height } = entry.contentRect
-        this.sizeCheck({ width, height })
-      })
+      const resizeObserver = new ResizeObserver(() => this.handleResize())
       resizeObserver.observe(this.el)
 
       this._clearEventList.push(() => resizeObserver.disconnect())
@@ -59,16 +75,9 @@ export class ResizeHandler implements ResizeEventHandler {
     }
 
     // Fallback resize listener
-    const handleResizeEvent = () => {
-      if (!this.el) return
-
-      const { width, height } = this.el.getBoundingClientRect()
-      this.sizeCheck({ width, height })
-    }
-
-    addEventListener('resize', handleResizeEvent)
+    addEventListener('resize', this.handleResize)
     this._clearEventList.push(() =>
-      removeEventListener('resize', handleResizeEvent)
+      removeEventListener('resize', this.handleResize)
     )
   }
 }

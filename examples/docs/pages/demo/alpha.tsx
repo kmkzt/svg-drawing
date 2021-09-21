@@ -498,6 +498,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             width: '100%',
             height: '100%',
             touchAction: 'none',
+            boxSizing: 'border-box',
           }}
         >
           {mode === 'draw' ? (
