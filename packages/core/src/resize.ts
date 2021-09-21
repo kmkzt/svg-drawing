@@ -35,17 +35,22 @@ export class ResizeHandler implements ResizeEventHandler {
     this.resize = resize
   }
 
+  private sizeCheck({ width, height }: { width: number; height: number }) {
+    this.resize({ width, height })
+  }
+
   private _setupListener(): void {
     if (!this.el) return
 
-    const { width, height, left, top } = this.el.getBoundingClientRect()
-    this.resize({ width, height, left, top })
+    // Initialize size
+    const { width, height } = this.el.getBoundingClientRect()
+    this.resize({ width, height })
 
     // ResizeObserver
     if (SUPPORT_RESIZE_OBSERVER) {
       const resizeObserver = new ResizeObserver(([entry]) => {
-        const { width, height, left, top } = entry.contentRect
-        this.resize({ width, height, left, top })
+        const { width, height } = entry.contentRect
+        this.sizeCheck({ width, height })
       })
       resizeObserver.observe(this.el)
 
@@ -57,8 +62,8 @@ export class ResizeHandler implements ResizeEventHandler {
     const handleResizeEvent = () => {
       if (!this.el) return
 
-      const { width, height, left, top } = this.el.getBoundingClientRect()
-      this.resize({ width, height, left, top })
+      const { width, height } = this.el.getBoundingClientRect()
+      this.sizeCheck({ width, height })
     }
 
     addEventListener('resize', handleResizeEvent)

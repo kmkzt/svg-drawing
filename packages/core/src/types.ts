@@ -75,12 +75,7 @@ export type DownloadOption = {
   filename?: string
 }
 
-export type ResizeCallback = (arg: {
-  width: number
-  height: number
-  left: number
-  top: number
-}) => void
+export type ResizeCallback = (arg: { width: number; height: number }) => void
 
 export interface ResizeEventHandler {
   active: boolean
