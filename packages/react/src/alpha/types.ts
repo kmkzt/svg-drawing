@@ -25,7 +25,7 @@ export type UseDraw = (opts: UseDrawOptions) => [SvgObject, DrawAction]
 export type UseDrawEventHandler<
   D extends DrawEventHandler = any,
   E extends HTMLElement = HTMLElement
-> = (ref: RefObject<E>, Handler: typeof DrawEventHandler, active?: boolean) => D
+> = (ref: RefObject<E>, Handler: new () => D, active?: boolean) => D
 
 /** UseResize */
 export type UseResize<T extends HTMLElement = HTMLElement> = (

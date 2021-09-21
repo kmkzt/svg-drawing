@@ -40,5 +40,5 @@ export const useDrawEventHandler = <
     return cleanup
   }, [active, handler, ref])
 
-  return handler as D
+  return handler
 }
