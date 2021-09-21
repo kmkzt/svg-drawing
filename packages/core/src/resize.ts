@@ -38,6 +38,9 @@ export class ResizeHandler implements ResizeEventHandler {
   private _setupListener(): void {
     if (!this.el) return
 
+    const { width, height, left, top } = this.el.getBoundingClientRect()
+    this.resize({ width, height, left, top })
+
     // ResizeObserver
     if (SUPPORT_RESIZE_OBSERVER) {
       const resizeObserver = new ResizeObserver(([entry]) => {
@@ -50,6 +53,7 @@ export class ResizeHandler implements ResizeEventHandler {
       return
     }
 
+    // Fallback resize listener
     const handleResizeEvent = () => {
       if (!this.el) return
 
