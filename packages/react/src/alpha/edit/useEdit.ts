@@ -10,7 +10,6 @@ import { usePressedKey } from '../keyboard/usePressedKey'
 import { useSvg } from '../svg/useSvg'
 import type {
   KeyboardMap,
-  UseEditOptions,
   UseEdit,
   EditSvgAction,
   EditSvgProps,
@@ -20,7 +19,7 @@ import type {
 export const useEdit: UseEdit = ({
   sharedSvg,
   multipleSelectBindKey = 'Shift',
-}: UseEditOptions = {}) => {
+} = {}) => {
   const [
     origin,
     { svg, onUpdate, onClear: onClearOrigin, onResize: onResizeOrigin },
@@ -97,7 +96,7 @@ export const useEdit: UseEdit = ({
     [core]
   )
 
-  const onCancelSelect = useCallback<EditSvgAction['onCancelSelect']>(() => {
+  const onCancelSelect = useCallback<EditSvgProps['onCancelSelect']>(() => {
     core.cancel()
   }, [core])
 
@@ -144,6 +143,7 @@ export const useEdit: UseEdit = ({
       boundingBox: editInfo?.boundingBox ?? null,
       onTranslateStart,
       onResizeBoundingBoxStart,
+      onCancelSelect,
     },
     {
       svg,
@@ -153,7 +153,6 @@ export const useEdit: UseEdit = ({
       onTranslate,
       onDeletePaths,
       onSelectPaths,
-      onCancelSelect,
       onClear,
       onResize,
     },

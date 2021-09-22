@@ -341,7 +341,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         )}
         {mode === 'edit' && (
           <Flex pt={3} justifyContent="start">
-            <Button mr={1} mb={1} onClick={edit.onCancelSelect}>
+            <Button mr={1} mb={1} onClick={editSvgProps.onCancelSelect}>
               Cancel
             </Button>
             <Button mr={1} mb={1} onClick={edit.onClear}>

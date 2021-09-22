@@ -4,7 +4,7 @@ import {
   EditSvgObject,
   SelectIndex,
 } from '@svg-drawing/core'
-import React, { useCallback, HTMLAttributes } from 'react'
+import React, { useCallback, HTMLAttributes, useRef } from 'react'
 import { EditSvgProps } from '../types'
 
 export const EditSvg = ({
@@ -12,12 +12,15 @@ export const EditSvg = ({
   paths,
   width,
   height,
-  editPaths: selectedPaths,
+  editPaths,
   boundingBox,
   onTranslateStart,
   onResizeBoundingBoxStart,
+  onCancelSelect,
   ...rest
 }: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
+  const svgRef = useRef<SVGSVGElement>(null)
+
   const handleMoveStartPoint = useCallback(
     (selectIndex: Required<SelectIndex>) =>
       (
@@ -40,9 +43,33 @@ export const EditSvg = ({
       },
     [onTranslateStart]
   )
+
+  const handleClickFrame = useCallback(
+    (ev: React.MouseEvent<SVGSVGElement>) => {
+      if (!svgRef.current) return
+      if (!svgRef.current.isSameNode(ev.target as any)) return
+
+      onCancelSelect()
+    },
+    [onCancelSelect]
+  )
+
   return (
-    <svg width={width} height={height} {...rest}>
-      {background && <rect width={width} height={height} fill={background} />}
+    <svg
+      ref={svgRef}
+      width={width}
+      height={height}
+      onMouseDown={handleClickFrame}
+      {...rest}
+    >
+      {background && (
+        <rect
+          style={{ pointerEvents: 'none' }}
+          width={width}
+          height={height}
+          fill={background}
+        />
+      )}
       {boundingBox && (
         <EditBoundingBox
           {...boundingBox}
@@ -58,8 +85,8 @@ export const EditSvg = ({
           onTouchStart={handleMoveStartPath(pathIndex)}
         />
       ))}
-      {selectedPaths &&
-        Object.entries(selectedPaths).map(([, { index, controlPoints, d }]) => (
+      {editPaths &&
+        Object.entries(editPaths).map(([, { index, controlPoints, d }]) => (
           <g key={index}>
             <path
               d={d}
