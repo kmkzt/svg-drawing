@@ -1,7 +1,7 @@
 import { SvgDrawing } from '@svg-drawing/core'
 import { useCallback, useMemo } from 'react'
 import { useSvg } from '../svg/useSvg'
-import type { UseDraw, DrawAction, KeyboardMap } from '../types'
+import type { UseDraw, DrawAction } from '../types'
 
 /**
  * @example
@@ -33,25 +33,16 @@ import type { UseDraw, DrawAction, KeyboardMap } from '../types'
  *     )
  *   }
  */
-export const useDraw: UseDraw = ({ factory, handler, sharedSvg }) => {
-  const [svgObj, { svg, onUpdate, ...rest }] = useSvg({
-    sharedSvg,
-  })
+export const useDraw: UseDraw = ({ factory, handler, ...useSvgOption }) => {
+  const [svgObj, { svg, onUpdate, ...rest }] = useSvg(useSvgOption)
   const drawing = useMemo(
     () => new SvgDrawing(svg, factory, handler, onUpdate),
     [factory, handler, onUpdate, svg]
   )
 
-  const onUndoDraw = useCallback<DrawAction['onUndoDraw']>(() => {
-    drawing.undo()
-  }, [drawing])
-
-  /** @fixme Doesn't work!! */
-  const keyboardMap = useMemo<KeyboardMap>(
-    () => ({
-      ['Escape']: drawing.drawEnd,
-    }),
-    [drawing.drawEnd]
+  const onUndoDraw = useCallback<DrawAction['onUndoDraw']>(
+    () => drawing.undo(),
+    [drawing]
   )
 
   return [
@@ -60,7 +51,6 @@ export const useDraw: UseDraw = ({ factory, handler, sharedSvg }) => {
       svg,
       onUndoDraw,
       onUpdate,
-      keyboardMap,
       ...rest,
     },
   ]

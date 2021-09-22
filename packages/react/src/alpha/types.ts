@@ -9,6 +9,8 @@ import type {
   SvgEditing,
   PointObject,
   SelectIndex,
+  SvgOption,
+  SvgDrawing,
 } from '@svg-drawing/core'
 import type { RefObject } from 'react'
 
@@ -37,6 +39,7 @@ export type UseResize<T extends HTMLElement = HTMLElement> = (
 /** UseSvg options */
 export type UseSvgOptions = {
   sharedSvg?: Svg
+  defaultSvgOption?: Partial<SvgOption>
 }
 
 /**
@@ -87,6 +90,5 @@ export type EditSvgProps = SvgObject & {
 
 /** UseDraw return type */
 export type DrawAction = SvgAction & {
-  onUndoDraw: () => void
-  keyboardMap: KeyboardMap
+  onUndoDraw: SvgDrawing<any, any, any>['undo']
 }

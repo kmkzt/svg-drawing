@@ -17,15 +17,13 @@ import type {
 
 /** @todo Fix onClear and onResize. */
 export const useEdit: UseEdit = ({
-  sharedSvg,
   multipleSelectBindKey = 'Shift',
+  ...useSvgOption
 } = {}) => {
   const [
     origin,
     { svg, onUpdate, onClear: onClearOrigin, onResize: onResizeOrigin },
-  ] = useSvg({
-    sharedSvg,
-  })
+  ] = useSvg(useSvgOption)
 
   const [{ editInfo, preview }, setEditObj] = useState<{
     editInfo: EditSvgObject | null

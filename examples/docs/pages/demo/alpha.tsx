@@ -28,7 +28,6 @@ import {
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../../components/Layout'
 
-const size = 30
 const colorList = [
   'none',
   '#F44336',
@@ -53,21 +52,22 @@ const colorList = [
   'black',
 ]
 
-const lattice = (s: number) => `
+const bgBoxSize = 30
+const bgStyle = `
   repeating-linear-gradient(
     90deg,
     #ddd ,
     #ddd 1px,
     transparent 1px,
-    transparent ${String(s)}px
+    transparent ${String(bgBoxSize)}px
   ),
   repeating-linear-gradient(
     0deg,
     #ddd ,
     #ddd 1px,
     transparent 1px,
-    transparent ${String(s)}px
-  )
+    transparent ${String(bgBoxSize)}px
+  ), ${String(bgBoxSize)}px ${String(bgBoxSize)}px
 `
 interface Props {
   isSp: boolean
@@ -121,6 +121,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [svgProps, draw] = useDraw({
     handler,
     factory,
+    defaultSvgOption: {
+      background: 'transparent',
+    },
   })
 
   const sharedSvg = draw.svg
@@ -150,11 +153,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   useResize(targetRef, handleResize)
 
   /** Setup keyboardBind */
-  const keyboardMap = useMemo(
-    () => (mode === 'edit' ? edit.keyboardMap : draw.keyboardMap),
-    [mode, edit.keyboardMap, draw.keyboardMap]
-  )
-  useKeyboardBind?.(keyboardMap)
+  useKeyboardBind?.(edit.keyboardMap)
 
   const handleChangeCurve = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (ev) => {
@@ -491,8 +490,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         <div
           ref={targetRef}
           style={{
-            backgroundImage: lattice(size),
-            backgroundSize: `${size}px ${size}px`,
+            background: bgStyle,
             border: '1px solid #333',
             margin: '0 auto 0 0',
             width: '100%',

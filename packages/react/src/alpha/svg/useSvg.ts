@@ -5,10 +5,10 @@ import type { ResizeCallback } from '@svg-drawing/core'
 
 const RENDER_INTERVAL = 0
 
-export const useSvg: UseSvg = ({ sharedSvg }) => {
+export const useSvg: UseSvg = ({ sharedSvg, defaultSvgOption = {} }) => {
   const svg = useMemo(
-    () => sharedSvg || new Svg({ width: 0, height: 0 }),
-    [sharedSvg]
+    () => sharedSvg || new Svg({ width: 0, height: 0, ...defaultSvgOption }),
+    [sharedSvg] // eslint-disable-line
   )
   const [svgObj, setSvgObj] = useState(svg.toJson())
 
@@ -37,7 +37,6 @@ export const useSvg: UseSvg = ({ sharedSvg }) => {
     onUpdate()
   }, [svg, onUpdate])
 
-  /** @todo Fix useEdit resize. */
   const onResize = useCallback<ResizeCallback>(
     ({ width, height }) => {
       svg.resize({ width, height })
