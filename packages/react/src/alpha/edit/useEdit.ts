@@ -56,19 +56,14 @@ export const useEdit: UseEdit = ({
 
   const multipleSelect = usePressedKey(multipleSelectBindKey)
 
-  const onSelectPaths = useCallback<EditSvgAction['onSelectPaths']>(
-    (sel) => {
-      core.select(sel, multipleSelect.current)
-    },
+  const onSelectPaths = useCallback<EditSvgProps['onSelectPaths']>(
+    (sel) => core.select(sel, multipleSelect.current),
     [core, multipleSelect]
   )
 
   const onTranslateStart = useCallback<EditSvgProps['onTranslateStart']>(
-    (po, sel) => {
-      if (sel) core.select(sel, multipleSelect.current)
-      core.startTranslate(po)
-    },
-    [core, multipleSelect]
+    (po) => core.startTranslate(po),
+    [core]
   )
 
   const onTranslate = useCallback(
@@ -139,6 +134,7 @@ export const useEdit: UseEdit = ({
       ...svgProps,
       editPaths: editInfo?.paths ?? null,
       boundingBox: editInfo?.boundingBox ?? null,
+      onSelectPaths,
       onTranslateStart,
       onResizeBoundingBoxStart,
       onCancelSelect,
@@ -150,7 +146,6 @@ export const useEdit: UseEdit = ({
       onChangeAttributes,
       onTranslate,
       onDeletePaths,
-      onSelectPaths,
       onClear,
       onResize,
     },

@@ -17,6 +17,7 @@ export const EditSvg = ({
   onTranslateStart,
   onResizeBoundingBoxStart,
   onCancelSelect,
+  onSelectPaths,
   ...rest
 }: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
   const svgRef = useRef<SVGSVGElement>(null)
@@ -27,9 +28,11 @@ export const EditSvg = ({
         ev:
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-      ) =>
-        onTranslateStart(getPointFromEvent(ev), selectIndex),
-    [onTranslateStart]
+      ) => {
+        onSelectPaths(selectIndex)
+        onTranslateStart(getPointFromEvent(ev))
+      },
+    [onSelectPaths, onTranslateStart]
   )
 
   const handleMoveStartPath = useCallback(
@@ -39,15 +42,16 @@ export const EditSvg = ({
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
       ) => {
-        onTranslateStart(getPointFromEvent(ev), { path })
+        onSelectPaths({ path })
+        onTranslateStart(getPointFromEvent(ev))
       },
-    [onTranslateStart]
+    [onSelectPaths, onTranslateStart]
   )
 
-  const handleClickFrame = useCallback(
-    (ev: React.MouseEvent<SVGSVGElement>) => {
+  const handleCancel = useCallback(
+    (ev: React.MouseEvent<SVGSVGElement> | React.TouchEvent<SVGSVGElement>) => {
       if (!svgRef.current) return
-      if (!svgRef.current.isSameNode(ev.target as any)) return
+      if (!svgRef.current.isSameNode(ev.target as Node)) return
 
       onCancelSelect()
     },
@@ -59,7 +63,8 @@ export const EditSvg = ({
       ref={svgRef}
       width={width}
       height={height}
-      onMouseDown={handleClickFrame}
+      onMouseDown={handleCancel}
+      onTouchStart={handleCancel}
       {...rest}
     >
       {background && (

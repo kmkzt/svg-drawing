@@ -73,7 +73,6 @@ export type UseParseFile = (opts: { svg: Svg }) => (file: File) => Promise<void>
 
 export type EditSvgAction = SvgAction & {
   keyboardMap: KeyboardMap
-  onSelectPaths: (sel: SelectIndex) => void
   onDeletePaths: () => void
   onTranslate: SvgEditing['translate']
   onChangeAttributes: SvgEditing['changeAttributes']
@@ -84,7 +83,8 @@ export type EditSvgProps = SvgObject & {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
   onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
-  onTranslateStart: (po: PointObject, sel?: SelectIndex) => void
+  onTranslateStart: SvgEditing['startTranslate']
+  onSelectPaths: (sel: SelectIndex) => void
   onCancelSelect: () => void
 }
 
