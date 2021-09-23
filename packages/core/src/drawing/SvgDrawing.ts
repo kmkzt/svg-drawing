@@ -54,9 +54,9 @@ import type {
  * @export
  */
 export class SvgDrawing<
-  S extends Svg,
-  P extends DrawFactory,
-  H extends DrawHandler
+  S extends Svg = Svg,
+  P extends DrawFactory = BasicDrawFactory,
+  H extends DrawHandler = PencilHandler
 > {
   private _drawPath: Path | null
   private _drawPoints: PointObject[]
@@ -156,7 +156,7 @@ export class SvgDrawing<
     handler.changeDelay(delay)
     handler.on()
 
-    return new SvgDrawing<Svg, BasicDrawFactory, PencilHandler>(
+    return new SvgDrawing(
       new Svg({ width, height, background }),
       new BasicDrawFactory(
         {

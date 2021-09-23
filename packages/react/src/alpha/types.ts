@@ -90,5 +90,5 @@ export type EditSvgProps = SvgObject & {
 
 /** UseDraw return type */
 export type DrawAction = SvgAction & {
-  onUndoDraw: SvgDrawing<any, any, any>['undo']
+  onUndoDraw: SvgDrawing['undo']
 }
