@@ -150,19 +150,16 @@ export class EditSvg {
           continue
         }
 
-        selectingPoint.map((pointKey: number) => {
-          const po = new Point(
-            command.value[pointKey],
-            command.value[pointKey + 1]
+        selectingPoint.map((pointKey: number) =>
+          pointExec(
+            new Point(command.value[pointKey], command.value[pointKey + 1]),
+            {
+              path: +pathKey,
+              command: +commandKey,
+              point: +pointKey,
+            }
           )
-          pointExec(po, {
-            path: +pathKey,
-            command: +commandKey,
-            point: +pointKey,
-          })
-          command.value[pointKey] = po.x
-          command.value[pointKey + 1] = po.y
-        })
+        )
       }
     }
   }
