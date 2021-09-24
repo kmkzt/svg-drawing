@@ -114,7 +114,7 @@ export class SvgDrawing<
     const po =
       this._drawPath?.commands[
         this._drawPath.commands.length - 1
-      ].point?.clone()
+      ]?.point?.clone()
     if (!po) return
     this._drawPath = this._createDrawPath()
     this._addDrawPoint(po.toJson())
