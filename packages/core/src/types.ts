@@ -25,24 +25,16 @@ export interface DrawPoint extends PointObject {
 }
 
 /** Command Object */
+export type RelativeCommandType = 'm' | 'l' | 'c' | 'h' | 'v' | 'a' | 'q' | 's'
+
+export type AbsoluteCommandType = Uppercase<RelativeCommandType>
+
+export type CloseCommandType = 'Z' | 'z'
+
 export type CommandType =
-  | 'M'
-  | 'm'
-  | 'L'
-  | 'l'
-  | 'C'
-  | 'c'
-  | 'Z'
-  | 'H'
-  | 'h'
-  | 'V'
-  | 'v'
-  | 'A'
-  | 'a'
-  | 'Q'
-  | 'q'
-  | 'S'
-  | 's'
+  | RelativeCommandType
+  | AbsoluteCommandType
+  | CloseCommandType
 export type CommandObject = {
   type: CommandType
   value: number[]
