@@ -151,17 +151,13 @@ export class EditSvg {
         }
 
         selectingPoint.map((pointKey: number) => {
-          const po = new Point(
-            command.value[pointKey],
-            command.value[pointKey + 1]
-          )
-          pointExec(po, {
+          const point = command.points[pointKey]
+          pointExec(point, {
             path: +pathKey,
             command: +commandKey,
             point: +pointKey,
           })
-          command.value[pointKey] = po.x
-          command.value[pointKey + 1] = po.y
+          command.points[pointKey] = point /** @todo Remove this line */
         })
       }
     }
@@ -350,7 +346,8 @@ export class EditPath {
   /** @todo Compatible relative point */
   public get points(): Point[] {
     return this.path.commands.reduce(
-      (p: Point[], com) => (com.point ? [...p, com.point] : p),
+      (p: Point[], com) =>
+        com.points.length ? [...p, com.points[com.points.length - 1]] : p,
       []
     )
   }
@@ -363,16 +360,12 @@ export class EditPath {
       const next = commands[c + 1]
 
       const outlinePoints = [
-        curr.cr?.toJson(),
-        curr.point?.toJson(),
-        next?.cl?.toJson(),
+        curr.points[1]?.toJson(),
+        curr.points[2]?.toJson(),
+        next.points[0]?.toJson(),
       ].filter(Boolean) as PointObject[]
 
-      const points = [
-        curr.cl?.toJson(),
-        curr.cr?.toJson(),
-        curr.point?.toJson(),
-      ].filter(Boolean) as PointObject[]
+      const points = curr.points.map((po) => po.toJson()) as PointObject[]
 
       const selectingPoints: SelectingPoints | null =
         this.selecting?.[c] ?? null
@@ -382,7 +375,7 @@ export class EditPath {
           index: {
             path: this.index,
             command: c,
-            point: p * 2,
+            point: p,
           },
           value,
           selected: selectingPoints?.includes(p * 2) ?? false,

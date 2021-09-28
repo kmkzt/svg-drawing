@@ -1,5 +1,5 @@
 import { Point } from './point'
-import { AbsoluteCommandType, CommandType, PointObject } from '../types'
+import { CommandType, PointObject } from '../types'
 import { roundUp } from '../utils'
 
 /**
@@ -12,6 +12,7 @@ export type Command<T extends CommandType = any> = T extends 'M' | 'L' | 'C'
       type: T
       values: number[]
       points: Point[]
+      point: Point | undefined
       toString: () => string
       clone: () => Command<T>
       scale: (r: number) => Command<T>
@@ -26,6 +27,7 @@ export type Command<T extends CommandType = any> = T extends 'M' | 'L' | 'C'
       type: T
       values: number[]
       points: Point[]
+      point: Point | undefined
       toString: () => string
       clone: () => Command<T>
       scale: (r: number) => Command<T>
@@ -114,91 +116,60 @@ export class OtherCommand {
   } as const
 
   // TODO: Convert data format to number array.
-  constructor(public type: CommandType, public value: number[] = []) {}
+  constructor(public type: CommandType, public values: number[] = []) {}
 
-  /** @deprecated */
-  public set cr(po: Point | undefined) {
-    return
+  public set points(p: Point[]) {
+    if (!p) return
+    this.values = p.reduce((acc: number[], p) => [...acc, p.x, p.y], [])
   }
 
-  /** @deprecated */
-  public get cr(): Point | undefined {
-    return undefined
-  }
-
-  /** @deprecated */
-  public set cl(po: Point | undefined) {
-    if (!po) return
-    if (!this.isCurve) {
-      return
-    }
-    this.value.splice(0, 1, po.x)
-    this.value.splice(1, 1, po.y)
-  }
-
-  /** @deprecated */
-  public get cl(): Point | undefined {
-    if (!this.isCurve) {
-      return undefined
-    }
-    const [x, y] = this.value.slice(0, 2)
-    return new Point(x, y)
-  }
-
-  public set point(po: Point | undefined) {
-    if (!po) return
-    this.value.splice(this.value.length - 2, 1, po.x)
-    this.value.splice(this.value.length - 1, 1, po.y)
+  public get points(): Point[] {
+    return this.values.reduce(
+      (acc: Point[], _, i: number) =>
+        i % 2 ? acc : [...acc, new Point(this.values[i - 1], this.values[i])],
+      []
+    )
   }
 
   public get point(): Point | undefined {
-    const xy = this.value.slice(this.value.length - 2)
-    return xy.length === 2 ? new Point(xy[0], xy[1]) : undefined
+    return this.points[this.points.length - 1]
   }
 
   public toString(): string {
     if (this.type === OtherCommand.Types.Z) return OtherCommand.Types.Z
-    return `${this.type} ${this.value.map((v) => roundUp(v)).join(' ')}`
+    return `${this.type} ${this.values.map((v) => roundUp(v)).join(' ')}`
   }
 
   public scale(r: number): Command {
     const upd = new OtherCommand(
       this.type,
-      this.value.map((p) => p * r)
+      this.values.map((p) => p * r)
     )
     return upd
   }
 
   public scaleX(r: number): Command {
-    const point = this.point?.scaleX(r)
-    const cl = this.cl?.scaleX(r)
-    const cr = this.cr?.scaleX(r)
     return new OtherCommand(
       this.type,
-      [cl, cr, point].reduce(
-        (res: number[], po: Point | undefined) =>
-          po ? [...res, po.x, po.y] : res,
-        []
-      )
+      this.points.reduce((res: number[], po: Point) => {
+        const upd = po.scale(r)
+        return [...res, upd.x, upd.y]
+      }, [])
     )
   }
 
   public scaleY(r: number): Command {
-    const point = this.point?.scaleY(r)
-    const cl = this.cl?.scaleY(r)
-    const cr = this.cr?.scaleY(r)
     return new OtherCommand(
       this.type,
-      [cl, cr, point].reduce(
-        (res: number[], po: Point | undefined) =>
-          po ? [...res, po.x, po.y] : res,
-        []
-      )
+      this.points.reduce((res: number[], po: Point) => {
+        const upd = po.scaleY(r)
+        return [...res, upd.x, upd.y]
+      }, [])
     )
   }
 
   public clone(): Command {
-    return new OtherCommand(this.type, this.value.slice())
+    return new OtherCommand(this.type, this.values.slice())
   }
 
   /** @deprecated */
@@ -213,7 +184,7 @@ export class OtherCommand {
       case OtherCommand.Types.q:
       case OtherCommand.Types.S:
       case OtherCommand.Types.s:
-        return this.value.length === 4
+        return this.values.length === 4
       default:
         return false
     }
@@ -232,10 +203,9 @@ export class OtherCommand {
 
   public translate(p: PointObject) {
     if (this.relative) return
-    const po = new Point(p.x, p.y)
-    this.point = this.point?.add(po)
-    this.cr = this.cr?.add(po)
-    this.cl = this.cl?.add(po)
+    this.points.map((po) => {
+      po.translate(p)
+    })
   }
 
   public static validTypes(t: any): t is CommandType {
@@ -255,6 +225,10 @@ export class RelativeMove implements Command<'m'> {
 
   public get values(): number[] {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
+  }
+
+  public get point(): Point {
+    return this.points[0]
   }
 
   public toString() {
@@ -299,6 +273,10 @@ export class Move implements Command<'M'> {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
+  public get point(): Point {
+    return this.points[0]
+  }
+
   public toString() {
     return `${this.type}${this.values.join(' ')}`
   }
@@ -339,6 +317,10 @@ export class RelativeLine implements Command<'l'> {
 
   public get values(): number[] {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
+  }
+
+  public get point(): Point {
+    return this.points[0]
   }
 
   public toString() {
@@ -384,6 +366,10 @@ export class Line implements Command<'L'> {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
+  public get point(): Point {
+    return this.points[0]
+  }
+
   public toString() {
     return `${this.type}${this.values.join(' ')}`
   }
@@ -424,6 +410,10 @@ export class RelativeCurve implements Command<'c'> {
 
   public get values(): number[] {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
+  }
+
+  public get point(): Point {
+    return this.points[2]
   }
 
   public toString() {
@@ -483,6 +473,10 @@ export class Curve implements Command<'C'> {
       (acc: number[], po) => [...acc, po.x, po.y],
       []
     ) as [number, number, number, number, number, number]
+  }
+
+  public get point(): Point {
+    return this.points[2]
   }
 
   public toString() {

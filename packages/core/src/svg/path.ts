@@ -1,4 +1,4 @@
-import { Command } from './command'
+import { Command, OtherCommand } from './command'
 import { CommandType, PathObject, PointObject } from '../types'
 import { kebab2camel } from '../utils'
 
@@ -55,7 +55,7 @@ export class Path {
       .trim()
   }
 
-  // TODO: Valid Command type
+  /** @todo Fix parse 'L' | 'l' | 'M' | 'm' | 'C' | 'c' */
   public parseCommandString(d: string): void {
     this.commands = []
     let type: CommandType | null = null
@@ -64,12 +64,13 @@ export class Path {
     for (let i = 0; i < c.length; i += 1) {
       const t = c[i]
       // COMMAND Parse
-      if (Command.validTypes(t)) {
+      if (OtherCommand.validTypes(t)) {
         if (!type) {
           type = t
           continue
         }
-        this.commands.push(new Command(type, value))
+
+        this.commands.push(new OtherCommand(type, value))
         type = t
         value = []
         continue
@@ -81,7 +82,7 @@ export class Path {
     }
 
     if (type !== null) {
-      this.commands.push(new Command(type, value))
+      this.commands.push(new OtherCommand(type, value))
     }
   }
 
