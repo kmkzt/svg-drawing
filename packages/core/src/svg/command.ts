@@ -236,7 +236,7 @@ export class RelativeMove implements Command<'m'> {
   }
 
   public translate(p: PointObject) {
-    this.basePoint.add(p)
+    this.basePoint = this.basePoint.add(p)
   }
 
   public scale(r: number) {
@@ -282,7 +282,7 @@ export class Move implements Command<'M'> {
   }
 
   public translate(p: PointObject) {
-    this.points.map((po) => po.add(p))
+    this.points = this.points.map((po) => po.add(p)) as [Point]
   }
 
   public scale(r: number) {
@@ -328,7 +328,7 @@ export class RelativeLine implements Command<'l'> {
   }
 
   public translate(p: PointObject) {
-    this.basePoint.add(p)
+    this.basePoint = this.basePoint.add(p)
   }
 
   public scale(r: number) {
@@ -375,7 +375,7 @@ export class Line implements Command<'L'> {
   }
 
   public translate(p: PointObject) {
-    this.points.map((po) => po.add(p))
+    this.points = this.points.map((po) => po.add(p)) as [Point]
   }
 
   public scale(r: number) {
@@ -421,7 +421,7 @@ export class RelativeCurve implements Command<'c'> {
   }
 
   public translate(p: PointObject) {
-    this.basePoint.add(p)
+    this.basePoint = this.basePoint.add(p)
   }
 
   public scale(r: number) {
@@ -484,7 +484,7 @@ export class Curve implements Command<'C'> {
   }
 
   public translate(p: PointObject) {
-    this.points.map((po) => po.add(p))
+    this.points = this.points.map((po) => po.add(p)) as [Point, Point, Point]
   }
 
   public scale(r: number) {
