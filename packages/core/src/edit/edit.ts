@@ -151,13 +151,11 @@ export class EditSvg {
         }
 
         selectingPoint.map((pointKey: number) => {
-          const point = command.points[pointKey]
-          pointExec(point, {
+          pointExec(command.points[pointKey], {
             path: +pathKey,
             command: +commandKey,
             point: +pointKey,
           })
-          command.points[pointKey] = point /** @todo Remove this line */
         })
       }
     }
@@ -346,8 +344,7 @@ export class EditPath {
   /** @todo Compatible relative point */
   public get points(): Point[] {
     return this.path.commands.reduce(
-      (p: Point[], com) =>
-        com.points.length ? [...p, com.points[com.points.length - 1]] : p,
+      (p: Point[], com) => (com.point ? [...p, com.point] : p),
       []
     )
   }
@@ -362,27 +359,26 @@ export class EditPath {
       const outlinePoints = [
         curr.points[1]?.toJson(),
         curr.points[2]?.toJson(),
-        next.points[0]?.toJson(),
-      ].filter(Boolean) as PointObject[]
-
-      const points = curr.points.map((po) => po.toJson()) as PointObject[]
+        next?.points[0]?.toJson(),
+      ].filter(Boolean)
 
       const selectingPoints: SelectingPoints | null =
         this.selecting?.[c] ?? null
 
       controlPoints.push({
-        points: points.map((value, p) => ({
+        points: curr.points.map((point, pIndex) => ({
           index: {
             path: this.index,
             command: c,
-            point: p,
+            point: pIndex,
           },
-          value,
-          selected: selectingPoints?.includes(p * 2) ?? false,
+          value: point.toJson(),
+          selected: selectingPoints?.includes(pIndex) ?? false,
         })),
         d: genOutline(outlinePoints),
       })
     }
+
     return controlPoints
   }
 
