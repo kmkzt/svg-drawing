@@ -1,4 +1,14 @@
-import { Svg, Path, Command, PathObject } from '@svg-drawing/core'
+import {
+  Svg,
+  Path,
+  Command,
+  PathObject,
+  Move,
+  Close,
+  Point,
+  Line,
+  QuadraticCurve,
+} from '@svg-drawing/core'
 import { Rgba } from './palette'
 import { convertRGBAImage } from './utils/convertRGBAImage'
 
@@ -34,7 +44,7 @@ interface PathInfo {
   isholepath: boolean
 }
 interface PointInfo {
-  points: Point[]
+  points: DirectionPoint[]
   boundingbox: [number, number, number, number]
   holechildren: number[]
   isholepath: boolean
@@ -53,7 +63,7 @@ const DIRECTION_TYPE = {
   CENTER: 8,
   EMPTY: -1,
 } as const
-interface Point {
+interface DirectionPoint {
   x: number
   y: number
   direction: DirectionValue
@@ -298,7 +308,7 @@ export class ImgTrace {
     return res
   }
 
-  private _pointpoly(p: Point, pa: Point[]): boolean {
+  private _pointpoly(p: DirectionPoint, pa: DirectionPoint[]): boolean {
     let isin = false
 
     for (let i = 0, j = pa.length - 1; i < pa.length; j = i++) {
@@ -585,15 +595,16 @@ export class ImgTrace {
     }
 
     const commands = [
-      new Command('M', [path.points[0].x, path.points[0].y]),
+      new Move([new Point(path.points[0].x, path.points[0].y)]),
       ...comms,
-      new Command('Z'),
+      new Close(),
     ]
     holes.reverse()
+    const value = holes[holes.length - 1].values.slice(0, 2)
     const holeCommands = [
-      new Command('M', holes[holes.length - 1].value.slice(0, 2)),
+      new Move([new Point(value[0], value[1])]),
       ...holes,
-      new Command('Z'),
+      new Close(),
     ]
     return {
       commands,
@@ -650,12 +661,11 @@ export class ImgTrace {
 
     if (curvepass) {
       return [
-        new Command(
-          'L',
+        new Line([
           isHolePath
-            ? [path.points[seqstart].x, path.points[seqstart].y]
-            : [path.points[seqend].x, path.points[seqend].y]
-        ),
+            ? new Point(path.points[seqstart].x, path.points[seqstart].y)
+            : new Point(path.points[seqend].x, path.points[seqend].y),
+        ]),
       ]
     }
 
@@ -702,11 +712,9 @@ export class ImgTrace {
     }
     if (curvepass) {
       return [
-        new Command('Q', [
-          cpx,
-          cpy,
-          path.points[seqend].x,
-          path.points[seqend].y,
+        new QuadraticCurve([
+          new Point(cpx, cpy),
+          new Point(path.points[seqend].x, path.points[seqend].y),
         ]),
       ]
     }
