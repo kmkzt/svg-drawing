@@ -1,5 +1,5 @@
 import { Point } from './point'
-import { CommandType, PointObject } from '../types'
+import { CloseCommandType, CommandType, PointObject } from '../types'
 import { roundUp } from '../utils'
 
 /**
@@ -36,23 +36,24 @@ export type Command<T extends CommandType = any> = T extends 'M' | 'L' | 'C'
       translate: (po: PointObject) => void
       toAbsolute: () => Command<Uppercase<T>>
     }
+  : T extends CloseCommandType
+  ? {
+      type: T
+      values: []
+      points: []
+      point: undefined
+      toString: () => string
+      clone: () => Command<CloseCommandType>
+      scale: (r: number) => Command<CloseCommandType>
+      scaleX: (r: number) => Command<CloseCommandType>
+      scaleY: (r: number) => Command<CloseCommandType>
+      translate: (po: PointObject) => void
+    }
   : OtherCommand
 
 /** @deprecated */
 export class OtherCommand {
   static Types = {
-    /**
-     * Close
-     *
-     * 'Z'
-     */
-    Z: 'Z',
-    /**
-     * Close
-     *
-     * 'z'
-     */
-    z: 'z',
     /**
      * Horizontal
      *
@@ -136,7 +137,6 @@ export class OtherCommand {
   }
 
   public toString(): string {
-    if (this.type === OtherCommand.Types.Z) return OtherCommand.Types.Z
     return `${this.type} ${this.values.map((v) => roundUp(v)).join(' ')}`
   }
 
@@ -514,5 +514,50 @@ export class Curve implements Command<'C'> {
       base.clone(),
       this.points.map((po) => po.sub(base)) as [Point, Point, Point]
     )
+  }
+}
+
+/**
+ * Close
+ *
+ * 'z'
+ */
+export class Close implements Command<'z'> {
+  public readonly type = 'z'
+
+  public get values(): [] {
+    return []
+  }
+
+  public get points(): [] {
+    return []
+  }
+
+  public get point(): undefined {
+    return undefined
+  }
+
+  public toString() {
+    return `${this.type}`
+  }
+
+  public translate(_p: PointObject) {
+    return
+  }
+
+  public scale(_r: number) {
+    return new Close()
+  }
+
+  public scaleX(r: number) {
+    return new Close()
+  }
+
+  public scaleY(r: number) {
+    return new Close()
+  }
+
+  public clone() {
+    return new Close()
   }
 }

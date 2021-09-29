@@ -1,4 +1,4 @@
-import { Point, Command, OtherCommand, Move, Line, Curve, Vector } from '../svg'
+import { Point, Command, Move, Line, Curve, Vector, Close } from '../svg'
 import type { PointObject, ConvertOption, CreateCommand } from '../types'
 
 export interface GenerateCommandsConverter {
@@ -75,5 +75,5 @@ export class BezierCurve implements GenerateCommandsConverter {
 
 export const closeCommands = (commands: Command[]): Command[] => [
   ...commands,
-  new OtherCommand('Z'),
+  new Close(),
 ]
