@@ -1,4 +1,4 @@
-import type { Command, Path } from './svg'
+import type { Path, Point } from './svg'
 
 /** Svg Path JSON TODO: improve key types */
 export type PathObject = {
@@ -25,9 +25,11 @@ export interface DrawPoint extends PointObject {
 }
 
 /** Command Object */
-export type RelativeCommandType = 'm' | 'l' | 'c' | 'h' | 'v' | 'a' | 'q' | 's'
+export type RelativeCommandType = 'm' | 'l' | 'c' | 'q' | 's'
 
 export type AbsoluteCommandType = Uppercase<RelativeCommandType>
+
+export type OtherCommandType = 'h' | 'v' | 'a' | 'H' | 'V' | 'A'
 
 export type CloseCommandType = 'Z' | 'z'
 
@@ -35,6 +37,34 @@ export type CommandType =
   | RelativeCommandType
   | AbsoluteCommandType
   | CloseCommandType
+  | OtherCommandType
+
+export type Command<T extends CommandType = any> = {
+  type: T
+  values: number[]
+  points: Point[]
+  point: Point | undefined
+  toString: () => string
+  clone: () => Command<T>
+  scale: (r: number) => Command<T>
+  scaleX: (r: number) => Command<T>
+  scaleY: (r: number) => Command<T>
+  translate: (po: PointObject) => void
+}
+
+export type CommandClass<T extends CommandType> = T extends AbsoluteCommandType
+  ? Command<T> & {
+      toRelative: (base: Point) => CommandClass<Lowercase<T>>
+    }
+  : T extends RelativeCommandType
+  ? Command<T> & {
+      basePoint: Point
+      toAbsolute: () => CommandClass<Uppercase<T>>
+    }
+  : T extends OtherCommandType | CloseCommandType
+  ? Command<T>
+  : any
+
 export type CommandObject = {
   type: CommandType
   value: number[]

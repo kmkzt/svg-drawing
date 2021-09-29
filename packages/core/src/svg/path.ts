@@ -1,6 +1,6 @@
-import { Command, OtherCommand } from './command'
-import { CommandType, PathObject, PointObject } from '../types'
+import { OtherCommand } from './command'
 import { kebab2camel } from '../utils'
+import type { Command, CommandType, PathObject, PointObject } from '../types'
 
 /**
  * @todo: refactor command. The following commands are not supported.

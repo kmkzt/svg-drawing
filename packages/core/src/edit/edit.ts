@@ -1,4 +1,4 @@
-import { Command, Path, Point, Svg } from '../svg'
+import { Path, Point, Svg } from '../svg'
 import type {
   PointObject,
   ControlPoint,
@@ -10,6 +10,7 @@ import type {
   ResizeBoundingBoxBase,
   SelectingCommands,
   SelectingPoints,
+  Command,
 } from '../types'
 
 const genOutline = (points: PointObject[]) =>
