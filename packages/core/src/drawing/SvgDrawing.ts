@@ -52,6 +52,7 @@ import type {
  *
  * @class SvgDrawing
  * @export
+ * @todo Separate SvgDrawing and Drawing
  */
 export class SvgDrawing<
   S extends Svg = Svg,
@@ -138,6 +139,10 @@ export class SvgDrawing<
     download(this.svg, opt)
   }
 
+  /**
+   * @deprecated
+   * @todo Separate methods
+   */
   public static init(
     el: HTMLElement,
     {

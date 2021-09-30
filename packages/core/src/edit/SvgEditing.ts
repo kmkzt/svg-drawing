@@ -8,6 +8,7 @@ import type {
   SelectIndex,
 } from '../types'
 
+/** @todo Separate SvgEditing and Editing */
 export class SvgEditing {
   constructor(
     public editSvg: EditSvg,
@@ -152,6 +153,7 @@ export class SvgEditing {
     this.removeResizeBoundingBoxListener()
   }
 
+  /** @deprecated */
   public static init(svg: Svg) {
     return new SvgEditing(new EditSvg(svg))
   }
