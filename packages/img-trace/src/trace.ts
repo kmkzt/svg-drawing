@@ -595,14 +595,14 @@ export class ImgTrace {
     }
 
     const commands = [
-      new Move([new Point(path.points[0].x, path.points[0].y)]),
+      new Move(new Point(path.points[0].x, path.points[0].y)),
       ...comms,
       new Close(),
     ]
     holes.reverse()
     const value = holes[holes.length - 1].values.slice(0, 2)
     const holeCommands = [
-      new Move([new Point(value[0], value[1])]),
+      new Move(new Point(value[0], value[1])),
       ...holes,
       new Close(),
     ]
@@ -661,11 +661,11 @@ export class ImgTrace {
 
     if (curvepass) {
       return [
-        new Line([
+        new Line(
           isHolePath
             ? new Point(path.points[seqstart].x, path.points[seqstart].y)
-            : new Point(path.points[seqend].x, path.points[seqend].y),
-        ]),
+            : new Point(path.points[seqend].x, path.points[seqend].y)
+        ),
       ]
     }
 

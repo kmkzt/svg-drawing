@@ -47,18 +47,6 @@ export class OtherCommand<T extends OtherCommandType> implements Command<T> {
      * `a 6 4 10 0 1 14 10`
      */
     a: 'a',
-    /**
-     * Quadratic curve
-     *
-     * Q 10 60 10 30
-     */
-    Q: 'Q',
-    /**
-     * Quadratic curve relative
-     *
-     * `q 10 60 10 30`
-     */
-    q: 'q',
   } as const
 
   // TODO: Convert data format to number array.
@@ -117,15 +105,8 @@ export class OtherCommand<T extends OtherCommandType> implements Command<T> {
     return new OtherCommand(this.type, this.values.slice())
   }
 
-  /** @deprecated */
-  public get relative(): boolean {
-    return (
-      [OtherCommand.Types.a, OtherCommand.Types.q] as CommandType[]
-    ).includes(this.type)
-  }
-
   public translate(p: PointObject) {
-    if (this.relative) return
+    if (OtherCommand.Types.a === this.type) return
     this.points.map((po) => {
       po.translate(p)
     })
@@ -144,7 +125,10 @@ export class OtherCommand<T extends OtherCommandType> implements Command<T> {
 export class RelativeMove implements CommandClass<'m'> {
   public readonly type = 'm'
   public readonly relative = false
-  constructor(public basePoint: Point, public points: [Point]) {}
+  public points: [Point]
+  constructor(public basePoint: Point, point: Point) {
+    this.points = [point]
+  }
 
   public get values(): number[] {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
@@ -163,23 +147,23 @@ export class RelativeMove implements CommandClass<'m'> {
   }
 
   public scale(r: number) {
-    return new RelativeMove(this.basePoint.clone(), [this.points[0].scale(r)])
+    return new RelativeMove(this.basePoint.clone(), this.points[0].scale(r))
   }
 
   public scaleX(r: number) {
-    return new RelativeMove(this.basePoint.clone(), [this.points[0].scaleX(r)])
+    return new RelativeMove(this.basePoint.clone(), this.points[0].scaleX(r))
   }
 
   public scaleY(r: number) {
-    return new RelativeMove(this.basePoint.clone(), [this.points[0].scaleY(r)])
+    return new RelativeMove(this.basePoint.clone(), this.points[0].scaleY(r))
   }
 
   public clone() {
-    return new RelativeMove(this.basePoint.clone(), [this.points[0].clone()])
+    return new RelativeMove(this.basePoint.clone(), this.points[0].clone())
   }
 
   public toAbsolute(): Move {
-    return new Move([this.basePoint.add(this.points[0])])
+    return new Move(this.basePoint.add(this.points[0]))
   }
 }
 
@@ -190,7 +174,10 @@ export class RelativeMove implements CommandClass<'m'> {
  */
 export class Move implements CommandClass<'M'> {
   public readonly type = 'M'
-  constructor(public points: [Point]) {}
+  public points: [Point]
+  constructor(point: Point) {
+    this.points = [point]
+  }
 
   public get values(): number[] {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
@@ -209,23 +196,23 @@ export class Move implements CommandClass<'M'> {
   }
 
   public scale(r: number) {
-    return new Move([this.points[0].scale(r)])
+    return new Move(this.points[0].scale(r))
   }
 
   public scaleX(r: number) {
-    return new Move([this.points[0].scaleX(r)])
+    return new Move(this.points[0].scaleX(r))
   }
 
   public scaleY(r: number) {
-    return new Move([this.points[0].scaleY(r)])
+    return new Move(this.points[0].scaleY(r))
   }
 
   public clone() {
-    return new Move([this.points[0].clone()])
+    return new Move(this.points[0].clone())
   }
 
   public toRelative(base: Point): RelativeMove {
-    return new RelativeMove(base.clone(), [this.points[0].sub(base)])
+    return new RelativeMove(base.clone(), this.points[0].sub(base))
   }
 }
 
@@ -236,7 +223,10 @@ export class Move implements CommandClass<'M'> {
  */
 export class RelativeLine implements CommandClass<'l'> {
   public readonly type = 'l'
-  constructor(public basePoint: Point, public points: [Point]) {}
+  public points: [Point]
+  constructor(public basePoint: Point, point: Point) {
+    this.points = [point]
+  }
 
   public get values(): number[] {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
@@ -255,23 +245,23 @@ export class RelativeLine implements CommandClass<'l'> {
   }
 
   public scale(r: number) {
-    return new RelativeLine(this.basePoint.clone(), [this.points[0].scale(r)])
+    return new RelativeLine(this.basePoint.clone(), this.points[0].scale(r))
   }
 
   public scaleX(r: number) {
-    return new RelativeLine(this.basePoint.clone(), [this.points[0].scaleX(r)])
+    return new RelativeLine(this.basePoint.clone(), this.points[0].scaleX(r))
   }
 
   public scaleY(r: number) {
-    return new RelativeLine(this.basePoint.clone(), [this.points[0].scaleY(r)])
+    return new RelativeLine(this.basePoint.clone(), this.points[0].scaleY(r))
   }
 
   public clone() {
-    return new RelativeLine(this.basePoint.clone(), [this.points[0].clone()])
+    return new RelativeLine(this.basePoint.clone(), this.points[0].clone())
   }
 
   public toAbsolute(): CommandClass<'L'> {
-    return new Line([this.basePoint.add(this.points[0])])
+    return new Line(this.basePoint.add(this.points[0]))
   }
 }
 
@@ -280,10 +270,12 @@ export class RelativeLine implements CommandClass<'l'> {
  *
  * `L 0 0`
  */
-
 export class Line implements CommandClass<'L'> {
   public readonly type = 'L'
-  constructor(public points: [Point]) {}
+  public points: [Point]
+  constructor(point: Point) {
+    this.points = [point]
+  }
 
   public get values(): number[] {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
@@ -302,23 +294,23 @@ export class Line implements CommandClass<'L'> {
   }
 
   public scale(r: number) {
-    return new Line([this.points[0].scale(r)])
+    return new Line(this.points[0].scale(r))
   }
 
   public scaleX(r: number) {
-    return new Line([this.points[0].scaleX(r)])
+    return new Line(this.points[0].scaleX(r))
   }
 
   public scaleY(r: number) {
-    return new Line([this.points[0].scaleY(r)])
+    return new Line(this.points[0].scaleY(r))
   }
 
   public clone() {
-    return new Line([this.points[0].clone()])
+    return new Line(this.points[0].clone())
   }
 
   public toRelative(base: Point) {
-    return new RelativeLine(base.clone(), [this.points[0].sub(base)])
+    return new RelativeLine(base.clone(), this.points[0].sub(base))
   }
 }
 

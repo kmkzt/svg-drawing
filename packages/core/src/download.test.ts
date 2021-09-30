@@ -1,25 +1,34 @@
 import { download, toBase64 } from './download'
-import { Svg, Path, Command } from './svg'
+import { Svg, Path, Move, Point, Curve, Line, Close } from './svg'
 
 describe('download.ts', () => {
   const svg = new Svg({ width: 4, height: 4 })
     .addPath(
       new Path()
-        .addCommand(new Command('M', [0, 0]))
-        .addCommand(new Command('C', [0.2, 0.2, 0.6, 0.8, 1, 1]))
-        .addCommand(new Command('C', [1.4, 1.2, 1.6, 1.2, 2, 1]))
-        .addCommand(new Command('C', [2.4, 0.8, 2.8, 0.2, 3, 0]))
+        .addCommand(new Move(new Point(0, 0)))
+        .addCommand(
+          new Curve([new Point(0.2, 0.2), new Point(0.6, 0.8), new Point(1, 1)])
+        )
+        .addCommand(
+          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
+        )
+        .addCommand(
+          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
+        )
+        .addCommand(
+          new Curve([new Point(2.4, 0.8), new Point(2.8, 0.2), new Point(3, 0)])
+        )
     )
     .addPath(
       new Path({
         strokeLinecap: 'square',
         strokeLinejoin: 'mitter',
       })
-        .addCommand(new Command('M', [4, 4]))
-        .addCommand(new Command('L', [9, 4]))
-        .addCommand(new Command('L', [9, 8]))
-        .addCommand(new Command('L', [3, 0]))
-        .addCommand(new Command('Z'))
+        .addCommand(new Move(new Point(4, 4)))
+        .addCommand(new Line(new Point(9, 4)))
+        .addCommand(new Line(new Point(9, 8)))
+        .addCommand(new Line(new Point(3, 0)))
+        .addCommand(new Close())
     )
 
   it('toBase64', () => {

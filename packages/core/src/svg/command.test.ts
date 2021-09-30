@@ -1,92 +1,286 @@
-import { Command } from './command'
+import { Curve, Line, Move } from './command'
 import { Point } from './point'
 
 describe('svg/command.ts', () => {
-  describe('Command', () => {
-    describe('new Command()', () => {
-      it('Absolute', () => {
-        expect(new Command('M', [0, 0]).toString()).toBe('M 0 0')
-        expect(new Command('L', [1, 1]).toString()).toBe('L 1 1')
-        expect(
-          new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1]).toString()
-        ).toBe('C 0.25 0.25 0.75 0.25 1 1')
+  describe('Absolute command', () => {
+    describe('Move', () => {
+      it('new Move(', () => {
+        expect(new Move(new Point(0, 0)).toString()).toBe('M0 0')
       })
-      it.todo('Relative')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it('clone', () => {
+        const cmd = new Move(new Point(1, 1))
+        const clone = cmd.clone()
+        clone.points[0] = new Point(2, 2)
+        expect(cmd.toString()).toBe('M1 1')
+        expect(clone.toString()).toBe('M2 2')
+      })
+      it('scale', () => {
+        expect(new Move(new Point(1, 1)).scale(2).toString()).toBe('M2 2')
+      })
+      it('scaleX', () => {
+        expect(new Move(new Point(1, 1)).scaleX(2).toString()).toBe('M2 1')
+      })
+      it('scaleY', () => {
+        expect(new Move(new Point(1, 1)).scaleY(2).toString()).toBe('M1 2')
+      })
+      it.todo('translate')
+      it.todo('toRelative')
     })
 
-    describe('clone', () => {
-      let cmd: Command
-      let clone: Command
-      beforeEach(() => {
-        cmd = new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1])
-        clone = cmd.clone()
+    describe('Line', () => {
+      it('new Line(', () => {
+        expect(new Line(new Point(0, 0)).toString()).toBe('L0 0')
       })
-      it('point is not overwritten', () => {
-        clone.point = new Point(1.5, 1)
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it('clone', () => {
+        const cmd = new Line(new Point(1, 1))
+        const clone = cmd.clone()
+        clone.points[0] = new Point(2, 2)
+        expect(cmd.toString()).toBe('L1 1')
+        expect(clone.toString()).toBe('L2 2')
+      })
+      it('scale', () => {
+        expect(new Line(new Point(1, 1)).scale(2).toString()).toBe('L2 2')
+      })
+      it('scaleX', () => {
+        expect(new Line(new Point(1, 1)).scaleX(2).toString()).toBe('L2 1')
+      })
+      it('scaleY', () => {
+        expect(new Line(new Point(1, 1)).scaleY(2).toString()).toBe('L1 2')
+      })
+      it.todo('translate')
+      it.todo('toRelative')
+    })
+
+    describe('Curve', () => {
+      it('new Curve()', () => {
+        expect(
+          new Curve([
+            new Point(0.25, 0.25),
+            new Point(0.75, 0.25),
+            new Point(1, 1),
+          ]).toString()
+        ).toBe('C0.25 0.25 0.75 0.25 1 1')
+      })
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it('clone', () => {
+        const cmd = new Curve([
+          new Point(0.25, 0.25),
+          new Point(0.75, 0.25),
+          new Point(1, 1),
+        ])
+        const clone = cmd.clone()
+        clone.points[2] = new Point(1.5, 1)
         expect(cmd.point.x).toBe(1)
         expect(clone.point.x).toBe(1.5)
       })
-      it('cl is not overwritten', () => {
-        clone.cl = new Point(0.1, 0.1)
-        expect(cmd.cl.x).toBe(0.25)
-        expect(clone.cl.x).toBe(0.1)
-      })
-      it('cr is not overwritten', () => {
-        clone.cr = new Point(1.2, 0.1)
-        expect(cmd.cr.x).toBe(0.75)
-        expect(clone.cr.x).toBe(1.2)
-      })
-    })
-
-    describe('scale', () => {
-      it('Absolute', () => {
-        expect(new Command('M', [1, 1]).scale(2).toString()).toBe('M 2 2')
-        expect(new Command('L', [1, 1]).scale(2).toString()).toBe('L 2 2')
+      it('scale', () => {
         expect(
-          new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1]).scale(2).toString()
-        ).toBe('C 0.5 0.5 1.5 0.5 2 2')
+          new Curve([
+            new Point(0.25, 0.25),
+            new Point(0.75, 0.25),
+            new Point(1, 1),
+          ])
+            .scale(2)
+            .toString()
+        ).toBe('C0.5 0.5 1.5 0.5 2 2')
       })
-      it.todo('Relative')
-    })
-
-    describe('scaleX', () => {
-      it('Absolute', () => {
-        expect(new Command('M', [1, 1]).scaleX(2).toString()).toBe('M 2 1')
-        expect(new Command('L', [1, 1]).scaleX(2).toString()).toBe('L 2 1')
+      it('scaleX', () => {
         expect(
-          new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1]).scaleX(2).toString()
-        ).toBe('C 0.5 0.25 1.5 0.25 2 1')
+          new Curve([
+            new Point(0.25, 0.25),
+            new Point(0.75, 0.25),
+            new Point(1, 1),
+          ])
+            .scaleX(2)
+            .toString()
+        ).toBe('C0.5 0.25 1.5 0.25 2 1')
       })
-
-      it.todo('Relative')
-    })
-
-    describe('scaleY', () => {
-      it('Absolute', () => {
-        expect(new Command('M', [1, 1]).scaleY(2).toString()).toBe('M 1 2')
-        expect(new Command('L', [1, 1]).scaleY(2).toString()).toBe('L 1 2')
+      it('scaleY', () => {
         expect(
-          new Command('C', [0.25, 0.25, 0.75, 0.25, 1, 1]).scaleY(2).toString()
-        ).toBe('C 0.25 0.5 0.75 0.5 1 2')
+          new Curve([
+            new Point(0.25, 0.25),
+            new Point(0.75, 0.25),
+            new Point(1, 1),
+          ])
+            .scaleY(2)
+            .toString()
+        ).toBe('C0.25 0.5 0.75 0.5 1 2')
       })
+      it.todo('translate')
+      it.todo('toRelative')
+    })
 
-      it.todo('Relative')
+    describe('ArcCurve', () => {
+      it.todo('new ArcCurve')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toRelative')
     })
-    it('validTypes', () => {
-      expect(Command.validTypes('M')).toBe(true)
-      expect(Command.validTypes('m')).toBe(true)
-      expect(Command.validTypes('L')).toBe(true)
-      expect(Command.validTypes('l')).toBe(true)
-      expect(Command.validTypes('C')).toBe(true)
-      expect(Command.validTypes('c')).toBe(true)
-      expect(Command.validTypes('Z')).toBe(true)
-      expect(Command.validTypes('z')).toBe(true)
-      expect(Command.validTypes('A')).toBe(true)
-      expect(Command.validTypes('a')).toBe(true)
-      expect(Command.validTypes('Q')).toBe(true)
-      expect(Command.validTypes('q')).toBe(true)
-      expect(Command.validTypes('S')).toBe(true)
-      expect(Command.validTypes('s')).toBe(true)
+
+    describe('Horizonal', () => {
+      it.todo('new Horizonal')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toRelative')
     })
+
+    describe('Vertical', () => {
+      it.todo('new Vertical')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toRelative')
+    })
+  })
+
+  describe('Relative command', () => {
+    describe('RelativeMove', () => {
+      it.todo('new RelativeMove')
+      it.todo('basePoint')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toAbsolute')
+    })
+
+    describe('RelativeLine', () => {
+      it.todo('new RelativeLine')
+      it.todo('basePoint')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toAbsolute')
+    })
+
+    describe('RelativeCurve', () => {
+      it.todo('new RelativeCurve')
+      it.todo('basePoint')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toAbsolute')
+    })
+
+    describe('RelativeShortcutCurve', () => {
+      it.todo('new RelativeShortcutCurve')
+      it.todo('basePoint')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toAbsolute')
+    })
+
+    describe('RelativeQuadraticCurve', () => {
+      it.todo('new RelativeQuadraticCurve')
+      it.todo('basePoint')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toAbsolute')
+    })
+
+    describe('RelativeArcCurve', () => {
+      it.todo('new RelativeArcCurve')
+      it.todo('basePoint')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toAbsolute')
+    })
+
+    describe('RelativeHorizonal', () => {
+      it.todo('new RelativeHorizonal')
+      it.todo('basePoint')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toAbsolute')
+    })
+
+    describe('RelativeVertical', () => {
+      it.todo('new RelativeVertical')
+      it.todo('basePoint')
+      it.todo('point')
+      it.todo('points')
+      it.todo('values')
+      it.todo('clone')
+      it.todo('scale')
+      it.todo('scaleX')
+      it.todo('scaleY')
+      it.todo('translate')
+      it.todo('toAbsolute')
+    })
+  })
+
+  describe('Close', () => {
+    it.todo('new Close')
+    it.todo('point')
+    it.todo('points')
+    it.todo('values')
+    it.todo('clone')
+    it.todo('scale')
+    it.todo('scaleX')
+    it.todo('scaleY')
+    it.todo('translate')
   })
 })

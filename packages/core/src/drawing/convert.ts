@@ -12,7 +12,7 @@ export interface GenerateCommandsConverter {
 
 export const createLineCommands: CreateCommand = (points) =>
   points.map((p, i) =>
-    i === 0 ? new Move([new Point(p.x, p.y)]) : new Line([new Point(p.x, p.y)])
+    i === 0 ? new Move(new Point(p.x, p.y)) : new Line(new Point(p.x, p.y))
   )
 
 const genVector = ({
@@ -62,7 +62,7 @@ export class BezierCurve implements GenerateCommandsConverter {
     }
     for (let i = 0; i < p.length; i += 1) {
       if (i === 0) {
-        commands.push(new Move([new Point(p[i].x, p[i].y)]))
+        commands.push(new Move(new Point(p[i].x, p[i].y)))
         continue
       }
       commands.push(

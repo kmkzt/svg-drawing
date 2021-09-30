@@ -1,4 +1,4 @@
-import { Command } from './command'
+import { Line, Move } from '.'
 import { Path } from './path'
 import { Point } from './point'
 import { pathObjectToElement } from '../renderer'
@@ -8,8 +8,8 @@ describe('svg/path.ts', () => {
     let path: Path
     beforeEach(() => {
       path = new Path({ strokeWidth: '1' })
-        .addCommand(new Command('M', [1, 1]))
-        .addCommand(new Command('L', [2, 2]))
+        .addCommand(new Move(new Point(1, 1)))
+        .addCommand(new Line(new Point(2, 2)))
     })
     it('addCommand', () => {
       expect(path.commands.length).toBe(2)
@@ -49,9 +49,9 @@ describe('svg/path.ts', () => {
     })
     it('clone', () => {
       const origin = new Path({ strokeWidth: '1' }).addCommand(
-        new Command('M', [1, 1])
+        new Move(new Point(1, 1))
       )
-      const clone = origin.clone().addCommand(new Command('L', [2, 2]))
+      const clone = origin.clone().addCommand(new Line(new Point(2, 2)))
       clone.commands[0].point = new Point(3, clone.commands[0].point.y)
       expect(origin.commands.length).toBe(1)
       expect(clone.commands.length).toBe(2)
@@ -60,10 +60,10 @@ describe('svg/path.ts', () => {
     })
     describe('toJson and toElement', () => {
       const path = new Path()
-        .addCommand(new Command('M', [0, 0]))
-        .addCommand(new Command('L', [1, 1]))
-        .addCommand(new Command('L', [2, 1]))
-        .addCommand(new Command('L', [3, 0]))
+        .addCommand(new Move(new Point(0, 0)))
+        .addCommand(new Line(new Point(1, 1)))
+        .addCommand(new Line(new Point(2, 1)))
+        .addCommand(new Line(new Point(3, 0)))
       it('toJson', () => {
         expect(path.toJson()).toMatchSnapshot()
       })
@@ -73,9 +73,9 @@ describe('svg/path.ts', () => {
     })
     describe('commands parameter and getCommandString', () => {
       const path = new Path()
-        .addCommand(new Command('M', [0, 0]))
-        .addCommand(new Command('L', [1, 1]))
-        .addCommand(new Command('L', [-1, -1]))
+        .addCommand(new Move(new Point(0, 0)))
+        .addCommand(new Line(new Point(1, 1)))
+        .addCommand(new Line(new Point(-1, -1)))
       it('Normal', () => {
         expect(path.commands).toMatchSnapshot()
         expect(path.getCommandString()).toMatchSnapshot()
