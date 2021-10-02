@@ -1,11 +1,5 @@
 import { Point } from './point'
-import {
-  Command,
-  CommandClass,
-  CommandType,
-  OtherCommandType,
-  PointObject,
-} from '../types'
+import { Command, CommandClass, OtherCommandType, PointObject } from '../types'
 import { roundUp } from '../utils'
 
 /** @deprecated */

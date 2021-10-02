@@ -1,4 +1,18 @@
-import { OtherCommand } from './command'
+import {
+  Close,
+  Curve,
+  Line,
+  Move,
+  OtherCommand,
+  QuadraticCurve,
+  ShortcutCurve,
+  RelativeMove,
+  RelativeLine,
+  RelativeQuadraticCurve,
+  RelativeShortcutCurve,
+  RelativeCurve,
+} from './command'
+import { Point } from './point'
 import { kebab2camel } from '../utils'
 import type { Command, CommandType, PathObject, PointObject } from '../types'
 
@@ -55,35 +69,120 @@ export class Path {
       .trim()
   }
 
-  /** @todo Fix parse 'L' | 'l' | 'M' | 'm' | 'C' | 'c' */
+  /**
+   * @todo Fix parse 'L' | 'l' | 'M' | 'm' | 'C' | 'c'
+   *
+   * @todo Remove basePoint ?
+   */
   public parseCommandString(d: string): void {
     this.commands = []
-    let type: CommandType | null = null
-    let value: number[] = []
-    const c = d.split(' ')
-    for (let i = 0; i < c.length; i += 1) {
-      const t = c[i]
-      // COMMAND Parse
-      if (OtherCommand.validTypes(t)) {
-        if (!type) {
-          type = t
-          continue
+    const commandsTypes = 'mlsqlhvcsqaz'
+    ;[
+      ...(d.matchAll(
+        new RegExp(`([${commandsTypes}])([^${commandsTypes}]*)`, 'gi')
+      ) || []),
+    ].map((match: RegExpMatchArray, i) => {
+      const values =
+        match[1]
+          .split(/[\,\s]/)
+          ?.reduce(
+            (acc: number[], str) => (str === '' ? acc : [...acc, +str]),
+            []
+          ) || []
+      switch (match[0]) {
+        case 'M': {
+          this.commands.push(new Move(new Point(values[0], values[1])))
+          break
+        }
+        case 'm': {
+          this.commands.push(
+            new RelativeMove(
+              this.commands[i - 1].point as Point,
+              new Point(values[0], values[1])
+            )
+          )
+          break
+        }
+        case 'L': {
+          this.commands.push(new Line(new Point(values[0], values[1])))
+          break
+        }
+        case 'l': {
+          this.commands.push(
+            new RelativeLine(
+              this.commands[i - 1].point as Point,
+              new Point(values[0], values[1])
+            )
+          )
+          break
+        }
+        case 'C': {
+          this.commands.push(
+            new Curve([
+              new Point(values[0], values[1]),
+              new Point(values[2], values[3]),
+              new Point(values[4], values[5]),
+            ])
+          )
+          break
+        }
+        case 'c': {
+          this.commands.push(
+            new RelativeCurve(this.commands[i - 1].point as Point, [
+              new Point(values[0], values[1]),
+              new Point(values[2], values[3]),
+              new Point(values[4], values[5]),
+            ])
+          )
+          break
+        }
+        case 'Q': {
+          this.commands.push(
+            new QuadraticCurve([
+              new Point(values[0], values[1]),
+              new Point(values[2], values[3]),
+            ])
+          )
+          break
+        }
+        case 'q': {
+          this.commands.push(
+            new RelativeQuadraticCurve(this.commands[i - 1].point as Point, [
+              new Point(values[0], values[1]),
+              new Point(values[2], values[3]),
+            ])
+          )
+          break
+        }
+        case 'S': {
+          this.commands.push(
+            new ShortcutCurve([
+              new Point(values[0], values[1]),
+              new Point(values[2], values[3]),
+            ])
+          )
+          break
+        }
+        case 's': {
+          this.commands.push(
+            new RelativeShortcutCurve(this.commands[i - 1].point as Point, [
+              new Point(values[0], values[1]),
+              new Point(values[2], values[3]),
+            ])
+          )
+          break
+        }
+        case 'Z':
+        case 'z': {
+          this.commands.push(new Close())
+          break
         }
 
-        this.commands.push(new OtherCommand(type, value))
-        type = t
-        value = []
-        continue
+        default: {
+          this.commands.push(new OtherCommand(match[0] as any, values))
+        }
       }
-      if (isNaN(+c[i])) {
-        return
-      }
-      value.push(+c[i])
-    }
-
-    if (type !== null) {
-      this.commands.push(new OtherCommand(type, value))
-    }
+    })
   }
 
   public parsePathElement(pEl: SVGPathElement): this {
