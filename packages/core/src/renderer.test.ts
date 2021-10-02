@@ -14,9 +14,6 @@ describe('renderer.ts', () => {
           new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
         )
         .addCommand(
-          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
-        )
-        .addCommand(
           new Curve([new Point(2.4, 0.8), new Point(2.8, 0.2), new Point(3, 0)])
         )
     )
