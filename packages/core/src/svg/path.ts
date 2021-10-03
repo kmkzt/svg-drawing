@@ -14,7 +14,7 @@ import {
 } from './command'
 import { Point } from './point'
 import { kebab2camel } from '../utils'
-import type { Command, CommandType, PathObject, PointObject } from '../types'
+import type { Command, PathObject, PointObject } from '../types'
 
 /**
  * @todo: refactor command. The following commands are not supported.
@@ -69,120 +69,117 @@ export class Path {
       .trim()
   }
 
-  /**
-   * @todo Fix parse 'L' | 'l' | 'M' | 'm' | 'C' | 'c'
-   *
-   * @todo Remove basePoint ?
-   */
+  /** @todo Remove basePoint */
   public parseCommandString(d: string): void {
-    this.commands = []
     const commandsTypes = 'mlsqlhvcsqaz'
-    ;[
-      ...(d.matchAll(
-        new RegExp(`([${commandsTypes}])([^${commandsTypes}]*)`, 'gi')
-      ) || []),
-    ].map((match: RegExpMatchArray, i) => {
-      const values =
-        match[1]
-          .split(/[\,\s]/)
-          ?.reduce(
-            (acc: number[], str) => (str === '' ? acc : [...acc, +str]),
-            []
-          ) || []
-      switch (match[0]) {
-        case 'M': {
-          this.commands.push(new Move(new Point(values[0], values[1])))
-          break
-        }
-        case 'm': {
-          this.commands.push(
-            new RelativeMove(
-              this.commands[i - 1].point as Point,
-              new Point(values[0], values[1])
-            )
-          )
-          break
-        }
-        case 'L': {
-          this.commands.push(new Line(new Point(values[0], values[1])))
-          break
-        }
-        case 'l': {
-          this.commands.push(
-            new RelativeLine(
-              this.commands[i - 1].point as Point,
-              new Point(values[0], values[1])
-            )
-          )
-          break
-        }
-        case 'C': {
-          this.commands.push(
-            new Curve([
-              new Point(values[0], values[1]),
-              new Point(values[2], values[3]),
-              new Point(values[4], values[5]),
-            ])
-          )
-          break
-        }
-        case 'c': {
-          this.commands.push(
-            new RelativeCurve(this.commands[i - 1].point as Point, [
-              new Point(values[0], values[1]),
-              new Point(values[2], values[3]),
-              new Point(values[4], values[5]),
-            ])
-          )
-          break
-        }
-        case 'Q': {
-          this.commands.push(
-            new QuadraticCurve([
-              new Point(values[0], values[1]),
-              new Point(values[2], values[3]),
-            ])
-          )
-          break
-        }
-        case 'q': {
-          this.commands.push(
-            new RelativeQuadraticCurve(this.commands[i - 1].point as Point, [
-              new Point(values[0], values[1]),
-              new Point(values[2], values[3]),
-            ])
-          )
-          break
-        }
-        case 'S': {
-          this.commands.push(
-            new ShortcutCurve([
-              new Point(values[0], values[1]),
-              new Point(values[2], values[3]),
-            ])
-          )
-          break
-        }
-        case 's': {
-          this.commands.push(
-            new RelativeShortcutCurve(this.commands[i - 1].point as Point, [
-              new Point(values[0], values[1]),
-              new Point(values[2], values[3]),
-            ])
-          )
-          break
-        }
-        case 'Z':
-        case 'z': {
-          this.commands.push(new Close())
-          break
-        }
+    // expect ['M 0 0 ', 'M', ' 0 0 ', ...]
+    const regexp = new RegExp(
+      `([${commandsTypes}])([^${commandsTypes}]*)`,
+      'gi'
+    )
 
-        default: {
-          this.commands.push(new OtherCommand(match[0] as any, values))
+    this.commands = [...(d.matchAll(regexp) || [])].reduce(
+      (acc: Command<any>[], match: RegExpMatchArray, i) => {
+        const values =
+          match[2]
+            .split(/[\,\s]/)
+            ?.reduce(
+              (acc: number[], str) => (str === '' ? acc : [...acc, +str]),
+              []
+            ) || []
+        switch (match[1]) {
+          case 'M': {
+            return [...acc, new Move(new Point(values[0], values[1]))]
+          }
+          case 'm': {
+            return [
+              ...acc,
+              new RelativeMove(
+                acc[i - 1].point as Point,
+                new Point(values[0], values[1])
+              ),
+            ]
+          }
+          case 'L': {
+            return [...acc, new Line(new Point(values[0], values[1]))]
+          }
+          case 'l': {
+            return [
+              ...acc,
+              new RelativeLine(
+                acc[i - 1].point as Point,
+                new Point(values[0], values[1])
+              ),
+            ]
+          }
+          case 'C': {
+            return [
+              ...acc,
+              new Curve([
+                new Point(values[0], values[1]),
+                new Point(values[2], values[3]),
+                new Point(values[4], values[5]),
+              ]),
+            ]
+          }
+          case 'c': {
+            return [
+              ...acc,
+              new RelativeCurve(acc[i - 1].point as Point, [
+                new Point(values[0], values[1]),
+                new Point(values[2], values[3]),
+                new Point(values[4], values[5]),
+              ]),
+            ]
+          }
+          case 'Q': {
+            return [
+              ...acc,
+              new QuadraticCurve([
+                new Point(values[0], values[1]),
+                new Point(values[2], values[3]),
+              ]),
+            ]
+          }
+          case 'q': {
+            return [
+              ...acc,
+              new RelativeQuadraticCurve(acc[i - 1].point as Point, [
+                new Point(values[0], values[1]),
+                new Point(values[2], values[3]),
+              ]),
+            ]
+          }
+          case 'S': {
+            return [
+              ...acc,
+              new ShortcutCurve([
+                new Point(values[0], values[1]),
+                new Point(values[2], values[3]),
+              ]),
+            ]
+          }
+          case 's': {
+            return [
+              ...acc,
+              new RelativeShortcutCurve(acc[i - 1].point as Point, [
+                new Point(values[0], values[1]),
+                new Point(values[2], values[3]),
+              ]),
+            ]
+          }
+          case 'Z':
+          case 'z': {
+            return [...acc, new Close()]
+          }
+
+          default: {
+            return [...acc, new OtherCommand(match[1] as any, values)]
+          }
         }
-      }
-    })
+      },
+      []
+    )
   }
 
   public parsePathElement(pEl: SVGPathElement): this {

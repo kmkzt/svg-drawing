@@ -64,7 +64,7 @@ export class OtherCommand<T extends OtherCommandType> implements Command<T> {
   }
 
   public toString(): string {
-    return `${this.type} ${this.values.map((v) => roundUp(v)).join(' ')}`
+    return `${this.type}${this.values.map((v) => roundUp(v)).join(' ')}`
   }
 
   public scale(r: number) {

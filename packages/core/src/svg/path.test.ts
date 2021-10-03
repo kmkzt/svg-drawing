@@ -23,35 +23,19 @@ describe('Path', () => {
     expect(path.commands[0].point.x).toBe(2)
     expect(path.commands[0].point.y).toBe(2)
   })
-  describe('parseCommandString', () => {
-    beforeEach(() => {
-      path = new Path()
-    })
-    it('success pattern', () => {
-      const testData =
-        'M 0 0 L 1 1 C 2 2 2 4 6 0 Q 0 0 1 1 H 10 V 20 m 0 0 l 1 1 c 1 1 2 2 3 3 h 10 v 20 A 6 4 10 0 1 14 10 a 6 4 10 0 1 14 10'
-      path.parseCommandString(testData)
-      expect(path.getCommandString()).toBe(testData)
-    })
-    it('close command', () => {
-      const testData = 'M 0 0 L 1 1 C 2 2 2 4 6 0 Z'
-      path.parseCommandString(testData)
-      expect(path.getCommandString()).toBe(testData)
-    })
-    // TODO: Validate command
-      it.skip('failed pattern', () => { // eslint-disable-line
-      path.parseCommandString('M a b')
-      expect(path.getCommandString()).toBe('')
-      path.parseCommandString('M 0 0 C 0 1 2')
-      expect(path.getCommandString()).toBe('M 0 0')
-    })
+  it('parseCommandString', () => {
+    const path = new Path()
+    const testData =
+      'M0 0 L1 1 C2 2 2 4 6 0 Q0 0 1 1 m0 0 l1 1 c1 1 2 2 3 3 H10 V20 h10 v20 A6 4 10 0 1 14 10 a6 4 10 0 1 14 10'
+    path.parseCommandString(testData)
+    expect(path.getCommandString()).toBe(testData)
   })
   it('clone', () => {
     const origin = new Path({ strokeWidth: '1' }).addCommand(
       new Move(new Point(1, 1))
     )
     const clone = origin.clone().addCommand(new Line(new Point(2, 2)))
-    clone.commands[0].point = new Point(3, clone.commands[0].point.y)
+    clone.commands[0].points[0] = new Point(3, clone.commands[0].point.y)
     expect(origin.getCommandString()).toBe('M1 1')
     expect(clone.getCommandString()).toBe('M3 1 L2 2')
   })
