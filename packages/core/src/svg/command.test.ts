@@ -145,7 +145,6 @@ describe('Vertical', () => {
 
 describe('RelativeMove', () => {
   it.todo('new RelativeMove()')
-  it.todo('basePoint')
   it.todo('point')
   it.todo('points')
   it.todo('values')
@@ -159,7 +158,6 @@ describe('RelativeMove', () => {
 
 describe('RelativeLine', () => {
   it.todo('new RelativeLine()')
-  it.todo('basePoint')
   it.todo('point')
   it.todo('points')
   it.todo('values')
@@ -173,7 +171,6 @@ describe('RelativeLine', () => {
 
 describe('RelativeCurve', () => {
   it.todo('new RelativeCurve()')
-  it.todo('basePoint')
   it.todo('point')
   it.todo('points')
   it.todo('values')
@@ -187,7 +184,6 @@ describe('RelativeCurve', () => {
 
 describe('RelativeShortcutCurve', () => {
   it.todo('new RelativeShortcutCurve()')
-  it.todo('basePoint')
   it.todo('point')
   it.todo('points')
   it.todo('values')
@@ -201,7 +197,6 @@ describe('RelativeShortcutCurve', () => {
 
 describe('RelativeQuadraticCurve', () => {
   it.todo('new RelativeQuadraticCurve()')
-  it.todo('basePoint')
   it.todo('point')
   it.todo('points')
   it.todo('values')
@@ -215,7 +210,6 @@ describe('RelativeQuadraticCurve', () => {
 
 describe('RelativeArcCurve', () => {
   it.todo('new RelativeArcCurve()')
-  it.todo('basePoint')
   it.todo('point')
   it.todo('points')
   it.todo('values')
@@ -229,7 +223,6 @@ describe('RelativeArcCurve', () => {
 
 describe('RelativeHorizonal', () => {
   it.todo('new RelativeHorizonal()')
-  it.todo('basePoint')
   it.todo('point')
   it.todo('points')
   it.todo('values')
@@ -243,7 +236,6 @@ describe('RelativeHorizonal', () => {
 
 describe('RelativeVertical', () => {
   it.todo('new RelativeVertical()')
-  it.todo('basePoint')
   it.todo('point')
   it.todo('points')
   it.todo('values')

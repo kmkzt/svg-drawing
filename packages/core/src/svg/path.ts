@@ -69,7 +69,6 @@ export class Path {
       .trim()
   }
 
-  /** @todo Remove basePoint */
   public parseCommandString(d: string): void {
     const commandsTypes = 'mlsqlhvcsqaz'
     // expect ['M 0 0 ', 'M', ' 0 0 ', ...]
@@ -92,25 +91,13 @@ export class Path {
             return [...acc, new Move(new Point(values[0], values[1]))]
           }
           case 'm': {
-            return [
-              ...acc,
-              new RelativeMove(
-                acc[i - 1].point as Point,
-                new Point(values[0], values[1])
-              ),
-            ]
+            return [...acc, new RelativeMove(new Point(values[0], values[1]))]
           }
           case 'L': {
             return [...acc, new Line(new Point(values[0], values[1]))]
           }
           case 'l': {
-            return [
-              ...acc,
-              new RelativeLine(
-                acc[i - 1].point as Point,
-                new Point(values[0], values[1])
-              ),
-            ]
+            return [...acc, new RelativeLine(new Point(values[0], values[1]))]
           }
           case 'C': {
             return [
@@ -125,7 +112,7 @@ export class Path {
           case 'c': {
             return [
               ...acc,
-              new RelativeCurve(acc[i - 1].point as Point, [
+              new RelativeCurve([
                 new Point(values[0], values[1]),
                 new Point(values[2], values[3]),
                 new Point(values[4], values[5]),
@@ -144,7 +131,7 @@ export class Path {
           case 'q': {
             return [
               ...acc,
-              new RelativeQuadraticCurve(acc[i - 1].point as Point, [
+              new RelativeQuadraticCurve([
                 new Point(values[0], values[1]),
                 new Point(values[2], values[3]),
               ]),
@@ -162,7 +149,7 @@ export class Path {
           case 's': {
             return [
               ...acc,
-              new RelativeShortcutCurve(acc[i - 1].point as Point, [
+              new RelativeShortcutCurve([
                 new Point(values[0], values[1]),
                 new Point(values[2], values[3]),
               ]),

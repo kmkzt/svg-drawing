@@ -58,8 +58,7 @@ export type CommandClass<T extends CommandType> = T extends AbsoluteCommandType
     }
   : T extends RelativeCommandType
   ? Command<T> & {
-      basePoint: Point
-      toAbsolute: () => CommandClass<Uppercase<T>>
+      toAbsolute: (base: Point) => CommandClass<Uppercase<T>>
     }
   : T extends OtherCommandType | CloseCommandType
   ? Command<T>
