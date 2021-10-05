@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`drawing.ts SvgDrawing clear() 1`] = `
+exports[`SvgDrawing clear() 1`] = `
 <svg
   height="0"
   version="1.1"
@@ -10,7 +10,7 @@ exports[`drawing.ts SvgDrawing clear() 1`] = `
 />
 `;
 
-exports[`drawing.ts SvgDrawing close 1`] = `
+exports[`SvgDrawing close 1`] = `
 <svg
   height="0"
   version="1.1"
@@ -29,7 +29,7 @@ exports[`drawing.ts SvgDrawing close 1`] = `
 </svg>
 `;
 
-exports[`drawing.ts SvgDrawing curve = false 1`] = `
+exports[`SvgDrawing curve = false 1`] = `
 <svg
   height="0"
   version="1.1"
@@ -48,7 +48,7 @@ exports[`drawing.ts SvgDrawing curve = false 1`] = `
 </svg>
 `;
 
-exports[`drawing.ts SvgDrawing default 1`] = `
+exports[`SvgDrawing default 1`] = `
 <svg
   height="0"
   version="1.1"
@@ -67,7 +67,7 @@ exports[`drawing.ts SvgDrawing default 1`] = `
 </svg>
 `;
 
-exports[`drawing.ts SvgDrawing undo() 1`] = `
+exports[`SvgDrawing undo() 1`] = `
 <svg
   height="0"
   version="1.1"

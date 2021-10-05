@@ -1,14 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`svg/svg.ts Svg download svg download 1`] = `
-Object {
-  "data": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0gMCAwIEMgMC4yIDAuMiAwLjYgMC44IDEgMSBDIDEuNCAxLjIgMS42IDEuMiAyIDEgQyAyLjQgMC44IDIuOCAwLjIgMyAwIj48L3BhdGg+PHBhdGggZD0iTSA0IDQgTCA5IDQgTCA5IDggTCAzIDAgWiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXR0ZXIiPjwvcGF0aD48L3N2Zz4=",
-  "extension": "svg",
-  "filename": undefined,
-}
-`;
-
-exports[`svg/svg.ts Svg parseSVGElement 1`] = `
+exports[`Svg parseSVGElement 1`] = `
 Svg {
   "background": undefined,
   "height": 400,
@@ -20,34 +12,43 @@ Svg {
         "strokeWidth": "8",
       },
       "commands": Array [
-        Command {
+        Move {
+          "points": Array [
+            Point {
+              "_x": 2,
+              "_y": 2,
+            },
+          ],
           "type": "M",
-          "value": Array [
-            2,
-            2,
-          ],
         },
-        Command {
+        Line {
+          "points": Array [
+            Point {
+              "_x": 4,
+              "_y": 4,
+            },
+          ],
           "type": "L",
-          "value": Array [
-            4,
-            4,
-          ],
         },
-        Command {
+        Curve {
+          "points": Array [
+            Point {
+              "_x": 6,
+              "_y": 6,
+            },
+            Point {
+              "_x": 10,
+              "_y": 6,
+            },
+            Point {
+              "_x": 14,
+              "_y": 6,
+            },
+          ],
           "type": "C",
-          "value": Array [
-            6,
-            6,
-            10,
-            6,
-            14,
-            6,
-          ],
         },
-        Command {
-          "type": "Z",
-          "value": Array [],
+        Close {
+          "type": "z",
         },
       ],
     },
@@ -56,7 +57,7 @@ Svg {
 }
 `;
 
-exports[`svg/svg.ts Svg parseSVGString 1`] = `
+exports[`Svg parseSVGString 1`] = `
 Svg {
   "background": undefined,
   "height": 400,
@@ -68,34 +69,43 @@ Svg {
         "strokeWidth": "8",
       },
       "commands": Array [
-        Command {
+        Move {
+          "points": Array [
+            Point {
+              "_x": 2,
+              "_y": 2,
+            },
+          ],
           "type": "M",
-          "value": Array [
-            2,
-            2,
-          ],
         },
-        Command {
+        Line {
+          "points": Array [
+            Point {
+              "_x": 4,
+              "_y": 4,
+            },
+          ],
           "type": "L",
-          "value": Array [
-            4,
-            4,
-          ],
         },
-        Command {
+        Curve {
+          "points": Array [
+            Point {
+              "_x": 6,
+              "_y": 6,
+            },
+            Point {
+              "_x": 10,
+              "_y": 6,
+            },
+            Point {
+              "_x": 14,
+              "_y": 6,
+            },
+          ],
           "type": "C",
-          "value": Array [
-            6,
-            6,
-            10,
-            6,
-            14,
-            6,
-          ],
         },
-        Command {
-          "type": "Z",
-          "value": Array [],
+        Close {
+          "type": "z",
         },
       ],
     },
@@ -104,37 +114,16 @@ Svg {
 }
 `;
 
-exports[`svg/svg.ts Svg toBase64 1`] = `"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNTAwIiB3aWR0aD0iNTAwIj48cGF0aCBkPSJNIDAgMCBDIDAuMiAwLjIgMC42IDAuOCAxIDEgQyAxLjQgMS4yIDEuNiAxLjIgMiAxIEMgMi40IDAuOCAyLjggMC4yIDMgMCI+PC9wYXRoPjxwYXRoIGQ9Ik0gNCA0IEwgOSA0IEwgOSA4IEwgMyAwIFoiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1saW5lam9pbj0ibWl0dGVyIj48L3BhdGg+PC9zdmc+"`;
-
-exports[`svg/svg.ts Svg toElement 1`] = `
-<svg
-  height="500"
-  version="1.1"
-  width="500"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
->
-  <path
-    d="M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0"
-  />
-  <path
-    d="M 4 4 L 9 4 L 9 8 L 3 0 Z"
-    stroke-linecap="square"
-    stroke-linejoin="mitter"
-  />
-</svg>
-`;
-
-exports[`svg/svg.ts Svg toJson 1`] = `
+exports[`Svg toJson 1`] = `
 Object {
   "background": undefined,
   "height": 500,
   "paths": Array [
     Object {
-      "d": "M 0 0 C 0.2 0.2 0.6 0.8 1 1 C 1.4 1.2 1.6 1.2 2 1 C 2.4 0.8 2.8 0.2 3 0",
+      "d": "M0 0 C0.2 0.2 0.6 0.8 1 1 C1.4 1.2 1.6 1.2 2 1 C2.4 0.8 2.8 0.2 3 0",
     },
     Object {
-      "d": "M 4 4 L 9 4 L 9 8 L 3 0 Z",
+      "d": "M4 4 L9 4 L9 8 L3 0 z",
       "strokeLinecap": "square",
       "strokeLinejoin": "mitter",
     },

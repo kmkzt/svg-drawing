@@ -81,7 +81,7 @@ export class Path {
       (acc: Command<any>[], match: RegExpMatchArray, i) => {
         const values =
           match[2]
-            .split(/[\,\s]/)
+            ?.split(/[\,\s]/)
             ?.reduce(
               (acc: number[], str) => (str === '' ? acc : [...acc, +str]),
               []

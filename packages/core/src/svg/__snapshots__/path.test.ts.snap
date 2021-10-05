@@ -1,41 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`svg/path.ts Path commands parameter and getCommandString Normal 1`] = `
+exports[`Path commands parameter and getCommandString Normal 1`] = `
 Array [
-  Command {
+  Move {
+    "points": Array [
+      Point {
+        "_x": 0,
+        "_y": 0,
+      },
+    ],
     "type": "M",
-    "value": Array [
-      0,
-      0,
-    ],
   },
-  Command {
-    "type": "L",
-    "value": Array [
-      1,
-      1,
+  Line {
+    "points": Array [
+      Point {
+        "_x": 1,
+        "_y": 1,
+      },
     ],
+    "type": "L",
   },
-  Command {
-    "type": "L",
-    "value": Array [
-      -1,
-      -1,
+  Line {
+    "points": Array [
+      Point {
+        "_x": -1,
+        "_y": -1,
+      },
     ],
+    "type": "L",
   },
 ]
 `;
 
-exports[`svg/path.ts Path commands parameter and getCommandString Normal 2`] = `"M 0 0 L 1 1 L -1 -1"`;
+exports[`Path commands parameter and getCommandString Normal 2`] = `"M0 0 L1 1 L-1 -1"`;
 
-exports[`svg/path.ts Path toJson and toElement toElement 1`] = `
+exports[`Path toJson and toElement toElement 1`] = `
 <path
-  d="M 0 0 L 1 1 L 2 1 L 3 0"
+  d="M0 0 L1 1 L2 1 L3 0"
 />
 `;
 
-exports[`svg/path.ts Path toJson and toElement toJson 1`] = `
+exports[`Path toJson and toElement toJson 1`] = `
 Object {
-  "d": "M 0 0 L 1 1 L 2 1 L 3 0",
+  "d": "M0 0 L1 1 L2 1 L3 0",
 }
 `;
