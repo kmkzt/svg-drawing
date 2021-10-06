@@ -77,7 +77,7 @@ export class Path {
       'gi'
     )
 
-    this.commands = [...(d.matchAll(regexp) || [])].reduce(
+    this.commands = Array.from(d.matchAll(regexp) || []).reduce(
       (acc: Command<any>[], match: RegExpMatchArray, i) => {
         const values =
           match[2]

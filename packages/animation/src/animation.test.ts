@@ -7,49 +7,43 @@ const defaultTestData = `<svg width="200" height="200">
   <path fill="#ff0" stroke="#f0f" stroke-width="2" d="M 2 2 L 4 4 C 6 6 10 6 14 6 Z"></path>
 </svg>`
 
-describe('animation.ts', () => {
-  describe('Animation', () => {
-    const generateAnimation = (svgStr = defaultTestData) => {
-      const svg = new Svg({ width: 200, height: 200 })
-      svg.parseSVGString(svgStr)
-      const anim = new Animation(svg)
-      return anim
-    }
-    it('init', () => {
-      expect(generateAnimation()).toMatchSnapshot()
-    })
-    it('generateFrame', () => {
-      const svg = generateAnimation()
-      svg.setAnimation((paths) => {
-        return [paths[0]]
-      })
-      expect(svg.generateFrame().length).toBe(1)
-    })
-    // TODO: Improve test pattern
-    it('toAnimationElement', () => {
-      const svg = generateAnimation()
-      const testAnimation: FrameAnimation = (paths, count) => {
-        const update = []
-        for (let i = 0; i < paths.length; i += 1) {
-          // Test property
-          if (count % 2 === 0) paths[i].attrs.stroke = '#0ff'
-          // Test Attribute
-          if (count % 3 === 0)
-            Object.assign(paths[i].attrs, {
-              strokeLinecap: 'mitter',
-            })
-          if (count < paths[i].commands.length) {
-            paths[i].commands = paths[i].commands.slice(0, count)
-            update.push(paths[i])
-            break
-          }
-          count -= paths[i].commands.length
+describe('Animation', () => {
+  const init = (svgStr = defaultTestData) =>
+    new Animation(new Svg({ width: 200, height: 200 }).parseSVGString(svgStr))
+
+  it('new Animation()', () => {
+    expect(init()).toMatchSnapshot()
+  })
+  it('generateFrame', () => {
+    const anim = init()
+    anim.setAnimation((paths) => [paths[0]])
+
+    expect(anim.generateFrame()).toMatchObject([anim.svg.paths[0]])
+  })
+  // TODO: Improve test pattern
+  it('toElement', () => {
+    const anim = init()
+    anim.setAnimation((paths, count) => {
+      const update = []
+      for (let i = 0; i < paths.length; i += 1) {
+        // Test property
+        if (count % 2 === 0) paths[i].attrs.stroke = '#0ff'
+        // Test Attribute
+        if (count % 3 === 0)
+          Object.assign(paths[i].attrs, {
+            strokeLinecap: 'mitter',
+          })
+        if (count < paths[i].commands.length) {
+          paths[i].commands = paths[i].commands.slice(0, count)
           update.push(paths[i])
+          break
         }
-        return update
+        count -= paths[i].commands.length
+        update.push(paths[i])
       }
-      svg.setAnimation(testAnimation)
-      expect(svg.toElement()).toMatchSnapshot()
+      return update
     })
+
+    expect(anim.toElement()).toMatchSnapshot()
   })
 })
