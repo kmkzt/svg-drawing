@@ -162,14 +162,8 @@ export class EditSvg {
     }
   }
 
-  public changeAttributes({ d, ...attrs }: PathObject) {
-    this.exec((path) => {
-      path.attrs = {
-        ...path.attrs,
-        ...attrs,
-      }
-      if (d) path.parseCommandString(d)
-    })
+  public changeAttributes(attrs: PathObject) {
+    this.exec((path) => path.updateAttributes(attrs))
   }
 
   public translate(po: PointObject) {

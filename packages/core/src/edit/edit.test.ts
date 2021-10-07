@@ -1,5 +1,5 @@
 import { EditSvg } from './edit'
-import { Svg } from '../svg'
+import { parseSVGString } from '../parser'
 
 const testSvgData =
   '<svg width="200" height="200">' +
@@ -9,11 +9,10 @@ const testSvgData =
   '</svg>'
 
 describe('edit.ts', () => {
-  const edit = new EditSvg(new Svg({ width: 200, height: 200 }))
-
+  let edit: EditSvg
   describe('EditSvg', () => {
     beforeEach(() => {
-      edit.svg.parseSVGString(testSvgData)
+      edit = new EditSvg(parseSVGString(testSvgData))
     })
     describe('changeAttributes', () => {
       it('Change attributes of selected paths', () => {

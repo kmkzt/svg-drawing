@@ -1,6 +1,12 @@
 import { Point } from './point'
-import { Command, CommandClass, OtherCommandType, PointObject } from '../types'
 import { roundUp } from '../utils'
+import type {
+  Command,
+  CommandClass,
+  CommandType,
+  OtherCommandType,
+  PointObject,
+} from '../types'
 
 /** @deprecated */
 export class OtherCommand<T extends OtherCommandType> implements Command<T> {
@@ -700,5 +706,71 @@ export class Close implements CommandClass<'z'> {
 
   public clone() {
     return new Close()
+  }
+}
+
+export const createCommand = (
+  type: CommandType,
+  values: number[] = []
+): Command => {
+  switch (type) {
+    case 'M': {
+      return new Move(new Point(values[0], values[1]))
+    }
+    case 'm': {
+      return new RelativeMove(new Point(values[0], values[1]))
+    }
+    case 'L': {
+      return new Line(new Point(values[0], values[1]))
+    }
+    case 'l': {
+      return new RelativeLine(new Point(values[0], values[1]))
+    }
+    case 'C': {
+      return new Curve([
+        new Point(values[0], values[1]),
+        new Point(values[2], values[3]),
+        new Point(values[4], values[5]),
+      ])
+    }
+    case 'c': {
+      return new RelativeCurve([
+        new Point(values[0], values[1]),
+        new Point(values[2], values[3]),
+        new Point(values[4], values[5]),
+      ])
+    }
+    case 'Q': {
+      return new QuadraticCurve([
+        new Point(values[0], values[1]),
+        new Point(values[2], values[3]),
+      ])
+    }
+    case 'q': {
+      return new RelativeQuadraticCurve([
+        new Point(values[0], values[1]),
+        new Point(values[2], values[3]),
+      ])
+    }
+    case 'S': {
+      return new ShortcutCurve([
+        new Point(values[0], values[1]),
+        new Point(values[2], values[3]),
+      ])
+    }
+    case 's': {
+      return new RelativeShortcutCurve([
+        new Point(values[0], values[1]),
+        new Point(values[2], values[3]),
+      ])
+    }
+    case 'Z':
+    case 'z': {
+      return new Close()
+    }
+
+    default: {
+      return new OtherCommand(type, values)
+    }
   }
 }

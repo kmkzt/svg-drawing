@@ -1,8 +1,8 @@
 import { Line, Move } from '.'
 import { Path } from './path'
 import { Point } from './point'
+import { parseCommandString } from '../parser'
 import { pathObjectToElement } from '../renderer'
-
 describe('Path', () => {
   let path: Path
   beforeEach(() => {
@@ -18,17 +18,9 @@ describe('Path', () => {
   })
   it('scale', () => {
     path.scale(2)
-    expect(path.attrs.strokeWidth).toBe('2')
     expect(path.commands[0].type).toBe('M')
     expect(path.commands[0].point.x).toBe(2)
     expect(path.commands[0].point.y).toBe(2)
-  })
-  it('parseCommandString', () => {
-    const path = new Path()
-    const testData =
-      'M0 0 L1 1 C2 2 2 4 6 0 Q0 0 1 1 m0 0 l1 1 c1 1 2 2 3 3 H10 V20 h10 v20 A6 4 10 0 1 14 10 a6 4 10 0 1 14 10'
-    path.parseCommandString(testData)
-    expect(path.getCommandString()).toBe(testData)
   })
   it('clone', () => {
     const origin = new Path({ strokeWidth: '1' }).addCommand(

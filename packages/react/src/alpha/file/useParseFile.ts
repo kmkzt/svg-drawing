@@ -2,7 +2,11 @@ import { ImgLoader, ImgTrace, Palette } from '@svg-drawing/img-trace'
 import { useCallback } from 'react'
 import type { UseParseFile } from '../types'
 
-/** @todo Added cancel event handler. */
+/**
+ * @todo Added cancel event handler.
+ *
+ * @todo Fix to return Svg
+ */
 export const useParseFile: UseParseFile = ({ svg }) =>
   useCallback(
     async (file) => {

@@ -90,33 +90,6 @@ export class Svg {
     return this
   }
 
-  public parseSVGString(svgStr: string): this {
-    const svgEl: SVGSVGElement | null = new DOMParser()
-      .parseFromString(svgStr, 'image/svg+xml')
-      .querySelector('svg')
-    if (!svgEl) {
-      this.paths = []
-      return this
-    }
-    return this.parseSVGElement(svgEl)
-  }
-
-  public parseSVGElement(svgEl: SVGSVGElement): this {
-    const update: Path[] = []
-    svgEl.querySelectorAll('path').forEach((pEl) => {
-      const pa = new Path().parsePathElement(pEl)
-      if (pa.commands.length !== 0) {
-        update.push(pa)
-      }
-    })
-    this.paths = update
-    const width = Number(svgEl.getAttribute('width'))
-    if (width && this.width) {
-      this.scale(this.width / width)
-    }
-    return this
-  }
-
   public clone(): Svg {
     const svg = new Svg({
       width: this.width,
