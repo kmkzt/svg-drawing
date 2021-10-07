@@ -1,8 +1,8 @@
 import { Line, Move } from '.'
 import { Path } from './path'
 import { Point } from './point'
-import { parseCommandString } from '../parser'
 import { pathObjectToElement } from '../renderer'
+
 describe('Path', () => {
   let path: Path
   beforeEach(() => {

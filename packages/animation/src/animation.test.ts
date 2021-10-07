@@ -1,6 +1,5 @@
-import { Svg } from '@svg-drawing/core'
+import { parseSVGString } from '@svg-drawing/core'
 import { Animation } from './animation'
-import { FrameAnimation } from './types'
 
 const defaultTestData = `<svg width="200" height="200">
   <path fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>
@@ -9,8 +8,7 @@ const defaultTestData = `<svg width="200" height="200">
 
 describe('Animation', () => {
   const init = (svgStr = defaultTestData) =>
-    new Animation(new Svg({ width: 200, height: 200 }).parseSVGString(svgStr))
-
+    new Animation(parseSVGString(svgStr))
   it('new Animation()', () => {
     expect(init()).toMatchSnapshot()
   })
@@ -27,10 +25,10 @@ describe('Animation', () => {
       const update = []
       for (let i = 0; i < paths.length; i += 1) {
         // Test property
-        if (count % 2 === 0) paths[i].attrs.stroke = '#0ff'
+        if (count % 2 === 0) paths[i].updateAttributes({ stroke: '#0ff' })
         // Test Attribute
         if (count % 3 === 0)
-          Object.assign(paths[i].attrs, {
+          paths[i].updateAttributes({
             strokeLinecap: 'mitter',
           })
         if (count < paths[i].commands.length) {
