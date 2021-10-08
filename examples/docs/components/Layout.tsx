@@ -50,11 +50,6 @@ const GlobalHeader = () => (
             <a>img-trace</a>
           </Link>
         </Text>
-        <Text mr={2}>
-          <Link href="/demo/alpha">
-            <a>alpha</a>
-          </Link>
-        </Text>
       </Flex>
       <Box width={1 / 10} style={{ textAlign: 'right' }}>
         <RELink color="#000" href="https://github.com/kmkzt/svg-drawing">
