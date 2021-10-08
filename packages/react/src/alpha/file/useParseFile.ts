@@ -1,3 +1,4 @@
+import { parseSVGString } from '@svg-drawing/core'
 import { ImgLoader, ImgTrace, Palette } from '@svg-drawing/img-trace'
 import { useCallback } from 'react'
 import type { UseParseFile } from '../types'
@@ -20,7 +21,7 @@ export const useParseFile: UseParseFile = ({ svg }) =>
           const [type, data] = ev.target.result.split(',')
           if (type === 'data:image/svg+xml;base64') {
             const svgXml = atob(data)
-            svg.parseSVGString(svgXml)
+            svg.copy(parseSVGString(svgXml))
             resolve()
           }
           const imgData = (await new ImgLoader({ corsenabled: true }).fromUrl(
