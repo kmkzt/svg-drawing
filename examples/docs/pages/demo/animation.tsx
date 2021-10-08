@@ -1,6 +1,11 @@
 import { Slider, Input, Label } from '@rebass/forms/styled-components'
 import { SvgAnimation, FrameAnimation } from '@svg-drawing/animation'
-import { Command, Point, ResizeHandler } from '@svg-drawing/core'
+import {
+  Command,
+  parseSVGString,
+  Point,
+  ResizeHandler,
+} from '@svg-drawing/core'
 import { NextPage } from 'next'
 import {
   useEffect,
@@ -21,9 +26,9 @@ const shake: FrameAnimation = (paths) => {
   const randomShaking = (): number => Math.random() * range - range / 2
   for (let i = 0; i < paths.length; i += 1) {
     paths[i].commands = paths[i].commands.map((c: Command) => {
-      c.point = c.point?.add(new Point(randomShaking(), randomShaking()))
-      c.cl = c.cl?.add(new Point(randomShaking(), randomShaking()))
-      c.cr = c.cr?.add(new Point(randomShaking(), randomShaking()))
+      c.points = c.points.map((po) =>
+        po.add(new Point(randomShaking(), randomShaking()))
+      )
       return c
     })
   }
@@ -101,12 +106,12 @@ const Animation: NextPage<Props> = ({ isSp }) => {
     })
 
     // Setup resizeHandler
-    resizeHandler.setElement(aniDivRef.current)
-    resizeHandler.setHandler(animationRef.current.resize)
-    resizeHandler.on()
+    // resizeHandler.setElement(aniDivRef.current)
+    // resizeHandler.setHandler(animationRef.current.resize)
+    // resizeHandler.on()
 
     // SET EXAMPLE
-    animationRef.current.svg.parseSVGString(example)
+    animationRef.current.svg.copy(parseSVGString(example))
     handleDrawingAnimation()
   })
 
@@ -126,7 +131,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
       if (type !== 'data:image/svg+xml;base64') return
 
       const svgxml = atob(data)
-      animationRef.current.svg.parseSVGString(svgxml)
+      animationRef.current.svg.copy(parseSVGString(svgxml))
       animationRef.current.start()
     }
 
