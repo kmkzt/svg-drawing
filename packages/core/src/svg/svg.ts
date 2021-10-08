@@ -66,13 +66,6 @@ export class Svg {
     return this.paths.map((p) => p.clone())
   }
 
-  public updatePath(pa: Path, i?: number): this {
-    const updateIndex = i || this.paths.length - 1
-    if (updateIndex < 0) this.paths.push(pa)
-    this.paths[updateIndex] = pa
-    return this
-  }
-
   public toJson(): SvgObject {
     return {
       width: this.width,
