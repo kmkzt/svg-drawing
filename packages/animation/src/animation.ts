@@ -12,13 +12,13 @@ import { AnimationOption, FrameAnimation } from './types'
 export class Animation {
   public ms: number
   private _anim: FrameAnimation | null
-  private originPaths: Path[]
-  private _framesNumber: number | undefined
+  private _origin: Svg
+  private _frames: number | undefined
   private _repeatCount: string
   constructor(public svg: Svg, { ms }: AnimationOption = { ms: 60 }) {
     this.ms = ms
     this._anim = null
-    this.originPaths = this.cloneOriginPaths()
+    this._origin = this.generateOrigin()
     this._repeatCount = 'indefinite'
   }
 
@@ -38,29 +38,36 @@ export class Animation {
     }: { frames?: number; repeatCount?: number | string; ms?: number } = {}
   ): void {
     this._anim = fn
-    this._framesNumber = frames
+    this._frames = frames
+    this._origin = this.generateOrigin()
     this._repeatCount = repeatCount ? `${repeatCount}` : 'indefinite'
     if (ms) this.ms = ms
+  }
+
+  public restore(): void {
+    this.svg.copy(this._origin)
   }
 
   public generateFrame(index?: number): Path[] {
     if (!this._anim) return this.svg.paths
     return this._anim(
-      this.originPaths.map((p) => p.clone()),
+      this._origin.paths.map((p) => p.clone()),
       index
     )
   }
 
-  public toElement(): SVGSVGElement {
-    this.cloneOriginPaths()
+  public update() {
+    this._origin = this.generateOrigin()
+  }
 
-    const animPathsList: Path[][] = Array(this.framesNumber)
+  public toElement(): SVGSVGElement {
+    const animPathsList: Path[][] = Array(this.frames)
       .fill(null)
       .map((_: any, i: number) => this.generateFrame(i))
 
-    const dur = this.framesNumber * (this.ms > 0 ? this.ms : 1) + 'ms'
-    const t = 1 / this.framesNumber
-    const keyTimes = `0;${Array(this.framesNumber)
+    const dur = this.frames * (this.ms > 0 ? this.ms : 1) + 'ms'
+    const t = 1 / this.frames
+    const keyTimes = `0;${Array(this.frames)
       .fill(undefined)
       .map((_, i) => roundUp((i + 1) * t, 4) + '')
       .join(';')}`
@@ -93,7 +100,7 @@ export class Animation {
       })
     }
 
-    const animEls = this.originPaths.map((p) => {
+    const animEls = this._origin.paths.map((p) => {
       const pEl = pathObjectToElement(p.toJson())
       const dAnimEl = createAnimationElement(
         p,
@@ -147,16 +154,15 @@ export class Animation {
   }
 
   /** @returns {number} Default value is total of commands length. */
-  private get framesNumber(): number {
-    return this._framesNumber && this._framesNumber > 0
-      ? this._framesNumber
-      : this.originPaths.reduce((l, p) => l + p.commands.length, 0)
+  private get frames(): number {
+    return this._frames && this._frames > 0
+      ? this._frames
+      : this._origin.paths.reduce((l, p) => l + p.commands.length, 0)
   }
 
-  private cloneOriginPaths(): Path[] {
-    return this.svg.clonePaths().map((p, i) => {
-      p.attrs.id = `t${i}`
-      return p
-    })
+  private generateOrigin(): Svg {
+    const svg = this.svg.clone()
+    svg.paths.map((p, i) => p.updateAttributes({ id: `t${i}` }))
+    return svg
   }
 }
