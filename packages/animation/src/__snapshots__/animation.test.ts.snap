@@ -3,7 +3,9 @@
 exports[`Animation new Animation() 1`] = `
 Animation {
   "_anim": null,
-  "_origin": Svg {
+  "_repeatCount": "indefinite",
+  "ms": 60,
+  "origin": Svg {
     "background": undefined,
     "height": 200,
     "paths": Array [
@@ -59,109 +61,6 @@ Animation {
         "attrs": Object {
           "fill": "#ff0",
           "id": "t1",
-          "stroke": "#f0f",
-          "strokeWidth": "2",
-        },
-        "commands": Array [
-          Move {
-            "points": Array [
-              Point {
-                "_x": 2,
-                "_y": 2,
-              },
-            ],
-            "type": "M",
-          },
-          Line {
-            "points": Array [
-              Point {
-                "_x": 4,
-                "_y": 4,
-              },
-            ],
-            "type": "L",
-          },
-          Curve {
-            "points": Array [
-              Point {
-                "_x": 6,
-                "_y": 6,
-              },
-              Point {
-                "_x": 10,
-                "_y": 6,
-              },
-              Point {
-                "_x": 14,
-                "_y": 6,
-              },
-            ],
-            "type": "C",
-          },
-          Close {
-            "type": "z",
-          },
-        ],
-      },
-    ],
-    "width": 200,
-  },
-  "_repeatCount": "indefinite",
-  "ms": 60,
-  "svg": Svg {
-    "background": undefined,
-    "height": 200,
-    "paths": Array [
-      Path {
-        "attrs": Object {
-          "fill": "#f00",
-          "stroke": "#00f",
-          "strokeWidth": "4",
-        },
-        "commands": Array [
-          Move {
-            "points": Array [
-              Point {
-                "_x": 1,
-                "_y": 1,
-              },
-            ],
-            "type": "M",
-          },
-          Line {
-            "points": Array [
-              Point {
-                "_x": 2,
-                "_y": 2,
-              },
-            ],
-            "type": "L",
-          },
-          Curve {
-            "points": Array [
-              Point {
-                "_x": 3,
-                "_y": 3,
-              },
-              Point {
-                "_x": 5,
-                "_y": 3,
-              },
-              Point {
-                "_x": 7,
-                "_y": 3,
-              },
-            ],
-            "type": "C",
-          },
-          Close {
-            "type": "z",
-          },
-        ],
-      },
-      Path {
-        "attrs": Object {
-          "fill": "#ff0",
           "stroke": "#f0f",
           "strokeWidth": "2",
         },

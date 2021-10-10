@@ -9,24 +9,24 @@ const defaultTestData = `<svg width="200" height="200">
 
 describe('SvgAnimation.ts', () => {
   describe('SvgAnimation', () => {
-    const generateAniamtion = (svgStr = defaultTestData) => {
+    const generateAnimation = (svgStr = defaultTestData) => {
       const anim = SvgAnimation.init(document.createElement('div'))
       anim.svg.copy(parseSVGString(svgStr))
       return anim
     }
     it('init', () => {
-      expect(generateAniamtion()).toMatchSnapshot()
+      expect(generateAnimation()).toMatchSnapshot()
     })
     it('generateFrame', () => {
-      const svg = generateAniamtion()
-      svg.setAnimation((paths) => {
+      const svg = generateAnimation()
+      svg.animation.setAnimation((paths) => {
         return [paths[0]]
       })
-      expect(svg.generateFrame().length).toBe(1)
+      expect(svg.animation.generateFrame().length).toBe(1)
     })
     // TODO: Improve test pattern
     it('toAnimationElement', () => {
-      const svg = generateAniamtion()
+      const svg = generateAnimation()
       const testAnimation: FrameAnimation = (paths, count) => {
         const update = []
         for (let i = 0; i < paths.length; i += 1) {
@@ -47,14 +47,15 @@ describe('SvgAnimation.ts', () => {
         }
         return update
       }
-      svg.setAnimation(testAnimation)
-      expect(svg.toElement()).toMatchSnapshot()
+      svg.animation.setAnimation(testAnimation)
+      svg.start()
+      expect(svg.animation.toElement()).toMatchSnapshot()
     })
 
     it('setAnimation, start, stop', async () => {
-      const svg = generateAniamtion()
+      const svg = generateAnimation()
       let loop = 0
-      svg.setAnimation(
+      svg.animation.setAnimation(
         (_paths, fid) => {
           loop += 1
           return []

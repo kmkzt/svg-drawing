@@ -11,14 +11,14 @@ import { AnimationOption, FrameAnimation } from './types'
 
 export class Animation {
   public ms: number
+  public origin: Svg
   private _anim: FrameAnimation | null
-  private _origin: Svg
   private _frames: number | undefined
   private _repeatCount: string
-  constructor(public svg: Svg, { ms }: AnimationOption = { ms: 60 }) {
+  constructor({ ms }: AnimationOption = { ms: 60 }) {
     this.ms = ms
     this._anim = null
-    this._origin = this.generateOrigin()
+    this.origin = this.generateOrigin(new Svg({ width: 0, height: 0 }))
     this._repeatCount = 'indefinite'
   }
 
@@ -39,25 +39,22 @@ export class Animation {
   ): void {
     this._anim = fn
     this._frames = frames
-    this._origin = this.generateOrigin()
     this._repeatCount = repeatCount ? `${repeatCount}` : 'indefinite'
     if (ms) this.ms = ms
   }
 
-  public restore(): void {
-    this.svg.copy(this._origin)
-  }
-
   public generateFrame(index?: number): Path[] {
-    if (!this._anim) return this.svg.paths
+    if (!this._anim) return this.origin.paths
+
     return this._anim(
-      this._origin.paths.map((p) => p.clone()),
+      this.origin.paths.map((p) => p.clone()),
       index
     )
   }
 
-  public update() {
-    this._origin = this.generateOrigin()
+  public initialize(svg: Svg) {
+    this.origin = this.generateOrigin(svg)
+    return this
   }
 
   public toElement(): SVGSVGElement {
@@ -100,7 +97,7 @@ export class Animation {
       })
     }
 
-    const animEls = this._origin.paths.map((p) => {
+    const animEls = this.origin.paths.map((p) => {
       const pEl = pathObjectToElement(p.toJson())
       const dAnimEl = createAnimationElement(
         p,
@@ -133,36 +130,36 @@ export class Animation {
     })
 
     const size = {
-      width: String(this.svg.width),
-      height: String(this.svg.height),
+      width: String(this.origin.width),
+      height: String(this.origin.height),
     }
-    const bgEl = this.svg.background
+    const bgEl = this.origin.background
       ? [
           createSvgChildElement('rect', {
             ...size,
-            fill: this.svg.background,
+            fill: this.origin.background,
           }),
         ]
       : []
     return createSvgElement(
       {
-        width: String(this.svg.width),
-        height: String(this.svg.height),
+        width: String(this.origin.width),
+        height: String(this.origin.height),
       },
       bgEl.concat(animEls)
     )
   }
 
   /** @returns {number} Default value is total of commands length. */
-  private get frames(): number {
+  public get frames(): number {
     return this._frames && this._frames > 0
       ? this._frames
-      : this._origin.paths.reduce((l, p) => l + p.commands.length, 0)
+      : this.origin.paths.reduce((l, p) => l + p.commands.length, 0)
   }
 
-  private generateOrigin(): Svg {
-    const svg = this.svg.clone()
-    svg.paths.map((p, i) => p.updateAttributes({ id: `t${i}` }))
-    return svg
+  private generateOrigin(svg: Svg) {
+    const origin = svg.clone()
+    origin.paths.map((p, i) => p.updateAttributes({ id: `t${i}` }))
+    return origin
   }
 }
