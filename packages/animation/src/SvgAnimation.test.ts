@@ -1,3 +1,4 @@
+import { parseSVGString } from '@svg-drawing/core'
 import { SvgAnimation } from './SvgAnimation'
 import { FrameAnimation } from './types'
 
@@ -10,7 +11,7 @@ describe('SvgAnimation.ts', () => {
   describe('SvgAnimation', () => {
     const generateAniamtion = (svgStr = defaultTestData) => {
       const anim = SvgAnimation.init(document.createElement('div'))
-      anim.svg.parseSVGString(svgStr)
+      anim.svg.copy(parseSVGString(svgStr))
       return anim
     }
     it('init', () => {
