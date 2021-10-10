@@ -44,7 +44,7 @@ const GRAYSCALE_PALETTE = [
   { r: 150, g: 150, b: 150, a: 255 },
   { r: 200, g: 200, b: 200, a: 255 },
 ]
-export default () => {
+const ImageTrace = () => {
   const [list, setList] = useState(IMAGE_LIST)
   const [palettes, setPalettes] = useState<Rgba[]>(GRAYSCALE_PALETTE)
   const [imageData, setImageData] = useState<ImageData>()
@@ -276,3 +276,5 @@ export default () => {
     </Layout>
   )
 }
+
+export default ImageTrace
