@@ -91,7 +91,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
     const num = Number(e.target.value)
     if (Number.isNaN(num) || !animationRef.current) return
 
-    animationRef.current.ms = num
+    animationRef.current.animation.ms = num
     setAnimMs(num)
   }, [])
 
@@ -141,7 +141,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   const handleShake = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.setAnimation(shake, {
+    animationRef.current.animation.setAnimation(shake, {
       frames: 3,
     })
     animationRef.current.start()
@@ -150,7 +150,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   const handleDrawingAnimation = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.setAnimation(drawingAnimation, {
+    animationRef.current.animation.setAnimation(drawingAnimation, {
       repeatCount: 1,
     })
     animationRef.current.start()
@@ -159,7 +159,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   const handleColorfulAnimation = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.setAnimation(colorfulAnimation, {
+    animationRef.current.animation.setAnimation(colorfulAnimation, {
       frames: colorfulList.length,
     })
     animationRef.current.start()
