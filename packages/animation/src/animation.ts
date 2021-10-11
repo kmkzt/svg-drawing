@@ -58,16 +58,18 @@ export class Animation {
   }
 
   public toElement(): SVGSVGElement {
-    const animPathsList: Path[][] = Array(this.frames)
-      .fill(null)
-      .map((_: any, i: number) => this.generateFrame(i))
+    const animPathsList: Path[][] = [...Array(this.frames)].map(
+      (_: any, i: number) => this.generateFrame(i)
+    )
 
-    const dur = this.frames * (this.ms > 0 ? this.ms : 1) + 'ms'
-    const t = 1 / this.frames
-    const keyTimes = `0;${Array(this.frames)
-      .fill(undefined)
-      .map((_, i) => roundUp((i + 1) * t, 4) + '')
-      .join(';')}`
+    const animateAttrs = {
+      repeatCount: this._repeatCount,
+      dur: this.frames * (this.ms > 0 ? this.ms : 1) + 'ms',
+      keyTimes: [...Array(this.frames)].reduce(
+        (acc, _, i) => acc + ';' + roundUp((i + 1) * (1 / this.frames), 4),
+        '0'
+      ),
+    }
 
     const createAnimationElement = (
       origin: Path,
@@ -89,10 +91,8 @@ export class Animation {
       if (animValues.every((v) => v === defaultValue)) return null
 
       return createSvgChildElement('animate', {
-        dur,
-        keyTimes,
+        ...animateAttrs,
         attributeName,
-        repeatCount: this._repeatCount,
         values: [defaultValue, ...animValues].join(';'),
       })
     }
@@ -129,25 +129,19 @@ export class Animation {
       return pEl
     })
 
-    const size = {
+    const sizeAttributes = {
       width: String(this.origin.width),
       height: String(this.origin.height),
     }
     const bgEl = this.origin.background
       ? [
           createSvgChildElement('rect', {
-            ...size,
+            ...sizeAttributes,
             fill: this.origin.background,
           }),
         ]
       : []
-    return createSvgElement(
-      {
-        width: String(this.origin.width),
-        height: String(this.origin.height),
-      },
-      bgEl.concat(animEls)
-    )
+    return createSvgElement(sizeAttributes, bgEl.concat(animEls))
   }
 
   /** @returns {number} Default value is total of commands length. */
