@@ -22,13 +22,11 @@ export class SvgAnimation {
     this.resize = this.resize.bind(this)
   }
 
-  public stop(): boolean {
-    if (this._stopAnimation) {
-      this._stopAnimation()
-      this.restore()
-      return true
-    }
-    return false
+  public stop(): void {
+    if (!this._stopAnimation) return
+
+    this._stopAnimation()
+    this.restore()
   }
 
   public restore(): void {
@@ -39,6 +37,7 @@ export class SvgAnimation {
   public start(): void {
     // If do not this first, this cannot get the number of frames well.
     this.stop()
+
     this.animation.initialize(this.svg)
     this._startAnimation()
   }

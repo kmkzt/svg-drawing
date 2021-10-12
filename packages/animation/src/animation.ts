@@ -46,10 +46,7 @@ export class Animation {
   public generateFrame(index?: number): Path[] {
     if (!this._anim) return this.origin.paths
 
-    return this._anim(
-      this.origin.paths.map((p) => p.clone()),
-      index
-    )
+    return this._anim(this.origin.clonePaths(), index)
   }
 
   public initialize(svg: Svg) {
