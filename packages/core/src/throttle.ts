@@ -1,12 +1,6 @@
-interface Options {
-  leading?: boolean
-  trailing?: boolean
-}
-
 export function throttle<T extends (...args: any) => any>(
   func: T,
-  wait: number,
-  options: Options = {}
+  wait: number
 ): (...args: Parameters<T>) => ReturnType<T> | null {
   let context: any | null
   let args: any | null
@@ -15,7 +9,7 @@ export function throttle<T extends (...args: any) => any>(
   let previous = 0
 
   const later = (): void => {
-    previous = options.leading === false ? 0 : Date.now()
+    previous = Date.now()
     timeout = null
     result = func.apply(context, args)
     if (!timeout) {
@@ -26,13 +20,12 @@ export function throttle<T extends (...args: any) => any>(
 
   return function wrap(
     this: typeof func,
-    ...wraparg: Parameters<T>
+    ...wrapArg: Parameters<T>
   ): ReturnType<T> | null {
     const now = Date.now()
-    if (!previous && options.leading === false) previous = now
     const remaining = wait - (now - previous)
     context = this
-    args = wraparg
+    args = wrapArg
     if (remaining <= 0 || remaining > wait) {
       if (timeout) {
         clearTimeout(timeout)
@@ -44,7 +37,7 @@ export function throttle<T extends (...args: any) => any>(
         context = null
         args = null
       }
-    } else if (!timeout && options.trailing !== false) {
+    } else if (!timeout) {
       timeout = setTimeout(later, remaining)
     }
     return result
