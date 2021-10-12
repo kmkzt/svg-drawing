@@ -15,6 +15,22 @@ export const mimeTypeMap = {
   svg: 'image/svg+xml',
 } as const
 
+const base64ToBlob = (
+  data: string,
+  type: typeof mimeTypeMap[keyof typeof mimeTypeMap]
+) => {
+  const bin = atob(data.replace(/^.*,/, ''))
+  const buffer = new Uint8Array(bin.length)
+
+  for (let i = 0; i < bin.length; i += 1) {
+    buffer[i] = bin.charCodeAt(i)
+  }
+
+  return new Blob([buffer.buffer], {
+    type,
+  })
+}
+
 export const downloadBlob = ({
   data,
   extension,
@@ -24,15 +40,9 @@ export const downloadBlob = ({
   extension: keyof typeof mimeTypeMap
   filename?: string
 }): void => {
-  const bin = atob(data.replace(/^.*,/, ''))
-  const buffer = new Uint8Array(bin.length)
-  for (let i = 0; i < bin.length; i += 1) {
-    buffer[i] = bin.charCodeAt(i)
-  }
+  const blob = base64ToBlob(data, mimeTypeMap[extension])
+
   const fname = filename || `${Date.now()}.${extension}`
-  const blob = new Blob([buffer.buffer], {
-    type: mimeTypeMap[extension],
-  })
   // IE
   if (navigator.msSaveBlob) {
     navigator.msSaveBlob(blob, fname)
@@ -40,7 +50,7 @@ export const downloadBlob = ({
   }
 
   // Firefox, Chrome, Safari
-  if (URL && URL.createObjectURL) {
+  if (URL?.createObjectURL) {
     const a = document.createElement('a')
     a.download = fname
     a.href = URL.createObjectURL(blob)
