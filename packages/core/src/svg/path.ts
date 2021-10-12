@@ -72,7 +72,9 @@ export class Path {
 
   public clone(): Path {
     return new Path(
-      this.attrs,
+      {
+        ...this.attrs,
+      },
       this.commands.map((c) => c.clone())
     )
   }
