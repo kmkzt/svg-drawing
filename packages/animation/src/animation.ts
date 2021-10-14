@@ -116,7 +116,7 @@ export class Animation {
             createSvgChildElement('animate', {
               ...animateAttrs,
               attributeName: camel2kebab(attributeName),
-              values: [defaultValue, ...animateValues].join(';'),
+              values: [...animateValues, defaultValue].join(';'),
             })
           )
         })
