@@ -4,10 +4,25 @@ import {
   pathObjectToElement,
   Path,
   Svg,
-  camel2kebab,
   roundUp,
+  camel2kebab,
 } from '@svg-drawing/core'
 import { AnimationOption, FrameAnimation } from './types'
+
+const createAnimateAttributeValues = (
+  animationPaths: (Path | undefined)[],
+  attributeName: string,
+  defaultValue: string
+): string[] =>
+  animationPaths.map((p) => p?.attrs[attributeName] || defaultValue)
+
+const createAnimateCommandValues = (
+  animationPaths: (Path | undefined)[],
+  originPath: Path
+): string[] =>
+  animationPaths.map(
+    (p) => p?.getCommandString() || originPath.commands[0].toString()
+  )
 
 export class Animation {
   public ms: number
@@ -44,7 +59,7 @@ export class Animation {
   }
 
   public generateFrame(index?: number): Path[] {
-    if (!this._anim) return this.origin.paths
+    if (!this._anim) return this.origin.clonePaths()
 
     return this._anim(this.origin.clonePaths(), index)
   }
@@ -55,75 +70,58 @@ export class Animation {
   }
 
   public toElement(): SVGSVGElement {
-    const animPathsList: Path[][] = [...Array(this.frames)].map(
-      (_: any, i: number) => this.generateFrame(i)
+    const frameLoop = Array(this.frames).fill(null)
+
+    const animPathsList: Path[][] = frameLoop.map((_: any, i: number) =>
+      this.generateFrame(i)
     )
 
     const animateAttrs = {
       repeatCount: this._repeatCount,
       dur: this.frames * (this.ms > 0 ? this.ms : 1) + 'ms',
-      keyTimes: [...Array(this.frames)].reduce(
+      keyTimes: frameLoop.reduce(
         (acc, _, i) => acc + ';' + roundUp((i + 1) * (1 / this.frames), 4),
         '0'
       ),
     }
 
-    const createAnimationElement = (
-      origin: Path,
-      attributeName: string,
-      defaultValue: string,
-      getValue: ({
-        origin,
-        path,
-      }: {
-        origin: Path
-        path?: Path
-      }) => string | undefined
-    ): SVGElement | null => {
-      const animValues = animPathsList.map((ap) => {
-        const path = ap.find((p) => p.attrs.id === origin.attrs.id)
-        return getValue({ origin, path }) || defaultValue
-      })
-      // return null if value is same all.
-      if (animValues.every((v) => v === defaultValue)) return null
+    const animEls = this.origin.paths.map((basePath) => {
+      const basePathJson = basePath.toJson()
+      const baseEl = pathObjectToElement(basePathJson)
+      if (!basePathJson.id) return baseEl
 
-      return createSvgChildElement('animate', {
-        ...animateAttrs,
-        attributeName,
-        values: [defaultValue, ...animValues].join(';'),
-      })
-    }
-
-    const animEls = this.origin.paths.map((p) => {
-      const pEl = pathObjectToElement(p.toJson())
-      const dAnimEl = createAnimationElement(
-        p,
-        'd',
-        p.getCommandString(),
-        ({ origin, path }) =>
-          path && path.commands.length > 0
-            ? path.getCommandString()
-            : origin.commands[0].toString()
+      const animPaths = animPathsList.map((ap) =>
+        ap.find((p) => p.attrs.id === basePath.attrs.id)
       )
-      if (dAnimEl) pEl.appendChild(dAnimEl)
 
       // TODO: Check attribute key and value.
-      const { id, ...attrs } = p.attrs // exclude id
-      Object.entries(attrs).map(
-        ([propertyName, val]: [string, string | undefined]) => {
-          if (!val) return
-          const attrName = camel2kebab(propertyName)
-          const aEl = createAnimationElement(
-            p,
-            attrName,
-            val,
-            ({ path }) => path?.attrs[propertyName]
-          )
-          if (aEl) pEl.appendChild(aEl)
-        }
-      )
+      const { id, ...attrs } = basePathJson
+      Object.keys(attrs)
+        .sort()
+        .map((attributeName: string) => {
+          const defaultValue = attrs[attributeName]
+          if (!defaultValue) return
 
-      return pEl
+          const animateValues =
+            attributeName === 'd'
+              ? createAnimateCommandValues(animPaths, basePath)
+              : createAnimateAttributeValues(
+                  animPaths,
+                  camel2kebab(attributeName),
+                  defaultValue
+                )
+          if (animateValues.every((v) => v === defaultValue)) return null
+
+          baseEl.appendChild(
+            createSvgChildElement('animate', {
+              ...animateAttrs,
+              attributeName: camel2kebab(attributeName),
+              values: [defaultValue, ...animateValues].join(';'),
+            })
+          )
+        })
+
+      return baseEl
     })
 
     const sizeAttributes = {
