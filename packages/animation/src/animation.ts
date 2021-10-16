@@ -115,9 +115,9 @@ export class Animation {
       const { id, ...attrs } = basePathJson
       const animateAttributes: AnimateAttribute[] = Object.keys(attrs)
         .sort()
-        .reduce((attr: AnimateAttribute[], attributeName: string) => {
+        .reduce((attrs: AnimateAttribute[], attributeName: string) => {
           const defaultValue = attrs[attributeName]
-          if (!defaultValue) return attr
+          if (!defaultValue) return attrs
 
           const values =
             attributeName === 'd'
@@ -127,10 +127,10 @@ export class Animation {
                   attributeName,
                   defaultValue
                 )
-          if (values.every((v) => v === defaultValue)) return attr
+          if (values.every((v) => v === defaultValue)) return attrs
 
           return [
-            ...attr,
+            ...attrs,
             {
               ...frameAttrs,
               attributeName: camel2kebab(attributeName),
