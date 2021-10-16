@@ -17,8 +17,9 @@ export const useAnimation = ({
     (...arg: Parameters<Animation['setAnimation']>) => {
       if (!targetRef.current) return
 
-      const animation = new Animation(sharedSvg)
+      const animation = new Animation({ ms })
       animation.setAnimation(...arg)
+      animation.initialize(sharedSvg)
 
       const animationSvg = animation.toElement()
       targetRef.current.replaceChild(
@@ -26,7 +27,7 @@ export const useAnimation = ({
         targetRef.current.childNodes[0]
       )
     },
-    [sharedSvg]
+    [ms, sharedSvg]
   )
 
   return setupAnimation

@@ -22,7 +22,8 @@ describe('SvgAnimation.ts', () => {
       svg.animation.setAnimation((paths) => {
         return [paths[0]]
       })
-      expect(svg.animation.generateFrame().length).toBe(1)
+
+      expect(svg.animation.getFramePaths(0).length).toBe(1)
     })
     // TODO: Improve test pattern
     it('toAnimationElement', () => {

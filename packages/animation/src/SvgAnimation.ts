@@ -5,14 +5,12 @@ import {
   svg2base64,
   RendererOption,
   ResizeCallback,
-  Path,
 } from '@svg-drawing/core'
 import { Animation } from './animation'
 import { AnimationOption } from './types'
 
 export class SvgAnimation {
-  private _stopId: number | null = null
-  private _generator: Generator<Path[], void, unknown> | null = null
+  private _stopId?: number
   constructor(
     public svg: Svg,
     public animation: Animation,
@@ -43,19 +41,18 @@ export class SvgAnimation {
 
   private _setupAnimation() {
     this.animation.initialize(this.svg)
-    this._generator = this.animation.setupGenerator(0)
   }
 
   private _updateFrame() {
-    if (!this._generator) return
+    if (!this.animation.generator) return
 
-    const { value } = this._generator.next()
-    if (!value) {
+    const result = this.animation.generator.next()
+    if (result.done) {
       this.stop()
       return
     }
 
-    this.svg.paths = value
+    this.svg.paths = result.value
     this.update(this.svg)
   }
 

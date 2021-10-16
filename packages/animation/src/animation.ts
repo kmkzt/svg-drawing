@@ -27,14 +27,13 @@ const createAnimateCommandValues = (
 export class Animation {
   public ms: number
   public origin: Svg
-  private _anim: FrameAnimation | null
-  private _frames: number | undefined
-  private _repeatCount: string
+  public generator?: Generator<Path[], void, unknown>
+  private _frames?: number
+  private _repeatCount?: number
+  private _anim?: FrameAnimation
   constructor({ ms }: AnimationOption = { ms: 60 }) {
     this.ms = ms
-    this._anim = null
     this.origin = this.generateOrigin(new Svg({ width: 0, height: 0 }))
-    this._repeatCount = 'indefinite'
   }
 
   /**
@@ -50,12 +49,14 @@ export class Animation {
       frames,
       repeatCount,
       ms,
-    }: { frames?: number; repeatCount?: number | string; ms?: number } = {}
+    }: { frames?: number; repeatCount?: number; ms?: number } = {}
   ): void {
     this._anim = fn
     this._frames = frames
-    this._repeatCount = `${repeatCount || 'indefinite'}`
+    this._repeatCount = repeatCount || undefined
     if (ms) this.ms = ms
+
+    this.generator = this.setupGenerator()
   }
 
   public getFramePaths(frame: number): Path[] {
@@ -64,10 +65,16 @@ export class Animation {
       : this.origin.clonePaths()
   }
 
-  public *setupGenerator(index = 0) {
-    let frame = index
-    while (true) {
-      frame = frame > this.frames ? 0 : frame + 1
+  private *setupGenerator() {
+    let frame = 0
+    let repeatCount = 0
+    while (!this._repeatCount || repeatCount < this._repeatCount) {
+      if (frame > this.frames) {
+        repeatCount += 1
+        frame = 0
+      } else {
+        frame += 1
+      }
 
       yield this.getFramePaths(frame)
     }
@@ -86,7 +93,7 @@ export class Animation {
     )
 
     const animateAttrs = {
-      repeatCount: this._repeatCount,
+      repeatCount: `${this._repeatCount || `indefinite`}`,
       dur: this.frames * (this.ms > 0 ? this.ms : 1) + 'ms',
       keyTimes: frameLoop.reduce(
         (acc, _, i) => acc + ';' + roundUp((i + 1) * (1 / this.frames), 4),
@@ -148,7 +155,10 @@ export class Animation {
     return createSvgElement(sizeAttributes, bgEl.concat(animEls))
   }
 
-  /** @returns {number} Default value is total of commands length. */
+  /**
+   * @deprecated
+   * @returns {number} Default value is total of commands length.
+   */
   public get frames(): number {
     return this._frames && this._frames > 0
       ? this._frames

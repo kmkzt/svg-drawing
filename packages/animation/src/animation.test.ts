@@ -12,11 +12,11 @@ describe('Animation', () => {
   it('new Animation()', () => {
     expect(init()).toMatchSnapshot()
   })
-  it('generateFrame', () => {
+  it('getFramePaths', () => {
     const anim = init()
     anim.setAnimation((paths) => [paths[0]])
 
-    expect(anim.generateFrame()).toMatchObject([anim.origin.paths[0]])
+    expect(anim.getFramePaths(0)).toMatchObject([anim.origin.paths[0]])
   })
   // TODO: Improve test pattern
   it('toElement', () => {
