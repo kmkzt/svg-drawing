@@ -44,8 +44,8 @@ export const downloadBlob = ({
 
   const fname = filename || `${Date.now()}.${extension}`
   // IE
-  if (navigator.msSaveBlob) {
-    navigator.msSaveBlob(blob, fname)
+  if ((navigator as any).msSaveBlob) {
+    ;(navigator as any).msSaveBlob(blob, fname)
     return
   }
 

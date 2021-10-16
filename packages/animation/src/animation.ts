@@ -128,7 +128,7 @@ export class Animation {
       width: String(this.origin.width),
       height: String(this.origin.height),
     }
-    const bgEl = this.origin.background
+    const bgEl: SVGElement[] = this.origin.background
       ? [
           createSvgChildElement('rect', {
             ...sizeAttributes,
