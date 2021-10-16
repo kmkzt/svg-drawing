@@ -93,7 +93,7 @@ export class Animation {
       this.getFramePaths(i)
     )
 
-    const frameAttrs = {
+    const baseAttrs = {
       repeatCount: `${this._repeatCount || `indefinite`}`,
       dur: this.frames * (this.ms > 0 ? this.ms : 1) + 'ms',
       keyTimes: frameLoop.reduce(
@@ -112,12 +112,12 @@ export class Animation {
       )
 
       // TODO: Check attribute key and value.
-      const { id, ...attrs } = basePathJson
-      const animateAttributes: AnimateAttribute[] = Object.keys(attrs)
+      const { id, ...pathJson } = basePathJson
+      const animateAttributes: AnimateAttribute[] = Object.keys(pathJson)
         .sort()
-        .reduce((attrs: AnimateAttribute[], attributeName: string) => {
-          const defaultValue = attrs[attributeName]
-          if (!defaultValue) return attrs
+        .reduce((animateAttrs: AnimateAttribute[], attributeName: string) => {
+          const defaultValue = pathJson[attributeName]
+          if (!defaultValue) return animateAttrs
 
           const values =
             attributeName === 'd'
@@ -127,12 +127,12 @@ export class Animation {
                   attributeName,
                   defaultValue
                 )
-          if (values.every((v) => v === defaultValue)) return attrs
+          if (values.every((v) => v === defaultValue)) return animateAttrs
 
           return [
-            ...attrs,
+            ...animateAttrs,
             {
-              ...frameAttrs,
+              ...baseAttrs,
               attributeName: camel2kebab(attributeName),
               values: [...values, defaultValue].join(';'),
             },
