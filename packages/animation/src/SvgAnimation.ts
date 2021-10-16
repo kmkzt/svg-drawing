@@ -5,6 +5,8 @@ import {
   svg2base64,
   RendererOption,
   ResizeCallback,
+  createSvgChildElement,
+  createSvgElement,
 } from '@svg-drawing/core'
 import { Animation } from './animation'
 import { AnimationOption } from './types'
@@ -27,7 +29,7 @@ export class SvgAnimation {
   }
 
   public restore(): void {
-    this.svg.copy(this.animation.origin)
+    this.svg.paths = this.animation.restorePaths()
     this.update(this.svg)
   }
 
@@ -40,7 +42,7 @@ export class SvgAnimation {
   }
 
   private _setupAnimation() {
-    this.animation.initialize(this.svg)
+    this.animation.initialize(this.svg.paths)
   }
 
   private _updateFrame() {
@@ -76,8 +78,24 @@ export class SvgAnimation {
    * @todo Support gif and apng
    */
   public download(filename?: string): void {
+    const sizeAttributes = {
+      width: String(this.svg.width),
+      height: String(this.svg.height),
+    }
+
+    const childEl: SVGElement[] = this.svg.background
+      ? [
+          createSvgChildElement('rect', {
+            ...sizeAttributes,
+            fill: this.svg.background,
+          }),
+          ...this.animation.toElement(),
+        ]
+      : this.animation.toElement()
+    const svgEl = createSvgElement(sizeAttributes, childEl)
+
     downloadBlob({
-      data: svg2base64(this.animation.toElement().outerHTML),
+      data: svg2base64(svgEl.outerHTML),
       extension: 'svg',
       filename,
     })
@@ -86,7 +104,7 @@ export class SvgAnimation {
   public resize({ width, height }: Parameters<ResizeCallback>[0]): void {
     this.stop()
     this.svg.resize({ width, height })
-    this.animation.initialize(this.svg)
+    this.animation.initialize(this.svg.paths)
     this.start()
   }
 
