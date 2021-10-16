@@ -27,11 +27,13 @@ export const createSvgElement = (
   return svg
 }
 
-export const createSvgChildElement = (
-  elname: string,
+export const createSvgChildElement = <
+  T extends keyof SVGElementTagNameMap = any
+>(
+  elName: T,
   attrs: Attrs
-): SVGElement => {
-  const path = document.createElementNS(SVG_NS, elname)
+): SVGElementTagNameMap[T] => {
+  const path = document.createElementNS(SVG_NS, elName)
   Object.keys(attrs)
     .sort()
     .map((key: string) => {
@@ -40,7 +42,7 @@ export const createSvgChildElement = (
   return path
 }
 
-export const pathObjectToElement = (path: PathObject): SVGElement => {
+export const pathObjectToElement = (path: PathObject): SVGPathElement => {
   const kebabAttrs = Object.entries(path).reduce(
     (acc, [key, val], _i) =>
       val
