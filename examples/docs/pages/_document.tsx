@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'
 import Document, {
   Head,
   Html,
