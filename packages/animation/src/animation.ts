@@ -54,14 +54,23 @@ export class Animation {
   ): void {
     this._anim = fn
     this._frames = frames
-    this._repeatCount = repeatCount ? `${repeatCount}` : 'indefinite'
+    this._repeatCount = `${repeatCount || 'indefinite'}`
     if (ms) this.ms = ms
   }
 
-  public generateFrame(index?: number): Path[] {
-    if (!this._anim) return this.origin.clonePaths()
+  public getFramePaths(frame: number): Path[] {
+    return this._anim
+      ? this._anim(this.origin.clonePaths(), frame)
+      : this.origin.clonePaths()
+  }
 
-    return this._anim(this.origin.clonePaths(), index)
+  public *setupGenerator(index = 0) {
+    let frame = index
+    while (true) {
+      frame = frame > this.frames ? 0 : frame + 1
+
+      yield this.getFramePaths(frame)
+    }
   }
 
   public initialize(svg: Svg) {
@@ -73,7 +82,7 @@ export class Animation {
     const frameLoop = Array(this.frames).fill(null)
 
     const animPathsList: Path[][] = frameLoop.map((_: any, i: number) =>
-      this.generateFrame(i)
+      this.getFramePaths(i)
     )
 
     const animateAttrs = {

@@ -5,27 +5,26 @@ import {
   svg2base64,
   RendererOption,
   ResizeCallback,
+  Path,
 } from '@svg-drawing/core'
 import { Animation } from './animation'
 import { AnimationOption } from './types'
 
 export class SvgAnimation {
-  private _stopId: number
-  private _stopAnimation: (() => void) | null
+  private _stopId: number | null = null
+  private _generator: Generator<Path[], void, unknown> | null = null
   constructor(
     public svg: Svg,
     public animation: Animation,
     private update: (svg: Svg) => void
   ) {
-    this._stopAnimation = null
-    this._stopId = 0
     this.resize = this.resize.bind(this)
   }
 
   public stop(): void {
-    if (!this._stopAnimation) return
+    if (!this._stopId) return
 
-    this._stopAnimation()
+    cancelAnimationFrame(this._stopId)
     this.restore()
   }
 
@@ -38,28 +37,41 @@ export class SvgAnimation {
     // If do not this first, this cannot get the number of frames well.
     this.stop()
 
-    this.animation.initialize(this.svg)
+    this._setupAnimation()
     this._startAnimation()
   }
 
+  private _setupAnimation() {
+    this.animation.initialize(this.svg)
+    this._generator = this.animation.setupGenerator(0)
+  }
+
+  private _updateFrame() {
+    if (!this._generator) return
+
+    const { value } = this._generator.next()
+    if (!value) {
+      this.stop()
+      return
+    }
+
+    this.svg.paths = value
+    this.update(this.svg)
+  }
+
   private _startAnimation(): void {
-    let index = 0
-    let start: number | undefined
-    const loopCount: number = this.animation.frames
-    const frame: FrameRequestCallback = (timestamp) => {
-      if (!start || timestamp - start > this.animation.ms) {
+    let start = 0
+
+    const frame: FrameRequestCallback = (timestamp: number) => {
+      if (timestamp - start > this.animation.ms) {
         start = timestamp
-        this.svg.paths = this.animation.generateFrame(index)
-        this.update(this.svg)
-        index = index > loopCount ? 0 : index + 1
+        this._updateFrame()
       }
+
       this._stopId = requestAnimationFrame(frame)
     }
+
     this._stopId = requestAnimationFrame(frame)
-    this._stopAnimation = () => {
-      cancelAnimationFrame(this._stopId)
-      this._stopAnimation = null
-    }
   }
 
   /**
