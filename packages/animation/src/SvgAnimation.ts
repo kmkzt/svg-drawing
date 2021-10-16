@@ -82,7 +82,7 @@ export class SvgAnimation {
 
     const animationJson = this.animation.toJson()
 
-    const pathEls = this.svg.paths.map((path) => {
+    const pathEls = this.animation.paths.map((path) => {
       const pathJson = path.toJson()
       const pathEl = pathObjectToElement(pathJson)
 
