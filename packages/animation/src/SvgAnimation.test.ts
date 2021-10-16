@@ -17,16 +17,8 @@ describe('SvgAnimation.ts', () => {
     it('init', () => {
       expect(generateAnimation()).toMatchSnapshot()
     })
-    it('generateFrame', () => {
-      const svg = generateAnimation()
-      svg.animation.setAnimation((paths) => {
-        return [paths[0]]
-      })
-
-      expect(svg.animation.getFramePaths(0).length).toBe(1)
-    })
     // TODO: Improve test pattern
-    it('toAnimationElement', () => {
+    it('toElement', () => {
       const svg = generateAnimation()
       const testAnimation: FrameAnimation = (paths, count) => {
         const update = []
@@ -50,7 +42,7 @@ describe('SvgAnimation.ts', () => {
       }
       svg.animation.setAnimation(testAnimation)
       svg.start()
-      expect(svg.animation.toElement()).toMatchSnapshot()
+      expect(svg.toElement()).toMatchSnapshot()
     })
 
     it('setAnimation, start, stop', async () => {

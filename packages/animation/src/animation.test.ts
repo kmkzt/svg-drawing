@@ -8,7 +8,7 @@ const defaultTestData = `<svg width="200" height="200">
 
 describe('Animation', () => {
   const init = (svgStr = defaultTestData) =>
-    new Animation().initialize(parseSVGString(svgStr))
+    new Animation().initialize(parseSVGString(svgStr).paths)
   it('new Animation()', () => {
     expect(init()).toMatchSnapshot()
   })
@@ -16,10 +16,10 @@ describe('Animation', () => {
     const anim = init()
     anim.setAnimation((paths) => [paths[0]])
 
-    expect(anim.getFramePaths(0)).toMatchObject([anim.origin.paths[0]])
+    expect(anim.getFramePaths(0)).toMatchObject([anim.paths[0]])
   })
   // TODO: Improve test pattern
-  it('toElement', () => {
+  it('toJson', () => {
     const anim = init()
     anim.setAnimation((paths, count) => {
       const update = []
@@ -42,6 +42,6 @@ describe('Animation', () => {
       return update
     })
 
-    expect(anim.toElement()).toMatchSnapshot()
+    expect(anim.toJson()).toMatchSnapshot()
   })
 })

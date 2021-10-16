@@ -7,6 +7,7 @@ import {
   ResizeCallback,
   createSvgChildElement,
   createSvgElement,
+  pathObjectToElement,
 } from '@svg-drawing/core'
 import { Animation } from './animation'
 import { AnimationOption } from './types'
@@ -73,29 +74,48 @@ export class SvgAnimation {
     this._stopId = requestAnimationFrame(frame)
   }
 
-  /**
-   * @param filename
-   * @todo Support gif and apng
-   */
-  public download(filename?: string): void {
+  public toElement() {
     const sizeAttributes = {
       width: String(this.svg.width),
       height: String(this.svg.height),
     }
 
-    const childEl: SVGElement[] = this.svg.background
+    const animationJson = this.animation.toJson()
+
+    const pathEls = this.svg.paths.map((path) => {
+      const pathJson = path.toJson()
+      const pathEl = pathObjectToElement(pathJson)
+
+      if (pathJson.id) {
+        const animAttrs = animationJson[pathJson.id]
+        animAttrs.map((attr) => {
+          pathEl.appendChild(createSvgChildElement('animate', attr))
+        })
+      }
+
+      return pathEl
+    })
+
+    const childEls: SVGElement[] = this.svg.background
       ? [
           createSvgChildElement('rect', {
             ...sizeAttributes,
             fill: this.svg.background,
           }),
-          ...this.animation.toElement(),
+          ...pathEls,
         ]
-      : this.animation.toElement()
-    const svgEl = createSvgElement(sizeAttributes, childEl)
+      : pathEls
 
+    return createSvgElement(sizeAttributes, childEls)
+  }
+
+  /**
+   * @param filename
+   * @todo Support gif and apng
+   */
+  public download(filename?: string): void {
     downloadBlob({
-      data: svg2base64(svgEl.outerHTML),
+      data: svg2base64(this.toElement().outerHTML),
       extension: 'svg',
       filename,
     })

@@ -1,13 +1,10 @@
+import { Path, roundUp, camel2kebab } from '@svg-drawing/core'
 import {
-  createSvgElement,
-  createSvgChildElement,
-  pathObjectToElement,
-  Path,
-  Svg,
-  roundUp,
-  camel2kebab,
-} from '@svg-drawing/core'
-import { AnimationOption, FrameAnimation } from './types'
+  AnimationOption,
+  FrameAnimation,
+  AnimateObject,
+  AnimateAttribute,
+} from './types'
 
 const createAnimateAttributeValues = (
   animationPaths: (Path | undefined)[],
@@ -89,26 +86,26 @@ export class Animation {
     return this
   }
 
-  public toElement(): SVGPathElement[] {
+  public toJson(): AnimateObject {
     const frameLoop = Array(this.frames).fill(null)
 
     const animPathsList: Path[][] = frameLoop.map((_: any, i: number) =>
       this.getFramePaths(i)
     )
 
-    const animateAttrs = {
+    const frameAttrs = {
       repeatCount: `${this._repeatCount || `indefinite`}`,
       dur: this.frames * (this.ms > 0 ? this.ms : 1) + 'ms',
       keyTimes: frameLoop.reduce(
-        (acc, _, i) => acc + ';' + roundUp((i + 1) * (1 / this.frames), 4),
+        (acc: string, _, i) =>
+          acc + ';' + roundUp((i + 1) * (1 / this.frames), 4),
         '0'
       ),
     }
 
-    return this.paths.map((basePath) => {
+    return this.paths.reduce((acc: AnimateObject, basePath) => {
       const basePathJson = basePath.toJson()
-      const baseEl = pathObjectToElement(basePathJson)
-      if (!basePathJson.id) return baseEl
+      if (!basePathJson.id) return acc
 
       const animPaths = animPathsList.map((ap) =>
         ap.find((p) => p.attrs.id === basePath.attrs.id)
@@ -116,33 +113,37 @@ export class Animation {
 
       // TODO: Check attribute key and value.
       const { id, ...attrs } = basePathJson
-      Object.keys(attrs)
+      const animateAttributes: AnimateAttribute[] = Object.keys(attrs)
         .sort()
-        .map((attributeName: string) => {
+        .reduce((attr: AnimateAttribute[], attributeName: string) => {
           const defaultValue = attrs[attributeName]
-          if (!defaultValue) return
+          if (!defaultValue) return attr
 
-          const animateValues =
+          const values =
             attributeName === 'd'
               ? createAnimateCommandValues(animPaths, basePath)
               : createAnimateAttributeValues(
                   animPaths,
-                  camel2kebab(attributeName),
+                  attributeName,
                   defaultValue
                 )
-          if (animateValues.every((v) => v === defaultValue)) return null
+          if (values.every((v) => v === defaultValue)) return attr
 
-          baseEl.appendChild(
-            createSvgChildElement('animate', {
-              ...animateAttrs,
+          return [
+            ...attr,
+            {
+              ...frameAttrs,
               attributeName: camel2kebab(attributeName),
-              values: [...animateValues, defaultValue].join(';'),
-            })
-          )
-        })
+              values: [...values, defaultValue].join(';'),
+            },
+          ]
+        }, [])
 
-      return baseEl
-    })
+      return {
+        ...acc,
+        [id]: animateAttributes,
+      }
+    }, {})
   }
 
   /**
