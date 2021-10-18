@@ -3,6 +3,7 @@
 exports[`SvgAnimation.ts SvgAnimation init 1`] = `
 SvgAnimation {
   "animation": Animation {
+    "_frame": null,
     "ms": 60,
     "paths": Array [],
   },

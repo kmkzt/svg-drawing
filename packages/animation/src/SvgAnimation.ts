@@ -87,8 +87,7 @@ export class SvgAnimation {
       const pathEl = pathObjectToElement(pathJson)
 
       if (pathJson.id) {
-        const animAttrs = animationJson[pathJson.id]
-        animAttrs.map((attr) => {
+        animationJson?.[pathJson.id]?.map((attr) => {
           pathEl.appendChild(createSvgChildElement('animate', attr))
         })
       }

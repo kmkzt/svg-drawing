@@ -1,11 +1,11 @@
 import { Slider, Input, Label } from '@rebass/forms/styled-components'
-import { SvgAnimation, FrameAnimation } from '@svg-drawing/animation'
 import {
-  Command,
-  parseSVGString,
-  Point,
-  ResizeHandler,
-} from '@svg-drawing/core'
+  SvgAnimation,
+  DrawFrame,
+  AttributeFrame,
+  ShakeFrame,
+} from '@svg-drawing/animation'
+import { parseSVGString, ResizeHandler } from '@svg-drawing/core'
 import { NextPage } from 'next'
 import {
   useEffect,
@@ -21,21 +21,7 @@ import { example } from '../../lib/example-svg'
 
 const size = 30
 
-const shake: FrameAnimation = (paths) => {
-  const range = 5
-  const randomShaking = (): number => Math.random() * range - range / 2
-  for (let i = 0; i < paths.length; i += 1) {
-    paths[i].commands = paths[i].commands.map((c: Command) => {
-      c.points = c.points.map((po) =>
-        po.add(new Point(randomShaking(), randomShaking()))
-      )
-      return c
-    })
-  }
-  return paths
-}
-
-const colorfulList = [
+const colorList = [
   '#F44336',
   '#E91E63',
   '#9C27B0',
@@ -52,30 +38,10 @@ const colorfulList = [
   '#FF9800',
   '#FF5722',
 ]
-
-const colorfulAnimation: FrameAnimation = (paths, fid) => {
-  if (!fid) return paths
-  for (let i = 0; i < paths.length; i += 1) {
-    paths[i].attrs.stroke = colorfulList[fid % colorfulList.length]
-    paths[i].attrs.fill = colorfulList[(fid + 4) % colorfulList.length]
-  }
-  return paths
-}
-
-const drawingAnimation: FrameAnimation = (paths, fid) => {
-  if (!fid) return paths
-  const update = []
-  for (let i = 0; i < paths.length; i += 1) {
-    if (fid < paths[i].commands.length) {
-      paths[i].commands = paths[i].commands.slice(0, fid)
-      update.push(paths[i])
-      break
-    }
-    fid -= paths[i].commands.length
-    update.push(paths[i])
-  }
-  return update
-}
+const attributesList = colorList.map((stroke, i) => ({
+  stroke,
+  fill: colorList[(i + 4) % colorList.length],
+}))
 
 interface Props {
   isSp: boolean
@@ -141,27 +107,30 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   const handleShake = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.animation.setAnimation(shake, {
-      frames: 3,
-    })
+    animationRef.current.animation.setAnimation(new ShakeFrame(10))
     animationRef.current.start()
   }, [])
 
   const handleDrawingAnimation = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.animation.setAnimation(drawingAnimation, {
-      repeatCount: 1,
-    })
+    animationRef.current.animation.setAnimation(
+      new DrawFrame(animationRef.current.svg.paths),
+      {
+        repeatCount: 1,
+      }
+    )
+
     animationRef.current.start()
   }, [])
 
   const handleColorfulAnimation = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.animation.setAnimation(colorfulAnimation, {
-      frames: colorfulList.length,
-    })
+    animationRef.current.animation.setAnimation(
+      new AttributeFrame(attributesList)
+    )
+
     animationRef.current.start()
   }, [])
 

@@ -25,9 +25,8 @@ export class Animation {
   public ms: number
   public paths: Path[]
   public generator?: Generator<Path[], void, unknown>
-  private _frames?: number
+  private _frame: FrameAnimation | null = null
   private _repeatCount?: number
-  private _anim?: FrameAnimation
   constructor({ ms }: AnimationOption = { ms: 60 }) {
     this.ms = ms
     this.paths = []
@@ -41,25 +40,23 @@ export class Animation {
    * @param {{ frame?: number; repeat?: number }} opts
    */
   public setAnimation(
-    fn: FrameAnimation,
-    {
-      frames,
-      repeatCount,
-      ms,
-    }: { frames?: number; repeatCount?: number; ms?: number } = {}
+    frame: FrameAnimation,
+    { repeatCount, ms }: { repeatCount?: number; ms?: number } = {}
   ): void {
-    this._anim = fn
-    this._frames = frames
+    this._frame = frame
+
     this._repeatCount = repeatCount || undefined
     if (ms) this.ms = ms
 
     this.generator = this.setupGenerator()
   }
 
-  public getFramePaths(frame: number): Path[] {
+  public getFramePaths(key: number): Path[] {
     const paths = this.paths.map((p) => p.clone())
 
-    return this._anim ? this._anim(paths, frame) : paths
+    if (!paths.length || !this._frame) return paths
+
+    return this._frame.animation(paths, key)
   }
 
   public restorePaths() {
@@ -67,27 +64,33 @@ export class Animation {
   }
 
   private *setupGenerator() {
-    let frame = 0
+    let loopId = 0
     let repeatCount = 0
+    if (!this._frame) return
+
     while (!this._repeatCount || repeatCount < this._repeatCount) {
-      if (frame > this.frames) {
+      if (loopId > this._frame.loops) {
         repeatCount += 1
-        frame = 0
+        loopId = 0
       } else {
-        frame += 1
+        loopId += 1
       }
 
-      yield this.getFramePaths(frame)
+      yield this.getFramePaths(loopId)
     }
   }
 
   public initialize(paths: Path[]) {
     this.paths = this.generateOriginPaths(paths)
+    this.generator = this.setupGenerator()
     return this
   }
 
   public toJson(): AnimateObject {
-    const frameLoop = Array(this.frames).fill(null)
+    if (!this._frame) return {}
+
+    const loop = this._frame.loops
+    const frameLoop = Array(this._frame.loops).fill(null)
 
     const animPathsList: Path[][] = frameLoop.map((_: any, i: number) =>
       this.getFramePaths(i)
@@ -95,10 +98,9 @@ export class Animation {
 
     const baseAttrs = {
       repeatCount: `${this._repeatCount || `indefinite`}`,
-      dur: this.frames * (this.ms > 0 ? this.ms : 1) + 'ms',
+      dur: loop * (this.ms > 0 ? this.ms : 1) + 'ms',
       keyTimes: frameLoop.reduce(
-        (acc: string, _, i) =>
-          acc + ';' + roundUp((i + 1) * (1 / this.frames), 4),
+        (acc: string, _, i) => acc + ';' + roundUp((i + 1) * (1 / loop), 4),
         '0'
       ),
     }
@@ -144,16 +146,6 @@ export class Animation {
         [id]: animateAttributes,
       }
     }, {})
-  }
-
-  /**
-   * @deprecated
-   * @returns {number} Default value is total of commands length.
-   */
-  public get frames(): number {
-    return this._frames && this._frames > 0
-      ? this._frames
-      : this.paths.reduce((l, p) => l + p.commands.length, 0)
   }
 
   private generateOriginPaths(paths: Path[]) {

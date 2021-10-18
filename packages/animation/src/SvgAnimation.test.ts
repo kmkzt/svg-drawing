@@ -20,28 +20,35 @@ describe('SvgAnimation.ts', () => {
     // TODO: Improve test pattern
     it('toElement', () => {
       const svg = generateAnimation()
-      const testAnimation: FrameAnimation = (paths, count) => {
-        const update = []
-        for (let i = 0; i < paths.length; i += 1) {
-          // Test property
-          if (count % 2 === 0) paths[i].updateAttributes({ stroke: '#0ff' })
-          // Test Attribute
-          if (count % 3 === 0)
-            paths[i].updateAttributes({
-              strokeLinecap: 'mitter',
-            })
-          if (count < paths[i].commands.length) {
-            paths[i].commands = paths[i].commands.slice(0, count)
-            update.push(paths[i])
-            break
-          }
-          count -= paths[i].commands.length
-          update.push(paths[i])
-        }
-        return update
-      }
-      svg.animation.setAnimation(testAnimation)
+
       svg.start()
+      svg.animation.setAnimation({
+        animation: (paths, key) => {
+          let count = key
+          const update = []
+          for (let i = 0; i < paths.length; i += 1) {
+            // Test property
+            if (count % 2 === 0) paths[i].updateAttributes({ stroke: '#0ff' })
+            // Test Attribute
+            if (count % 3 === 0)
+              paths[i].updateAttributes({
+                strokeLinecap: 'mitter',
+              })
+            if (count < paths[i].commands.length) {
+              paths[i].commands = paths[i].commands.slice(0, count)
+              update.push(paths[i])
+              break
+            }
+            count -= paths[i].commands.length
+            update.push(paths[i])
+          }
+          return update
+        },
+        loops: svg.animation.paths.reduce(
+          (acc, p) => acc + p.commands.length,
+          0
+        ),
+      })
       expect(svg.toElement()).toMatchSnapshot()
     })
 
@@ -49,13 +56,15 @@ describe('SvgAnimation.ts', () => {
       const svg = generateAnimation()
       let loop = 0
       svg.animation.setAnimation(
-        (_paths, fid) => {
-          loop += 1
-          return []
+        {
+          animation: (_paths, fid) => {
+            loop += 1
+            return []
+          },
+          loops: 3,
         },
         {
           ms: 300,
-          frames: 3,
         }
       )
       svg.start()

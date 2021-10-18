@@ -14,32 +14,36 @@ describe('Animation', () => {
   })
   it('getFramePaths', () => {
     const anim = init()
-    anim.setAnimation((paths) => [paths[0]])
+    anim.setAnimation({ animation: (paths) => [paths[0]], loops: 1 })
 
     expect(anim.getFramePaths(0)).toMatchObject([anim.paths[0]])
   })
   // TODO: Improve test pattern
   it('toJson', () => {
     const anim = init()
-    anim.setAnimation((paths, count) => {
-      const update = []
-      for (let i = 0; i < paths.length; i += 1) {
-        // Test property
-        if (count % 2 === 0) paths[i].updateAttributes({ stroke: '#0ff' })
-        // Test Attribute
-        if (count % 3 === 0)
-          paths[i].updateAttributes({
-            strokeLinecap: 'mitter',
-          })
-        if (count < paths[i].commands.length) {
-          paths[i].commands = paths[i].commands.slice(0, count)
+    anim.setAnimation({
+      animation: (paths, key) => {
+        const update = []
+        let count = key
+        for (let i = 0; i < paths.length; i += 1) {
+          // Test property
+          if (count % 2 === 0) paths[i].updateAttributes({ stroke: '#0ff' })
+          // Test Attribute
+          if (count % 3 === 0)
+            paths[i].updateAttributes({
+              strokeLinecap: 'mitter',
+            })
+          if (count < paths[i].commands.length) {
+            paths[i].commands = paths[i].commands.slice(0, count)
+            update.push(paths[i])
+            break
+          }
+          count -= paths[i].commands.length
           update.push(paths[i])
-          break
         }
-        count -= paths[i].commands.length
-        update.push(paths[i])
-      }
-      return update
+        return update
+      },
+      loops: anim.paths.reduce((acc, p) => acc + p.commands.length, 0),
     })
 
     expect(anim.toJson()).toMatchSnapshot()

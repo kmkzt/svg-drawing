@@ -2,6 +2,8 @@
 
 exports[`Animation new Animation() 1`] = `
 Animation {
+  "_frame": null,
+  "generator": Object {},
   "ms": 60,
   "paths": Array [
     Path {
