@@ -14,14 +14,14 @@ describe('Animation', () => {
   })
   it('getFramePaths', () => {
     const anim = init()
-    anim.setAnimation({ animation: (paths) => [paths[0]], loops: 1 })
+    anim.setup({ animation: (paths) => [paths[0]], loops: 1 })
 
     expect(anim.getFramePaths(0)).toMatchObject([anim.paths[0]])
   })
   // TODO: Improve test pattern
   it('toJson', () => {
     const anim = init()
-    anim.setAnimation({
+    anim.setup({
       animation: (paths, key) => {
         const update = []
         let count = key

@@ -107,14 +107,14 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   const handleShake = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.animation.setAnimation(new ShakeFrame(10))
+    animationRef.current.animation.setup(new ShakeFrame(10))
     animationRef.current.start()
   }, [])
 
   const handleDrawingAnimation = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.animation.setAnimation(
+    animationRef.current.animation.setup(
       new DrawFrame(animationRef.current.svg.paths),
       {
         repeatCount: 1,
@@ -127,9 +127,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   const handleColorfulAnimation = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.animation.setAnimation(
-      new AttributeFrame(attributesList)
-    )
+    animationRef.current.animation.setup(new AttributeFrame(attributesList))
 
     animationRef.current.start()
   }, [])

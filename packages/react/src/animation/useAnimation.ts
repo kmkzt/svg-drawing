@@ -1,34 +1,43 @@
-import { Animation } from '@svg-drawing/animation'
-import { useCallback, useRef } from 'react'
-import type { Svg } from '@svg-drawing/core'
+import { Animation, AnimateObject } from '@svg-drawing/animation'
+import { useCallback, useState, useMemo } from 'react'
+import type { Path } from '@svg-drawing/core'
 
-export const useAnimation = ({
-  ms,
-  sharedSvg,
-  background,
-}: {
-  ms: number
-  sharedSvg: Svg
-  background: string
-}): Animation['setAnimation'] => {
-  const targetRef = useRef<HTMLDivElement | null>(null)
+type UseAnimation = (arg: { paths: Path[] }) => [
+  AnimateObject | null,
+  {
+    update: () => void
+    clear: () => void
+    setup: Animation['setup']
+  }
+]
 
-  const setupAnimation = useCallback(
-    (...arg: Parameters<Animation['setAnimation']>) => {
-      if (!targetRef.current) return
+export const useAnimation: UseAnimation = ({ paths }) => {
+  const [animateObject, setAnimateObject] = useState<AnimateObject | null>(null)
 
-      const animation = new Animation({ ms })
-      animation.setAnimation(...arg)
-      animation.initialize(sharedSvg)
+  const animation = useMemo(() => new Animation(), [])
 
-      const animationSvg = animation.toElement()
-      targetRef.current.replaceChild(
-        animationSvg,
-        targetRef.current.childNodes[0]
-      )
+  const setup = useCallback<Animation['setup']>(
+    (frame, opts) => {
+      animation.setup(frame, opts)
     },
-    [ms, sharedSvg]
+    [animation]
   )
 
-  return setupAnimation
+  const update = useCallback(() => {
+    animation.initialize(paths)
+    setAnimateObject(animation.toJson())
+  }, [animation, paths])
+
+  const clear = useCallback(() => {
+    setAnimateObject(null)
+  }, [])
+
+  return [
+    animateObject,
+    {
+      setup,
+      update,
+      clear,
+    },
+  ]
 }

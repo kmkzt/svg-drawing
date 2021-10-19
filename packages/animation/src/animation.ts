@@ -39,7 +39,7 @@ export class Animation {
    * @param {FramaAnimation} fn
    * @param {{ frame?: number; repeat?: number }} opts
    */
-  public setAnimation(
+  public setup(
     frame: FrameAnimation,
     { repeatCount, ms }: { repeatCount?: number; ms?: number } = {}
   ): void {

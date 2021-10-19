@@ -46,7 +46,7 @@
       const start = document.getElementById('start')
       start.onclick = () => {
         // Sets the animation callback function
-        anim.setAnimation(
+        anim.setup(
           // Example drawing animation.
           // Since the Path Object before animation is passed as an argument, it is converted and returned.
           (paths, fid) => {
@@ -63,7 +63,7 @@
             }
             return update
           },
-          // setAnimation options. `repeatCount` is related to downloadAnimation methods.
+          // setup options. `repeatCount` is related to downloadAnimation methods.
           {
             repeatCount: 1,
             ms: 20,

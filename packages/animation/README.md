@@ -41,7 +41,7 @@ const setupAnimation = () => {
 
   // Sets the animation callback function. `fid` is number of frame index.
   // It repeat times number of total commands. You can change the number of repeats as an option.
-  anim.setAnimation(
+  anim.setup(
     (paths, fid) => {
       let dispNum = fid
       const update = []
@@ -139,7 +139,7 @@ anim.renderer.svg.parseSVGString(
 ![shake animation svg](./assets/shake.svg)
 
 ```js
-anim.setAnimation(
+anim.setup(
   paths => {
     const range = 5
     const randomShaking = () => Math.random() * range - range / 2
@@ -182,7 +182,7 @@ const colorfulList = [
   '#FF5722'
 ]
 
-anim.setAnimation(
+anim.setup(
   (paths, fid) => {
     for (let i = 0; i < paths.length; i += 1) {
       paths[i].attrs.stroke = colorfulList[fid % colorfulList.length]

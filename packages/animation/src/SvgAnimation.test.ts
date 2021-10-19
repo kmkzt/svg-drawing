@@ -22,7 +22,7 @@ describe('SvgAnimation.ts', () => {
       const svg = generateAnimation()
 
       svg.start()
-      svg.animation.setAnimation({
+      svg.animation.setup({
         animation: (paths, key) => {
           let count = key
           const update = []
@@ -52,10 +52,10 @@ describe('SvgAnimation.ts', () => {
       expect(svg.toElement()).toMatchSnapshot()
     })
 
-    it('setAnimation, start, stop', async () => {
+    it('setup, start, stop', async () => {
       const svg = generateAnimation()
       let loop = 0
-      svg.animation.setAnimation(
+      svg.animation.setup(
         {
           animation: (_paths, fid) => {
             loop += 1
