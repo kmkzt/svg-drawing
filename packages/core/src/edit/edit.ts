@@ -3,7 +3,7 @@ import type {
   PointObject,
   ControlPoint,
   BoundingBox,
-  PathObject,
+  PathAttributes,
   Selecting,
   EditSvgObject,
   EditPathObject,
@@ -162,7 +162,7 @@ export class EditSvg {
     }
   }
 
-  public changeAttributes(attrs: PathObject) {
+  public changeAttributes(attrs: PathAttributes) {
     this.exec((path) => path.updateAttributes(attrs))
   }
 

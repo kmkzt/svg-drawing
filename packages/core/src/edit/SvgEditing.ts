@@ -2,7 +2,7 @@ import { EditSvg } from './edit'
 import { Svg } from '../svg'
 import type {
   PointObject,
-  PathObject,
+  PathAttributes,
   Selecting,
   ResizeBoundingBoxBase,
   SelectIndex,
@@ -53,7 +53,7 @@ export class SvgEditing {
     this.cancel()
   }
 
-  public changeAttributes(attrs: PathObject) {
+  public changeAttributes(attrs: PathAttributes) {
     this.editSvg.changeAttributes(attrs)
     this.updater(this.editSvg)
   }

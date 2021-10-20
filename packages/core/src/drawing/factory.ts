@@ -1,10 +1,10 @@
 import { BezierCurve, closeCommands, createLineCommands } from './convert'
 import { Path } from '../svg'
-import type { CreateCommand, DrawFactory, PathObject } from '../types'
+import type { CreateCommand, DrawFactory, PathAttributes } from '../types'
 
 export class BasicDrawFactory implements DrawFactory {
   constructor(
-    private attrs: PathObject,
+    private attrs: PathAttributes,
     private opts: { curve?: boolean; close?: boolean } = {}
   ) {
     this.opts = {
@@ -28,11 +28,11 @@ export class BasicDrawFactory implements DrawFactory {
     return (po) => (this.opts.close ? closeCommands(create(po)) : create(po))
   }
 
-  setPathAttributes(attrs: PathObject) {
+  setPathAttributes(attrs: PathAttributes) {
     this.attrs = attrs
   }
 
-  updatePathAttributes(attrs: PathObject) {
+  updatePathAttributes(attrs: PathAttributes) {
     this.attrs = {
       ...this.attrs,
       ...attrs,

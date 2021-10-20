@@ -1,4 +1,4 @@
-import type { Command, PathObject, PointObject } from '../types'
+import type { Command, PathAttributes, PointObject } from '../types'
 
 /**
  * @todo: refactor command. The following commands are not supported.
@@ -6,7 +6,7 @@ import type { Command, PathObject, PointObject } from '../types'
  * Cannot support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
  */
 export class Path {
-  constructor(public attrs: PathObject = {}, public commands: Command[] = []) {}
+  constructor(public attrs: PathAttributes = {}, public commands: Command[] = []) {}
 
   public scale(r: number): this {
     this.commands = this.commands.map((c: Command) => c.scale(r))
@@ -46,18 +46,18 @@ export class Path {
     )
   }
 
-  public toJson(): PathObject {
+  public toJson(): PathAttributes {
     return {
       ...this.attrs,
       d: this.getCommandString(),
     }
   }
 
-  public setAttributes(attrs: PathObject) {
+  public setAttributes(attrs: PathAttributes) {
     this.attrs = attrs
   }
 
-  public updateAttributes(attrs: PathObject) {
+  public updateAttributes(attrs: PathAttributes) {
     this.attrs = {
       ...this.attrs,
       ...attrs,

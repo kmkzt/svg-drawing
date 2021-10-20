@@ -1,6 +1,6 @@
 import { Svg } from './svg'
 import { camel2kebab } from './utils'
-import type { PathObject, RendererOption, SvgObject } from './types'
+import type { PathAttributes, RendererOption, SvgObject } from './types'
 
 const VERSION = '1.1'
 const SVG_NS = 'http://www.w3.org/2000/svg'
@@ -42,7 +42,7 @@ export const createSvgChildElement = <
   return path
 }
 
-export const pathObjectToElement = (path: PathObject): SVGPathElement => {
+export const pathObjectToElement = (path: PathAttributes): SVGPathElement => {
   const kebabAttrs = Object.entries(path).reduce(
     (acc, [key, val], _i) =>
       val

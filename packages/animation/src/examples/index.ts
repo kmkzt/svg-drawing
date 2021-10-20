@@ -1,4 +1,4 @@
-import { Command, Point, Path, PathObject } from '@svg-drawing/core'
+import { Command, Point, Path, PathAttributes } from '@svg-drawing/core'
 import { FrameAnimation } from '../types'
 
 export class ShakeFrame implements FrameAnimation {
@@ -25,7 +25,7 @@ export class ShakeFrame implements FrameAnimation {
 }
 
 export class AttributeFrame implements FrameAnimation {
-  constructor(private attributesList: PathObject[]) {
+  constructor(private attributesList: PathAttributes[]) {
     this.animation = this.animation.bind(this)
   }
 

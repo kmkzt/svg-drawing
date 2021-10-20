@@ -4,7 +4,7 @@ import {
   download,
   PenHandler,
   PencilHandler,
-  PathObject,
+  PathAttributes,
   ResizeCallback,
 } from '@svg-drawing/core'
 import {
@@ -86,7 +86,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [type, changeType] = useState<DrawHandlerType>('pencil')
   const [drawActive, setDrawActive] = useState(true)
   /** PathOptions */
-  const [pathOptions, setPathOptions] = useState<PathObject>({
+  const [pathOptions, setPathOptions] = useState<PathAttributes>({
     fill: 'none',
     stroke: 'black',
     strokeWidth: '5',

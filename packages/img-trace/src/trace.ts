@@ -2,7 +2,7 @@ import {
   Svg,
   Path,
   Command,
-  PathObject,
+  PathAttributes,
   Move,
   Close,
   Point,
@@ -78,7 +78,7 @@ export interface ImgTraceOption {
   pathOmit?: number
   commandOmit?: number
   // override path element attribute
-  pathAttrs?: PathObject
+  pathAttrs?: PathAttributes
   palettes?: Rgba[]
 }
 
@@ -201,7 +201,7 @@ export class ImgTrace {
   public pathOmit: number
   public commandOmit: number
   // Path element attribute
-  public pathAttrs: PathObject
+  public pathAttrs: PathAttributes
   // Palettes
   public palettes: Rgba[]
 

@@ -1,8 +1,12 @@
-import { BasicDrawFactory, DrawFactory, PathObject } from '@svg-drawing/core'
+import {
+  BasicDrawFactory,
+  DrawFactory,
+  PathAttributes,
+} from '@svg-drawing/core'
 import { useMemo } from 'react'
 
 export const useDrawFactory = (
-  pathAttrs: PathObject,
+  pathAttrs: PathAttributes,
   {
     curve,
     close,
