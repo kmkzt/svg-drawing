@@ -1,4 +1,5 @@
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
+import { DrawFrame } from '@svg-drawing/animation'
 import {
   download,
   PenHandler,
@@ -16,6 +17,7 @@ import {
   useKeyboardBind,
   useDrawFactory,
   useResize,
+  useAnimation,
 } from '@svg-drawing/react'
 import { NextPage } from 'next'
 import {
@@ -140,6 +142,17 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     },
     [draw]
   )
+
+  /** Setup animation */
+  const [animateObj, animateAction] = useAnimation({ paths: sharedSvg.paths })
+
+  const handleClickAnimation = useCallback(() => {
+    const drawFrame = new DrawFrame(sharedSvg.paths)
+    animateAction.setup(drawFrame)
+    animateAction.update()
+    edit.onUpdate()
+    draw.onUpdate()
+  }, [animateAction, draw, edit, sharedSvg.paths])
 
   /** Setup resize */
   const handleResize = useCallback<ResizeCallback>(
@@ -348,6 +361,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             </Button>
           </Flex>
         )}
+        <Button onClick={handleClickAnimation}>Animation</Button>
       </Box>
       <Box as="fieldset">
         <Flex flexWrap="wrap">
@@ -485,7 +499,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           </Label>
         )}
       </Box>
-      <div>{JSON.stringify(editSvgProps.boundingBox)}</div>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
           ref={targetRef}
@@ -506,6 +519,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           )}
         </div>
       </Box>
+      <div>{JSON.stringify(editSvgProps.boundingBox)}</div>
+      <div>{JSON.stringify(animateObj)}</div>
     </Layout>
   )
 }

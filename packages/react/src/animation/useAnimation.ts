@@ -8,7 +8,8 @@ type UseAnimation = (arg: { paths: Path[] }) => [
     update: () => void
     clear: () => void
     setup: Animation['setup']
-  }
+  },
+  Animation
 ]
 
 export const useAnimation: UseAnimation = ({ paths }) => {
@@ -39,5 +40,6 @@ export const useAnimation: UseAnimation = ({ paths }) => {
       update,
       clear,
     },
+    animation,
   ]
 }
