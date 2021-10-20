@@ -1,7 +1,7 @@
 import { Path, Point, Svg } from '../svg'
 import type {
   PointObject,
-  ControlPoint,
+  EditVertex,
   BoundingBox,
   PathAttributes,
   Selecting,
@@ -344,8 +344,8 @@ export class EditPath {
     )
   }
 
-  public get controlPoints(): ControlPoint[] {
-    const controlPoints: ControlPoint[] = []
+  public get vertex(): EditVertex[] {
+    const vertex: EditVertex[] = []
     const commands = this.path.commands
     for (let c = 0; c < commands.length; c += 1) {
       const curr = commands[c]
@@ -360,7 +360,7 @@ export class EditPath {
       const selectingPoints: SelectingPoints | null =
         this.selecting?.[c] ?? null
 
-      controlPoints.push({
+      vertex.push({
         points: curr.points.map((point, pIndex) => ({
           index: {
             path: this.index,
@@ -374,7 +374,7 @@ export class EditPath {
       })
     }
 
-    return controlPoints
+    return vertex
   }
 
   public get boundingBox(): BoundingBox {
@@ -403,7 +403,7 @@ export class EditPath {
       index: this.index,
       d: this.path.getCommandString(),
       boundingBox: this.boundingBox,
-      controlPoints: this.controlPoints,
+      vertex: this.vertex,
     }
   }
 }

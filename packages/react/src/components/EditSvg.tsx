@@ -91,7 +91,7 @@ export const EditSvg = ({
         />
       ))}
       {editPaths &&
-        Object.entries(editPaths).map(([, { index, controlPoints, d }]) => (
+        Object.entries(editPaths).map(([, { index, vertex, d }]) => (
           <g key={index}>
             <path
               d={d}
@@ -101,7 +101,7 @@ export const EditSvg = ({
               onMouseDown={handleMoveStartPath(index)}
               onTouchStart={handleMoveStartPath(index)}
             />
-            {controlPoints.map(({ points, d }, commandIndex) => (
+            {vertex.map(({ points, d }, commandIndex) => (
               <g key={commandIndex}>
                 <path
                   d={d}

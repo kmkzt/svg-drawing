@@ -80,7 +80,7 @@ describe('edit.ts', () => {
   describe('EditPath', () => {
     it.todo('points')
 
-    it.todo('controlPoints')
+    it.todo('vertex')
 
     it.todo('boundingBox')
   })

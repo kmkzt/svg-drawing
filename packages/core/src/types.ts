@@ -1,7 +1,7 @@
 import type { Path, Point } from './svg'
 
 /** Svg Path JSON TODO: improve key types */
-export type PathAttributes = {
+export type PathObject = {
   [camelCase: string]: string | undefined
 }
 
@@ -10,7 +10,7 @@ export type SvgObject = {
   width: number
   height: number
   background?: string
-  paths: PathAttributes[]
+  paths: PathObject[]
 }
 
 /** Point Object */
@@ -131,7 +131,7 @@ export type ClearListener = () => void
 export interface DrawFactory {
   createPath: () => Path
   createCommand: CreateCommand
-  setPathAttributes: (attrs: PathAttributes) => void
+  setPathAttributes: (attrs: PathObject) => void
 }
 
 export type DrawStart = () => void
@@ -155,7 +155,7 @@ export type SelectIndex = {
 }
 
 /** Control Point */
-export type ControlPoint = {
+export type EditVertex = {
   points: {
     index: Required<SelectIndex>
     selected: boolean
@@ -179,7 +179,7 @@ export type SelectingPoints = Array<number>
 export type EditPathObject = {
   index: number
   d: string
-  controlPoints: ControlPoint[]
+  vertex: EditVertex[]
   boundingBox: BoundingBox
 }
 
