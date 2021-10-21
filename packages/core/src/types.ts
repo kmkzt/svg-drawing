@@ -1,7 +1,7 @@
 import type { Path, Point } from './svg'
 
 /** Svg Path JSON TODO: improve key types */
-export type PathObject = {
+export type PathAttributes = {
   [camelCase: string]: string | undefined
 }
 
@@ -10,7 +10,7 @@ export type SvgObject = {
   width: number
   height: number
   background?: string
-  paths: PathObject[]
+  paths: PathAttributes[]
 }
 
 /** Point Object */
@@ -131,7 +131,7 @@ export type ClearListener = () => void
 export interface DrawFactory {
   createPath: () => Path
   createCommand: CreateCommand
-  setPathAttributes: (attrs: PathObject) => void
+  setPathAttributes: (attrs: PathAttributes) => void
 }
 
 export type DrawStart = () => void
