@@ -1,3 +1,4 @@
+import { PathObject } from '..'
 import type { Command, PathAttributes, PointObject } from '../types'
 
 /**
@@ -6,7 +7,10 @@ import type { Command, PathAttributes, PointObject } from '../types'
  * Cannot support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
  */
 export class Path {
-  constructor(public attrs: PathAttributes = {}, public commands: Command[] = []) {}
+  constructor(
+    public attrs: PathAttributes = {},
+    public commands: Command[] = []
+  ) {}
 
   public scale(r: number): this {
     this.commands = this.commands.map((c: Command) => c.scale(r))
@@ -46,10 +50,13 @@ export class Path {
     )
   }
 
-  public toJson(): PathAttributes {
+  public toJson(): PathObject {
     return {
-      ...this.attrs,
-      d: this.getCommandString(),
+      type: 'path',
+      attributes: {
+        ...this.attrs,
+        d: this.getCommandString(),
+      },
     }
   }
 

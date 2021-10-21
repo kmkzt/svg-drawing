@@ -11,8 +11,8 @@ export const Svg = ({
 }: SvgObject & HTMLAttributes<SVGSVGElement>) => (
   <svg width={width} height={height} {...rest}>
     {background && <rect width={width} height={height} fill={background} />}
-    {paths.map((pathAttr, i) => (
-      <path key={i} {...pathAttr} />
+    {paths.map(({ type, attributes }, i) => (
+      <path key={i} {...attributes} />
     ))}
   </svg>
 )

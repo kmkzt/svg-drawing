@@ -8,6 +8,7 @@ const SVG_XLINK = 'http://www.w3.org/1999/xlink'
 interface Attrs {
   [key: string]: string
 }
+
 export const createSvgElement = (
   attrs: Attrs,
   childs: SVGElement[]
@@ -42,6 +43,7 @@ export const createSvgChildElement = <
   return path
 }
 
+/** @deprecated */
 export const pathObjectToElement = (path: PathAttributes): SVGPathElement => {
   const kebabAttrs = Object.entries(path).reduce(
     (acc, [key, val], _i) =>
@@ -68,7 +70,7 @@ export const svgObjectToElement = ({
     : []
   const updateEl = createSvgElement(size, [
     ...bgEl,
-    ...paths.map(pathObjectToElement),
+    ...paths.map(({ attributes }) => pathObjectToElement(attributes)),
   ])
   return updateEl
 }

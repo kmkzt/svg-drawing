@@ -82,10 +82,10 @@ export const EditSvg = ({
           onResizeBoundingBoxStart={onResizeBoundingBoxStart}
         />
       )}
-      {paths.map((pathAttr, pathIndex) => (
+      {paths.map(({ attributes }, pathIndex) => (
         <path
           key={pathIndex}
-          {...pathAttr}
+          {...attributes}
           onMouseDown={handleMoveStartPath(pathIndex)}
           onTouchStart={handleMoveStartPath(pathIndex)}
         />

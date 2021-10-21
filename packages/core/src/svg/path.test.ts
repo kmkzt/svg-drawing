@@ -41,7 +41,8 @@ describe('Path', () => {
       expect(path.toJson()).toMatchSnapshot()
     })
     it('toElement', () => {
-      expect(pathObjectToElement(path.toJson())).toMatchSnapshot()
+      const { attributes } = path.toJson()
+      expect(pathObjectToElement(attributes)).toMatchSnapshot()
     })
   })
   describe('commands parameter and getCommandString', () => {

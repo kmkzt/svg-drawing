@@ -5,12 +5,16 @@ export type PathAttributes = {
   [camelCase: string]: string | undefined
 }
 
+export type PathObject = {
+  type: keyof SVGElementTagNameMap
+  attributes: PathAttributes
+}
 /** Svg JSON */
 export type SvgObject = {
   width: number
   height: number
   background?: string
-  paths: PathAttributes[]
+  paths: PathObject[]
 }
 
 /** Point Object */

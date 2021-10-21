@@ -106,19 +106,19 @@ export class Animation {
     }
 
     return this.paths.reduce((acc: AnimateObject, basePath) => {
-      const basePathJson = basePath.toJson()
-      if (!basePathJson.id) return acc
+      const { attributes: baseAttributes } = basePath.toJson()
+      if (!baseAttributes.id) return acc
 
       const animPaths = animPathsList.map((ap) =>
         ap.find((p) => p.attrs.id === basePath.attrs.id)
       )
 
       // TODO: Check attribute key and value.
-      const { id, ...pathJson } = basePathJson
-      const animateAttributes: AnimateAttribute[] = Object.keys(pathJson)
+      const { id, ...attributes } = baseAttributes
+      const animateAttributes: AnimateAttribute[] = Object.keys(attributes)
         .sort()
         .reduce((animateAttrs: AnimateAttribute[], attributeName: string) => {
-          const defaultValue = pathJson[attributeName]
+          const defaultValue = attributes[attributeName]
           if (!defaultValue) return animateAttrs
 
           const values =

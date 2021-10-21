@@ -6,12 +6,18 @@ Object {
   "height": 500,
   "paths": Array [
     Object {
-      "d": "M0 0 C0.2 0.2 0.6 0.8 1 1 C1.4 1.2 1.6 1.2 2 1 C2.4 0.8 2.8 0.2 3 0",
+      "attributes": Object {
+        "d": "M0 0 C0.2 0.2 0.6 0.8 1 1 C1.4 1.2 1.6 1.2 2 1 C2.4 0.8 2.8 0.2 3 0",
+      },
+      "type": "path",
     },
     Object {
-      "d": "M4 4 L9 4 L9 8 L3 0 z",
-      "strokeLinecap": "square",
-      "strokeLinejoin": "mitter",
+      "attributes": Object {
+        "d": "M4 4 L9 4 L9 8 L3 0 z",
+        "strokeLinecap": "square",
+        "strokeLinejoin": "mitter",
+      },
+      "type": "path",
     },
   ],
   "width": 500,
