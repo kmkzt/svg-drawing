@@ -28,16 +28,15 @@ const SUPPORT_EVENT_LISTENER_PASSIVE_OPTION = (() => {
 const getPassiveOptions = (passive = true): false | { passive: boolean } =>
   SUPPORT_EVENT_LISTENER_PASSIVE_OPTION ? { passive } : false
 
-export class DrawEventHandler implements DrawHandler {
+export abstract class DrawEventHandler implements DrawHandler {
   /** Remove EventList */
-  protected _clearEventList: Array<ClearListener>
-  /** AddEventListener Options */
-  protected _listenerOption: ReturnType<typeof getPassiveOptions>
+  private _clearEventList: Array<ClearListener>
   /** Offset coordinates */
-  protected _offset: {
+  private _offset: {
     left: number
     top: number
   }
+
   /** EventHandler */
   protected drawEnd: DrawEnd
   protected drawStart: DrawStart
@@ -56,7 +55,6 @@ export class DrawEventHandler implements DrawHandler {
     this.drawMove = () => void 0
     this.drawEnd = () => void 0
     this._clearEventList = []
-    this._listenerOption = getPassiveOptions(false)
   }
 
   public get isActive(): boolean {
@@ -72,7 +70,7 @@ export class DrawEventHandler implements DrawHandler {
     this.off()
     this._clearEventList = [
       ...this._setupCoordinatesListener(),
-      ...this._setupListener(),
+      ...this.setupListener(),
     ]
   }
 
@@ -118,9 +116,6 @@ export class DrawEventHandler implements DrawHandler {
       pressure: (ev as any)?.pressure,
     }
   }
-  protected _setupListener(): Array<ClearListener> {
-    return []
-  }
 
   /** Set left, top property when scroll or resize event */
   private _setupCoordinatesListener(): Array<ClearListener> {
@@ -141,11 +136,15 @@ export class DrawEventHandler implements DrawHandler {
       },
     ]
   }
+
+  protected abstract setupListener(): Array<ClearListener>
 }
 
 export class PencilHandler extends DrawEventHandler {
   private _drawMoveThrottle: DrawMove
   private delay = 20
+  /** AddEventListener Options */
+  private listenerOption: ReturnType<typeof getPassiveOptions>
   constructor(el: HTMLElement | null = null) {
     super(el)
     /** Bind methods */
@@ -156,6 +155,8 @@ export class PencilHandler extends DrawEventHandler {
     this._handleEnd = this._handleEnd.bind(this)
 
     this._drawMoveThrottle = throttle(this.drawMove, this.delay).bind(this)
+
+    this.listenerOption = getPassiveOptions(false)
   }
 
   public changeDelay(delay: number): void {
@@ -178,7 +179,7 @@ export class PencilHandler extends DrawEventHandler {
     if (this.isActive) this.on()
   }
 
-  protected _setupListener(): Array<ClearListener> {
+  protected setupListener(): Array<ClearListener> {
     if (SUPPORT_POINTER_EVENT) return this._setupDrawListener('pointer')
 
     if (SUPPORT_ON_TOUCH_START) return this._setupDrawListener('touch')
@@ -237,22 +238,22 @@ export class PencilHandler extends DrawEventHandler {
     const { start, move, end, flameout } = eventMap[type]
 
     const startClear = start.map((evname): ClearListener => {
-      el.addEventListener(evname, this._handleStart, this._listenerOption)
+      el.addEventListener(evname, this._handleStart, this.listenerOption)
       return () => el.removeEventListener(evname, this._handleStart)
     })
 
     const moveClear = move.map((evname): ClearListener => {
-      el.addEventListener(evname, this._handleMove, this._listenerOption)
+      el.addEventListener(evname, this._handleMove, this.listenerOption)
       return () => el.removeEventListener(evname, this._handleMove)
     })
 
     const endClear = end.map((evname): ClearListener => {
-      el.addEventListener(evname, this._handleEnd, this._listenerOption)
+      el.addEventListener(evname, this._handleEnd, this.listenerOption)
       return () => el.removeEventListener(evname, this._handleEnd)
     })
 
     const flameoutClear = flameout.map((evname): ClearListener => {
-      addEventListener(evname, this._handleEnd, this._listenerOption)
+      addEventListener(evname, this._handleEnd, this.listenerOption)
       return () => removeEventListener(evname, this._handleEnd)
     })
 
@@ -268,7 +269,7 @@ export class PenHandler extends DrawEventHandler {
     this._handleProt = this._handleProt.bind(this)
   }
 
-  protected _setupListener(): Array<ClearListener> {
+  protected setupListener(): Array<ClearListener> {
     const clearEvent: ClearListener[] = [...this._setupCancelListener()]
     if (SUPPORT_POINTER_EVENT)
       return [...this._setupDrawListener('pointer'), ...clearEvent]
