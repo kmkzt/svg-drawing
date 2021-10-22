@@ -69,13 +69,6 @@ export const EditSvg = ({
       {...rest}
     >
       {background && <BackgroundRect fill={background} />}
-      {boundingBox && (
-        <EditBoundingBox
-          {...boundingBox}
-          onTranslateStart={onTranslateStart}
-          onResizeBoundingBoxStart={onResizeBoundingBoxStart}
-        />
-      )}
       {paths.map(({ attributes }, pathIndex) => (
         <path
           key={pathIndex}
@@ -84,6 +77,13 @@ export const EditSvg = ({
           onTouchStart={handleMoveStartPath(pathIndex)}
         />
       ))}
+      {boundingBox && (
+        <EditBoundingBox
+          {...boundingBox}
+          onTranslateStart={onTranslateStart}
+          onResizeBoundingBoxStart={onResizeBoundingBoxStart}
+        />
+      )}
       {editPaths &&
         Object.entries(editPaths).map(([, { index, vertex, d }]) => (
           <g key={index}>
