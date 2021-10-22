@@ -2,8 +2,8 @@ import { Path, roundUp, camel2kebab } from '@svg-drawing/core'
 import {
   AnimationOption,
   FrameAnimation,
-  AnimateObject,
   AnimateAttribute,
+  AnimationObject,
 } from './types'
 
 const createAnimateAttributeValues = (
@@ -86,7 +86,7 @@ export class Animation {
     return this
   }
 
-  public toJson(): AnimateObject {
+  public toJson(): AnimationObject {
     if (!this._frame) return {}
 
     const loop = this._frame.loops
@@ -105,7 +105,7 @@ export class Animation {
       ),
     }
 
-    return this.paths.reduce((acc: AnimateObject, basePath) => {
+    return this.paths.reduce((acc: AnimationObject, basePath) => {
       const { attributes: baseAttributes } = basePath.toJson()
       if (!baseAttributes.id) return acc
 
@@ -115,7 +115,7 @@ export class Animation {
 
       // TODO: Check attribute key and value.
       const { id, ...attributes } = baseAttributes
-      const animateAttributes: AnimateAttribute[] = Object.keys(attributes)
+      const animateAttributesList: AnimateAttribute[] = Object.keys(attributes)
         .sort()
         .reduce((animateAttrs: AnimateAttribute[], attributeName: string) => {
           const defaultValue = attributes[attributeName]
@@ -143,7 +143,10 @@ export class Animation {
 
       return {
         ...acc,
-        [id]: animateAttributes,
+        [id]: animateAttributesList.map((animateAttributes) => ({
+          type: 'animate',
+          attributes: animateAttributes,
+        })),
       }
     }, {})
   }

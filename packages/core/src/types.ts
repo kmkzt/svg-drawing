@@ -9,6 +9,7 @@ export type PathObject = {
   type: keyof SVGElementTagNameMap
   attributes: PathAttributes
 }
+
 /** Svg JSON */
 export type SvgObject = {
   width: number
@@ -174,10 +175,8 @@ export type BoundingBox = {
   max: PointObject
 }
 
-export type Selecting = {
-  [path: number]: SelectingCommands
-}
-export type SelectingCommands = { [command: number]: SelectingPoints }
+export type Selecting = Record<number, SelectingCommands>
+export type SelectingCommands = Record<number, SelectingPoints>
 export type SelectingPoints = Array<number>
 
 export type EditPathObject = {
@@ -189,17 +188,13 @@ export type EditPathObject = {
 
 export type EditSvgObject = {
   index: Selecting
-  paths: {
-    [pathIndex: number]: EditPathObject
-  }
+  paths: Record<number, EditPathObject>
   boundingBox: {
     x: number
     y: number
     width: number
     height: number
-    vertex: {
-      [fixedPosition in FixedType]: PointObject
-    }
+    vertex: Record<FixedType, PointObject>
     selected: boolean
   }
 }

@@ -22,7 +22,7 @@ import type {
  *   SvgDrawing.init(el)
  *
  *   // Options
- *   SvgDrawing.init({
+ *   SvgDrawing.init(el, {
  *     curve: true,
  *     close: false,
  *     penColor: '#00f',

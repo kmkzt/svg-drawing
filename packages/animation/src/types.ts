@@ -10,9 +10,17 @@ export interface FrameAnimation {
 }
 
 export type AnimateAttribute = {
-  [key in 'repeatCount' | 'dur' | 'keyTimes' | 'values']: string
+  [key in
+    | 'attributeName'
+    | 'repeatCount'
+    | 'dur'
+    | 'keyTimes'
+    | 'values']: string
 }
 
 export type AnimateObject = {
-  [pathId: string]: AnimateAttribute[]
+  type: 'animate'
+  attributes: AnimateAttribute
 }
+
+export type AnimationObject = Record<string, AnimateObject[]>
