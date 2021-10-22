@@ -5,6 +5,7 @@ import {
   SelectIndex,
 } from '@svg-drawing/core'
 import React, { useCallback, HTMLAttributes, useRef } from 'react'
+import { BackgroundRect } from './BackgroundRect'
 import { EditSvgProps } from '../types'
 
 export const EditSvg = ({
@@ -67,14 +68,7 @@ export const EditSvg = ({
       onTouchStart={handleCancel}
       {...rest}
     >
-      {background && (
-        <rect
-          style={{ pointerEvents: 'none' }}
-          width={width}
-          height={height}
-          fill={background}
-        />
-      )}
+      {background && <BackgroundRect fill={background} />}
       {boundingBox && (
         <EditBoundingBox
           {...boundingBox}

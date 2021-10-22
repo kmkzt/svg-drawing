@@ -1,16 +1,17 @@
 import React from 'react'
+import { BackgroundRect } from './BackgroundRect'
 import type { SvgObject } from '@svg-drawing/core'
 import type { HTMLAttributes } from 'react'
 
 export const Svg = ({
   background,
-  paths,
   width,
   height,
+  paths,
   ...rest
 }: SvgObject & HTMLAttributes<SVGSVGElement>) => (
   <svg width={width} height={height} {...rest}>
-    {background && <rect width={width} height={height} fill={background} />}
+    {background && <BackgroundRect fill={background} />}
     {paths.map(({ type, attributes }, i) => (
       <path key={i} {...attributes} />
     ))}
