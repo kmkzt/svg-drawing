@@ -1,9 +1,9 @@
-import { Animation, AnimateObject } from '@svg-drawing/animation'
+import { Animation, AnimationObject } from '@svg-drawing/animation'
 import { useCallback, useState, useMemo } from 'react'
 import type { Path } from '@svg-drawing/core'
 
 type UseAnimation = (arg: { paths: Path[] }) => [
-  AnimateObject | null,
+  AnimationObject | null,
   {
     update: () => void
     clear: () => void
@@ -13,7 +13,9 @@ type UseAnimation = (arg: { paths: Path[] }) => [
 ]
 
 export const useAnimation: UseAnimation = ({ paths }) => {
-  const [animateObject, setAnimateObject] = useState<AnimateObject | null>(null)
+  const [animateObject, setAnimateObject] = useState<AnimationObject | null>(
+    null
+  )
 
   const animation = useMemo(() => new Animation(), [])
 
