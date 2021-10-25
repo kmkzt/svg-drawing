@@ -1,4 +1,4 @@
-import type { Path } from '@svg-drawing/core'
+import { Path } from '@svg-drawing/core'
 
 export type AnimationOption = {
   ms: number

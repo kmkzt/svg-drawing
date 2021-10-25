@@ -12,6 +12,7 @@ import {
   useEdit,
   Svg,
   EditSvg,
+  AnimateSvg,
   useDrawEventHandler,
   useParseFile,
   useKeyboardBind,
@@ -519,6 +520,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           )}
         </div>
       </Box>
+      <AnimateSvg animatePaths={animateObj} {...svgProps} />
       <div>{JSON.stringify(editSvgProps.boundingBox)}</div>
       <div>{JSON.stringify(animateObj)}</div>
     </Layout>
