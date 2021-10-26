@@ -1,3 +1,4 @@
+import { AnimationObject, Animation } from '@svg-drawing/animation'
 import type {
   SvgObject,
   Svg,
@@ -10,6 +11,7 @@ import type {
   SelectIndex,
   SvgOption,
   SvgDrawing,
+  Path,
 } from '@svg-drawing/core'
 import type { RefObject } from 'react'
 
@@ -21,6 +23,16 @@ export type UseEdit = (opts: UseEditOptions) => [EditSvgProps, EditSvgAction]
 
 /** UseDraw */
 export type UseDraw = (opts: UseDrawOptions) => [SvgObject, DrawAction]
+
+/** UseAnimation */
+export type UseAnimation = (arg: {
+  onChangeAnimation: (obj: AnimationObject | null) => void
+}) => {
+  instance: Animation
+  update: (paths: Path[]) => void
+  clear: () => void
+  setup: Animation['setup']
+}
 
 /** UseDrawEventHandler */
 export type UseDrawEventHandler<

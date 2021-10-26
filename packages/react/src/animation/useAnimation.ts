@@ -1,47 +1,34 @@
-import { Animation, AnimationObject } from '@svg-drawing/animation'
-import { useCallback, useState, useMemo } from 'react'
+import { Animation } from '@svg-drawing/animation'
+import { useCallback, useMemo } from 'react'
+import type { UseAnimation } from '../types'
 import type { Path } from '@svg-drawing/core'
 
-type UseAnimation = (arg: { paths: Path[] }) => [
-  AnimationObject | null,
-  {
-    update: () => void
-    clear: () => void
-    setup: Animation['setup']
-  },
-  Animation
-]
-
-export const useAnimation: UseAnimation = ({ paths }) => {
-  const [animateObject, setAnimateObject] = useState<AnimationObject | null>(
-    null
-  )
-
-  const animation = useMemo(() => new Animation(), [])
+export const useAnimation: UseAnimation = ({ onChangeAnimation }) => {
+  const instance = useMemo(() => new Animation(), [])
 
   const setup = useCallback<Animation['setup']>(
     (frame, opts) => {
-      animation.setup(frame, opts)
+      instance.setup(frame, opts)
     },
-    [animation]
+    [instance]
   )
 
-  const update = useCallback(() => {
-    animation.initialize(paths)
-    setAnimateObject(animation.toJson())
-  }, [animation, paths])
+  const update = useCallback(
+    (paths: Path[]) => {
+      instance.initialize(paths)
+      onChangeAnimation(instance.toJson())
+    },
+    [instance, onChangeAnimation]
+  )
 
   const clear = useCallback(() => {
-    setAnimateObject(null)
-  }, [])
+    onChangeAnimation(null)
+  }, [onChangeAnimation])
 
-  return [
-    animateObject,
-    {
-      setup,
-      update,
-      clear,
-    },
-    animation,
-  ]
+  return {
+    instance,
+    setup,
+    update,
+    clear,
+  }
 }

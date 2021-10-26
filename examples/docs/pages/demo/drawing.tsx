@@ -1,5 +1,5 @@
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
-import { DrawFrame } from '@svg-drawing/animation'
+import { DrawFrame, AnimationObject } from '@svg-drawing/animation'
 import {
   download,
   PenHandler,
@@ -145,15 +145,16 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   )
 
   /** Setup animation */
-  const [animateObj, animateAction] = useAnimation({ paths: sharedSvg.paths })
+  const [animateObj, setAnimateObj] = useState<AnimationObject | null>(null)
+  const animation = useAnimation({ onChangeAnimation: setAnimateObj })
 
   const handleClickAnimation = useCallback(() => {
     const drawFrame = new DrawFrame(sharedSvg.paths)
-    animateAction.setup(drawFrame)
-    animateAction.update()
+    animation.setup(drawFrame)
+    animation.update(sharedSvg.paths)
     edit.onUpdate()
     draw.onUpdate()
-  }, [animateAction, draw, edit, sharedSvg.paths])
+  }, [animation, draw, edit, sharedSvg.paths])
 
   /** Setup resize */
   const handleResize = useCallback<ResizeCallback>(
