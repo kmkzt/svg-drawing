@@ -20,7 +20,7 @@ export const EditSvg = ({
   onCancelSelect,
   onSelectPaths,
   ...rest
-}: EditSvgProps & HTMLAttributes<SVGSVGElement>) => {
+}: EditSvgProps) => {
   const svgRef = useRef<SVGSVGElement>(null)
 
   const handleMoveStartPoint = useCallback(

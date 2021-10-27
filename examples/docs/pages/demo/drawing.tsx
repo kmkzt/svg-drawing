@@ -6,10 +6,12 @@ import {
   PencilHandler,
   PathAttributes,
   ResizeCallback,
+  EditSvgObject,
 } from '@svg-drawing/core'
 import {
   useDraw,
   useEdit,
+  useSvg,
   Svg,
   EditSvg,
   AnimateSvg,
@@ -121,27 +123,47 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     }
   }, [penHandler, pencilHandler, type])
 
-  const [svgProps, draw] = useDraw({
+  const svg = useSvg({})
+  const [svgProps, onChangeSvg] = useState(svg.toJson())
+
+  const {
+    draw,
+    update: updateDraw,
+    clear,
+    undo,
+  } = useDraw({
     handler,
     factory,
-    defaultSvgOption: {
-      background: 'transparent',
-    },
+    svg,
+    onChangeSvg,
   })
 
-  const sharedSvg = draw.svg
   /** Setup edit */
-  const [editSvgProps, edit] = useEdit({
-    sharedSvg,
+
+  const [editInfo, onChangeEdit] = useState<EditSvgObject | null>(null)
+  const {
+    update: updateEdit,
+    onChangeAttributes,
+    keyboardMap,
+    onCancelSelect,
+    // onDeletePaths,
+    onSelectPaths,
+    // onTranslate,
+    onTranslateStart,
+    onResizeBoundingBoxStart,
+  } = useEdit({
+    svg,
+    onChangeEdit,
+    onChangeSvg,
   })
 
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (e: React.MouseEvent<HTMLElement>) => {
-      download(draw.svg, {
+      download(svg, {
         extension,
       })
     },
-    [draw]
+    [svg]
   )
 
   /** Setup animation */
@@ -149,26 +171,29 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const animation = useAnimation({ onChangeAnimation: setAnimateObj })
 
   const handleClickAnimation = useCallback(() => {
-    const drawFrame = new DrawFrame(sharedSvg.paths)
+    const drawFrame = new DrawFrame(svg.paths)
     animation.setup(drawFrame)
-    animation.update(sharedSvg.paths)
-    edit.onUpdate()
-    draw.onUpdate()
-  }, [animation, draw, edit, sharedSvg.paths])
+    animation.update(svg.paths)
+    updateEdit()
+  }, [animation, svg.paths, updateEdit])
 
   /** Setup resize */
   const handleResize = useCallback<ResizeCallback>(
     (arg) => {
-      draw.onResize(arg)
-      edit.onResize(arg)
+      console.log(arg)
+      svg.resize(arg)
+
+      console.log(svg)
+      updateDraw()
+      updateEdit()
     },
-    [draw, edit]
+    [svg, updateDraw, updateEdit]
   )
 
   useResize(targetRef, handleResize)
 
   /** Setup keyboardBind */
-  useKeyboardBind?.(edit.keyboardMap)
+  useKeyboardBind?.(keyboardMap)
 
   const handleChangeCurve = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (ev) => {
@@ -193,11 +218,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         strokeWidth: `${num}`,
       }))
-      edit.onChangeAttributes({
+      onChangeAttributes({
         strokeWidth: num + '',
       })
     },
-    [edit]
+    [onChangeAttributes]
   )
 
   const handleChangePenColor = useCallback<
@@ -208,11 +233,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         stroke: e.target.value,
       }))
-      edit.onChangeAttributes({
+      onChangeAttributes({
         stroke: e.target.value,
       })
     },
-    [edit]
+    [onChangeAttributes]
   )
 
   const handleClickPenColor = useCallback(
@@ -221,11 +246,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         stroke: col,
       }))
-      edit.onChangeAttributes({
+      onChangeAttributes({
         stroke: col,
       })
     },
-    [edit]
+    [onChangeAttributes]
   )
 
   const handleChangeFill = useCallback<ChangeEventHandler<HTMLInputElement>>(
@@ -234,11 +259,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         fill: e.target.value,
       }))
-      edit.onChangeAttributes({
+      onChangeAttributes({
         fill: e.target.value,
       })
     },
-    [edit]
+    [onChangeAttributes]
   )
 
   const handleClickFill = useCallback(
@@ -247,25 +272,25 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         fill: col,
       }))
-      edit.onChangeAttributes({
+      onChangeAttributes({
         fill: col,
       })
     },
-    [edit]
+    [onChangeAttributes]
   )
 
   const parseFile = useParseFile({
-    svg: sharedSvg,
+    svg,
   })
 
   const handleFiles = useCallback<ChangeEventHandler<HTMLInputElement>>(
     async (e) => {
       if (!e.target?.files) return
       await parseFile(e.target.files[0])
-      draw.onUpdate()
-      edit.onUpdate()
+      updateDraw()
+      updateEdit()
     },
-    [parseFile, draw, edit]
+    [parseFile, updateDraw, updateEdit]
   )
 
   const handleChangeType = useCallback<ChangeEventHandler<HTMLSelectElement>>(
@@ -286,12 +311,12 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ['edit', 'draw'].includes(str)
       const upd = ev.target.value
       if (isDrawMode(upd)) {
-        draw.onUpdate()
-        edit.onUpdate()
+        updateDraw()
+        updateEdit()
         setMode(upd)
       }
     },
-    [draw, edit]
+    [updateDraw, updateEdit]
   )
 
   return (
@@ -338,7 +363,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 <option value="pencil">Pencil</option>
               </select>
             </Label>
-            <Button mr={1} mb={1} onClick={draw.onUndoDraw}>
+            <Button mr={1} mb={1} onClick={undo}>
               Undo
             </Button>
             <Button
@@ -348,17 +373,17 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             >
               {drawActive ? 'Off' : 'On'}
             </Button>
-            <Button mr={1} mb={1} onClick={draw.onClear}>
+            <Button mr={1} mb={1} onClick={clear}>
               Clear
             </Button>
           </Flex>
         )}
         {mode === 'edit' && (
           <Flex pt={3} justifyContent="start">
-            <Button mr={1} mb={1} onClick={editSvgProps.onCancelSelect}>
+            <Button mr={1} mb={1} onClick={onCancelSelect}>
               Cancel
             </Button>
-            <Button mr={1} mb={1} onClick={edit.onClear}>
+            <Button mr={1} mb={1} onClick={clear}>
               Clear
             </Button>
           </Flex>
@@ -517,12 +542,20 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           {mode === 'draw' ? (
             <Svg {...svgProps} />
           ) : (
-            <EditSvg {...editSvgProps} />
+            <EditSvg
+              {...svgProps}
+              boundingBox={editInfo?.boundingBox ?? null}
+              editPaths={editInfo?.paths ?? null}
+              onCancelSelect={onCancelSelect}
+              onSelectPaths={onSelectPaths}
+              onTranslateStart={onTranslateStart}
+              onResizeBoundingBoxStart={onResizeBoundingBoxStart}
+            />
           )}
         </div>
       </Box>
-      <AnimateSvg animatePaths={animateObj} {...svgProps} />
-      <div>{JSON.stringify(editSvgProps.boundingBox)}</div>
+      <AnimateSvg animatePaths={animateObj ?? undefined} {...svgProps} />
+      <div>{JSON.stringify(editInfo?.boundingBox)}</div>
       <div>{JSON.stringify(animateObj)}</div>
     </Layout>
   )

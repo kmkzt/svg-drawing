@@ -1,8 +1,6 @@
-import { AnimationObject } from '@svg-drawing/animation'
 import React from 'react'
 import { BackgroundRect } from './BackgroundRect'
-import type { SvgObject } from '@svg-drawing/core'
-import type { HTMLAttributes } from 'react'
+import type { AnimateSvgProps } from '../types'
 
 export const AnimateSvg = ({
   background,
@@ -11,9 +9,7 @@ export const AnimateSvg = ({
   paths,
   animatePaths,
   ...rest
-}: SvgObject & {
-  animatePaths?: AnimationObject
-} & HTMLAttributes<SVGSVGElement>) => (
+}: AnimateSvgProps) => (
   <svg width={width} height={height} {...rest}>
     {background && <BackgroundRect fill={background} />}
     {paths.map(({ type, attributes }, i) => {

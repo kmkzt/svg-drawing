@@ -1,57 +1,67 @@
-import { SvgDrawing } from '@svg-drawing/core'
+import { SvgDrawing, DrawFactory, DrawHandler } from '@svg-drawing/core'
 import { useCallback, useMemo } from 'react'
-import { useSvg } from '../svg/useSvg'
-import type { UseDraw, DrawAction } from '../types'
+import { UseDrawOptions } from '..'
+import type { DrawAction } from '../types'
 
 /**
  * @example
  *   import { PencilHandler } from '@svg-drawing/core'
  *   import {
- *     Svg,
- *     useDrawFactory,
- *     useDrawEventHandler,
+ *   Svg,
+ *   useDrawFactory,
+ *   useDrawEventHandler,
  *   } from '@svg-drawing/react'
  *
  *   const DrawArea = () => {
- *     const ref = useRef(null)
- *     const handler = useDrawEventHandler(ref, PencilHandler, true)
+ *   const svg = useSvg({ width: 500, height: 500 })
+ *   const [svgObject, setSvgObject] = useState(svg.instance.toJson())
  *
- *     const factory = useDrawFactory(
- *       { stroke: '#000', fill: 'none' },
- *       { curve: true, close: false }
- *     )
+ *   const ref = useRef(null)
+ *   const handler = useDrawEventHandler(ref, PencilHandler, true)
  *
- *     const [svgProps, draw] = useDraw({
- *       handler,
- *       factory,
- *     })
+ *   const factory = useDrawFactory(
+ *   { stroke: '#000', fill: 'none' },
+ *   { curve: true, close: false }
+ *   )
  *
- *     return (
- *       <div ref={ref}>
- *         <Svg {...svgProps} />
- *       </div>
- *     )
+ *   const draw = useDraw({
+ *   svg.instance,
+ *   handler,
+ *   factory,
+ *   onChangeSvg: setSvgObject,
+ *   })
+ *
+ *   return (
+ *   <div ref={ref}>
+ *   <Svg {...svgObject} />
+ *   </div>
+ *   )
  *   }
  */
-export const useDraw: UseDraw = ({ factory, handler, ...useSvgOption }) => {
-  const [svgObj, { svg, onUpdate, ...rest }] = useSvg(useSvgOption)
-  const drawing = useMemo(
-    () => new SvgDrawing(svg, factory, handler, onUpdate),
-    [factory, handler, onUpdate, svg]
+export const useDraw = <P extends DrawFactory, H extends DrawHandler>({
+  factory,
+  handler,
+  svg,
+  onChangeSvg,
+}: UseDrawOptions<P, H>): DrawAction<P, H> => {
+  const update = useCallback(() => {
+    console.log(svg.toJson())
+    onChangeSvg(svg.toJson())
+  }, [onChangeSvg, svg])
+
+  const draw = useMemo(
+    () => new SvgDrawing(svg, factory, handler, update),
+    [svg, factory, handler, update]
   )
 
-  const onUndoDraw = useCallback<DrawAction['onUndoDraw']>(
-    () => drawing.undo(),
-    [drawing]
-  )
+  const clear = useCallback(() => draw.clear(), [draw])
 
-  return [
-    svgObj,
-    {
-      svg,
-      onUndoDraw,
-      onUpdate,
-      ...rest,
-    },
-  ]
+  const undo = useCallback(() => draw.undo(), [draw])
+
+  return {
+    draw,
+    update,
+    clear,
+    undo,
+  }
 }

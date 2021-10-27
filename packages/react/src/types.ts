@@ -13,16 +13,61 @@ import type {
   SvgDrawing,
   Path,
 } from '@svg-drawing/core'
-import type { RefObject } from 'react'
+import type { RefObject, HTMLAttributes } from 'react'
 
 /** UseSvg */
-export type UseSvg = (opts: UseSvgOptions) => [SvgObject, SvgAction]
-
-/** UseEdit */
-export type UseEdit = (opts: UseEditOptions) => [EditSvgProps, EditSvgAction]
+export type UseSvg = (opts: Partial<SvgOption>) => Svg
+export type SvgProps = SvgObject & HTMLAttributes<SVGSVGElement>
 
 /** UseDraw */
-export type UseDraw = (opts: UseDrawOptions) => [SvgObject, DrawAction]
+export type UseDraw<P extends DrawFactory, H extends DrawHandler> = (
+  opts: UseDrawOptions<P, H>
+) => DrawAction<P, H>
+
+export type UseDrawOptions<P extends DrawFactory, H extends DrawHandler> = {
+  factory: P
+  handler: H
+  svg: Svg
+  onChangeSvg: (obj: SvgObject) => void
+}
+export type DrawAction<P extends DrawFactory, H extends DrawHandler> = {
+  draw: SvgDrawing<Svg, P, H>
+  update: () => void
+  clear: SvgDrawing<Svg, P, H>['clear']
+  undo: SvgDrawing<Svg, P, H>['undo']
+}
+
+/** UseEdit */
+export type UseEdit = (opts: {
+  svg: Svg
+  multipleSelectBindKey?: string
+  onChangeEdit: (arg: EditSvgObject | null) => void
+  onChangeSvg: (obj: SvgObject) => void
+}) => EditSvgAction
+
+/** @todo Added return props for EditSvg */
+export type EditSvgAction = {
+  edit: SvgEditing
+  keyboardMap: KeyboardMap
+  update: () => void
+  onDeletePaths: () => void
+  onTranslate: SvgEditing['translate']
+  onChangeAttributes: SvgEditing['changeAttributes']
+  onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
+  onTranslateStart: SvgEditing['startTranslate']
+  onSelectPaths: (sel: SelectIndex) => void
+  onCancelSelect: () => void
+}
+
+/** @todo Separate SvgProps */
+export type EditSvgProps = SvgProps & {
+  editPaths: EditSvgObject['paths'] | null
+  boundingBox: EditSvgObject['boundingBox'] | null
+  onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
+  onTranslateStart: SvgEditing['startTranslate']
+  onSelectPaths: (sel: SelectIndex) => void
+  onCancelSelect: () => void
+}
 
 /** UseAnimation */
 export type UseAnimation = (arg: {
@@ -34,6 +79,9 @@ export type UseAnimation = (arg: {
   setup: Animation['setup']
 }
 
+export type AnimateSvgProps = SvgObject & {
+  animatePaths?: AnimationObject
+}
 /** UseDrawEventHandler */
 export type UseDrawEventHandler<
   D extends DrawEventHandler = any,
@@ -47,59 +95,8 @@ export type UseResize<T extends HTMLElement = HTMLElement> = (
   active?: boolean
 ) => void
 
-/** UseSvg options */
-export type UseSvgOptions = {
-  sharedSvg?: Svg
-  defaultSvgOption?: Partial<SvgOption>
-}
-
-/**
- * UseEdit options
- *
- * @todo Active status.
- */
-export type UseEditOptions = UseSvgOptions & {
-  multipleSelectBindKey?: string
-}
-
-/** UseDraw options */
-export type UseDrawOptions = UseSvgOptions & {
-  factory: DrawFactory
-  handler: DrawHandler
-}
-
-/** UseSvg Return type */
-export type SvgAction = {
-  svg: Svg
-  onUpdate: () => void
-  onClear: () => void
-  onResize: ResizeCallback
-}
-
 export type KeyboardMap = {
   [key: string]: (() => void) | undefined
 }
 
 export type UseParseFile = (opts: { svg: Svg }) => (file: File) => Promise<void>
-
-export type EditSvgAction = SvgAction & {
-  keyboardMap: KeyboardMap
-  onDeletePaths: () => void
-  onTranslate: SvgEditing['translate']
-  onChangeAttributes: SvgEditing['changeAttributes']
-}
-
-/** EditSvg components */
-export type EditSvgProps = SvgObject & {
-  editPaths: EditSvgObject['paths'] | null
-  boundingBox: EditSvgObject['boundingBox'] | null
-  onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
-  onTranslateStart: SvgEditing['startTranslate']
-  onSelectPaths: (sel: SelectIndex) => void
-  onCancelSelect: () => void
-}
-
-/** UseDraw return type */
-export type DrawAction = SvgAction & {
-  onUndoDraw: SvgDrawing['undo']
-}

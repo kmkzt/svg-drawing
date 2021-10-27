@@ -49,7 +49,7 @@ export const parseCommandString = (d: string): Command[] => {
     (acc: Command<any>[], match: RegExpMatchArray, i) => {
       const values: number[] =
         match[2]
-          ?.split(/[\,\s]/)
+          ?.split(/[,\s]/)
           ?.reduce(
             (acc: number[], str) => (str === '' ? acc : [...acc, +str]),
             []
