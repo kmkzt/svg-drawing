@@ -7,35 +7,35 @@ import type { DrawAction, UseDrawOptions } from '../types'
  * @example
  *   import { PencilHandler } from '@svg-drawing/core'
  *   import {
- *   Svg,
- *   useDrawFactory,
- *   useDrawEventHandler,
+ *     Svg,
+ *     useDrawFactory,
+ *     useDrawEventHandler,
  *   } from '@svg-drawing/react'
  *
  *   const DrawArea = () => {
- *   const svg = useSvg({ width: 500, height: 500 })
- *   const [svgObject, setSvgObject] = useState(svg.instance.toJson())
+ *     const svg = useSvg({ width: 500, height: 500 })
+ *     const [svgObject, setSvgObject] = useState(svg.toJson())
  *
- *   const ref = useRef(null)
- *   const handler = useDrawEventHandler(ref, PencilHandler, true)
+ *     const ref = useRef(null)
+ *     const handler = useDrawEventHandler(ref, PencilHandler, true)
  *
- *   const factory = useDrawFactory(
- *   { stroke: '#000', fill: 'none' },
- *   { curve: true, close: false }
- *   )
+ *     const factory = useDrawFactory(
+ *       { stroke: '#000', fill: 'none' },
+ *       { curve: true, close: false }
+ *     )
  *
- *   const draw = useDraw({
- *   svg.instance,
- *   handler,
- *   factory,
- *   onChangeSvg: setSvgObject,
- *   })
+ *     const draw = useDraw({
+ *       svg,
+ *       handler,
+ *       factory,
+ *       onChangeSvg: setSvgObject,
+ *     })
  *
- *   return (
- *   <div ref={ref}>
- *   <Svg {...svgObject} />
- *   </div>
- *   )
+ *     return (
+ *       <div ref={ref}>
+ *         <Svg {...svgObject} />
+ *       </div>
+ *     )
  *   }
  */
 export const useDraw = <P extends DrawFactory, H extends DrawHandler>({
