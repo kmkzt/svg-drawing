@@ -1,5 +1,5 @@
 import { SvgDrawing, DrawFactory, DrawHandler } from '@svg-drawing/core'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef, useEffect } from 'react'
 import { UseDrawOptions } from '..'
 import type { DrawAction } from '../types'
 
@@ -44,10 +44,11 @@ export const useDraw = <P extends DrawFactory, H extends DrawHandler>({
   svg,
   onChangeSvg,
 }: UseDrawOptions<P, H>): DrawAction<P, H> => {
-  const update = useCallback(() => {
-    console.log(svg.toJson())
+  const render = useCallback(() => {
     onChangeSvg(svg.toJson())
   }, [onChangeSvg, svg])
+
+  const update = useRenderInterval(render)
 
   const draw = useMemo(
     () => new SvgDrawing(svg, factory, handler, update),
@@ -64,4 +65,30 @@ export const useDraw = <P extends DrawFactory, H extends DrawHandler>({
     clear,
     undo,
   }
+}
+
+const RENDER_INTERVAL = 30
+
+const useRenderInterval = (
+  render: () => void,
+  ms: number | undefined = RENDER_INTERVAL
+): (() => void) => {
+  const shouldUpdateRef = useRef<boolean>(false)
+
+  const update = useCallback(() => {
+    shouldUpdateRef.current = true
+  }, [])
+
+  useEffect(() => {
+    const stopId = setInterval(() => {
+      if (!shouldUpdateRef.current) return
+
+      shouldUpdateRef.current = false
+      render()
+    }, ms)
+
+    return () => clearInterval(stopId)
+  }, [ms, render])
+
+  return update
 }
