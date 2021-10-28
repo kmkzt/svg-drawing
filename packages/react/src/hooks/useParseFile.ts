@@ -10,7 +10,7 @@ import type { UseParseFile } from '../types'
  */
 export const useParseFile: UseParseFile = ({ svg }) =>
   useCallback(
-    async (file) => {
+    async (file): Promise<void> => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
 

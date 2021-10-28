@@ -1,6 +1,6 @@
 import { EditSvg, PointObject, SvgEditing } from '@svg-drawing/core'
 import { useCallback, useMemo, useEffect } from 'react'
-import { usePressedKey } from '../keyboard/usePressedKey'
+import { usePressedKey } from './usePressedKey'
 import type { KeyboardMap, UseEdit, EditSvgAction } from '../types'
 
 /** @todo Fix onClear and onResize. */
