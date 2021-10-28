@@ -4,7 +4,7 @@ import {
   EditSvgObject,
   SelectIndex,
 } from '@svg-drawing/core'
-import React, { useCallback, HTMLAttributes, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { BackgroundRect } from './BackgroundRect'
 import { EditSvgProps } from '../types'
 
