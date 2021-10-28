@@ -1,11 +1,12 @@
-import { EditSvg, PointObject, SvgEditing } from '@svg-drawing/core'
+import { EditSvg, SvgEditing } from '@svg-drawing/core'
 import { useCallback, useMemo, useEffect } from 'react'
 import { usePressedKey } from './usePressedKey'
-import type { KeyboardMap, UseEdit, EditSvgAction } from '../types'
+import type { UseEdit, EditSvgAction, EditProps } from '../types'
 
 /** @todo Fix onClear and onResize. */
 export const useEdit: UseEdit = ({
   multipleSelectBindKey = 'Shift',
+  editSvgObject,
   svg,
   onChangeEdit,
   onChangeSvg,
@@ -30,25 +31,40 @@ export const useEdit: UseEdit = ({
 
   const multipleSelect = usePressedKey(multipleSelectBindKey)
 
-  const onSelectPaths = useCallback<EditSvgAction['onSelectPaths']>(
+  const selectPaths = useCallback<EditSvgAction['selectPaths']>(
     (sel) => edit.select(sel, multipleSelect.current),
     [edit, multipleSelect]
   )
 
-  const onTranslateStart = useCallback<EditSvgAction['onTranslateStart']>(
-    (po) => edit.startTranslate(po),
+  const changeAttributes = useCallback<EditSvgAction['changeAttributes']>(
+    (arg) => {
+      edit.changeAttributes(arg)
+    },
     [edit]
   )
 
-  const onTranslate = useCallback(
-    (po: PointObject) => {
+  const cancelSelect = useCallback<EditSvgAction['cancelSelect']>(() => {
+    edit.cancel()
+  }, [edit])
+
+  const deletePaths = useCallback<EditSvgAction['deletePaths']>(() => {
+    edit.deletePaths()
+  }, [edit])
+
+  const translate = useCallback<EditSvgAction['translate']>(
+    (po) => {
       edit.translate(po)
     },
     [edit]
   )
 
+  const onTranslateStart = useCallback<EditProps['onTranslateStart']>(
+    (po) => edit.startTranslate(po),
+    [edit]
+  )
+
   const onResizeBoundingBoxStart = useCallback<
-    EditSvgAction['onResizeBoundingBoxStart']
+    EditProps['onResizeBoundingBoxStart']
   >(
     (base) => {
       edit.startResizeBoundingBox(base)
@@ -56,43 +72,41 @@ export const useEdit: UseEdit = ({
     [edit]
   )
 
-  const onChangeAttributes = useCallback<EditSvgAction['onChangeAttributes']>(
-    (arg) => {
-      edit.changeAttributes(arg)
-    },
-    [edit]
-  )
-
-  const onCancelSelect = useCallback<EditSvgAction['onCancelSelect']>(() => {
-    edit.cancel()
-  }, [edit])
-
-  const onDeletePaths = useCallback<EditSvgAction['onDeletePaths']>(() => {
-    edit.deletePaths()
-  }, [edit])
-
-  const keyboardMap = useMemo<KeyboardMap>(
+  const keyboardMap = useMemo<EditSvgAction['keyboardMap']>(
     () => ({
-      ['Escape']: onCancelSelect,
-      ['ArrowRight']: () => onTranslate({ x: 0.5, y: 0 }),
-      ['ArrowLeft']: () => onTranslate({ x: -0.5, y: 0 }),
-      ['ArrowUp']: () => onTranslate({ x: 0, y: -0.5 }),
-      ['ArrowDown']: () => onTranslate({ x: 0, y: 0.5 }),
-      ['Backspace']: onDeletePaths,
+      ['Escape']: cancelSelect,
+      ['ArrowRight']: () => translate({ x: 0.5, y: 0 }),
+      ['ArrowLeft']: () => translate({ x: -0.5, y: 0 }),
+      ['ArrowUp']: () => translate({ x: 0, y: -0.5 }),
+      ['ArrowDown']: () => translate({ x: 0, y: 0.5 }),
+      ['Backspace']: deletePaths,
     }),
-    [onCancelSelect, onDeletePaths, onTranslate]
+    [cancelSelect, deletePaths, translate]
   )
 
+  const { editPaths, boundingBox } = useMemo(
+    () => ({
+      editPaths: editSvgObject?.paths ?? null,
+      boundingBox: editSvgObject?.boundingBox ?? null,
+    }),
+    [editSvgObject]
+  )
   return {
     edit,
     keyboardMap,
     update,
-    onSelectPaths,
-    onTranslateStart,
-    onResizeBoundingBoxStart,
-    onCancelSelect,
-    onChangeAttributes,
-    onTranslate,
-    onDeletePaths,
+    selectPaths,
+    cancelSelect,
+    changeAttributes,
+    translate,
+    deletePaths,
+    editSvgProps: {
+      editPaths,
+      boundingBox,
+      onTranslateStart,
+      onResizeBoundingBoxStart,
+      onSelectPaths: selectPaths,
+      onCancelSelect: cancelSelect,
+    },
   }
 }

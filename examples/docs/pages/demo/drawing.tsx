@@ -140,19 +140,16 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
 
   /** Setup edit */
 
-  const [editInfo, onChangeEdit] = useState<EditSvgObject | null>(null)
+  const [editSvgObject, onChangeEdit] = useState<EditSvgObject | null>(null)
   const {
-    update: updateEdit,
-    onChangeAttributes,
     keyboardMap,
-    onCancelSelect,
-    // onDeletePaths,
-    onSelectPaths,
-    // onTranslate,
-    onTranslateStart,
-    onResizeBoundingBoxStart,
+    editSvgProps,
+    update: updateEdit,
+    changeAttributes,
+    cancelSelect,
   } = useEdit({
     svg,
+    editSvgObject,
     onChangeEdit,
     onChangeSvg,
   })
@@ -218,11 +215,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         strokeWidth: `${num}`,
       }))
-      onChangeAttributes({
+      changeAttributes({
         strokeWidth: num + '',
       })
     },
-    [onChangeAttributes]
+    [changeAttributes]
   )
 
   const handleChangePenColor = useCallback<
@@ -233,11 +230,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         stroke: e.target.value,
       }))
-      onChangeAttributes({
+      changeAttributes({
         stroke: e.target.value,
       })
     },
-    [onChangeAttributes]
+    [changeAttributes]
   )
 
   const handleClickPenColor = useCallback(
@@ -246,11 +243,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         stroke: col,
       }))
-      onChangeAttributes({
+      changeAttributes({
         stroke: col,
       })
     },
-    [onChangeAttributes]
+    [changeAttributes]
   )
 
   const handleChangeFill = useCallback<ChangeEventHandler<HTMLInputElement>>(
@@ -259,11 +256,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         fill: e.target.value,
       }))
-      onChangeAttributes({
+      changeAttributes({
         fill: e.target.value,
       })
     },
-    [onChangeAttributes]
+    [changeAttributes]
   )
 
   const handleClickFill = useCallback(
@@ -272,11 +269,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         fill: col,
       }))
-      onChangeAttributes({
+      changeAttributes({
         fill: col,
       })
     },
-    [onChangeAttributes]
+    [changeAttributes]
   )
 
   const parseFile = useParseFile({
@@ -380,7 +377,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         )}
         {mode === 'edit' && (
           <Flex pt={3} justifyContent="start">
-            <Button mr={1} mb={1} onClick={onCancelSelect}>
+            <Button mr={1} mb={1} onClick={cancelSelect}>
               Cancel
             </Button>
             <Button mr={1} mb={1} onClick={clear}>
@@ -542,20 +539,12 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           {mode === 'draw' ? (
             <Svg {...svgProps} />
           ) : (
-            <EditSvg
-              {...svgProps}
-              boundingBox={editInfo?.boundingBox ?? null}
-              editPaths={editInfo?.paths ?? null}
-              onCancelSelect={onCancelSelect}
-              onSelectPaths={onSelectPaths}
-              onTranslateStart={onTranslateStart}
-              onResizeBoundingBoxStart={onResizeBoundingBoxStart}
-            />
+            <EditSvg {...svgProps} {...editSvgProps} />
           )}
         </div>
       </Box>
       <AnimateSvg animatePaths={animateObj ?? undefined} {...svgProps} />
-      <div>{JSON.stringify(editInfo?.boundingBox)}</div>
+      <div>{JSON.stringify(editSvgProps.boundingBox)}</div>
       <div>{JSON.stringify(animateObj)}</div>
     </Layout>
   )

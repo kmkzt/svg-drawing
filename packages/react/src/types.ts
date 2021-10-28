@@ -40,6 +40,7 @@ export type DrawAction<P extends DrawFactory, H extends DrawHandler> = {
 /** UseEdit */
 export type UseEdit = (opts: {
   svg: Svg
+  editSvgObject: EditSvgObject | null
   multipleSelectBindKey?: string
   onChangeEdit: (arg: EditSvgObject | null) => void
   onChangeSvg: (obj: SvgObject) => void
@@ -50,17 +51,17 @@ export type EditSvgAction = {
   edit: SvgEditing
   keyboardMap: KeyboardMap
   update: () => void
-  onDeletePaths: () => void
-  onTranslate: SvgEditing['translate']
-  onChangeAttributes: SvgEditing['changeAttributes']
-  onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
-  onTranslateStart: SvgEditing['startTranslate']
-  onSelectPaths: (sel: SelectIndex) => void
-  onCancelSelect: () => void
+  deletePaths: () => void
+  translate: SvgEditing['translate']
+  changeAttributes: SvgEditing['changeAttributes']
+  selectPaths: (sel: SelectIndex) => void
+  cancelSelect: () => void
+  editSvgProps: EditProps
 }
 
-/** @todo Separate SvgProps */
-export type EditSvgProps = SvgProps & {
+export type EditSvgProps = SvgProps & EditProps
+
+export type EditProps = {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
   onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
