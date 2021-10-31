@@ -23,6 +23,54 @@ export const EditSvg = ({
 }: EditSvgProps) => {
   const svgRef = useRef<SVGSVGElement>(null)
 
+  const handleCancel = useCallback(
+    (ev: React.MouseEvent<SVGSVGElement> | React.TouchEvent<SVGSVGElement>) => {
+      if (!svgRef.current) return
+      if (!svgRef.current.isSameNode(ev.target as Node)) return
+
+      onCancelSelect()
+    },
+    [onCancelSelect]
+  )
+
+  return (
+    <svg
+      ref={svgRef}
+      width={width}
+      height={height}
+      onMouseDown={handleCancel}
+      onTouchStart={handleCancel}
+      {...rest}
+    >
+      {background && <BackgroundRect fill={background} />}
+      <EditPaths
+        paths={paths}
+        editPaths={editPaths}
+        boundingBox={boundingBox}
+        onTranslateStart={onTranslateStart}
+        onResizeBoundingBoxStart={onResizeBoundingBoxStart}
+        onSelectPaths={onSelectPaths}
+      />
+    </svg>
+  )
+}
+
+export const EditPaths = ({
+  paths,
+  editPaths,
+  boundingBox,
+  onTranslateStart,
+  onResizeBoundingBoxStart,
+  onSelectPaths,
+}: Pick<
+  EditSvgProps,
+  | 'paths'
+  | 'editPaths'
+  | 'boundingBox'
+  | 'onTranslateStart'
+  | 'onResizeBoundingBoxStart'
+  | 'onSelectPaths'
+>) => {
   const handleMoveStartPoint = useCallback(
     (selectIndex: Required<SelectIndex>) =>
       (
@@ -49,26 +97,8 @@ export const EditSvg = ({
     [onSelectPaths, onTranslateStart]
   )
 
-  const handleCancel = useCallback(
-    (ev: React.MouseEvent<SVGSVGElement> | React.TouchEvent<SVGSVGElement>) => {
-      if (!svgRef.current) return
-      if (!svgRef.current.isSameNode(ev.target as Node)) return
-
-      onCancelSelect()
-    },
-    [onCancelSelect]
-  )
-
   return (
-    <svg
-      ref={svgRef}
-      width={width}
-      height={height}
-      onMouseDown={handleCancel}
-      onTouchStart={handleCancel}
-      {...rest}
-    >
-      {background && <BackgroundRect fill={background} />}
+    <>
       {paths.map(({ attributes }, pathIndex) => (
         <path
           key={pathIndex}
@@ -122,7 +152,7 @@ export const EditSvg = ({
             ))}
           </g>
         ))}
-    </svg>
+    </>
   )
 }
 
