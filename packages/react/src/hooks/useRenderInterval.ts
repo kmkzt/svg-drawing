@@ -2,26 +2,29 @@ import { useCallback, useRef, useEffect } from 'react'
 
 const RENDER_INTERVAL = 30
 
-export const useRenderInterval = (
-  render: () => void,
-  ms: number | undefined = RENDER_INTERVAL
-): (() => void) => {
-  const shouldUpdateRef = useRef<boolean>(false)
+type UpdateCallback = () => void
 
-  const update = useCallback(() => {
-    shouldUpdateRef.current = true
+export const useRenderInterval = (
+  ms: number | undefined = RENDER_INTERVAL
+): ((update: UpdateCallback) => void) => {
+  const updateCallback = useRef<null | (() => void)>(null)
+
+  const render = useCallback((update: UpdateCallback) => {
+    updateCallback.current = () => {
+      updateCallback.current = null
+      update()
+    }
   }, [])
 
   useEffect(() => {
     const stopId = setInterval(() => {
-      if (!shouldUpdateRef.current) return
+      if (!updateCallback.current) return
 
-      shouldUpdateRef.current = false
-      render()
+      updateCallback.current()
     }, ms)
 
     return () => clearInterval(stopId)
   }, [ms, render])
 
-  return update
+  return render
 }

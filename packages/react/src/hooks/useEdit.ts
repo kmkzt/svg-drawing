@@ -1,6 +1,7 @@
 import { EditSvg, SvgEditing } from '@svg-drawing/core'
 import { useCallback, useMemo, useEffect } from 'react'
 import { usePressedKey } from './usePressedKey'
+import { useRenderInterval } from './useRenderInterval'
 import type { UseEdit, EditSvgAction, EditProps } from '../types'
 
 /** @todo Fix onClear and onResize. */
@@ -13,18 +14,24 @@ export const useEdit: UseEdit = ({
 }) => {
   const editSvg = useMemo(() => new EditSvg(svg), [svg])
 
+  const render = useRenderInterval()
+
   const update = useCallback(() => {
-    onChangeEdit(editSvg.toJson())
-    onChangeSvg(editSvg.svg.toJson())
-  }, [editSvg, onChangeEdit, onChangeSvg])
+    render(() => {
+      onChangeEdit(editSvg.toJson())
+      onChangeSvg(editSvg.svg.toJson())
+    })
+  }, [editSvg, onChangeEdit, onChangeSvg, render])
 
   const edit = useMemo(
     () =>
       new SvgEditing(editSvg, (eSvg: EditSvg) => {
-        onChangeEdit(eSvg.toJson())
-        onChangeSvg(eSvg.svg.toJson())
+        render(() => {
+          onChangeEdit(eSvg.toJson())
+          onChangeSvg(eSvg.svg.toJson())
+        })
       }),
-    [editSvg, onChangeEdit, onChangeSvg]
+    [editSvg, onChangeEdit, onChangeSvg, render]
   )
 
   useEffect(() => () => edit.cleanup(), [edit])

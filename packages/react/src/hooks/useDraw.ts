@@ -44,11 +44,11 @@ export const useDraw = <P extends DrawFactory, H extends DrawHandler>({
   svg,
   onChangeSvg,
 }: UseDrawOptions<P, H>): DrawAction<P, H> => {
-  const render = useCallback(() => {
-    onChangeSvg(svg.toJson())
-  }, [onChangeSvg, svg])
+  const render = useRenderInterval()
 
-  const update = useRenderInterval(render)
+  const update = useCallback(() => {
+    render(() => onChangeSvg(svg.toJson()))
+  }, [render, onChangeSvg, svg])
 
   const draw = useMemo(
     () => new SvgDrawing(svg, factory, handler, update),
