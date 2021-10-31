@@ -1,18 +1,29 @@
-import React from 'react'
+import React, { useRef, useCallback } from 'react'
 import { BackgroundRect } from './BackgroundRect'
 import type { SvgProps } from '../types'
 
 export const Svg = ({
+  onSelectSvg,
   background,
-  width,
-  height,
-  paths,
+  children,
   ...rest
-}: SvgProps) => (
-  <svg width={width} height={height} {...rest}>
-    {background && <BackgroundRect fill={background} />}
-    {paths.map(({ type, attributes }, i) => (
-      <path key={i} {...attributes} />
-    ))}
-  </svg>
-)
+}: SvgProps) => {
+  const svgRef = useRef<SVGSVGElement>(null)
+
+  const onSelect = useCallback(
+    (ev: React.MouseEvent<SVGSVGElement> | React.TouchEvent<SVGSVGElement>) => {
+      if (!svgRef.current) return
+      if (!svgRef.current.isSameNode(ev.target as Node)) return
+
+      onSelectSvg?.()
+    },
+    [onSelectSvg]
+  )
+
+  return (
+    <svg ref={svgRef} onMouseDown={onSelect} onTouchStart={onSelect} {...rest}>
+      {background && <BackgroundRect fill={background} />}
+      {children}
+    </svg>
+  )
+}

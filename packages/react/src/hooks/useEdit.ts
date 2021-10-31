@@ -107,13 +107,12 @@ export const useEdit: UseEdit = ({
     changeAttributes,
     translate,
     deletePaths,
-    editSvgProps: {
+    editProps: {
       editPaths,
       boundingBox,
       onTranslateStart,
       onResizeBoundingBoxStart,
       onSelectPaths: selectPaths,
-      onCancelSelect: cancelSelect,
     },
   }
 }

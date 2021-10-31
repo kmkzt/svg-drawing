@@ -17,7 +17,15 @@ import type { RefObject, HTMLAttributes } from 'react'
 
 /** UseSvg */
 export type UseSvg = (opts: Partial<SvgOption>) => Svg
-export type SvgProps = SvgObject & HTMLAttributes<SVGSVGElement>
+export type SvgProps = HTMLAttributes<SVGSVGElement> & {
+  background: SvgObject['background']
+  children: React.ReactNode
+  onSelectSvg?: () => void
+}
+
+export type PathsProps = {
+  paths: SvgObject['paths']
+}
 
 /** UseDraw */
 export type UseDraw<P extends DrawFactory, H extends DrawHandler> = (
@@ -56,10 +64,8 @@ export type EditSvgAction = {
   changeAttributes: SvgEditing['changeAttributes']
   selectPaths: (sel: SelectIndex) => void
   cancelSelect: () => void
-  editSvgProps: EditProps
+  editProps: EditProps
 }
-
-export type EditSvgProps = SvgProps & EditProps
 
 export type EditProps = {
   editPaths: EditSvgObject['paths'] | null
@@ -67,8 +73,11 @@ export type EditProps = {
   onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
   onTranslateStart: SvgEditing['startTranslate']
   onSelectPaths: (sel: SelectIndex) => void
-  onCancelSelect: () => void
 }
+
+export type EditPathsProps = PathsProps & EditProps
+export type EditBoundingBoxProps = EditSvgObject['boundingBox'] &
+  Pick<EditProps, 'onResizeBoundingBoxStart' | 'onTranslateStart'>
 
 /** UseAnimation */
 export type UseAnimation = (arg: {
@@ -80,7 +89,7 @@ export type UseAnimation = (arg: {
   setup: Animation['setup']
 }
 
-export type AnimateSvgProps = SvgObject & {
+export type AnimatePathsProps = PathsProps & {
   animatePaths?: AnimationObject
 }
 /** UseDrawEventHandler */

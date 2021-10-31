@@ -1,59 +1,6 @@
-import {
-  PointObject,
-  FixedType,
-  EditSvgObject,
-  SelectIndex,
-} from '@svg-drawing/core'
-import React, { useCallback, useRef } from 'react'
-import { BackgroundRect } from './BackgroundRect'
-import { EditSvgProps } from '../types'
-
-export const EditSvg = ({
-  background,
-  paths,
-  width,
-  height,
-  editPaths,
-  boundingBox,
-  onTranslateStart,
-  onResizeBoundingBoxStart,
-  onCancelSelect,
-  onSelectPaths,
-  ...rest
-}: EditSvgProps) => {
-  const svgRef = useRef<SVGSVGElement>(null)
-
-  const handleCancel = useCallback(
-    (ev: React.MouseEvent<SVGSVGElement> | React.TouchEvent<SVGSVGElement>) => {
-      if (!svgRef.current) return
-      if (!svgRef.current.isSameNode(ev.target as Node)) return
-
-      onCancelSelect()
-    },
-    [onCancelSelect]
-  )
-
-  return (
-    <svg
-      ref={svgRef}
-      width={width}
-      height={height}
-      onMouseDown={handleCancel}
-      onTouchStart={handleCancel}
-      {...rest}
-    >
-      {background && <BackgroundRect fill={background} />}
-      <EditPaths
-        paths={paths}
-        editPaths={editPaths}
-        boundingBox={boundingBox}
-        onTranslateStart={onTranslateStart}
-        onResizeBoundingBoxStart={onResizeBoundingBoxStart}
-        onSelectPaths={onSelectPaths}
-      />
-    </svg>
-  )
-}
+import { PointObject, FixedType, SelectIndex } from '@svg-drawing/core'
+import React, { useCallback } from 'react'
+import { EditPathsProps, EditBoundingBoxProps } from '../types'
 
 export const EditPaths = ({
   paths,
@@ -62,15 +9,7 @@ export const EditPaths = ({
   onTranslateStart,
   onResizeBoundingBoxStart,
   onSelectPaths,
-}: Pick<
-  EditSvgProps,
-  | 'paths'
-  | 'editPaths'
-  | 'boundingBox'
-  | 'onTranslateStart'
-  | 'onResizeBoundingBoxStart'
-  | 'onSelectPaths'
->) => {
+}: EditPathsProps) => {
   const handleMoveStartPoint = useCallback(
     (selectIndex: Required<SelectIndex>) =>
       (
@@ -165,8 +104,7 @@ export const EditBoundingBox = ({
   selected,
   onTranslateStart,
   onResizeBoundingBoxStart,
-}: Pick<EditSvgProps, 'onTranslateStart' | 'onResizeBoundingBoxStart'> &
-  EditSvgObject['boundingBox']) => {
+}: EditBoundingBoxProps) => {
   const handleMovePathsStart = useCallback(
     (
       ev:
