@@ -1,13 +1,13 @@
 {
   "name": "@ranklab/svg-drawing-animation",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": "kmkzt<info.pscreator@gmail.com>",
-  "repository": "github:kmkzt/svg-drawing",
-  "homepage": "https://github.com/kmkzt/svg-drawing/tree/master/packages/animation#readme",
+  "repository": "github:ranklab-gaming/svg-drawing",
+  "homepage": "https://github.com/ranklab-gaming/svg-drawing/tree/master/packages/animation#readme",
   "bugs": {
-    "url": "https://github.com/kmkzt/svg-drawing/issues",
+    "url": "https://github.com/ranklab-gaming/svg-drawing/issues",
     "email": "info.pscreator@gmail.com"
   },
   "keywords": [
@@ -35,10 +35,10 @@
     "prepare": "yarn build"
   },
   "optionalDependencies": {
-    "@ranklab/svg-drawing-core": "^4.2.2"
+    "@ranklab/svg-drawing-core": "^4.2.3"
   },
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "6811d0236e51e0204ffbf64a6124ca5469079373"
+  "gitHead": "06a088d248d3e0ca4674680685f33a11e9365f93"
 }

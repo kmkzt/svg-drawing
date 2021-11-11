@@ -1,7 +1,7 @@
 {
   "name": "@svg-drawing-example/docs",
   "private": true,
-  "version": "4.2.2",
+  "version": "4.2.3",
   "scripts": {
     "clear": "rimraf .next out",
     "start": "next start",
@@ -11,12 +11,12 @@
     "prepare": "build"
   },
   "dependencies": {
+    "@ranklab/svg-drawing-animation": "^4.2.3",
+    "@ranklab/svg-drawing-core": "^4.2.3",
+    "@ranklab/svg-drawing-img-trace": "^4.2.3",
+    "@ranklab/svg-drawing-react": "^4.2.3",
     "@rebass/forms": "4.0.6",
     "@styled-icons/octicons": "10.6.0",
-    "@ranklab/svg-drawing-animation": "^4.2.2",
-    "@ranklab/svg-drawing-core": "^4.2.2",
-    "@ranklab/svg-drawing-img-trace": "^4.2.2",
-    "@ranklab/svg-drawing-react": "^4.2.2",
     "next": "9.5.4",
     "pressure": "2.1.2",
     "react": "16.13.1",

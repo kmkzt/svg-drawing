@@ -1,5 +1,5 @@
 {
-  "extends": ["@kmkzt"],
+  "extends": ["@ranklab"],
   "packageRules": [
     // For monorepo config
     {
@@ -8,7 +8,7 @@
         "packages/**/package.json"
       ],
       "extends": [
-        "@kmkzt"
+        "@ranklab"
       ]
     }
   ]
