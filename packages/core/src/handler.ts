@@ -102,9 +102,6 @@ export class DrawHandler {
   public on(): void {
     this.off()
 
-    // Setup coordinates listener
-    this._setupCoordinatesListener()
-
     // Setup Draw listener
     if (window.PointerEvent) {
       this._setupDrawListener('pointer')
@@ -118,6 +115,10 @@ export class DrawHandler {
 
   private _handleStart(ev: TouchEvent | MouseEvent | PointerEvent) {
     ev.preventDefault()
+
+    const { left, top } = this._el.getBoundingClientRect()
+    this._left = left
+    this._top = top
     this.start()
   }
 
@@ -128,7 +129,7 @@ export class DrawHandler {
 
   private _handleMove(ev: MouseEvent | PointerEvent | TouchEvent) {
     ev.preventDefault()
-    if (ev instanceof TouchEvent) {
+    if (typeof TouchEvent !== "undefined" && ev instanceof TouchEvent) {
       const touch = ev.touches[0]
       this.move({
         x: touch.clientX - this._left,
@@ -179,20 +180,6 @@ export class DrawHandler {
       ...endClear,
       ...frameoutClear
     )
-  }
-
-  private _setupCoordinatesListener() {
-    const handleEvent = (_ev: Event) => {
-      const { left, top } = this._el.getBoundingClientRect()
-      this._left = left
-      this._top = top
-    }
-    addEventListener('scroll', handleEvent)
-    this._el.addEventListener('resize', handleEvent)
-    this._clearEventList.push(() => {
-      removeEventListener('scroll', handleEvent)
-      this._el.removeEventListener('resize', handleEvent)
-    })
   }
 }
 
