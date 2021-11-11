@@ -1,15 +1,15 @@
-# `@svg-drawing/img-trace`
+# `@ranklab/svg-drawing-img-trace`
 
-[![npm version](https://img.shields.io/npm/v/@svg-drawing/img-trace/latest.svg)](https://www.npmjs.com/package/@svg-drawing/img-trace) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/img-trace.svg)](https://www.npmjs.com/package/@svg-drawing/img-trace)
+[![npm version](https://img.shields.io/npm/v/@ranklab/svg-drawing-img-trace/latest.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-img-trace) [![npm download](https://img.shields.io/npm/dm/@ranklab/svg-drawing-img-trace.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-img-trace)
 
 ## Install
 
 ### npm
 
 ```shell
-yarn add @svg-drawing/img-trace
+yarn add @ranklab/svg-drawing-img-trace
 # or
-# npm i @svg-drawing/img-trace
+# npm i @ranklab/svg-drawing-img-trace
 ```
 
 ## How to use
@@ -22,8 +22,8 @@ Example of downloading the image converted to Svg
 import {
   ImgTrace
   ImgLoader,
-} from '@svg-drawing/img-trace'
-import { download } from '@svg-drawing/core'
+} from '@ranklab/svg-drawing-img-trace'
+import { download } from '@ranklab/svg-drawing-core'
 
 const svgDownload = async () => {
   new ImgLoader().fromUrl('./images/example.png', (imgd) => {
@@ -38,11 +38,11 @@ svgDownload()
 Example of rendering an image converted to Svg
 
 ```ts
-import { Renderer } from '@svg-drawing/core'
+import { Renderer } from '@ranklab/svg-drawing-core'
 import {
   ImgTrace
   ImgLoader,
-} from '@svg-drawing/img-trace'
+} from '@ranklab/svg-drawing-img-trace'
 
 const handleImage = (imgd) => {
   const svg = new ImgTrace().load(imgd)
@@ -60,8 +60,8 @@ import {
   ImgTrace
   ImgLoader,
   Palette
-} from '@svg-drawing/img-trace'
-import { download } from '@svg-drawing/core'
+} from '@ranklab/svg-drawing-img-trace'
+import { download } from '@ranklab/svg-drawing-core'
 
 // imgd is new ImageData()
 const colorSvgDownload = () => {

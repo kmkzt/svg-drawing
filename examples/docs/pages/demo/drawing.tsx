@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState, ChangeEvent } from 'react'
 import { NextPage } from 'next'
-import { useSvgDrawing } from '@svg-drawing/react'
+import { useSvgDrawing } from '@ranklab/svg-drawing-react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import Layout from '../../components/Layout'

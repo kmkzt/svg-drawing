@@ -3,13 +3,13 @@ import {
   createSvgElement,
   createSvgChildElement,
   pathObjectToElement,
-} from '@svg-drawing/core/lib/renderer'
-import { camel2kebab, roundUp } from '@svg-drawing/core/lib/utils'
-import { downloadBlob, svg2base64 } from '@svg-drawing/core/lib/download'
-import { Path, Svg } from '@svg-drawing/core/lib/svg'
+} from '@ranklab/svg-drawing-core/lib/renderer'
+import { camel2kebab, roundUp } from '@ranklab/svg-drawing-core/lib/utils'
+import { downloadBlob, svg2base64 } from '@ranklab/svg-drawing-core/lib/download'
+import { Path, Svg } from '@ranklab/svg-drawing-core/lib/svg'
 import { AnimationOption, FrameAnimation } from './types'
-import { ResizeHandler } from '@svg-drawing/core/lib/handler'
-import type { ResizeHandlerCallback } from '@svg-drawing/core/lib/types'
+import { ResizeHandler } from '@ranklab/svg-drawing-core/lib/handler'
+import type { ResizeHandlerCallback } from '@ranklab/svg-drawing-core/lib/types'
 
 export class SvgAnimation {
   /**
@@ -227,11 +227,11 @@ export class SvgAnimation {
     }
     const bgEl = this.svg.background
       ? [
-          createSvgChildElement('rect', {
-            ...size,
-            fill: this.svg.background,
-          }),
-        ]
+        createSvgChildElement('rect', {
+          ...size,
+          fill: this.svg.background,
+        }),
+      ]
       : []
     return createSvgElement(
       {

@@ -1,15 +1,15 @@
-# `@svg-drawing/animation`
+# `@ranklab/svg-drawing-animation`
 
-[![npm version](https://img.shields.io/npm/v/@svg-drawing/animation/latest.svg)](https://www.npmjs.com/package/@svg-drawing/animation) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/animation.svg)](https://www.npmjs.com/package/@svg-drawing/animation)
+[![npm version](https://img.shields.io/npm/v/@ranklab/svg-drawing-animation/latest.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-animation) [![npm download](https://img.shields.io/npm/dm/@ranklab/svg-drawing-animation.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-animation)
 
 ## Install
 
 ### npm
 
 ```shell
-yarn add @svg-drawing/animation
+yarn add @ranklab/svg-drawing-animation
 # or
-# npm i @svg-drawing/animation
+# npm i @ranklab/svg-drawing-animation
 ```
 
 ## How to use
@@ -17,8 +17,8 @@ yarn add @svg-drawing/animation
 Example code is [here](/examples/docs/pages/demo/animation.tsx)
 
 ```js
-import { SvgDrawing } from '@svg-drawing/core'
-import { SvgAnimation } from '@svg-drawing/animation'
+import { SvgDrawing } from '@ranklab/svg-drawing-core'
+import { SvgAnimation } from '@ranklab/svg-drawing-animation'
 // Render drawing area. omitted the description
 const draw = new SvgDrawing(el)
 

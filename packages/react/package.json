@@ -1,6 +1,6 @@
 {
-  "name": "@svg-drawing/react",
-  "version": "4.2.1",
+  "name": "@ranklab/svg-drawing-react",
+  "version": "4.2.2",
   "description": "React svg drawing library. This library is a React extension of svg-drawing.",
   "author": "kmkzt <info.pscreator@gmail.com>",
   "homepage": "https://github.com/kmkzt/svg-drawing/tree/master/packages/react#readme",
@@ -38,10 +38,11 @@
     "react": ">= 16.8.0"
   },
   "optionalDependencies": {
-    "@svg-drawing/animation": "4.2.1",
-    "@svg-drawing/core": "4.2.1"
+    "@ranklab/svg-drawing-animation": "^4.2.2",
+    "@ranklab/svg-drawing-core": "^4.2.2"
   },
   "devDependencies": {
     "react": "16.13.1"
-  }
+  },
+  "gitHead": "78fa9950be1c6f82427aab66b96b2dfb46d23738"
 }

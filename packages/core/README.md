@@ -1,6 +1,6 @@
-# `@svg-drawing/core`
+# `@ranklab/svg-drawing-core`
 
-[![npm version](https://img.shields.io/npm/v/@svg-drawing/core/latest.svg)](https://www.npmjs.com/package/@svg-drawing/core) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/core.svg)](https://www.npmjs.com/package/@svg-drawing/core)
+[![npm version](https://img.shields.io/npm/v/@ranklab/svg-drawing-core/latest.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-core) [![npm download](https://img.shields.io/npm/dm/@ranklab/svg-drawing-core.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-core)
 
 ## How to use
 
@@ -9,7 +9,7 @@
 Install
 
 ```shell
-yarn add @svg-drawing/core
+yarn add @ranklab/svg-drawing-core
 # or
 # npm i svg-drawing
 ```
@@ -19,7 +19,7 @@ Example code is [here](/examples/docs/pages/demo/drawing.tsx)
 This example renders the drawing area.
 
 ```javascript
-import { SvgDrawing } from '@svg-drawing/core'
+import { SvgDrawing } from '@ranklab/svg-drawing-core'
 
 const el = document.createElement('div')
 
@@ -72,7 +72,7 @@ draw.svg.parseSVGElement(document.getElementByID('loadSVG'))
 
 ```html
 <div id="draw-area" style="width: 100vw;height: 100vh;"></div>
-<script src="https://unpkg.com/@svg-drawing/core@4.0.0-beta.6/lib/index.umd.js"></script>
+<script src="https://unpkg.com/@ranklab/svg-drawing-core@4.0.0-beta.6/lib/index.umd.js"></script>
 <script>
   var draw = new SVGDCore.SvgDrawing(document.getElementById('draw-area'))
 </script>

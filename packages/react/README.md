@@ -1,11 +1,11 @@
-# `@svg-drawing/react`
+# `@ranklab/svg-drawing-react`
 
-[![npm version](https://img.shields.io/npm/v/@svg-drawing/react/latest.svg)](https://www.npmjs.com/package/@svg-drawing/react) [![npm download](https://img.shields.io/npm/dm/@svg-drawing/react.svg)](https://www.npmjs.com/package/@svg-drawing/react)
+[![npm version](https://img.shields.io/npm/v/@ranklab/svg-drawing-react/latest.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-react) [![npm download](https://img.shields.io/npm/dm/@ranklab/svg-drawing-react.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-react)
 
 ## Get started
 
 ```shell
-yarn add react @svg-drawing/react
+yarn add react @ranklab/svg-drawing-react
 ```
 
 ## How to use
@@ -16,7 +16,7 @@ This is example.
 
 ```javascript
 import React from 'react'
-import { useSvgDrawing } from '@svg-drawing/react'
+import { useSvgDrawing } from '@ranklab/svg-drawing-react'
 
 const Drawing = () => {
   const [renderRef, draw] = useSvgDrawing()

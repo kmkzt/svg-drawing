@@ -1,6 +1,6 @@
 import { Rgba } from './palette'
 import { convertRGBAImage } from './utils/convertRGBAImage'
-import { Svg, Path, Command, PathObject } from '@svg-drawing/core'
+import { Svg, Path, Command, PathObject } from '@ranklab/svg-drawing-core'
 
 type ColorQuantization = number[][]
 // Edge node types ( ▓: this layer or 1; ░: not this layer or 0 )
@@ -288,9 +288,9 @@ export class ImgTrace {
           h === 0 || w === 0
             ? 0
             : (((cq[h - 1][w - 1] === palId ? 1 : 0) +
-                (cq[h - 1][w] === palId ? 2 : 0) +
-                (cq[h][w - 1] === palId ? 8 : 0) +
-                (cq[h][w] === palId ? 4 : 0)) as EdgeType)
+              (cq[h - 1][w] === palId ? 2 : 0) +
+              (cq[h][w - 1] === palId ? 8 : 0) +
+              (cq[h][w] === palId ? 4 : 0)) as EdgeType)
       }
     }
 
@@ -303,9 +303,9 @@ export class ImgTrace {
     for (let i = 0, j = pa.length - 1; i < pa.length; j = i++) {
       isin =
         pa[i].y > p.y !== pa[j].y > p.y &&
-        p.x <
+          p.x <
           ((pa[j].x - pa[i].x) * (p.y - pa[i].y)) / (pa[j].y - pa[i].y) +
-            pa[i].x
+          pa[i].x
           ? !isin
           : isin
     }
@@ -473,7 +473,7 @@ export class ImgTrace {
               paths[pacnt].points[pcnt].x,
               paths[pacnt].points[pcnt].y,
               (paths[pacnt].points[pcnt].x + paths[pacnt].points[nextidx].x) /
-                2,
+              2,
               (paths[pacnt].points[pcnt].y + paths[pacnt].points[nextidx].y) / 2
             ),
           })

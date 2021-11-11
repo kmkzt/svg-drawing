@@ -1,5 +1,5 @@
 {
-  "name": "@svg-drawing/root",
+  "name": "@ranklab/svg-drawing",
   "private": true,
   "workspaces": [
     "packages/*",

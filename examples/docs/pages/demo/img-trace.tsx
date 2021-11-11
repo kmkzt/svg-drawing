@@ -15,14 +15,14 @@ import {
   Heading,
 } from 'rebass/styled-components'
 import { Input } from '@rebass/forms/styled-components'
-import { Renderer, Svg, download } from '@svg-drawing/core'
+import { Renderer, Svg, download } from '@ranklab/svg-drawing-core'
 import {
   ImgTrace,
   Rgba,
   Palette,
   // Blur,
   ImgLoader,
-} from '@svg-drawing/img-trace'
+} from '@ranklab/svg-drawing-img-trace'
 import Layout from '../../components/Layout'
 
 const IMAGE_LIST = [
@@ -196,9 +196,8 @@ export default () => {
                     height: 30,
                     margin: 2,
                     position: 'relative',
-                    backgroundColor: `rgba(${pal.r}, ${pal.g}, ${pal.b}, ${
-                      pal.a / 255
-                    })`,
+                    backgroundColor: `rgba(${pal.r}, ${pal.g}, ${pal.b}, ${pal.a / 255
+                      })`,
                   }}
                 >
                   <div

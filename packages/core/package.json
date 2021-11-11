@@ -1,6 +1,6 @@
 {
-  "name": "@svg-drawing/core",
-  "version": "4.2.1",
+  "name": "@ranklab/svg-drawing-core",
+  "version": "4.2.2",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": "kmkzt<info.pscreator@gmail.com>",
@@ -36,5 +36,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "6811d0236e51e0204ffbf64a6124ca5469079373"
+  "gitHead": "78fa9950be1c6f82427aab66b96b2dfb46d23738"
 }
