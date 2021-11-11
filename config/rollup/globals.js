@@ -1,5 +1,5 @@
 export const packageGlobals = {
-  '@ranklab/svg-drawing-core': 'SVGDCore',
-  '@ranklab/svg-drawing-animation': 'SVGDAnimation',
-  '@ranklab/svg-drawing-img-trace': 'SVGDImgTrace',
+  '@ranklab-gaming/svg-drawing-core': 'SVGDCore',
+  '@ranklab-gaming/svg-drawing-animation': 'SVGDAnimation',
+  '@ranklab-gaming/svg-drawing-img-trace': 'SVGDImgTrace',
 }

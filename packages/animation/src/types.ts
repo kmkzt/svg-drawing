@@ -1,4 +1,4 @@
-import type { RendererOption, Path } from '@ranklab/svg-drawing-core'
+import type { RendererOption, Path } from '@ranklab-gaming/svg-drawing-core'
 export type AnimationOption = RendererOption & {
   ms: number
 }

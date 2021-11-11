@@ -1,15 +1,15 @@
-# `@ranklab/svg-drawing-img-trace`
+# `@ranklab-gaming/svg-drawing-img-trace`
 
-[![npm version](https://img.shields.io/npm/v/@ranklab/svg-drawing-img-trace/latest.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-img-trace) [![npm download](https://img.shields.io/npm/dm/@ranklab/svg-drawing-img-trace.svg)](https://www.npmjs.com/package/@ranklab/svg-drawing-img-trace)
+[![npm version](https://img.shields.io/npm/v/@ranklab-gaming/svg-drawing-img-trace/latest.svg)](https://www.npmjs.com/package/@ranklab-gaming/svg-drawing-img-trace) [![npm download](https://img.shields.io/npm/dm/@ranklab-gaming/svg-drawing-img-trace.svg)](https://www.npmjs.com/package/@ranklab-gaming/svg-drawing-img-trace)
 
 ## Install
 
 ### npm
 
 ```shell
-yarn add @ranklab/svg-drawing-img-trace
+yarn add @ranklab-gaming/svg-drawing-img-trace
 # or
-# npm i @ranklab/svg-drawing-img-trace
+# npm i @ranklab-gaming/svg-drawing-img-trace
 ```
 
 ## How to use
@@ -22,8 +22,8 @@ Example of downloading the image converted to Svg
 import {
   ImgTrace
   ImgLoader,
-} from '@ranklab/svg-drawing-img-trace'
-import { download } from '@ranklab/svg-drawing-core'
+} from '@ranklab-gaming/svg-drawing-img-trace'
+import { download } from '@ranklab-gaming/svg-drawing-core'
 
 const svgDownload = async () => {
   new ImgLoader().fromUrl('./images/example.png', (imgd) => {
@@ -38,11 +38,11 @@ svgDownload()
 Example of rendering an image converted to Svg
 
 ```ts
-import { Renderer } from '@ranklab/svg-drawing-core'
+import { Renderer } from '@ranklab-gaming/svg-drawing-core'
 import {
   ImgTrace
   ImgLoader,
-} from '@ranklab/svg-drawing-img-trace'
+} from '@ranklab-gaming/svg-drawing-img-trace'
 
 const handleImage = (imgd) => {
   const svg = new ImgTrace().load(imgd)
@@ -60,8 +60,8 @@ import {
   ImgTrace
   ImgLoader,
   Palette
-} from '@ranklab/svg-drawing-img-trace'
-import { download } from '@ranklab/svg-drawing-core'
+} from '@ranklab-gaming/svg-drawing-img-trace'
+import { download } from '@ranklab-gaming/svg-drawing-core'
 
 // imgd is new ImageData()
 const colorSvgDownload = () => {

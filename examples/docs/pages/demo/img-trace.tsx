@@ -15,14 +15,14 @@ import {
   Heading,
 } from 'rebass/styled-components'
 import { Input } from '@rebass/forms/styled-components'
-import { Renderer, Svg, download } from '@ranklab/svg-drawing-core'
+import { Renderer, Svg, download } from '@ranklab-gaming/svg-drawing-core'
 import {
   ImgTrace,
   Rgba,
   Palette,
   // Blur,
   ImgLoader,
-} from '@ranklab/svg-drawing-img-trace'
+} from '@ranklab-gaming/svg-drawing-img-trace'
 import Layout from '../../components/Layout'
 
 const IMAGE_LIST = [

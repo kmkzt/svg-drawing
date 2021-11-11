@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useCallback, MutableRefObject } from 'react'
-import type { DrawingOption } from '@ranklab/svg-drawing-core/lib/types'
-import { svgObjectToElement } from '@ranklab/svg-drawing-core/lib/renderer'
-import { SvgDrawing } from '@ranklab/svg-drawing-core/lib/drawing'
+import type { DrawingOption } from '@ranklab-gaming/svg-drawing-core/lib/types'
+import { svgObjectToElement } from '@ranklab-gaming/svg-drawing-core/lib/renderer'
+import { SvgDrawing } from '@ranklab-gaming/svg-drawing-core/lib/drawing'
 import { UseSvgDrawing } from './types'
 
 export const useSvgDrawing = (

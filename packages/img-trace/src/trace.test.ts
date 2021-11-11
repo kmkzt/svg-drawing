@@ -4,7 +4,7 @@ import { resolve } from 'path'
 import { ImgTrace, ImgTraceOption } from './trace'
 import { Palette } from './palette'
 import { loadPngData } from './__test__/loadPngData'
-import { svgObjectToElement } from '@ranklab/svg-drawing-core/lib/renderer'
+import { svgObjectToElement } from '@ranklab-gaming/svg-drawing-core/lib/renderer'
 
 const testPattern: {
   [key: string]: Partial<ImgTraceOption>
