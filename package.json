@@ -1,6 +1,5 @@
 {
   "name": "@ranklab-gaming/svg-drawing",
-  "private": true,
   "workspaces": [
     "packages/*",
     "examples/*"
