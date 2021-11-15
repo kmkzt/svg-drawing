@@ -1,4 +1,4 @@
-import { SvgDrawing, DrawFactory, DrawHandler } from '@svg-drawing/core'
+import { Drawing, DrawFactory, DrawHandler } from '@svg-drawing/core'
 import { useCallback, useMemo } from 'react'
 import { useRenderInterval } from './useRenderInterval'
 import type { DrawAction, UseDrawOptions } from '../types'
@@ -51,7 +51,7 @@ export const useDraw = <P extends DrawFactory, H extends DrawHandler>({
   }, [render, onChangeSvg, svg])
 
   const draw = useMemo(
-    () => new SvgDrawing(svg, factory, handler, update),
+    () => new Drawing(svg, factory, handler, update),
     [svg, factory, handler, update]
   )
 

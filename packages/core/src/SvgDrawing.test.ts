@@ -1,5 +1,5 @@
+import { svgObjectToElement } from './renderer'
 import { SvgDrawing } from './SvgDrawing'
-import { svgObjectToElement } from '../renderer'
 
 describe('SvgDrawing', () => {
   it('default', () => {
