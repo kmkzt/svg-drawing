@@ -7,10 +7,8 @@ import type { Command, PathAttributes, PointObject } from '../types'
  * Cannot support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
  */
 export class Path {
-  constructor(
-    public attrs: PathAttributes = {},
-    public commands: Command[] = []
-  ) {}
+  public commands: Command[] = []
+  constructor(public attrs: PathAttributes = {}) {}
 
   public scale(r: number): this {
     this.commands = this.commands.map((c: Command) => c.scale(r))
@@ -78,11 +76,8 @@ export class Path {
   }
 
   public clone(): Path {
-    return new Path(
-      {
-        ...this.attrs,
-      },
-      this.commands.map((c) => c.clone())
-    )
+    return new Path({
+      ...this.attrs,
+    }).addCommand(this.commands.map((c) => c.clone()))
   }
 }
