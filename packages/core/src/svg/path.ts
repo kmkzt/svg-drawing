@@ -7,8 +7,13 @@ import type { Command, PathAttributes, PointObject } from '../types'
  * Cannot support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
  */
 export class Path {
+  private static index = 0
+  private static genIndex = () => (Path.index += 1)
   public commands: Command[] = []
-  constructor(public attrs: PathAttributes = {}) {}
+  public key: string
+  constructor(public attrs: PathAttributes = {}, _key?: string) {
+    this.key = _key || `p${Path.genIndex()}`
+  }
 
   public scale(r: number): this {
     this.commands = this.commands.map((c: Command) => c.scale(r))
@@ -50,6 +55,7 @@ export class Path {
 
   public toJson(): PathObject {
     return {
+      key: this.key,
       type: 'path',
       attributes: {
         ...this.attrs,
@@ -76,8 +82,11 @@ export class Path {
   }
 
   public clone(): Path {
-    return new Path({
-      ...this.attrs,
-    }).addCommand(this.commands.map((c) => c.clone()))
+    return new Path(
+      {
+        ...this.attrs,
+      },
+      this.key
+    ).addCommand(this.commands.map((c) => c.clone()))
   }
 }

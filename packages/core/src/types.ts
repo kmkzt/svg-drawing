@@ -6,6 +6,7 @@ export type PathAttributes = {
 }
 
 export type PathObject = {
+  key: string
   type: keyof SVGElementTagNameMap
   attributes: PathAttributes
 }
