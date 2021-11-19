@@ -155,7 +155,7 @@ export interface DrawHandler {
 }
 
 export type SelectIndex = {
-  path: number
+  path: PathObject['key']
   command?: number
   point?: number
 }
@@ -176,12 +176,12 @@ export type BoundingBox = {
   max: PointObject
 }
 
-export type Selecting = Record<number, SelectingCommands>
+export type Selecting = Record<PathObject['key'], SelectingCommands>
 export type SelectingCommands = Record<number, SelectingPoints>
 export type SelectingPoints = Array<number>
 
 export type EditPathObject = {
-  index: number
+  key: PathObject['key']
   d: string
   vertex: EditVertex[]
   boundingBox: BoundingBox
@@ -189,7 +189,7 @@ export type EditPathObject = {
 
 export type EditSvgObject = {
   index: Selecting
-  paths: Record<number, EditPathObject>
+  paths: Record<PathObject['key'], EditPathObject>
   boundingBox: {
     x: number
     y: number

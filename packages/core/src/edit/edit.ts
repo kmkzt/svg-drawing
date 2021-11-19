@@ -11,6 +11,7 @@ import type {
   SelectingCommands,
   SelectingPoints,
   Command,
+  PathObject,
 } from '../types'
 
 const genOutline = (points: PointObject[]) =>
@@ -124,22 +125,24 @@ export class EditSvg {
   }
 
   private exec(
-    pathExec: (path: Path, i: { path: number }) => void,
+    pathExec: (path: Path, pathKey: PathObject['key']) => void,
     commandExec?: (
       command: Command,
-      i: { path: number; command: number }
+      i: { path: PathObject['key']; command: number }
     ) => void,
     pointExec?: (
       point: Point,
-      i: { path: number; command: number; point: number }
+      i: { path: PathObject['key']; command: number; point: number }
     ) => void
   ): void {
     for (const pathKey in this.selecting) {
-      const path = this.svg.paths[+pathKey]
+      const path = this.svg.paths.find((path) => path.key === pathKey)
       const selectingCommand = this.selecting[pathKey]
 
+      if (!path) continue
+
       if (Object.keys(selectingCommand).length === 0 || !commandExec) {
-        pathExec(path, { path: +pathKey })
+        pathExec(path, pathKey)
         continue
       }
 
@@ -147,13 +150,13 @@ export class EditSvg {
         const command = path.commands[+commandKey]
         const selectingPoint = selectingCommand[+commandKey]
         if (Object.keys(selectingPoint).length === 0 || !pointExec) {
-          commandExec(command, { path: +pathKey, command: +commandKey })
+          commandExec(command, { path: pathKey, command: +commandKey })
           continue
         }
 
         selectingPoint.map((pointKey: number) => {
           pointExec(command.points[pointKey], {
-            path: +pathKey,
+            path: pathKey,
             command: +commandKey,
             point: +pointKey,
           })
@@ -222,10 +225,11 @@ export class EditSvg {
   /** @todo Delete points */
   public delete() {
     this.exec(
-      (_p, index) => this.svg.deletePath(index.path),
+      (_p, pathKey) => this.svg.deletePath(pathKey),
       (_c, index) => {
-        const path = this.svg.paths[+index.path]
-        path.deleteCommand(index.command)
+        this.svg.paths
+          .find((path) => path.key === index.path)
+          ?.deleteCommand(index.command)
       }
     )
   }
@@ -242,8 +246,8 @@ export class EditSvg {
     const listX: number[] = []
     const listY: number[] = []
 
-    this.exec((path, index) => {
-      const editPath = new EditPath(path.clone(), index.path)
+    this.exec((path, key) => {
+      const editPath = new EditPath(path.clone(), key)
 
       const {
         boundingBox: {
@@ -268,8 +272,8 @@ export class EditSvg {
       this.selecting &&
       Object.keys(this.selecting).length > 0 &&
       Object.keys(this.selecting).every(
-        (pKey: string) =>
-          this.selecting && Object.keys(this.selecting[+pKey]).length === 0
+        (key: string) =>
+          this.selecting && Object.keys(this.selecting[key]).length === 0
       )
     )
   }
@@ -282,13 +286,9 @@ export class EditSvg {
 
     const paths: EditSvgObject['paths'] = {}
 
-    this.exec((path, index) => {
-      const editPath = new EditPath(
-        path.clone(),
-        index.path,
-        this.selecting?.[index.path]
-      )
-      paths[index.path] = editPath.toJson()
+    this.exec((path, key) => {
+      const editPath = new EditPath(path.clone(), key, this.selecting?.[key])
+      paths[key] = editPath.toJson()
 
       const {
         boundingBox: {
@@ -332,7 +332,7 @@ export class EditSvg {
 export class EditPath {
   constructor(
     public path: Path,
-    public index: number,
+    public key: PathObject['key'],
     public selecting?: SelectingCommands
   ) {}
 
@@ -363,7 +363,7 @@ export class EditPath {
       vertex.push({
         points: curr.points.map((point, pIndex) => ({
           index: {
-            path: this.index,
+            path: this.key,
             command: c,
             point: pIndex,
           },
@@ -400,7 +400,7 @@ export class EditPath {
 
   public toJson(): EditPathObject {
     return {
-      index: this.index,
+      key: this.key,
       d: this.path.getCommandString(),
       boundingBox: this.boundingBox,
       vertex: this.vertex,

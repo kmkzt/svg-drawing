@@ -1,5 +1,5 @@
 import { Path } from './path'
-import { SvgObject, SvgOption } from '../types'
+import type { SvgObject, SvgOption, PathObject } from '../types'
 
 export class Svg {
   public paths: Path[]
@@ -57,8 +57,8 @@ export class Svg {
     return this
   }
 
-  public deletePath(i: number): this {
-    this.paths.splice(i, 1)
+  public deletePath(key: PathObject['key']): this {
+    this.paths = this.paths.filter((path) => path.key !== key)
     return this
   }
 

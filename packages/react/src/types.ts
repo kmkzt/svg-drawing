@@ -10,8 +10,8 @@ import type {
   SvgEditing,
   SelectIndex,
   SvgOption,
-  SvgDrawing,
   Path,
+  Drawing,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
@@ -39,10 +39,10 @@ export type UseDrawOptions<P extends DrawFactory, H extends DrawHandler> = {
   onChangeSvg: (obj: SvgObject) => void
 }
 export type DrawAction<P extends DrawFactory, H extends DrawHandler> = {
-  draw: SvgDrawing<Svg, P, H>
+  draw: Drawing<Svg, P, H>
   update: () => void
-  clear: SvgDrawing<Svg, P, H>['clear']
-  undo: SvgDrawing<Svg, P, H>['undo']
+  clear: Drawing<Svg, P, H>['clear']
+  undo: Drawing<Svg, P, H>['undo']
 }
 
 /** UseEdit */

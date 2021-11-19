@@ -24,7 +24,7 @@ export const EditPaths = ({
   )
 
   const handleMoveStartPath = useCallback(
-    (path: number) =>
+    (path: string) =>
       (
         ev:
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
@@ -38,12 +38,12 @@ export const EditPaths = ({
 
   return (
     <>
-      {paths.map(({ attributes }, pathIndex) => (
+      {paths.map(({ key, attributes }) => (
         <path
-          key={pathIndex}
+          key={key}
           {...attributes}
-          onMouseDown={handleMoveStartPath(pathIndex)}
-          onTouchStart={handleMoveStartPath(pathIndex)}
+          onMouseDown={handleMoveStartPath(key)}
+          onTouchStart={handleMoveStartPath(key)}
         />
       ))}
       {boundingBox && (
@@ -54,15 +54,15 @@ export const EditPaths = ({
         />
       )}
       {editPaths &&
-        Object.entries(editPaths).map(([, { index, vertex, d }]) => (
-          <g key={index}>
+        Object.entries(editPaths).map(([, { key, vertex, d }]) => (
+          <g key={key}>
             <path
               d={d}
               strokeWidth={EDIT_CONFIG.line}
               stroke={EDIT_CONFIG.color.main}
               fill={EDIT_CONFIG.fill.boundingBox}
-              onMouseDown={handleMoveStartPath(index)}
-              onTouchStart={handleMoveStartPath(index)}
+              onMouseDown={handleMoveStartPath(key)}
+              onTouchStart={handleMoveStartPath(key)}
             />
             {vertex.map(({ points, d }, commandIndex) => (
               <g key={commandIndex}>
