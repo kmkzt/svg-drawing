@@ -1,8 +1,6 @@
 import {
   Renderer,
   Svg,
-  downloadBlob,
-  svg2base64,
   RendererOption,
   ResizeCallback,
   createSvgChildElement,

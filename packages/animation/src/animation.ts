@@ -81,7 +81,7 @@ export class Animation {
   }
 
   public initialize(paths: Path[]) {
-    this.paths = this.generateOriginPaths(paths)
+    this.paths = paths.map((p) => p.clone())
     this.generator = this.setupGenerator()
     return this
   }
@@ -106,15 +106,13 @@ export class Animation {
     }
 
     return this.paths.reduce((acc: AnimationObject, basePath) => {
-      const { attributes: baseAttributes } = basePath.toJson()
-      if (!baseAttributes.id) return acc
+      const { key, attributes } = basePath.toJson()
 
       const animPaths = animPathsList.map((ap) =>
-        ap.find((p) => p.attrs.id === basePath.attrs.id)
+        ap.find((p) => p.key === basePath.key)
       )
 
       // TODO: Check attribute key and value.
-      const { id, ...attributes } = baseAttributes
       const animateAttributesList: AnimateAttribute[] = Object.keys(attributes)
         .sort()
         .reduce((animateAttrs: AnimateAttribute[], attributeName: string) => {
@@ -143,19 +141,11 @@ export class Animation {
 
       return {
         ...acc,
-        [id]: animateAttributesList.map((animateAttributes) => ({
+        [key]: animateAttributesList.map((animateAttributes) => ({
           type: 'animate',
           attributes: animateAttributes,
         })),
       }
     }, {})
-  }
-
-  private generateOriginPaths(paths: Path[]) {
-    return paths.map((p, i) => {
-      p.updateAttributes({ id: `t${i}` })
-
-      return p.clone()
-    })
   }
 }
