@@ -1,5 +1,4 @@
-import { PathObject } from '..'
-import type { Command, PathAttributes, PointObject } from '../types'
+import type { Command, PathAttributes, PointObject, PathObject } from '../types'
 
 /**
  * @todo: refactor command. The following commands are not supported.
