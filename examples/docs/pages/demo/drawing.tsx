@@ -1,12 +1,13 @@
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import { DrawFrame, AnimationObject } from '@svg-drawing/animation'
 import {
-  download,
+  Download,
   PenHandler,
   PencilHandler,
   PathAttributes,
   ResizeCallback,
   EditSvgObject,
+  svgObjectToElement,
 } from '@svg-drawing/core'
 import {
   useDraw,
@@ -157,9 +158,21 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
 
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (e: React.MouseEvent<HTMLElement>) => {
-      download(svg, {
-        extension,
-      })
+      const download = new Download(svgObjectToElement(svg.toJson()))
+      const filename = `${Date.now()}`
+
+      switch (extension) {
+        case 'png':
+          download.png(filename + '.png')
+          break
+        case 'jpg':
+          download.jpg(filename + '.jpg')
+          break
+        case 'svg':
+        default:
+          download.svg(filename + '.svg')
+          break
+      }
     },
     [svg]
   )

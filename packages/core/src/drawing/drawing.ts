@@ -1,10 +1,8 @@
 import { BasicDrawFactory } from './factory'
 import { PencilHandler } from './handler'
-import { download } from '../download'
 import { Path, Svg } from '../svg'
 import { isAlmostSameNumber } from '../utils'
 import type {
-  DownloadOption,
   DrawHandler,
   PointObject,
   DrawFactory,
@@ -89,11 +87,6 @@ export class Drawing<
 
     this.svg.resize({ width, height })
     this.update(this.svg)
-  }
-
-  /** @deprecated */
-  public download(opt?: DownloadOption): void {
-    download(this.svg, opt)
   }
 
   private _createCommand() {

@@ -5,7 +5,7 @@ import {
   AttributeFrame,
   ShakeFrame,
 } from '@svg-drawing/animation'
-import { parseSVGString, ResizeHandler } from '@svg-drawing/core'
+import { parseSVGString, ResizeHandler, Download } from '@svg-drawing/core'
 import { NextPage } from 'next'
 import {
   useEffect,
@@ -147,7 +147,8 @@ const Animation: NextPage<Props> = ({ isSp }) => {
   const handleDownloadAnimation = useCallback(() => {
     if (!animationRef.current) return
 
-    animationRef.current.download()
+    const download = new Download(animationRef.current.toElement())
+    download.svg(`${Date.now()}.svg`)
   }, [])
 
   return (

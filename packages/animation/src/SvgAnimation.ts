@@ -108,18 +108,6 @@ export class SvgAnimation {
     return createSvgElement(sizeAttributes, childEls)
   }
 
-  /**
-   * @param filename
-   * @todo Support gif and apng
-   */
-  public download(filename?: string): void {
-    downloadBlob({
-      data: svg2base64(this.toElement().outerHTML),
-      extension: 'svg',
-      filename,
-    })
-  }
-
   public resize({ width, height }: Parameters<ResizeCallback>[0]): void {
     this.stop()
     this.svg.resize({ width, height })
