@@ -1,11 +1,11 @@
 import { Slider, Input, Label } from '@rebass/forms/styled-components'
+import { DrawFrame, AttributeFrame, ShakeFrame } from '@svg-drawing/animation'
 import {
   SvgAnimation,
-  DrawFrame,
-  AttributeFrame,
-  ShakeFrame,
-} from '@svg-drawing/animation'
-import { parseSVGString, ResizeHandler, Download } from '@svg-drawing/core'
+  parseSVGString,
+  ResizeHandler,
+  Download,
+} from '@svg-drawing/core'
 import { NextPage } from 'next'
 import {
   useEffect,

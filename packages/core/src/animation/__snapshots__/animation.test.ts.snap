@@ -9,7 +9,6 @@ Animation {
     Path {
       "attrs": Object {
         "fill": "#f00",
-        "id": "t0",
         "stroke": "#00f",
         "strokeLinecap": "round",
         "strokeWidth": "4",
@@ -54,11 +53,11 @@ Animation {
           "type": "z",
         },
       ],
+      "key": "p1",
     },
     Path {
       "attrs": Object {
         "fill": "#ff0",
-        "id": "t1",
         "stroke": "#f0f",
         "strokeLinecap": "butt",
         "strokeWidth": "2",
@@ -103,6 +102,7 @@ Animation {
           "type": "z",
         },
       ],
+      "key": "p2",
     },
   ],
 }
@@ -110,7 +110,7 @@ Animation {
 
 exports[`Animation toJson 1`] = `
 Object {
-  "t0": Array [
+  "p5": Array [
     Object {
       "attributes": Object {
         "attributeName": "d",
@@ -142,7 +142,7 @@ Object {
       "type": "animate",
     },
   ],
-  "t1": Array [
+  "p6": Array [
     Object {
       "attributes": Object {
         "attributeName": "d",

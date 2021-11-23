@@ -1,5 +1,5 @@
-import { parseSVGString } from '@svg-drawing/core'
 import { Animation } from './animation'
+import { parseSVGString } from '../parser'
 
 const defaultTestData = `<svg width="200" height="200">
   <path fill="#f00" stroke-linecap="round" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>

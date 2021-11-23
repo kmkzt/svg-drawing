@@ -1,4 +1,4 @@
-import { Animation } from '@svg-drawing/animation'
+import { Animation } from '@svg-drawing/core'
 import { useCallback, useMemo } from 'react'
 import type { UseAnimation } from '../types'
 import type { Path } from '@svg-drawing/core'

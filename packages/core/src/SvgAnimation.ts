@@ -1,14 +1,12 @@
+import { Animation } from './animation'
 import {
   Renderer,
-  Svg,
-  RendererOption,
-  ResizeCallback,
   createSvgChildElement,
   createSvgElement,
   pathObjectToElement,
-} from '@svg-drawing/core'
-import { Animation } from './animation'
-import { AnimationOption } from './types'
+} from './renderer'
+import { Svg } from './svg'
+import { AnimationOption, RendererOption, ResizeCallback } from './types'
 
 export class SvgAnimation {
   private _stopId?: number

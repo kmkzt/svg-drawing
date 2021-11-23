@@ -38,7 +38,6 @@
     "react": ">= 16.8.0"
   },
   "optionalDependencies": {
-    "@svg-drawing/animation": "4.2.1",
     "@svg-drawing/core": "4.2.1",
     "@svg-drawing/img-trace": "4.2.1"
   },

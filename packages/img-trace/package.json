@@ -36,7 +36,6 @@
     "prepare": "yarn build"
   },
   "optionalDependencies": {
-    "@svg-drawing/animation": "4.2.1",
     "@svg-drawing/core": "4.2.1"
   },
   "publishConfig": {

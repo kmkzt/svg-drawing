@@ -9,6 +9,7 @@ Object {
       "attributes": Object {
         "d": "M0 0 C0.2 0.2 0.6 0.8 1 1 C1.4 1.2 1.6 1.2 2 1 C2.4 0.8 2.8 0.2 3 0",
       },
+      "key": "p1",
       "type": "path",
     },
     Object {
@@ -17,6 +18,7 @@ Object {
         "strokeLinecap": "square",
         "strokeLinejoin": "mitter",
       },
+      "key": "p2",
       "type": "path",
     },
   ],

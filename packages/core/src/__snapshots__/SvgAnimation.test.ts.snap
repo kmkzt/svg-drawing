@@ -59,6 +59,7 @@ SvgAnimation {
             "type": "z",
           },
         ],
+        "key": "p1",
       },
       Path {
         "attrs": Object {
@@ -107,6 +108,7 @@ SvgAnimation {
             "type": "z",
           },
         ],
+        "key": "p2",
       },
     ],
     "width": 0,
@@ -126,62 +128,16 @@ exports[`SvgAnimation.ts SvgAnimation toElement 1`] = `
   <path
     d="M1 1 L2 2 C3 3 5 3 7 3 z"
     fill="#f00"
-    id="t0"
     stroke="#00f"
     stroke-linecap="round"
     stroke-width="4"
-  >
-    <animate
-      attributeName="d"
-      dur="480ms"
-      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
-      repeatCount="indefinite"
-      values="M1 1;M1 1;M1 1 L2 2;M1 1 L2 2 C3 3 5 3 7 3;M1 1 L2 2 C3 3 5 3 7 3 z;M1 1 L2 2 C3 3 5 3 7 3 z;M1 1 L2 2 C3 3 5 3 7 3 z;M1 1 L2 2 C3 3 5 3 7 3 z;M1 1 L2 2 C3 3 5 3 7 3 z"
-    />
-    <animate
-      attributeName="stroke"
-      dur="480ms"
-      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
-      repeatCount="indefinite"
-      values="#0ff;#00f;#0ff;#00f;#0ff;#00f;#0ff;#00f;#00f"
-    />
-    <animate
-      attributeName="stroke-linecap"
-      dur="480ms"
-      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
-      repeatCount="indefinite"
-      values="mitter;round;round;mitter;round;round;mitter;round;round"
-    />
-  </path>
+  />
   <path
     d="M2 2 L4 4 C6 6 10 6 14 6 z"
     fill="#ff0"
-    id="t1"
     stroke="#f0f"
     stroke-linecap="butt"
     stroke-width="2"
-  >
-    <animate
-      attributeName="d"
-      dur="480ms"
-      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
-      repeatCount="indefinite"
-      values="M2 2;M2 2;M2 2;M2 2;M2 2;M2 2;M2 2 L4 4;M2 2 L4 4 C6 6 10 6 14 6;M2 2 L4 4 C6 6 10 6 14 6 z"
-    />
-    <animate
-      attributeName="stroke"
-      dur="480ms"
-      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
-      repeatCount="indefinite"
-      values="#f0f;#f0f;#f0f;#f0f;#0ff;#f0f;#0ff;#f0f;#f0f"
-    />
-    <animate
-      attributeName="stroke-linecap"
-      dur="480ms"
-      keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1"
-      repeatCount="indefinite"
-      values="butt;butt;butt;butt;mitter;butt;butt;mitter;butt"
-    />
-  </path>
+  />
 </svg>
 `;

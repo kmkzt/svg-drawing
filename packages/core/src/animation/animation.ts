@@ -1,10 +1,11 @@
-import { Path, roundUp, camel2kebab } from '@svg-drawing/core'
-import {
+import { Path } from '../svg'
+import { roundUp, camel2kebab } from '../utils'
+import type {
   AnimationOption,
   FrameAnimation,
   AnimateAttribute,
   AnimationObject,
-} from './types'
+} from '../types'
 
 const createAnimateAttributeValues = (
   animationPaths: (Path | undefined)[],

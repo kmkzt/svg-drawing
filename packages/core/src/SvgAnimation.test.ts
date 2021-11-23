@@ -1,4 +1,4 @@
-import { parseSVGString } from '@svg-drawing/core'
+import { parseSVGString } from './parser'
 import { SvgAnimation } from './SvgAnimation'
 
 const defaultTestData = `<svg width="200" height="200">

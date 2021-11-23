@@ -1,4 +1,4 @@
-import { AnimationObject, Animation } from '@svg-drawing/animation'
+import { Animation } from '@svg-drawing/core'
 import type {
   SvgObject,
   Svg,
@@ -12,6 +12,7 @@ import type {
   SvgOption,
   Path,
   Drawing,
+  AnimationObject,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
