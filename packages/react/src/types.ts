@@ -18,7 +18,7 @@ import type { RefObject, HTMLAttributes } from 'react'
 /** UseSvg */
 export type UseSvg = (opts: Partial<SvgOption>) => Svg
 export type SvgProps = HTMLAttributes<SVGSVGElement> & {
-  background: SvgObject['background']
+  background?: SvgObject['background']
   children: React.ReactNode
   onSelectSvg?: () => void
 }
