@@ -1,6 +1,5 @@
 import { parseSVGString } from '@svg-drawing/core'
 import { SvgAnimation } from './SvgAnimation'
-import { FrameAnimation } from './types'
 
 const defaultTestData = `<svg width="200" height="200">
   <path fill="#f00" stroke-linecap="round" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>
@@ -21,7 +20,6 @@ describe('SvgAnimation.ts', () => {
     it('toElement', () => {
       const svg = generateAnimation()
 
-      svg.start()
       svg.animation.setup({
         animation: (paths, key) => {
           let count = key
@@ -49,12 +47,15 @@ describe('SvgAnimation.ts', () => {
           0
         ),
       })
+      svg.start()
+
       expect(svg.toElement()).toMatchSnapshot()
     })
 
     it('setup, start, stop', async () => {
       const svg = generateAnimation()
       let loop = 0
+
       svg.animation.setup(
         {
           animation: (_paths, fid) => {
@@ -68,6 +69,7 @@ describe('SvgAnimation.ts', () => {
         }
       )
       svg.start()
+
       setTimeout(() => {
         svg.stop()
         expect(loop).toBe(3)
