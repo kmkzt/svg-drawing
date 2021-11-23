@@ -31,6 +31,18 @@ describe('Path', () => {
     expect(origin.getCommandString()).toBe('M1 1')
     expect(clone.getCommandString()).toBe('M3 1 L2 2')
   })
+
+  describe('key', () => {
+    it('Take over key.', () => {
+      const testKey = 'test_key'
+      expect(new Path({}, testKey).key).toBe(testKey)
+    })
+    it('clone path have same key of origin.', () => {
+      const origin = new Path({})
+      expect(origin.key).toBe(origin.clone().key)
+    })
+  })
+
   describe('toJson and toElement', () => {
     const path = new Path()
       .addCommand(new Move(new Point(0, 0)))
