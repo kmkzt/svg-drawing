@@ -16,7 +16,8 @@ describe('edit.ts', () => {
     })
     describe('changeAttributes', () => {
       it('Change attributes of selected paths', () => {
-        edit.select({ ['0']: {} })
+        const editKey = edit.svg.paths[0].key
+        edit.select({ [editKey]: {} })
         edit.changeAttributes({ fill: '#ff0' })
         expect(edit.svg.paths[0].attrs.fill).toBe('#ff0')
       })
@@ -62,7 +63,8 @@ describe('edit.ts', () => {
 
     describe('delete', () => {
       it('Delete Selected path', () => {
-        edit.select({ ['0']: {} })
+        const editKey = edit.svg.paths[0].key
+        edit.select({ [editKey]: {} })
         edit.delete()
         expect(edit.svg.paths.length).toBe(2)
         expect(edit.svg.paths[0].attrs.id).toBe('path_1')
