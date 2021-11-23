@@ -1,5 +1,5 @@
 import { Input } from '@rebass/forms/styled-components'
-import { Renderer, Svg, download } from '@svg-drawing/core'
+import { Renderer, Svg, Download, svgObjectToElement } from '@svg-drawing/core'
 import {
   ImgTrace,
   Rgba,
@@ -109,7 +109,7 @@ const ImageTrace = () => {
       const renderer = new Renderer(renderRef.current)
       const { width, height } = renderRef.current.getBoundingClientRect()
       svg.resize({ width, height })
-      renderer.update(svg)
+      renderer.update({ svg: svg.toJson() })
     }
     renderSvg()
     addEventListener('resize', renderSvg)
@@ -158,7 +158,7 @@ const ImageTrace = () => {
 
   const handleDownload = useCallback(() => {
     if (!svg) return
-    download(svg)
+    new Download(svgObjectToElement(svg.toJson())).svg(`${Date.now()}.svg`)
   }, [svg])
 
   useEffect(() => {

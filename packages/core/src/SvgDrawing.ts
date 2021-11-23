@@ -80,7 +80,7 @@ export class SvgDrawing {
         { curve, close }
       ),
       handler,
-      new Renderer(el, { background }).update
+      (svg) => new Renderer(el, { background }).update({ svg: svg.toJson() })
     )
   }
 }

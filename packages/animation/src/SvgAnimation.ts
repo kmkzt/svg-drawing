@@ -120,7 +120,7 @@ export class SvgAnimation {
     return new SvgAnimation(
       new Svg({ width, height }),
       new Animation({ ms }),
-      new Renderer(el, { background }).update
+      (svg) => new Renderer(el, { background }).update({ svg: svg.toJson() })
     )
   }
 }

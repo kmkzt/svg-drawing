@@ -92,10 +92,7 @@ export class Renderer {
    *
    * @todo Partially render.
    */
-  public update(svg: Svg): void {
-    this.el.replaceChild(
-      svgObjectToElement(svg.toJson()),
-      this.el.childNodes[0]
-    )
+  public update({ svg }: { svg: SvgObject }): void {
+    this.el.replaceChild(svgObjectToElement(svg), this.el.childNodes[0])
   }
 }
