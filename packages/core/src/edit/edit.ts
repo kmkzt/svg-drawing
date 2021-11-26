@@ -1,3 +1,4 @@
+import { calculatePoint } from '../curve'
 import { Path, Point, Svg } from '../svg'
 import type {
   PointObject,
@@ -12,6 +13,7 @@ import type {
   SelectingPoints,
   Command,
   PathObject,
+  CommandClass,
 } from '../types'
 
 const genOutline = (points: PointObject[]) =>
@@ -337,11 +339,35 @@ export class EditPath {
   ) {}
 
   /** @todo Compatible relative point */
-  public get points(): Point[] {
-    return this.path.commands.reduce(
-      (p: Point[], com) => (com.point ? [...p, com.point] : p),
-      []
-    )
+  private get points(): PointObject[] {
+    const points: PointObject[] = []
+    let prev: PointObject | undefined = undefined
+    for (const command of this.path.commands) {
+      if (!command.point) {
+        prev = undefined
+        continue
+      }
+
+      const isCurveCommand = (command: Command): command is CommandClass<'C'> =>
+        command.type === 'C'
+
+      const addPoints: PointObject[] = isCurveCommand(command)
+        ? calculatePoint([
+            prev || (command.points[0].toJson() as PointObject),
+            ...(command.points.map((p) => p.toJson()) as [
+              PointObject,
+              PointObject,
+              PointObject
+            ]),
+          ])
+        : [command.point]
+
+      points.push(...addPoints)
+
+      prev = command.point?.toJson()
+    }
+
+    return points
   }
 
   public get vertex(): EditVertex[] {

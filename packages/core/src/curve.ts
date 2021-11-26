@@ -1,14 +1,11 @@
-type Point = {
-  x: number
-  y: number
-}
+import type { PointObject } from './types'
 
-type BezierCurvePoint = [Point, Point, Point, Point]
+type BezierCurvePoint = [PointObject, PointObject, PointObject, PointObject]
 
 export const calculateCoefficient = ([p0, p1, p2, p3]: BezierCurvePoint): {
-  a: Point
-  b: Point
-  c: Point
+  a: PointObject
+  b: PointObject
+  c: PointObject
 } => {
   const c = {
     x: 3 * (p1.x - p0.x),
@@ -30,11 +27,14 @@ export const calculateCoefficient = ([p0, p1, p2, p3]: BezierCurvePoint): {
 
 const { pow } = Math
 
-export const calculatePoint = (bezierCurve: BezierCurvePoint, range = 10) => {
+export const calculatePoint = (
+  bezierCurve: BezierCurvePoint,
+  range = 10
+): PointObject[] => {
   const { a, b, c } = calculateCoefficient(bezierCurve)
   const p = bezierCurve[0]
 
-  const calc = (t: number) => ({
+  const calc = (t: number): PointObject => ({
     x: a.x * pow(t, 3) + b.x * pow(t, 2) + c.x * t + p.x,
     y: a.y * pow(t, 3) + b.y * pow(t, 2) + c.y * t + p.y,
   })
