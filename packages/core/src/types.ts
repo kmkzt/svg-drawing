@@ -58,18 +58,6 @@ export type Command<T extends CommandType = any> = {
   translate: (po: PointObject) => void
 }
 
-export type CommandClass<T extends CommandType> = T extends AbsoluteCommandType
-  ? Command<T> & {
-      toRelative: (base: Point) => CommandClass<Lowercase<T>>
-    }
-  : T extends RelativeCommandType
-  ? Command<T> & {
-      toAbsolute: (base: Point) => CommandClass<Uppercase<T>>
-    }
-  : T extends OtherCommandType | CloseCommandType
-  ? Command<T>
-  : any
-
 export type CommandObject = {
   type: CommandType
   value: number[]

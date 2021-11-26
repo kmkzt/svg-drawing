@@ -13,7 +13,6 @@ import type {
   SelectingPoints,
   Command,
   PathObject,
-  CommandClass,
 } from '../types'
 
 const genOutline = (points: PointObject[]) =>
@@ -348,7 +347,7 @@ export class EditPath {
         continue
       }
 
-      const isCurveCommand = (command: Command): command is CommandClass<'C'> =>
+      const isCurveCommand = (command: Command): command is Command<'C'> =>
         command.type === 'C'
 
       const addPoints: PointObject[] = isCurveCommand(command)

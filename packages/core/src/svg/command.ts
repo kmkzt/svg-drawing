@@ -2,7 +2,6 @@ import { Point } from './point'
 import { roundUp } from '../utils'
 import type {
   Command,
-  CommandClass,
   CommandType,
   OtherCommandType,
   PointObject,
@@ -122,7 +121,7 @@ export class OtherCommand<T extends OtherCommandType> implements Command<T> {
  *
  * `m 0 0`
  */
-export class RelativeMove implements CommandClass<'m'> {
+export class RelativeMove implements Command<'m'> {
   public readonly type = 'm'
   public readonly relative = false
   public points: [Point]
@@ -161,10 +160,6 @@ export class RelativeMove implements CommandClass<'m'> {
   public clone() {
     return new RelativeMove(this.points[0].clone())
   }
-
-  public toAbsolute(base: Point): Move {
-    return new Move(this.points[0].add(base))
-  }
 }
 
 /**
@@ -172,7 +167,7 @@ export class RelativeMove implements CommandClass<'m'> {
  *
  * `M 0 0`
  */
-export class Move implements CommandClass<'M'> {
+export class Move implements Command<'M'> {
   public readonly type = 'M'
   public points: [Point]
   constructor(point: Point) {
@@ -221,7 +216,7 @@ export class Move implements CommandClass<'M'> {
  *
  * `l 0 0`
  */
-export class RelativeLine implements CommandClass<'l'> {
+export class RelativeLine implements Command<'l'> {
   public readonly type = 'l'
   public points: [Point]
   constructor(point: Point) {
@@ -259,10 +254,6 @@ export class RelativeLine implements CommandClass<'l'> {
   public clone() {
     return new RelativeLine(this.points[0].clone())
   }
-
-  public toAbsolute(base: Point): CommandClass<'L'> {
-    return new Line(this.points[0].add(base))
-  }
 }
 
 /**
@@ -270,7 +261,7 @@ export class RelativeLine implements CommandClass<'l'> {
  *
  * `L 0 0`
  */
-export class Line implements CommandClass<'L'> {
+export class Line implements Command<'L'> {
   public readonly type = 'L'
   public points: [Point]
   constructor(point: Point) {
@@ -308,10 +299,6 @@ export class Line implements CommandClass<'L'> {
   public clone() {
     return new Line(this.points[0].clone())
   }
-
-  public toRelative(base: Point) {
-    return new RelativeLine(this.points[0].sub(base))
-  }
 }
 
 /**
@@ -319,7 +306,7 @@ export class Line implements CommandClass<'L'> {
  *
  * `c 1 1 2 2 3 3`
  */
-export class RelativeCurve implements CommandClass<'c'> {
+export class RelativeCurve implements Command<'c'> {
   public readonly type = 'c'
   constructor(public points: [Point, Point, Point]) {}
 
@@ -362,12 +349,6 @@ export class RelativeCurve implements CommandClass<'c'> {
       this.points.map((po) => po.clone()) as [Point, Point, Point]
     )
   }
-
-  public toAbsolute(base: Point) {
-    return new Curve(
-      this.points.map((po) => po.add(base)) as [Point, Point, Point]
-    )
-  }
 }
 
 /**
@@ -375,7 +356,7 @@ export class RelativeCurve implements CommandClass<'c'> {
  *
  * `C 1 1 2 2 3 3`
  */
-export class Curve implements CommandClass<'C'> {
+export class Curve implements Command<'C'> {
   public readonly type = 'C'
   constructor(public points: [Point, Point, Point]) {}
 
@@ -419,12 +400,6 @@ export class Curve implements CommandClass<'C'> {
   public clone() {
     return new Curve(this.points.map((p) => p.clone()) as [Point, Point, Point])
   }
-
-  public toRelative(base: Point) {
-    return new RelativeCurve(
-      this.points.map((po) => po.sub(base)) as [Point, Point, Point]
-    )
-  }
 }
 
 /**
@@ -432,7 +407,7 @@ export class Curve implements CommandClass<'C'> {
  *
  * `S 10 60 10 30`
  */
-export class ShortcutCurve implements CommandClass<'S'> {
+export class ShortcutCurve implements Command<'S'> {
   public readonly type = 'S'
   constructor(public points: [Point, Point]) {}
 
@@ -478,12 +453,6 @@ export class ShortcutCurve implements CommandClass<'S'> {
       this.points.map((p) => p.clone()) as [Point, Point]
     )
   }
-
-  public toRelative(base: Point) {
-    return new RelativeShortcutCurve(
-      this.points.map((po) => po.sub(base)) as [Point, Point]
-    )
-  }
 }
 
 /**
@@ -491,7 +460,7 @@ export class ShortcutCurve implements CommandClass<'S'> {
  *
  * `s 10 60 10 30`
  */
-export class RelativeShortcutCurve implements CommandClass<'s'> {
+export class RelativeShortcutCurve implements Command<'s'> {
   public readonly type = 's'
   constructor(public points: [Point, Point]) {}
 
@@ -537,12 +506,6 @@ export class RelativeShortcutCurve implements CommandClass<'s'> {
       this.points.map((po) => po.clone()) as [Point, Point]
     )
   }
-
-  public toAbsolute(base: Point) {
-    return new ShortcutCurve(
-      this.points.map((po) => po.add(base)) as [Point, Point]
-    )
-  }
 }
 
 /**
@@ -551,7 +514,7 @@ export class RelativeShortcutCurve implements CommandClass<'s'> {
  * Q 10 60 10 30
  */
 
-export class QuadraticCurve implements CommandClass<'Q'> {
+export class QuadraticCurve implements Command<'Q'> {
   public readonly type = 'Q'
   constructor(public points: [Point, Point]) {}
 
@@ -597,12 +560,6 @@ export class QuadraticCurve implements CommandClass<'Q'> {
       this.points.map((p) => p.clone()) as [Point, Point]
     )
   }
-
-  public toRelative(base: Point) {
-    return new RelativeQuadraticCurve(
-      this.points.map((po) => po.sub(base)) as [Point, Point]
-    )
-  }
 }
 
 /**
@@ -610,7 +567,7 @@ export class QuadraticCurve implements CommandClass<'Q'> {
  *
  * `q 10 60 10 30`
  */
-export class RelativeQuadraticCurve implements CommandClass<'q'> {
+export class RelativeQuadraticCurve implements Command<'q'> {
   public readonly type = 'q'
   constructor(public points: [Point, Point]) {}
 
@@ -656,12 +613,6 @@ export class RelativeQuadraticCurve implements CommandClass<'q'> {
       this.points.map((po) => po.clone()) as [Point, Point]
     )
   }
-
-  public toAbsolute(base: Point) {
-    return new QuadraticCurve(
-      this.points.map((po) => po.add(base)) as [Point, Point]
-    )
-  }
 }
 
 /**
@@ -669,7 +620,7 @@ export class RelativeQuadraticCurve implements CommandClass<'q'> {
  *
  * 'z'
  */
-export class Close implements CommandClass<'z'> {
+export class Close implements Command<'z'> {
   public readonly type = 'z'
 
   public get values(): [] {
