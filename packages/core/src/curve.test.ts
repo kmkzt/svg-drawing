@@ -1,6 +1,6 @@
 import { calculateCoefficient, calculatePoint } from './curve'
 
-describe('curve', () => {
+describe('BezierCurve calculate point', () => {
   const testData: Parameters<typeof calculateCoefficient>[0] = [
     {
       x: 0,
