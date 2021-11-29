@@ -17,7 +17,7 @@
     "@svg-drawing/core": "4.2.1",
     "@svg-drawing/img-trace": "4.2.1",
     "@svg-drawing/react": "4.2.1",
-    "next": "9.5.4",
+    "next": "11.1.1",
     "pressure": "2.1.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
