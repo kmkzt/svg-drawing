@@ -125,7 +125,6 @@ export type ClearListener = () => void
 export interface DrawFactory {
   createPath: () => Path
   createCommand: CreateCommand
-  setPathAttributes: (attrs: PathAttributes) => void
 }
 
 export type DrawStart = () => void
