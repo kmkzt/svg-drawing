@@ -15,24 +15,23 @@ export const createLineCommands: CreateCommand = (points) =>
     i === 0 ? new Move(new Point(p.x, p.y)) : new Line(new Point(p.x, p.y))
   )
 
-const genVector = ({
+const distance = ({
   prev,
   next,
 }: {
   prev: PointObject
   next: PointObject
 }): Vector =>
-  new Point(next.x, next.y).sub(new Point(prev.x, prev.y)).toVector()
+  new Point(next.x, next.y).sub(new Point(prev.x, prev.y)).absoluteValue()
 
-const curveVector = ({
+const calculateAngle = ({
   prev,
   next,
-  value,
 }: {
   prev: PointObject
   next: PointObject
-  value: number
-}): Vector => new Vector(value, genVector({ prev, next }).angle)
+}): Vector => new Point(next.x, next.y).sub(new Point(prev.x, prev.y)).angle()
+
 export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number
   constructor({ ratio }: ConvertOption = {}) {
@@ -46,12 +45,18 @@ export class BezierCurve implements GenerateCommandsConverter {
     p3: PointObject,
     p4: PointObject
   ): Command {
-    const value = genVector({ prev: p2, next: p3 }).value * this.ratio
-    const vPrev = curveVector({ prev: p1, next: p3, value })
-    const vNext = curveVector({ prev: p4, next: p2, value })
+    const value = distance({ prev: p2, next: p3 }) * this.ratio
+    const vPrev = Point.fromVector({
+      angle: calculateAngle({ prev: p1, next: p3 }),
+      value,
+    })
+    const vNext = Point.fromVector({
+      angle: calculateAngle({ prev: p4, next: p2 }),
+      value,
+    })
 
-    const cPrev = new Point(p2.x, p2.y).add(vPrev.toPoint())
-    const cNext = new Point(p3.x, p3.y).add(vNext.toPoint())
+    const cPrev = new Point(p2.x, p2.y).add(vPrev)
+    const cNext = new Point(p3.x, p3.y).add(vNext)
     return new Curve([cPrev, cNext, new Point(p3.x, p3.y)])
   }
 

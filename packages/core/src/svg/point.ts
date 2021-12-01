@@ -1,8 +1,16 @@
-import { Vector } from './vector'
 import { PointObject } from '../types'
 
+// Maximum number of decimal places is 5
+const coeffecient = 100000
+const roundNumber = (num: number) => Math.round(num * coeffecient) / coeffecient
+
 export class Point implements PointObject {
-  constructor(private _x: number, private _y: number) {}
+  private _x: number
+  private _y: number
+  constructor(x: number, y: number) {
+    this._x = roundNumber(x)
+    this._y = roundNumber(y)
+  }
 
   public get x(): number {
     return this._x
@@ -12,10 +20,12 @@ export class Point implements PointObject {
     return this._y
   }
 
-  public toVector(): Vector {
-    const value = Math.sqrt(Math.pow(this._x, 2.0) + Math.pow(this._y, 2.0))
-    const angle = Math.atan2(this._y, this._x)
-    return new Vector(value, angle)
+  public absoluteValue(): number {
+    return Math.sqrt(Math.pow(this._x, 2.0) + Math.pow(this._y, 2.0))
+  }
+
+  public angle(): number {
+    return Math.atan2(this._y, this._x) * (180 / Math.PI)
   }
 
   public scale(r: number): Point {
@@ -56,5 +66,10 @@ export class Point implements PointObject {
       x: this._x,
       y: this._y,
     }
+  }
+
+  public static fromVector({ value, angle }: { value: number; angle: number }) {
+    const theta = (angle * Math.PI) / 180
+    return new Point(Math.cos(theta) * value, Math.sin(theta) * value)
   }
 }
