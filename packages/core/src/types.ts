@@ -45,7 +45,7 @@ export type CommandType =
   | CloseCommandType
   | OtherCommandType
 
-export type Command<T extends CommandType = any> = {
+export type Command<T = CommandType> = {
   type: T
   values: number[]
   points: Point[]
