@@ -25,7 +25,6 @@ describe('Move', () => {
     expect(new Move(new Point(1, 1)).scaleY(2).toString()).toBe('M1 2')
   })
   it.todo('translate')
-  it.todo('toRelative')
 })
 
 describe('Line', () => {
@@ -52,7 +51,6 @@ describe('Line', () => {
     expect(new Line(new Point(1, 1)).scaleY(2).toString()).toBe('L1 2')
   })
   it.todo('translate')
-  it.todo('toRelative')
 })
 
 describe('Curve', () => {
@@ -114,7 +112,6 @@ describe('ArcCurve', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toRelative')
 })
 
 describe('Horizonal', () => {
@@ -127,7 +124,6 @@ describe('Horizonal', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toRelative')
 })
 
 describe('Vertical', () => {
@@ -140,7 +136,6 @@ describe('Vertical', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toRelative')
 })
 
 describe('RelativeMove', () => {
@@ -153,7 +148,6 @@ describe('RelativeMove', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toAbsolute')
 })
 
 describe('RelativeLine', () => {
@@ -166,7 +160,6 @@ describe('RelativeLine', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toAbsolute')
 })
 
 describe('RelativeCurve', () => {
@@ -179,7 +172,6 @@ describe('RelativeCurve', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toAbsolute')
 })
 
 describe('RelativeShortcutCurve', () => {
@@ -192,7 +184,6 @@ describe('RelativeShortcutCurve', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toAbsolute')
 })
 
 describe('RelativeQuadraticCurve', () => {
@@ -205,7 +196,6 @@ describe('RelativeQuadraticCurve', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toAbsolute')
 })
 
 describe('RelativeArcCurve', () => {
@@ -218,7 +208,6 @@ describe('RelativeArcCurve', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toAbsolute')
 })
 
 describe('RelativeHorizonal', () => {
@@ -231,7 +220,6 @@ describe('RelativeHorizonal', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toAbsolute')
 })
 
 describe('RelativeVertical', () => {
@@ -244,7 +232,6 @@ describe('RelativeVertical', () => {
   it.todo('scaleX')
   it.todo('scaleY')
   it.todo('translate')
-  it.todo('toAbsolute')
 })
 
 describe('Close', () => {
