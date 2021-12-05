@@ -32,11 +32,11 @@ describe('Point', () => {
   })
 
   it('absoluteValue', () => {
-    expect(new Point(1.0, 1.0).absoluteValue()).toBe(1.4142135623730951)
+    expect(new Point(1.0, 1.0).absoluteValue).toBe(1.4142135623730951)
   })
 
-  it('angle', () => {
-    expect(new Point(1.0, 1.0).angle()).toBe(45)
+  it('degrees', () => {
+    expect(new Point(1.0, 1.0).degrees).toBe(45)
   })
 
   it('clone', () => {
@@ -48,29 +48,29 @@ describe('Point', () => {
   })
 
   describe('Point.fromVector', () => {
-    it('angle=45', () => {
+    it('degrees=45', () => {
       const x = 1
       const y = 1
       const value = Math.sqrt(Math.pow(1, 2.0) + Math.pow(1, 2.0))
       const po = Point.fromVector({
         value,
-        angle: 45,
+        degrees: 45,
       })
       expect(po.x).toBe(x)
       expect(po.y).toBe(y)
     })
-    it('angle=0', () => {
+    it('degrees=0', () => {
       const po = Point.fromVector({
         value: 1,
-        angle: 0,
+        degrees: 0,
       })
       expect(po.x).toBe(1)
       expect(po.y).toBe(0)
     })
-    it('angle=90', () => {
+    it('degrees=90', () => {
       const po = Point.fromVector({
         value: 1.0,
-        angle: 90.0,
+        degrees: 90.0,
       })
       expect(po.x).toBe(0)
       expect(po.y).toBe(1)

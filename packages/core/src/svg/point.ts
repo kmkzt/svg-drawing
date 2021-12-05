@@ -20,12 +20,12 @@ export class Point implements PointObject {
     return this._y
   }
 
-  public absoluteValue(): number {
-    return Math.sqrt(Math.pow(this._x, 2.0) + Math.pow(this._y, 2.0))
+  public get degrees(): number {
+    return Math.atan2(this._y, this._x) * (180 / Math.PI)
   }
 
-  public angle(): number {
-    return Math.atan2(this._y, this._x) * (180 / Math.PI)
+  public get absoluteValue(): number {
+    return Math.sqrt(Math.pow(this._x, 2.0) + Math.pow(this._y, 2.0))
   }
 
   public scale(r: number): Point {
@@ -68,8 +68,14 @@ export class Point implements PointObject {
     }
   }
 
-  public static fromVector({ value, angle }: { value: number; angle: number }) {
-    const theta = (angle * Math.PI) / 180
+  public static fromVector({
+    value,
+    degrees,
+  }: {
+    value: number
+    degrees: number
+  }) {
+    const theta = (degrees * Math.PI) / 180
     return new Point(Math.cos(theta) * value, Math.sin(theta) * value)
   }
 }
