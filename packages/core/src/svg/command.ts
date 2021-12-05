@@ -205,10 +205,6 @@ export class Move implements Command<'M'> {
   public clone() {
     return new Move(this.points[0].clone())
   }
-
-  public toRelative(base: Point): RelativeMove {
-    return new RelativeMove(this.points[0].sub(base))
-  }
 }
 
 /**
