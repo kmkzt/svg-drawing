@@ -1,4 +1,5 @@
-import { Point, Move, Line, Curve, Close } from '../svg'
+import { AbsoluteCommandType, CommandType, RelativeCommandType } from '..'
+import { Point, Move, Line, Curve, Close, Path } from '../svg'
 import type {
   Command,
   PointObject,
@@ -31,6 +32,39 @@ const calculateDegrees = ({
   prev: PointObject
   next: PointObject
 }): number => new Point(next.x, next.y).sub(new Point(prev.x, prev.y)).degrees
+
+/** @todo Implementation */
+const toRelativeCommand = (
+  command: Command,
+  basePoint: Point
+): Command<RelativeCommandType> => {
+  return command as Command<RelativeCommandType>
+}
+
+export const toRelativePath = (path: Path): Path => {
+  const isAbsoluteCommand = (type: CommandType): type is AbsoluteCommandType =>
+    ['M', 'L', 'C', 'Q', 'S'].includes(type)
+
+  let basePoint: Point | undefined = path.commands[0].point
+  const relativeCommands = path.commands.map((command) => {
+    const res =
+      basePoint && isAbsoluteCommand(command.type)
+        ? toRelativeCommand(command, basePoint)
+        : command
+    if (basePoint && isAbsoluteCommand(command.type)) {
+      basePoint = command.point
+    } else {
+      basePoint =
+        basePoint && command.point ? basePoint.add(command.point) : undefined
+    }
+
+    return res
+  })
+
+  const upd = path.clone()
+  upd.commands = relativeCommands
+  return upd
+}
 
 export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number

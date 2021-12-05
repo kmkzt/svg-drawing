@@ -1,4 +1,6 @@
-import { BezierCurve } from './convert'
+import { BezierCurve, toRelativeCommand } from './convert'
+import { parseCommandString } from '../parser'
+import { Path } from '../svg'
 
 describe('BezierCurve', () => {
   it('genCommand', () => {
@@ -13,5 +15,18 @@ describe('BezierCurve', () => {
         )
         .toString()
     ).toBe('C 1.4 1.2 1.6 1.2 2 1')
+  })
+})
+
+describe('toRelativeCommand', () => {
+  it('toRelativeCommand', () => {
+    const path = new Path()
+    path.addCommand(
+      parseCommandString('M100 100L200 200 C300 300 400 300 500 200')
+    )
+
+    expect(toRelativeCommand(path).getCommandString()).toBe(
+      'M100 100l100 100 c100 100 200 100 300 0'
+    )
   })
 })
