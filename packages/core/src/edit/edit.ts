@@ -1,5 +1,12 @@
 import { calculatePoint } from '../curve'
-import { Path, Point, Svg } from '../svg'
+import {
+  Path,
+  Point,
+  Svg,
+  isCurveCommand,
+  toAbsolutePath,
+  toRelativePath,
+} from '../svg'
 import type {
   PointObject,
   EditVertex,
@@ -101,6 +108,10 @@ export class EditSvg {
   private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(public svg: Svg) {}
 
+  private generateAbsolutePaths(): Path[] {
+    return this.svg.clone().paths.map((p) => toAbsolutePath(p))
+  }
+
   public select(sel: Selecting, multipleSelect?: boolean) {
     this.selecting = multipleSelect ? { ...this.selecting, ...sel } : sel
   }
@@ -136,8 +147,9 @@ export class EditSvg {
       i: { path: PathObject['key']; command: number; point: number }
     ) => void
   ): void {
+    const absolutePaths = this.generateAbsolutePaths()
     for (const pathKey in this.selecting) {
-      const path = this.svg.paths.find((path) => path.key === pathKey)
+      const path = absolutePaths.find((path) => path.key === pathKey)
       const selectingCommand = this.selecting[pathKey]
 
       if (!path) continue
@@ -164,6 +176,8 @@ export class EditSvg {
         })
       }
     }
+
+    this.svg.paths = absolutePaths.map((p) => toRelativePath(p))
   }
 
   public changeAttributes(attrs: PathAttributes) {
@@ -337,18 +351,20 @@ export class EditPath {
     public selecting?: SelectingCommands
   ) {}
 
-  /** @todo Compatible relative point */
+  private get absolutePath() {
+    return toAbsolutePath(this.path)
+  }
+
+  /** @todo Compatible for Quadratic and shortcut curve */
   private get points(): PointObject[] {
     const points: PointObject[] = []
     let prev: PointObject | undefined = undefined
-    for (const command of this.path.commands) {
+
+    for (const command of this.absolutePath.commands) {
       if (!command.point) {
         prev = undefined
         continue
       }
-
-      const isCurveCommand = (command: Command): command is Command<'C'> =>
-        command.type === 'C'
 
       const addPoints: PointObject[] = isCurveCommand(command)
         ? calculatePoint([
@@ -371,16 +387,16 @@ export class EditPath {
 
   public get vertex(): EditVertex[] {
     const vertex: EditVertex[] = []
-    const commands = this.path.commands
+    const commands = this.absolutePath.commands
     for (let c = 0; c < commands.length; c += 1) {
       const curr = commands[c]
       const next = commands[c + 1]
 
-      const outlinePoints = [
+      const outlinePoints: PointObject[] = [
         curr.points[1]?.toJson(),
         curr.points[2]?.toJson(),
         next?.points[0]?.toJson(),
-      ].filter(Boolean)
+      ].filter((p): p is PointObject => !!p)
 
       const selectingPoints: SelectingPoints | null =
         this.selecting?.[c] ?? null

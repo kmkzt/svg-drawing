@@ -1,6 +1,6 @@
 import { BasicDrawFactory } from './factory'
 import { PencilHandler } from './handler'
-import { Path, Svg } from '../svg'
+import { Path, Svg, toRelativePath } from '../svg'
 import { isAlmostSameNumber } from '../utils'
 import type {
   DrawHandler,
@@ -91,7 +91,10 @@ export class Drawing<
 
   private _createCommand() {
     if (!this._drawPath) return
+
+    /** @todo Refactor */
     this._drawPath.commands = this.pathFactory.createCommand(this._drawPoints)
+    this._drawPath.commands = toRelativePath(this._drawPath).commands
   }
 
   private _addDrawPoint(p4: PointObject) {
