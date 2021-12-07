@@ -1,5 +1,11 @@
-import { isAbsoluteCommand, toRelativeCommand } from './command'
+import {
+  isAbsoluteCommand,
+  toRelativeCommand,
+  isRelativeCommand,
+  toAbsoluteCommand,
+} from './command'
 import type { Command, PathAttributes, PointObject, PathObject } from '../types'
+
 /**
  * @todo: refactor command. The following commands are not supported.
  *
@@ -101,7 +107,7 @@ export const toRelativePath = (path: Path): Path => {
     const notAbsoluteCommand =
       basePoint && isAbsoluteCommand(command)
         ? toRelativeCommand(command, basePoint)
-        : command
+        : command.clone()
 
     basePoint = isAbsoluteCommand(command)
       ? command.point // Absolute point
@@ -110,6 +116,31 @@ export const toRelativePath = (path: Path): Path => {
       : undefined // Close
 
     upd.addCommand(notAbsoluteCommand)
+  }
+
+  return upd
+}
+
+export const toAbsolutePath = (path: Path): Path => {
+  let basePoint = path.commands[0].point
+  const upd = path.clone()
+  upd.commands = [path.commands[0]]
+
+  for (let i = 1; i < path.commands.length; i += 1) {
+    const command = path.commands[i]
+
+    const notRelativeCommand =
+      basePoint && isRelativeCommand(command)
+        ? toAbsoluteCommand(command, basePoint)
+        : command.clone()
+
+    basePoint = isAbsoluteCommand(command)
+      ? command.point // Absolute point
+      : basePoint && command.point
+      ? basePoint.add(command.point) // Relative point
+      : undefined // Close
+
+    upd.addCommand(notRelativeCommand)
   }
 
   return upd

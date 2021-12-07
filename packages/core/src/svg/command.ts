@@ -731,6 +731,20 @@ export const isAbsoluteCommand = (
 ): command is Command<AbsoluteCommandType> =>
   ['M', 'L', 'C', 'Q', 'S'].includes(command.type)
 
+export const isRelativeCommand = (
+  command: Command
+): command is Command<RelativeCommandType> =>
+  ['m', 'l', 'c', 'q', 's'].includes(command.type)
+
+export const isCurveCommand = (
+  command: Command
+): command is Command<'C' | 'c'> => ['c', 'C'].includes(command.type)
+
+export const isOtherCommand = (
+  command: Command
+): command is Command<OtherCommandType> =>
+  ['h', 'H', 'v', 'V', 'a', 'A', 'z', 'Z'].includes(command.type)
+
 export const toRelativeCommand = (
   command: Command<AbsoluteCommandType>,
   basePoint: PointObject
@@ -754,5 +768,31 @@ export const toRelativeCommand = (
       )
     default:
       throw new Error('toRelativeCommand error')
+  }
+}
+
+export const toAbsoluteCommand = (
+  command: Command<RelativeCommandType>,
+  basePoint: PointObject
+): Command<AbsoluteCommandType> => {
+  switch (command.type) {
+    case 'm':
+      return new Move(command.point.add(basePoint))
+    case 'l':
+      return new Line(command.point.add(basePoint))
+    case 'c':
+      return new Curve(
+        command.points.map((p) => p.add(basePoint)) as [Point, Point, Point]
+      )
+    case 'q':
+      return new QuadraticCurve(
+        command.points.map((p) => p.add(basePoint)) as [Point, Point]
+      )
+    case 's':
+      return new ShortcutCurve(
+        command.points.map((p) => p.add(basePoint)) as [Point, Point]
+      )
+    default:
+      throw new Error('toAbsoluteCommand error')
   }
 }
