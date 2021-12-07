@@ -5,6 +5,8 @@ import type {
   CommandType,
   OtherCommandType,
   PointObject,
+  AbsoluteCommandType,
+  RelativeCommandType,
 } from '../types'
 
 /** @deprecated */
@@ -721,5 +723,36 @@ export const createCommand = (
     default: {
       return new OtherCommand(type, values)
     }
+  }
+}
+
+export const isAbsoluteCommand = (
+  command: Command
+): command is Command<AbsoluteCommandType> =>
+  ['M', 'L', 'C', 'Q', 'S'].includes(command.type)
+
+export const toRelativeCommand = (
+  command: Command<AbsoluteCommandType>,
+  basePoint: PointObject
+): Command<RelativeCommandType> => {
+  switch (command.type) {
+    case 'M':
+      return new RelativeMove(command.point.sub(basePoint))
+    case 'L':
+      return new RelativeLine(command.point.sub(basePoint))
+    case 'C':
+      return new RelativeCurve(
+        command.points.map((p) => p.sub(basePoint)) as [Point, Point, Point]
+      )
+    case 'Q':
+      return new RelativeQuadraticCurve(
+        command.points.map((p) => p.sub(basePoint)) as [Point, Point]
+      )
+    case 'S':
+      return new RelativeShortcutCurve(
+        command.points.map((p) => p.sub(basePoint)) as [Point, Point]
+      )
+    default:
+      throw new Error('toRelativeCommand error')
   }
 }

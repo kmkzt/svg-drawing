@@ -45,62 +45,6 @@ const calculateDegrees = ({
   next: PointObject
 }): number => new Point(next.x, next.y).sub(new Point(prev.x, prev.y)).degrees
 
-const toRelativeCommand = (
-  command: Command<AbsoluteCommandType>,
-  basePoint: PointObject
-): Command<RelativeCommandType> => {
-  switch (command.type) {
-    case 'M':
-      return new RelativeMove(command.point.sub(basePoint))
-    case 'L':
-      return new RelativeLine(command.point.sub(basePoint))
-    case 'C':
-      return new RelativeCurve(
-        command.points.map((p) => p.sub(basePoint)) as [Point, Point, Point]
-      )
-    case 'Q':
-      return new RelativeQuadraticCurve(
-        command.points.map((p) => p.sub(basePoint)) as [Point, Point]
-      )
-    case 'S':
-      return new RelativeShortcutCurve(
-        command.points.map((p) => p.sub(basePoint)) as [Point, Point]
-      )
-    default:
-      throw new Error('toRelativeCommand')
-  }
-}
-
-export const toRelativePath = (path: Path): Path => {
-  const isAbsoluteCommand = (
-    command: Command
-  ): command is Command<AbsoluteCommandType> =>
-    ['M', 'L', 'C', 'Q', 'S'].includes(command.type)
-
-  let basePoint: Point | undefined = path.commands[0].point
-  const upd = path.clone()
-  upd.commands = [path.commands[0]]
-
-  for (let i = 1; i < path.commands.length; i += 1) {
-    const command = path.commands[i]
-
-    const notAbsoluteCommand =
-      basePoint && isAbsoluteCommand(command)
-        ? toRelativeCommand(command, basePoint)
-        : command
-
-    basePoint = isAbsoluteCommand(command)
-      ? command.point // Absolute point
-      : basePoint && command.point
-      ? basePoint.add(command.point) // Relative point
-      : undefined // Close
-
-    upd.addCommand(notAbsoluteCommand)
-  }
-
-  return upd
-}
-
 export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number
   constructor({ ratio }: ConvertOption = {}) {
