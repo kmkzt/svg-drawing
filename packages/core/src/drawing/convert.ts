@@ -1,5 +1,17 @@
 import { AbsoluteCommandType, CommandType, RelativeCommandType } from '..'
-import { Point, Move, Line, Curve, Close, Path } from '../svg'
+import {
+  Point,
+  Move,
+  Line,
+  Curve,
+  Close,
+  Path,
+  RelativeMove,
+  RelativeLine,
+  RelativeCurve,
+  RelativeQuadraticCurve,
+  RelativeShortcutCurve,
+} from '../svg'
 import type {
   Command,
   PointObject,
@@ -33,36 +45,59 @@ const calculateDegrees = ({
   next: PointObject
 }): number => new Point(next.x, next.y).sub(new Point(prev.x, prev.y)).degrees
 
-/** @todo Implementation */
 const toRelativeCommand = (
-  command: Command,
-  basePoint: Point
+  command: Command<AbsoluteCommandType>,
+  basePoint: PointObject
 ): Command<RelativeCommandType> => {
-  return command as Command<RelativeCommandType>
+  switch (command.type) {
+    case 'M':
+      return new RelativeMove(command.point.sub(basePoint))
+    case 'L':
+      return new RelativeLine(command.point.sub(basePoint))
+    case 'C':
+      return new RelativeCurve(
+        command.points.map((p) => p.sub(basePoint)) as [Point, Point, Point]
+      )
+    case 'Q':
+      return new RelativeQuadraticCurve(
+        command.points.map((p) => p.sub(basePoint)) as [Point, Point]
+      )
+    case 'S':
+      return new RelativeShortcutCurve(
+        command.points.map((p) => p.sub(basePoint)) as [Point, Point]
+      )
+    default:
+      throw new Error('toRelativeCommand')
+  }
 }
 
 export const toRelativePath = (path: Path): Path => {
-  const isAbsoluteCommand = (type: CommandType): type is AbsoluteCommandType =>
-    ['M', 'L', 'C', 'Q', 'S'].includes(type)
+  const isAbsoluteCommand = (
+    command: Command
+  ): command is Command<AbsoluteCommandType> =>
+    ['M', 'L', 'C', 'Q', 'S'].includes(command.type)
 
   let basePoint: Point | undefined = path.commands[0].point
-  const relativeCommands = path.commands.map((command) => {
-    const res =
-      basePoint && isAbsoluteCommand(command.type)
+  const upd = path.clone()
+  upd.commands = [path.commands[0]]
+
+  for (let i = 1; i < path.commands.length; i += 1) {
+    const command = path.commands[i]
+
+    const notAbsoluteCommand =
+      basePoint && isAbsoluteCommand(command)
         ? toRelativeCommand(command, basePoint)
         : command
-    if (basePoint && isAbsoluteCommand(command.type)) {
-      basePoint = command.point
-    } else {
-      basePoint =
-        basePoint && command.point ? basePoint.add(command.point) : undefined
-    }
 
-    return res
-  })
+    basePoint = isAbsoluteCommand(command)
+      ? command.point // Absolute point
+      : basePoint && command.point
+      ? basePoint.add(command.point) // Relative point
+      : undefined // Close
 
-  const upd = path.clone()
-  upd.commands = relativeCommands
+    upd.addCommand(notAbsoluteCommand)
+  }
+
   return upd
 }
 
