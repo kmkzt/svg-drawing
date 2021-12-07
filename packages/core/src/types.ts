@@ -35,21 +35,18 @@ export type RelativeCommandType = 'm' | 'l' | 'c' | 'q' | 's'
 
 export type AbsoluteCommandType = Uppercase<RelativeCommandType>
 
-export type OtherCommandType = 'h' | 'v' | 'a' | 'H' | 'V' | 'A'
-
-export type CloseCommandType = 'Z' | 'z'
+export type OtherCommandType = 'h' | 'v' | 'a' | 'H' | 'V' | 'A' | 'Z' | 'z'
 
 export type CommandType =
   | RelativeCommandType
   | AbsoluteCommandType
-  | CloseCommandType
   | OtherCommandType
 
-export type Command<T = CommandType> = {
+export interface Command<T = CommandType> {
   type: T
   values: number[]
   points: Point[]
-  point: Point | undefined
+  point: T extends OtherCommandType ? undefined : Point
   toString: () => string
   clone: () => Command<T>
   scale: (r: number) => Command<T>

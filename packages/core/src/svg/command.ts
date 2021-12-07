@@ -8,7 +8,9 @@ import type {
 } from '../types'
 
 /** @deprecated */
-export class OtherCommand<T extends OtherCommandType> implements Command<T> {
+export class OtherCommand<T extends OtherCommandType>
+  implements Command<OtherCommandType>
+{
   static Types = {
     /**
      * Horizontal
@@ -64,8 +66,8 @@ export class OtherCommand<T extends OtherCommandType> implements Command<T> {
     )
   }
 
-  public get point(): Point | undefined {
-    return this.points[this.points.length - 1]
+  public get point(): undefined {
+    return undefined
   }
 
   public toString(): string {
