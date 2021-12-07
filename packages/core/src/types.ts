@@ -42,10 +42,18 @@ export type CommandType =
   | AbsoluteCommandType
   | OtherCommandType
 
+type PointsLengthMap<T = CommandType> = T extends OtherCommandType
+  ? Point[]
+  : T extends 'm' | 'M' | 'l' | 'L'
+  ? [Point]
+  : T extends 'C' | 'c'
+  ? [Point, Point, Point]
+  : [Point, Point]
+
 export interface Command<T = CommandType> {
   type: T
   values: number[]
-  points: Point[]
+  points: PointsLengthMap<T>
   point: T extends OtherCommandType ? undefined : Point
   toString: () => string
   clone: () => Command<T>
