@@ -1,6 +1,10 @@
 import { PointObject } from '../types'
 
-// Maximum number of decimal places is 5
+/**
+ * Maximum number of decimal places is 5
+ *
+ * @todo Changeable parameter
+ */
 const coeffecient = 100000
 const roundNumber = (num: number) => Math.round(num * coeffecient) / coeffecient
 
