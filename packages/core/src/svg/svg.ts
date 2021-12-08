@@ -57,8 +57,8 @@ export class Svg {
     return this
   }
 
-  public deletePath(key: PathObject['key']): this {
-    this.paths = this.paths.filter((path) => path.key !== key)
+  public deletePath(deletePath: Path): this {
+    this.paths = this.paths.filter((path) => path.key !== deletePath.key)
     return this
   }
 
