@@ -1,17 +1,4 @@
-import { AbsoluteCommandType, CommandType, RelativeCommandType } from '..'
-import {
-  Point,
-  Move,
-  Line,
-  Curve,
-  Close,
-  Path,
-  RelativeMove,
-  RelativeLine,
-  RelativeCurve,
-  RelativeQuadraticCurve,
-  RelativeShortcutCurve,
-} from '../svg'
+import { Point, Move, Line, Curve, Close } from '../svg'
 import type {
   Command,
   PointObject,
