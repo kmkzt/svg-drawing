@@ -90,6 +90,10 @@ export class Renderer {
    *
    * @todo XSS test.
    *
+   * @todo Animation Svg renderer.
+   *
+   * @todo Edit layer renderer.
+   *
    * @todo Partially render.
    */
   public update({ svg }: { svg: SvgObject }): void {
