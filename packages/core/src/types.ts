@@ -146,16 +146,33 @@ export interface DrawHandler {
   }) => void
 }
 
-export type SelectIndex = {
+export type SelectPathIndex = {
   path: PathObject['key']
-  command?: number
-  point?: number
+  command?: undefined
+  point?: undefined
 }
+
+export type SelectCommandIndex = {
+  path: PathObject['key']
+  command: number
+  point?: undefined
+}
+
+export type SelectPointIndex = {
+  path: PathObject['key']
+  command: number
+  point: number
+}
+
+export type SelectIndex =
+  | SelectPathIndex
+  | SelectCommandIndex
+  | SelectPointIndex
 
 /** Control Point */
 export type EditVertex = {
   points: {
-    index: Required<SelectIndex>
+    index: SelectPointIndex
     selected: boolean
     value: PointObject
   }[]
