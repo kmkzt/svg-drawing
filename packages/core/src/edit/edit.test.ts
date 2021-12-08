@@ -1,11 +1,12 @@
 import { EditSvg } from './edit'
 import { parseSVGString } from '../parser'
 
+/** 'd' attributes must to be relative. */
 const testSvgData =
   '<svg width="200" height="200">' +
-  '<path id="path_0" fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>' +
-  '<path id="path_1" fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>' +
-  '<path id="path_2" fill="#f00" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>' +
+  '<path id="path_0" fill="#f00" stroke="#00f" stroke-width="4" d="M1 1 l1 1 c2 2 4 2 6 2 z"></path>' +
+  '<path id="path_1" fill="#f00" stroke="#00f" stroke-width="4" d="M1 1 l1 1 c2 2 4 2 6 2 z"></path>' +
+  '<path id="path_2" fill="#f00" stroke="#00f" stroke-width="4" d="M1 1 l1 1 c2 2 4 2 6 2 z"></path>' +
   '</svg>'
 
 describe('edit.ts', () => {
@@ -27,30 +28,74 @@ describe('edit.ts', () => {
     })
 
     describe('translate', () => {
-      it.todo('Selecting path')
-      it.todo('Selecting commands')
-      it.todo('Selecting point')
+      it('Selecting path', () => {
+        const editKey = edit.svg.paths[0].key
+        edit.select({ [editKey]: {} })
+        edit.translate({ x: 1, y: -1 })
+        expect(edit.svg.paths[0].getCommandString()).toBe(
+          'M2 0 l1 1 c2 2 4 2 6 2 z'
+        )
+      })
+      it('Selecting commands', () => {
+        const editKey = edit.svg.paths[0].key
+        edit.select({
+          [editKey]: {
+            [1]: [],
+          },
+        })
+        edit.translate({ x: 1, y: -1 })
+        expect(edit.svg.paths[0].getCommandString()).toBe(
+          'M1 1 l2 0 c1 3 3 3 5 3 z'
+        )
+      })
+      it('Selecting point', () => {
+        const editKey = edit.svg.paths[0].key
+        edit.select({
+          [editKey]: {
+            [2]: [0],
+          },
+        })
+        edit.translate({ x: 1, y: -1 })
+        expect(edit.svg.paths[0].getCommandString()).toBe(
+          'M1 1 l1 1 c3 1 4 2 6 2 z'
+        )
+      })
       it.todo('Selecting Multiple path')
     })
 
     describe('scale', () => {
-      it.todo('Selecting path')
-      it.todo('Selecting commands')
-      it.todo('Selecting point')
+      it('Selecting path', () => {
+        const editKey = edit.svg.paths[0].key
+        edit.select({ [editKey]: {} })
+        edit.scale(2)
+        expect(edit.svg.paths[0].getCommandString()).toBe(
+          'M2 2 l2 2 c4 4 8 4 12 4 z'
+        )
+      })
       it.todo('Selecting Multiple path')
     })
 
     describe('scaleX', () => {
-      it.todo('Selecting path')
-      it.todo('Selecting commands')
-      it.todo('Selecting point')
+      it('Selecting path', () => {
+        const editKey = edit.svg.paths[0].key
+        edit.select({ [editKey]: {} })
+        edit.scaleX(2)
+        expect(edit.svg.paths[0].getCommandString()).toBe(
+          'M2 1 l2 1 c4 2 8 2 12 2 z'
+        )
+      })
       it.todo('Selecting Multiple path')
     })
 
     describe('scaleY', () => {
-      it.todo('Selecting path')
-      it.todo('Selecting commands')
-      it.todo('Selecting point')
+      it('Selecting path', () => {
+        const editKey = edit.svg.paths[0].key
+        edit.select({ [editKey]: {} })
+        edit.scaleY(2)
+        expect(edit.svg.paths[0].getCommandString()).toBe(
+          'M1 2 l1 2 c2 4 4 4 6 4 z'
+        )
+      })
       it.todo('Selecting Multiple path')
     })
 
