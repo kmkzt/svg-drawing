@@ -137,7 +137,7 @@ export class EditSvg {
   }
 
   private exec(
-    pathExec: (path: Path, pathKey: PathObject['key']) => void,
+    pathExec: (path: Path) => void,
     commandExec?: (
       command: Command,
       i: { path: PathObject['key']; command: number }
@@ -155,7 +155,7 @@ export class EditSvg {
       if (!path) continue
 
       if (Object.keys(selectingCommand).length === 0 || !commandExec) {
-        pathExec(path, pathKey)
+        pathExec(path)
         continue
       }
 
@@ -240,7 +240,10 @@ export class EditSvg {
   /** @todo Delete points */
   public delete() {
     this.exec(
-      (_p, pathKey) => this.svg.deletePath(pathKey),
+      (p) => {
+        console.log('delete', p)
+        this.svg.deletePath(p.key)
+      },
       (_c, index) => {
         this.svg.paths
           .find((path) => path.key === index.path)
@@ -261,8 +264,8 @@ export class EditSvg {
     const listX: number[] = []
     const listY: number[] = []
 
-    this.exec((path, key) => {
-      const editPath = new EditPath(path.clone(), key)
+    this.exec((path) => {
+      const editPath = new EditPath(path.clone())
 
       const {
         boundingBox: {
@@ -301,18 +304,20 @@ export class EditSvg {
 
     const paths: EditSvgObject['paths'] = {}
 
-    this.exec((path, key) => {
-      const editPath = new EditPath(path.clone(), key, this.selecting?.[key])
-      paths[key] = editPath.toJson()
+    this.exec((path) => {
+      const editPath = new EditPath(
+        path.clone(),
+        this.selecting?.[path.key]
+      ).toJson()
 
       const {
-        boundingBox: {
-          min: { x: cMinX, y: cMinY },
-          max: { x: cMaxX, y: cMaxY },
-        },
-      } = editPath
+        min: { x: cMinX, y: cMinY },
+        max: { x: cMaxX, y: cMaxY },
+      } = editPath.boundingBox
       listX.push(cMinX, cMaxX)
       listY.push(cMinY, cMaxY)
+
+      paths[path.key] = editPath
     })
 
     const { min, max }: BoundingBox =
@@ -345,11 +350,7 @@ export class EditSvg {
 
 /** @todo Rename PathEdit ? */
 export class EditPath {
-  constructor(
-    public path: Path,
-    public key: PathObject['key'],
-    public selecting?: SelectingCommands
-  ) {}
+  constructor(public path: Path, public selecting?: SelectingCommands) {}
 
   private get absolutePath() {
     return toAbsolutePath(this.path)
@@ -404,7 +405,7 @@ export class EditPath {
       vertex.push({
         points: curr.points.map((point, pIndex) => ({
           index: {
-            path: this.key,
+            path: this.path.key,
             command: c,
             point: pIndex,
           },
@@ -441,7 +442,7 @@ export class EditPath {
 
   public toJson(): EditPathObject {
     return {
-      key: this.key,
+      key: this.path.key,
       d: this.path.getCommandString(),
       boundingBox: this.boundingBox,
       vertex: this.vertex,
