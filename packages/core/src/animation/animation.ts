@@ -1,5 +1,5 @@
-import { Path } from '../svg'
 import { roundUp, camel2kebab } from '../utils'
+import type { Path } from '../svg'
 import type {
   AnimationOption,
   FrameAnimation,

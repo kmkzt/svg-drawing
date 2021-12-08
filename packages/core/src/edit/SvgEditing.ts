@@ -1,5 +1,5 @@
 import { EditSvg } from './edit'
-import { Svg } from '../svg'
+import type { Svg } from '../svg'
 import type {
   PointObject,
   PathAttributes,

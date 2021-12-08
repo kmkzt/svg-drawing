@@ -1,5 +1,5 @@
-import { Animation } from '@svg-drawing/core'
 import type {
+  Animation,
   SvgObject,
   Svg,
   EditSvgObject,

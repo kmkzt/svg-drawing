@@ -1,7 +1,8 @@
-import { Drawing, DrawFactory, DrawHandler } from '@svg-drawing/core'
+import { Drawing } from '@svg-drawing/core'
 import { useCallback, useMemo } from 'react'
 import { useRenderInterval } from './useRenderInterval'
 import type { DrawAction, UseDrawOptions } from '../types'
+import type { DrawFactory, DrawHandler } from '@svg-drawing/core'
 
 /**
  * @example

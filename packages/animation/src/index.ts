@@ -1,6 +1,6 @@
-import {
+import { Point } from '@svg-drawing/core'
+import type {
   Command,
-  Point,
   Path,
   PathAttributes,
   FrameAnimation,

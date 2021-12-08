@@ -1,4 +1,4 @@
-import { PointObject } from '../types'
+import type { PointObject } from '../types'
 
 /**
  * Maximum number of decimal places is 5

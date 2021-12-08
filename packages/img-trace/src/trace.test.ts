@@ -4,7 +4,8 @@ import { resolve } from 'path'
 import { svgObjectToElement } from '@svg-drawing/core'
 import { loadPngData } from './__test__/loadPngData'
 import { Palette } from './palette'
-import { ImgTrace, ImgTraceOption } from './trace'
+import { ImgTrace } from './trace'
+import type { ImgTraceOption } from './trace'
 
 const testPattern: {
   [key: string]: Partial<ImgTraceOption>

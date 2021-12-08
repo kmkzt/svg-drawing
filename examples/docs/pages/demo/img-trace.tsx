@@ -1,20 +1,12 @@
 import { Input } from '@rebass/forms/styled-components'
-import { Renderer, Svg, Download, svgObjectToElement } from '@svg-drawing/core'
+import { Renderer, Download, svgObjectToElement } from '@svg-drawing/core'
 import {
   ImgTrace,
-  Rgba,
   Palette,
   // Blur,
   ImgLoader,
 } from '@svg-drawing/img-trace'
-import {
-  useState,
-  useCallback,
-  ChangeEvent,
-  useRef,
-  RefObject,
-  useEffect,
-} from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import {
   Box,
   Flex,
@@ -24,6 +16,9 @@ import {
   Heading,
 } from 'rebass/styled-components'
 import Layout from '../../components/Layout'
+import type { Svg } from '@svg-drawing/core'
+import type { Rgba } from '@svg-drawing/img-trace'
+import type { ChangeEvent, RefObject } from 'react'
 
 const IMAGE_LIST = [
   '/img_trace/cat.jpg',

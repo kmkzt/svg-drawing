@@ -1,13 +1,13 @@
-import { BasicDrawFactory } from './factory'
-import { PencilHandler } from './handler'
-import { Path, Svg } from '../svg'
 import { isAlmostSameNumber } from '../utils'
+import type { Path, Svg } from '../svg'
 import type {
   DrawHandler,
   PointObject,
   DrawFactory,
   ResizeCallback,
 } from '../types'
+import type { BasicDrawFactory } from './factory'
+import type { PencilHandler } from './handler'
 
 export class Drawing<
   S extends Svg = Svg,

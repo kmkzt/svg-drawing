@@ -1,16 +1,15 @@
 import {
   Svg,
   Path,
-  Command,
-  PathAttributes,
   Move,
   Close,
   Point,
   Line,
   QuadraticCurve,
 } from '@svg-drawing/core'
-import { Rgba } from './palette'
 import { convertRGBAImage } from './utils/convertRGBAImage'
+import type { Rgba } from './palette'
+import type { Command, PathAttributes } from '@svg-drawing/core'
 
 type ColorQuantization = number[][]
 // Edge node types ( ▓: this layer or 1; ░: not this layer or 0 )

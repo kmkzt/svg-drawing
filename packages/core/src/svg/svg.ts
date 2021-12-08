@@ -1,5 +1,5 @@
-import { Path } from './path'
-import type { SvgObject, SvgOption, PathObject } from '../types'
+import type { SvgObject, SvgOption } from '../types'
+import type { Path } from './path'
 
 export class Svg {
   public paths: Path[]

@@ -1,4 +1,5 @@
-import { MutableRefObject, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import type { MutableRefObject } from 'react'
 
 export const usePressedKey = (key: string): MutableRefObject<boolean> => {
   const multipleSelect = useRef(false)

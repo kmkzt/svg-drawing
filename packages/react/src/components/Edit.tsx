@@ -1,6 +1,6 @@
-import { PointObject, FixedType, SelectIndex } from '@svg-drawing/core'
 import React, { useCallback } from 'react'
-import { EditPathsProps, EditBoundingBoxProps } from '../types'
+import type { EditPathsProps, EditBoundingBoxProps } from '../types'
+import type { PointObject, FixedType, SelectIndex } from '@svg-drawing/core'
 
 export const EditPaths = ({
   paths,

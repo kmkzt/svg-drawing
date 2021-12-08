@@ -6,7 +6,7 @@ import {
   pathObjectToElement,
 } from './renderer'
 import { Svg } from './svg'
-import { AnimationOption, RendererOption, ResizeCallback } from './types'
+import type { AnimationOption, RendererOption, ResizeCallback } from './types'
 
 export class SvgAnimation {
   private _stopId?: number

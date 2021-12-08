@@ -1,12 +1,9 @@
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
-import { DrawFrame, AnimationObject } from '@svg-drawing/animation'
+import { DrawFrame } from '@svg-drawing/animation'
 import {
   Download,
   PenHandler,
   PencilHandler,
-  PathAttributes,
-  ResizeCallback,
-  EditSvgObject,
   svgObjectToElement,
 } from '@svg-drawing/core'
 import {
@@ -24,16 +21,17 @@ import {
   useResize,
   useAnimation,
 } from '@svg-drawing/react'
-import { NextPage } from 'next'
-import {
-  useCallback,
-  useState,
-  ChangeEventHandler,
-  useMemo,
-  useRef,
-} from 'react'
+import { useCallback, useState, useMemo, useRef } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../../components/Layout'
+import type { AnimationObject } from '@svg-drawing/animation'
+import type {
+  PathAttributes,
+  ResizeCallback,
+  EditSvgObject,
+} from '@svg-drawing/core'
+import type { NextPage } from 'next'
+import type { ChangeEventHandler } from 'react'
 
 const colorList = [
   'none',

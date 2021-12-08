@@ -6,18 +6,12 @@ import {
   ResizeHandler,
   Download,
 } from '@svg-drawing/core'
-import { NextPage } from 'next'
-import {
-  useEffect,
-  useRef,
-  useCallback,
-  useState,
-  ChangeEvent,
-  useMemo,
-} from 'react'
+import { useEffect, useRef, useCallback, useState, useMemo } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../../components/Layout'
 import { example } from '../../lib/example-svg'
+import type { NextPage } from 'next'
+import type { ChangeEvent } from 'react'
 
 const size = 30
 

@@ -1,13 +1,6 @@
-import {} from '..'
 import { calculatePoint } from '../curve'
-import {
-  Path,
-  Point,
-  Svg,
-  isCurveCommand,
-  toAbsolutePath,
-  toRelativePath,
-} from '../svg'
+import { Point, isCurveCommand, toAbsolutePath, toRelativePath } from '../svg'
+import type { Path, Svg } from '../svg'
 import type {
   PointObject,
   EditVertex,
