@@ -2,8 +2,8 @@ import { Animation } from './animation'
 import { parseSVGString } from '../parser'
 
 const defaultTestData = `<svg width="200" height="200">
-  <path fill="#f00" stroke-linecap="round" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>
-  <path fill="#ff0" stroke-linecap="butt" stroke="#f0f" stroke-width="2" d="M 2 2 L 4 4 C 6 6 10 6 14 6 Z"></path>
+  <path fill="#f00" stroke-linecap="round" stroke="#00f" stroke-width="4" d="M1 1 l1 1 c2 2 4 2 6 2 z"></path>
+  <path fill="#ff0" stroke-linecap="butt" stroke="#f0f" stroke-width="2" d="M 2 2 l2 2 C4 4 8 4 12 4 Z"></path>
 </svg>`
 
 describe('Animation', () => {

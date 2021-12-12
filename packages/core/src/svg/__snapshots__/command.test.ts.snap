@@ -1,0 +1,202 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Curve new Curve() 1`] = `
+Curve {
+  "points": Array [
+    Point {
+      "_x": 0.25,
+      "_y": 0.25,
+    },
+    Point {
+      "_x": 0.75,
+      "_y": 0.25,
+    },
+    Point {
+      "_x": 1,
+      "_y": 1,
+    },
+  ],
+  "type": "C",
+}
+`;
+
+exports[`Curve point 1`] = `
+Point {
+  "_x": 1,
+  "_y": 1,
+}
+`;
+
+exports[`Line new Line() 1`] = `
+Line {
+  "points": Array [
+    Point {
+      "_x": 0,
+      "_y": 0,
+    },
+  ],
+  "type": "L",
+}
+`;
+
+exports[`Line point 1`] = `
+Point {
+  "_x": 0,
+  "_y": 0,
+}
+`;
+
+exports[`Line points 1`] = `
+Array [
+  Point {
+    "_x": 0,
+    "_y": 0,
+  },
+]
+`;
+
+exports[`Line values 1`] = `
+Array [
+  0,
+  0,
+]
+`;
+
+exports[`Move new Move() 1`] = `
+Move {
+  "points": Array [
+    Point {
+      "_x": 0,
+      "_y": 0,
+    },
+  ],
+  "type": "M",
+}
+`;
+
+exports[`Move point 1`] = `
+Point {
+  "_x": 0,
+  "_y": 0,
+}
+`;
+
+exports[`Move points 1`] = `
+Array [
+  Point {
+    "_x": 0,
+    "_y": 0,
+  },
+]
+`;
+
+exports[`Move values 1`] = `
+Array [
+  Point {
+    "_x": 0,
+    "_y": 0,
+  },
+]
+`;
+
+exports[`RelativeCurve new RelativeCurve() 1`] = `
+RelativeCurve {
+  "points": Array [
+    Point {
+      "_x": 0.25,
+      "_y": 0.25,
+    },
+    Point {
+      "_x": 0.75,
+      "_y": 0.25,
+    },
+    Point {
+      "_x": 1,
+      "_y": 1,
+    },
+  ],
+  "type": "c",
+}
+`;
+
+exports[`RelativeCurve point 1`] = `
+Point {
+  "_x": 1,
+  "_y": 1,
+}
+`;
+
+exports[`RelativeLine new RelativeLine() 1`] = `
+RelativeLine {
+  "points": Array [
+    Point {
+      "_x": 0,
+      "_y": 0,
+    },
+  ],
+  "type": "l",
+}
+`;
+
+exports[`RelativeLine point 1`] = `
+Point {
+  "_x": 0,
+  "_y": 0,
+}
+`;
+
+exports[`RelativeLine points 1`] = `
+Array [
+  Point {
+    "_x": 0,
+    "_y": 0,
+  },
+]
+`;
+
+exports[`RelativeLine values 1`] = `
+Array [
+  Point {
+    "_x": 0,
+    "_y": 0,
+  },
+]
+`;
+
+exports[`RelativeMove new RelativeMove() 1`] = `
+RelativeMove {
+  "points": Array [
+    Point {
+      "_x": 0,
+      "_y": 0,
+    },
+  ],
+  "relative": false,
+  "type": "m",
+}
+`;
+
+exports[`RelativeMove point 1`] = `
+Point {
+  "_x": 0,
+  "_y": 0,
+}
+`;
+
+exports[`RelativeMove points 1`] = `
+Array [
+  Point {
+    "_x": 0,
+    "_y": 0,
+  },
+]
+`;
+
+exports[`RelativeMove values 1`] = `
+Array [
+  Point {
+    "_x": 0,
+    "_y": 0,
+  },
+]
+`;
