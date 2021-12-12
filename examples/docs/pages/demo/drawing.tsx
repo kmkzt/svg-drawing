@@ -24,8 +24,8 @@ import {
 import { useCallback, useState, useMemo, useRef } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../../components/Layout'
-import type { AnimationObject } from '@svg-drawing/animation'
 import type {
+  AnimationObject,
   PathAttributes,
   ResizeCallback,
   EditSvgObject,
