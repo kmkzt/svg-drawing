@@ -236,7 +236,7 @@ export class RelativeLine implements Command<'l'> {
   }
 
   public translate(p: PointObject) {
-    return
+    this.points = this.points.map((po) => po.add(p)) as [Point]
   }
 
   public scale(r: number) {
@@ -323,7 +323,7 @@ export class RelativeCurve implements Command<'c'> {
   }
 
   public translate(p: PointObject) {
-    return
+    this.points = this.points.map((po) => po.add(p)) as [Point, Point, Point]
   }
 
   public scale(r: number) {
@@ -480,7 +480,7 @@ export class RelativeShortcutCurve implements Command<'s'> {
   }
 
   public translate(p: PointObject) {
-    return
+    this.points = this.points.map((po) => po.add(p)) as [Point, Point]
   }
 
   public scale(r: number) {
@@ -587,7 +587,7 @@ export class RelativeQuadraticCurve implements Command<'q'> {
   }
 
   public translate(p: PointObject) {
-    return
+    this.points = this.points.map((po) => po.add(p)) as [Point, Point]
   }
 
   public scale(r: number) {
