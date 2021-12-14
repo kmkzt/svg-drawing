@@ -6,7 +6,7 @@
 
 `svg-drawing` is svg based drawing library.
 
-This is a **[demo](https://svg-drawing.vercel.app/demo/drawing)**.
+This is a **[demo](https://svg-drawing.vercel.app)**.
 Code is [here](./examples/docs/pages/demo).
 
 This project has moved to monorepo. If you want to use the previous version, please use [here](https://github.com/kmkzt/svg-drawing/tree/v3.0.0).
