@@ -22,12 +22,12 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "rebass": "4.0.7",
-    "remark": "12.0.1",
-    "remark-basepath": "1.0.1",
-    "remark-highlight.js": "6.0.0",
-    "remark-html": "13.0.2",
+    "rehype-highlight": "5.0.1",
+    "remark-parse": "10.0.1",
+    "remark-rehype": "10.1.0",
     "styled-components": "5.1.1",
-    "styled-system": "5.1.5"
+    "styled-system": "5.1.5",
+    "unified": "10.1.1"
   },
   "devDependencies": {
     "@types/rebass": "4.0.6",

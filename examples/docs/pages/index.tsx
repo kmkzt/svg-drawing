@@ -83,10 +83,7 @@ const Top: NextPage<Props> = ({ content }) => {
 // }
 
 export async function getStaticProps() {
-  const content = await markdownToHtml(readme, {
-    basePath: 'https://github.com/kmkzt/svg-drawing/tree/master',
-    baseImagePath: 'https://raw.githubusercontent.com/kmkzt/svg-drawing/master',
-  })
+  const content = await markdownToHtml(readme)
 
   return {
     props: {
