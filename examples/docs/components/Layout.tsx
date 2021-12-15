@@ -37,18 +37,18 @@ const GlobalHeader = () => (
         </Link>
       </Box>
       <Flex as="nav" alignContent="center" width={6 / 10}>
-        <Link href={`${basePath}/demo/drawing`}>
+        <Link href="/demo/drawing">
           <a>
             <Text mr={2}>drawing</Text>
           </a>
         </Link>
         <Text mr={2}>
-          <Link href={`${basePath}/demo/animation`}>
+          <Link href="/demo/animation">
             <a>animation</a>
           </Link>
         </Text>
         <Text mr={2}>
-          <Link href={`${basePath}/demo/img-trace`}>
+          <Link href="/demo/img-trace">
             <a>img-trace</a>
           </Link>
         </Text>
