@@ -8,7 +8,7 @@
   "scripts": {
     "clean": "lerna clean; rimraf ./coverage ./packages/**/{lib,dist,node_modules}; yarn cache clean",
     "build": "lerna run build",
-    "build:gh-page": "IS_GH_PAGE=true yarn workspace @svg-drawing-example/docs build",
+    "build:gh-page": "BASE_PATH=\"/svg-drawing\" yarn workspace @svg-drawing-example/docs build",
     "dev": "yarn build; concurrently yarn:dev:{main,tsc}",
     "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",
     "dev:tsc": "yarn lerna run dev:tsc --concurrency 1 --parallel --stream",

@@ -2,8 +2,9 @@ import Link from 'next/link'
 import Head from 'next/head'
 import { Fragment } from 'react'
 import { Flex, Box, Text, Link as RELink } from 'rebass/styled-components'
-import styled, { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
 import { MarkGithub } from '@styled-icons/octicons/MarkGithub'
+import { basePath } from '../config/paths'
 
 const GlobalStyle = createGlobalStyle`
  body, * {
@@ -16,11 +17,12 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: initial;
   }
 `
+
 const GlobalHeader = () => (
   <Box bg="#fafafa" py="8px" px="16px">
     <Flex justifyContent="space-between">
       <Box width={3 / 10}>
-        <Link href="/">
+        <Link href={`${basePath}/`}>
           <a>
             <Text
               fontSize={3}
@@ -35,18 +37,18 @@ const GlobalHeader = () => (
         </Link>
       </Box>
       <Flex as="nav" alignContent="center" width={6 / 10}>
-        <Link href="/demo/drawing">
+        <Link href={`${basePath}/demo/drawing`}>
           <a>
             <Text mr={2}>drawing</Text>
           </a>
         </Link>
         <Text mr={2}>
-          <Link href="/demo/animation">
+          <Link href={`${basePath}/demo/animation`}>
             <a>animation</a>
           </Link>
         </Text>
         <Text mr={2}>
-          <Link href="/demo/img-trace">
+          <Link href={`${basePath}/demo/img-trace`}>
             <a>img-trace</a>
           </Link>
         </Text>
