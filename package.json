@@ -8,8 +8,8 @@
   "scripts": {
     "clean": "lerna clean; rimraf ./coverage ./packages/**/{lib,dist,node_modules}; yarn cache clean",
     "build": "lerna run build",
-    "build:gh-page": "export BASE_PATH=\"/svg-drawing\"; yarn workspace @svg-drawing-example/docs build",
-    "dev": "yarn build; concurrently yarn:dev:{main,tsc}",
+    "build:gh-page": "export BASE_PATH=\"/svg-drawing\"; yarn build",
+    "dev": "concurrently yarn:dev:{main,tsc}",
     "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",
     "dev:tsc": "yarn lerna run dev:tsc --concurrency 1 --parallel --stream",
     "dev:test": "DEBUG=debug yarn test --watchAll",
