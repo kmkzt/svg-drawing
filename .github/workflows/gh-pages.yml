@@ -13,11 +13,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: 12.13.0
+          node-version: 16.13.1
       - name: Build
         run: |
           yarn install --frozen-lockfile
-          yarn build
+          yarn build:gh-page
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:

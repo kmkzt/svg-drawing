@@ -8,7 +8,7 @@
   "scripts": {
     "clean": "lerna clean; rimraf ./coverage ./packages/**/{lib,dist,node_modules}; yarn cache clean",
     "build": "lerna run build",
-    "build:gh-page": "IS_GH_PAGE=true yarn workspace @svg-drawing-example/docs build",
+    "build:gh-page": "export BASE_PATH=\"/svg-drawing\"; yarn workspace @svg-drawing-example/docs build",
     "dev": "concurrently yarn:dev:{main,tsc}",
     "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",
     "dev:tsc": "yarn lerna run dev:tsc --concurrency 1 --parallel --stream",
@@ -33,12 +33,12 @@
     "@rollup/plugin-node-resolve": "13.0.6",
     "@rollup/plugin-replace": "3.0.0",
     "@types/jest": "26.0.24",
-    "@types/node": "16.11.12",
+    "@types/node": "16.11.13",
     "@types/react": "17.0.37",
     "@types/react-dom": "17.0.11",
-    "@typescript-eslint/eslint-plugin": "4.33.0",
-    "@typescript-eslint/parser": "4.33.0",
-    "@typescript-eslint/typescript-estree": "4.33.0",
+    "@typescript-eslint/eslint-plugin": "5.7.0",
+    "@typescript-eslint/parser": "5.7.0",
+    "@typescript-eslint/typescript-estree": "5.7.0",
     "babel-jest": "26.6.3",
     "babel-plugin-annotate-pure-calls": "0.4.0",
     "babel-plugin-transform-react-remove-prop-types": "0.4.24",
@@ -66,7 +66,7 @@
     "rollup-plugin-size-snapshot": "0.12.0",
     "rollup-plugin-sourcemaps": "0.6.3",
     "rollup-plugin-terser": "7.0.2",
-    "typescript": "4.4.4"
+    "typescript": "4.5.4"
   },
   "resolutions": {
     "http-proxy": "1.18.1"

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Fragment } from 'react'
 import { Flex, Box, Text, Link as RELink } from 'rebass/styled-components'
-import styled, { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
  body, * {
@@ -16,11 +16,12 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: initial;
   }
 `
+
 const GlobalHeader = () => (
   <Box bg="#fafafa" py="8px" px="16px">
     <Flex justifyContent="space-between">
       <Box width={3 / 10}>
-        <Link href="/">
+        <Link href={`/`}>
           <a>
             <Text
               fontSize={3}
@@ -35,7 +36,7 @@ const GlobalHeader = () => (
         </Link>
       </Box>
       <Flex as="nav" alignContent="center" width={6 / 10}>
-        <Link href="/demo/drawing">
+        <Link href="/">
           <a>
             <Text mr={2}>drawing</Text>
           </a>

@@ -19,6 +19,7 @@ import Layout from '../../components/Layout'
 import type { Svg } from '@svg-drawing/core'
 import type { Rgba } from '@svg-drawing/img-trace'
 import type { ChangeEvent, RefObject } from 'react'
+import { basePath } from '../../config/paths'
 
 const IMAGE_LIST = [
   '/img_trace/cat.jpg',
@@ -27,10 +28,7 @@ const IMAGE_LIST = [
   '/img_trace/panda.png',
   '/img_trace/risu.jpg',
   '/img_trace/tanuki.jpg',
-].map((url) =>
-  // For gh-pages
-  process.env.IS_GH_PAGE === 'true' ? `/svg-drawing${url}` : url
-)
+].map((url) => `${basePath}${url}`)
 
 const GRAYSCALE_PALETTE = [
   { r: 0, g: 0, b: 0, a: 255 },

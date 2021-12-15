@@ -40,8 +40,5 @@
   "optionalDependencies": {
     "@svg-drawing/core": "4.2.1",
     "@svg-drawing/img-trace": "4.2.1"
-  },
-  "devDependencies": {
-    "react": "16.13.1"
   }
 }
