@@ -33,9 +33,9 @@ export const downloadBlob = ({
   const blob = new Blob([buffer.buffer], {
     type: mimeTypeMap[extension],
   })
-  if (window.navigator.msSaveBlob) {
+  if ((window.navigator as any).msSaveBlob) {
     // IE
-    window.navigator.msSaveBlob(blob, fname)
+    ;(window.navigator as any).msSaveBlob(blob, fname)
   } else if (window.URL && window.URL.createObjectURL) {
     // Firefox, Chrome, Safari
     const a = document.createElement('a')
