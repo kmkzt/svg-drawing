@@ -26,6 +26,7 @@ __debug__
 
 # configuration for editor
 .vscode
+.node-version
 
 # npm lock files
 package-lock.json
