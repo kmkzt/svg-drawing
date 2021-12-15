@@ -24,6 +24,7 @@ import {
   ImgLoader,
 } from '@svg-drawing/img-trace'
 import Layout from '../../components/Layout'
+import { basePath } from '../../config/paths'
 
 const IMAGE_LIST = [
   '/img_trace/cat.jpg',
@@ -32,10 +33,7 @@ const IMAGE_LIST = [
   '/img_trace/panda.png',
   '/img_trace/risu.jpg',
   '/img_trace/tanuki.jpg',
-].map((url) =>
-  // For gh-pages
-  process.env.IS_GH_PAGE === 'true' ? `/svg-drawing${url}` : url
-)
+].map((url) => `${basePath}${url}`)
 
 const GRAYSCALE_PALETTE = [
   { r: 0, g: 0, b: 0, a: 255 },
@@ -101,9 +99,7 @@ export default () => {
     }
   }, [imageUrl, imageData, palettes, traceOption])
 
-  /**
-   * Update Svg Render
-   */
+  /** Update Svg Render */
   useEffect(() => {
     if (!renderRef.current) return
     const renderSvg = () => {
