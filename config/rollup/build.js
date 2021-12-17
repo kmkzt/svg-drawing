@@ -7,6 +7,8 @@ import sourceMaps from 'rollup-plugin-sourcemaps'
 import { terser } from 'rollup-plugin-terser'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 import { packageGlobals } from './globals'
+import { createBanner } from './banner'
+
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json']
 const targets = '>1%, not dead, not ie 11, not op_mini all'
 
@@ -23,10 +25,16 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
     ...(pkg.peerDependencies || {}),
     ...(pkg.optionalDependencies || {}),
   })
+
+  const banner = createBanner({
+    name: pkg.name,
+    version: pkg.version,
+    license: pkg.license,
+    author: pkg.author.name,
+  })
+
   return [
-    /**
-     * umd
-     */
+    /** Umd */
     {
       input,
       output: {
@@ -36,6 +44,7 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
         globals,
         exports: 'named',
         sourcemap: false,
+        banner,
       },
       external,
       plugins: [
@@ -48,9 +57,7 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
         sizeSnapshot(),
       ],
     },
-    /**
-     * umd(development)
-     */
+    /** Umd(development) */
     // {
     //   input,
     //   output: {
@@ -70,9 +77,7 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
     //     terser()
     //   ]
     // },
-    /**
-     * cjs
-     */
+    /** Cjs */
     {
       input,
       output: {
@@ -80,6 +85,7 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
         format: 'cjs',
         exports: 'named',
         sourcemap: true,
+        banner,
       },
       external,
       plugins: [
@@ -90,12 +96,10 @@ export default ({ getBabelOptions, globals: injectGlobal }) => ({
         sizeSnapshot(),
       ],
     },
-    /**
-     * esm
-     */
+    /** Esm */
     {
       input,
-      output: { file: pkg.module, format: 'esm', sourcemap: true },
+      output: { file: pkg.module, format: 'esm', sourcemap: true, banner },
       external,
       plugins: [
         sourceMaps(),
