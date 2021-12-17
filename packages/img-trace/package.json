@@ -3,12 +3,14 @@
   "version": "4.2.1",
   "license": "MIT",
   "description": "svg drawing library.",
-  "author": "kmkzt<info.pscreator@gmail.com>",
+  "author": {
+    "name": "Kazuto Kamei",
+    "email": "kmkzt0927@gmail.com"
+  },
   "repository": "github:kmkzt/svg-drawing",
   "homepage": "https://github.com/kmkzt/svg-drawing/tree/master/packages/img-trace#readme",
   "bugs": {
-    "url": "https://github.com/kmkzt/svg-drawing/issues",
-    "email": "info.pscreator@gmail.com"
+    "url": "https://github.com/kmkzt/svg-drawing/issues"
   },
   "keywords": [
     "svg",
