@@ -2,7 +2,10 @@
   "name": "@svg-drawing/react",
   "version": "4.2.1",
   "description": "React svg drawing library. This library is a React extension of svg-drawing.",
-  "author": "kmkzt <kmkzt0927@gmail.com>",
+  "author": {
+    "name": "Kazuto Kamei",
+    "email": "kmkzt0927@gmail.com"
+  },
   "homepage": "https://github.com/kmkzt/svg-drawing/tree/master/packages/react#readme",
   "license": "MIT",
   "types": "lib/index.d.ts",
