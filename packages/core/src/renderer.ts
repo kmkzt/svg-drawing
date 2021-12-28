@@ -1,5 +1,5 @@
-import { PathObject, RendererOption, SvgObject } from './types'
 import { camel2kebab } from './utils'
+import type { PathObject, RendererOption, SvgObject } from './types'
 
 const VERSION = '1.1'
 const SVG_NS = 'http://www.w3.org/2000/svg'
@@ -72,17 +72,11 @@ export const svgObjectToElement = ({
 
 export class Renderer {
   constructor(public el: HTMLElement, { background }: RendererOption = {}) {
-    /**
-     * Setup parameter
-     */
+    /** Setup parameter */
     const { width, height } = el.getBoundingClientRect()
     el.appendChild(svgObjectToElement({ background, width, height, paths: [] }))
   }
-  /**
-   * render
-   * TODO: XSS test
-   * TODO: Partially renderable
-   */
+  /** Render TODO: XSS test TODO: Partially renderable */
   public update(svgObj: SvgObject): void {
     this.el.replaceChild(svgObjectToElement(svgObj), this.el.childNodes[0])
   }

@@ -1,39 +1,31 @@
+import { downloadBlob, svg2base64 } from '@svg-drawing/core/lib/download'
+import { ResizeHandler } from '@svg-drawing/core/lib/handler'
 import {
   Renderer,
   createSvgElement,
   createSvgChildElement,
   pathObjectToElement,
 } from '@svg-drawing/core/lib/renderer'
+import { Svg } from '@svg-drawing/core/lib/svg'
 import { camel2kebab, roundUp } from '@svg-drawing/core/lib/utils'
-import { downloadBlob, svg2base64 } from '@svg-drawing/core/lib/download'
-import { Path, Svg } from '@svg-drawing/core/lib/svg'
-import { AnimationOption, FrameAnimation } from './types'
-import { ResizeHandler } from '@svg-drawing/core/lib/handler'
+import type { AnimationOption, FrameAnimation } from './types'
+import type { Path } from '@svg-drawing/core/lib/svg'
 import type { ResizeHandlerCallback } from '@svg-drawing/core/lib/types'
 
 export class SvgAnimation {
-  /**
-   * Options
-   */
+  /** Options */
   public ms: number
-  /**
-   * Private prorperty
-   */
+  /** Private prorperty */
   private _stopId: number
   private _stopAnimation: (() => void) | null
   private _anim: FrameAnimation | null
   private _restorePaths: Path[]
   private _framesNumber: number | undefined
-  /**
-   * Modules
-   */
+  /** Modules */
   public svg: Svg
   public renderer: Renderer
   public resizeHandler: ResizeHandler
-  /**
-   * Relation animate element
-   * TODO: add easing option
-   */
+  /** Relation animate element TODO: add easing option */
   private _repeatCount: string
   constructor(
     el: HTMLElement,
@@ -45,18 +37,12 @@ export class SvgAnimation {
     this._restorePaths = []
     this._stopId = 0
     this._repeatCount = 'indefinite'
-    /**
-     * Setup Svg
-     */
+    /** Setup Svg */
     const { width, height } = el.getBoundingClientRect()
     this.svg = new Svg({ width, height, background })
-    /**
-     * Setup renderer
-     */
+    /** Setup renderer */
     this.renderer = new Renderer(el, { background })
-    /**
-     * Setup resize handler
-     */
+    /** Setup resize handler */
     this._resize = this._resize.bind(this)
     this.resizeHandler = new ResizeHandler(el, {
       resize: this._resize,
@@ -66,9 +52,9 @@ export class SvgAnimation {
 
   /**
    * @param {FramaAnimation} fn
-   * @param {{ frame?: number; repeat?: number }} opts
-   * `frame` is the number of frames to animate
-   * `repeat` is related for repeatCount of animate element attribute.
+   * @param {{ frame?: number; repeat?: number }} opts `frame` is the number of
+   *   frames to animate `repeat` is related for repeatCount of animate element
+   *   attribute.
    */
   public setAnimation(
     fn: FrameAnimation,
@@ -242,10 +228,7 @@ export class SvgAnimation {
     )
   }
 
-  /**
-   * @param filename
-   * TODO: Support gif and apng
-   */
+  /** @param filename TODO: Support gif and apng */
   public download(filename?: string): void {
     downloadBlob({
       data: svg2base64(this.toElement().outerHTML),
@@ -254,10 +237,7 @@ export class SvgAnimation {
     })
   }
 
-  /**
-   * @return {number}
-   * Default value is total of commands length.
-   */
+  /** @returns {number} Default value is total of commands length. */
   private _getFramesNumber(): number {
     return this._framesNumber && this._framesNumber > 0
       ? this._framesNumber
