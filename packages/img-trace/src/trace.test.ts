@@ -1,10 +1,11 @@
 /* eslint-disable jest/no-test-callback */
 import { writeFileSync } from 'fs'
 import { resolve } from 'path'
-import { ImgTrace, ImgTraceOption } from './trace'
-import { Palette } from './palette'
-import { loadPngData } from './__test__/loadPngData'
 import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
+import { loadPngData } from './__test__/loadPngData'
+import { Palette } from './palette'
+import { ImgTrace } from './trace'
+import type { ImgTraceOption } from './trace'
 
 const testPattern: {
   [key: string]: Partial<ImgTraceOption>
@@ -39,7 +40,7 @@ describe('trace.ts', () => {
           }).load(png)
 
           const data = svgObjectToElement(svg.toJson()).outerHTML
-          /** DEBUG **/
+          /** DEBUG * */
           if (process.env.DEBUG === 'debug') {
             writeFileSync(
               resolve(__dirname, `__debug__/${testname}-${Date.now()}.svg`),

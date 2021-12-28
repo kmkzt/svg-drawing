@@ -1,5 +1,5 @@
 import { Point, Command, COMMAND_TYPE } from './svg'
-import { PointObject, ConvertOption } from './types'
+import type { PointObject, ConvertOption } from './types'
 
 export class Convert {
   public ratio: number

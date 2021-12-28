@@ -1,6 +1,6 @@
 import { svgObjectToElement } from './renderer'
 import type { Svg } from './svg'
-import { DownloadOption, SvgObject } from './types'
+import type { DownloadOption, SvgObject } from './types'
 
 export const toBase64 = (svgObj: SvgObject): string => {
   return svg2base64(svgObjectToElement(svgObj).outerHTML)

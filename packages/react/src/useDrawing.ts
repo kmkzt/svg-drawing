@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useCallback, MutableRefObject } from 'react'
-import type { DrawingOption } from '@svg-drawing/core/lib/types'
-import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
 import { SvgDrawing } from '@svg-drawing/core/lib/drawing'
-import { UseSvgDrawing } from './types'
+import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
+import React, { useRef, useEffect, useCallback } from 'react'
+import type { UseSvgDrawing } from './types'
+import type { DrawingOption } from '@svg-drawing/core/lib/types'
+import type { MutableRefObject } from 'react'
 
 export const useSvgDrawing = (
   option?: Partial<DrawingOption>

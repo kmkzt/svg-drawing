@@ -1,6 +1,7 @@
-import { Rgba } from './palette'
+import { Svg, Path, Command } from '@svg-drawing/core'
 import { convertRGBAImage } from './utils/convertRGBAImage'
-import { Svg, Path, Command, PathObject } from '@svg-drawing/core'
+import type { Rgba } from './palette'
+import type { PathObject } from '@svg-drawing/core'
 
 type ColorQuantization = number[][]
 // Edge node types ( ▓: this layer or 1; ░: not this layer or 0 )
@@ -258,7 +259,8 @@ export class ImgTrace {
 
   /**
    * Find similar color from palette and return ID
-   * @param {Rgba} color pixel color
+   *
+   * @param {Rgba} color Pixel color
    */
   private _findPaletteIndex({ r, g, b, a }: Rgba): number {
     let cdl = 1024 // 4 * 256 is the maximum RGBA distance
@@ -456,14 +458,13 @@ export class ImgTrace {
           )
         ) {
           if (ins[pacnt].points.length > 0) {
-            ins[pacnt].points[
-              ins[pacnt].points.length - 1
-            ].direction = this._getdirection(
-              ins[pacnt].points[ins[pacnt].points.length - 1].x,
-              ins[pacnt].points[ins[pacnt].points.length - 1].y,
-              paths[pacnt].points[pcnt].x,
-              paths[pacnt].points[pcnt].y
-            )
+            ins[pacnt].points[ins[pacnt].points.length - 1].direction =
+              this._getdirection(
+                ins[pacnt].points[ins[pacnt].points.length - 1].x,
+                ins[pacnt].points[ins[pacnt].points.length - 1].y,
+                paths[pacnt].points[pcnt].x,
+                paths[pacnt].points[pcnt].y
+              )
           }
 
           ins[pacnt].points.push({
