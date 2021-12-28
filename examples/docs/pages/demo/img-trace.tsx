@@ -16,10 +16,10 @@ import {
   Heading,
 } from 'rebass/styled-components'
 import Layout from '../../components/Layout'
-import type { Svg } from '@svg-drawing/core'
-import type { Rgba } from '@svg-drawing/img-trace'
-import type { ChangeEvent, RefObject } from 'react'
 import { basePath } from '../../config/paths'
+import type { Svg, Svg } from '@svg-drawing/core'
+import type { Rgba, Rgba } from '@svg-drawing/img-trace'
+import type { ChangeEvent, RefObject, ChangeEvent, RefObject } from 'react'
 
 const IMAGE_LIST = [
   '/img_trace/cat.jpg',

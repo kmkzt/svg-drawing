@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-test-callback */
 import { resolve } from 'path'
 import { loadPngData } from './__test__/loadPngData'
 import { Palette } from './palette'

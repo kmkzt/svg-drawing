@@ -1,4 +1,3 @@
-import { Svg } from './svg'
 import { camel2kebab } from './utils'
 import type { PathAttributes, RendererOption, SvgObject } from './types'
 
