@@ -33,7 +33,7 @@
     "lib:rollup": "NODE_ENV=production rollup -c",
     "lib:tsc": "NODE_ENV=production tsc",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ./src --ext .js,.ts,.tsx;",
+    "lint": "eslint ./src --ext .js,.ts,.tsx",
     "fmt": "yarn lint --fix",
     "prepare": "yarn build"
   },
