@@ -1,9 +1,9 @@
-import Link from 'next/link'
+import { MarkGithub } from '@styled-icons/octicons/MarkGithub'
 import Head from 'next/head'
+import Link from 'next/link'
 import { Fragment } from 'react'
 import { Flex, Box, Text, Link as RELink } from 'rebass/styled-components'
 import { createGlobalStyle } from 'styled-components'
-import { MarkGithub } from '@styled-icons/octicons/MarkGithub'
 
 const GlobalStyle = createGlobalStyle`
  body, * {
