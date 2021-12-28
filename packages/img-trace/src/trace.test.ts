@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-test-callback */
 import { writeFileSync } from 'fs'
 import { resolve } from 'path'
 import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
@@ -32,7 +31,7 @@ describe('trace.ts', () => {
   })
   describe('ImgTrace', () => {
     Object.entries(testPattern).map(([testname, testopts]) => {
-      it(testname, (done) => {
+      it(`${testname}`, (done) => {
         loadPngData(testimage, (png) => {
           const svg = new ImgTrace({
             palettes: Palette.imageData(png),

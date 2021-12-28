@@ -95,6 +95,6 @@ module.exports = {
     ],
 
     // Test
-    'jest/no-test-callback': 'warn',
+    'jest/no-done-callback': 'warn',
   },
 }
