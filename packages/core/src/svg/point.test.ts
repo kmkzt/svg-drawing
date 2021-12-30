@@ -42,7 +42,6 @@ describe('Point', () => {
   it('clone', () => {
     const po = new Point(0, 0)
     const clone = po.clone()
-    clone.translate(new Point(2, 0))
     expect(po.x).toBe(0)
     expect(clone.x).toBe(2)
   })

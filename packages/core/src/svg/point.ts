@@ -52,11 +52,6 @@ export class Point implements PointObject {
     return new Point(this._x - p.x, this._y - p.y)
   }
 
-  public translate(p: PointObject): void {
-    this._x += p.x
-    this._y += p.y
-  }
-
   public eql(p: PointObject): boolean {
     return this._x === p.x && this._y === p.y
   }

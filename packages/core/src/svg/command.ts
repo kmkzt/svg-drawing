@@ -110,9 +110,7 @@ export class OtherCommand<T extends OtherCommandType>
 
   public translate(p: PointObject) {
     if (OtherCommand.Types.a === this.type) return
-    this.points.map((po) => {
-      po.translate(p)
-    })
+    this.points = this.points.map((po) => po.add(p))
   }
 
   public static validTypes(t: any): t is OtherCommandType {

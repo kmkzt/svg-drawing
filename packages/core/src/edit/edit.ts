@@ -13,9 +13,6 @@ import type {
   SelectingCommands,
   SelectingPoints,
   Command,
-  SelectCommandIndex,
-  SelectPathIndex,
-  SelectPointIndex,
 } from '../types'
 
 const genOutline = (points: PointObject[]) =>
@@ -129,7 +126,10 @@ export class EditSvg {
   }
 
   public changeAttributes(attrs: PathAttributes) {
-    this.exec((path) => path.updateAttributes(attrs))
+    this.exec((path) => {
+      path.updateAttributes(attrs)
+      return path
+    })
   }
 
   public translate(po: PointObject) {
@@ -139,9 +139,15 @@ export class EditSvg {
     }
 
     this.exec(
-      (path) => path.translate(move),
-      (command) => command.translate(move),
-      (point) => point.translate(new Point(move.x, move.y))
+      (path) => {
+        path.translate(move)
+        return path
+      },
+      (command) => {
+        command.translate(move)
+        return command
+      },
+      (point) => point.add(new Point(move.x, move.y))
     )
   }
 
@@ -182,19 +188,30 @@ export class EditSvg {
       path.scaleX(scale.x)
       path.scaleY(scale.y)
       path.translate(move)
+
+      return path
     })
   }
 
   /** @todo Delete points */
   public delete() {
-    this.exec(
-      (p, { svg }) => svg.deletePath(p),
-      (_c, { svg, index }) => {
-        svg.paths
-          .find((path) => path.key === index.path)
-          ?.deleteCommand(index.command)
+    const svg = this.generateAbsolutePathSvg()
+
+    for (const pathKey in this.selecting) {
+      const selectingCommand = this.selecting[pathKey]
+
+      if (Object.keys(selectingCommand).length === 0) {
+        const path = this.svg.paths.find((p) => p.key === pathKey)
+        if (path) svg.deletePath(path)
+        continue
       }
-    )
+
+      for (const commandKey in selectingCommand) {
+        svg.paths.find((p) => p.key === pathKey)?.deleteCommand(+commandKey)
+      }
+    }
+
+    this.svg.paths = svg.paths.map((p) => toRelativePath(p))
   }
 
   public preview(): EditSvg {
@@ -220,6 +237,8 @@ export class EditSvg {
       } = editPath
       listX.push(cMinX, cMaxX)
       listY.push(cMinY, cMaxY)
+
+      return path
     })
 
     return listX.length !== 0 && listY.length !== 0
@@ -252,6 +271,8 @@ export class EditSvg {
       listY.push(cMinY, cMaxY)
 
       paths[path.key] = editPath
+
+      return path
     })
 
     const { min, max }: BoundingBox =
@@ -299,48 +320,37 @@ export class EditSvg {
   }
 
   private exec(
-    pathExec: (path: Path, ctx: { svg: Svg; index: SelectPathIndex }) => void,
-    commandExec?: (
-      command: Command,
-      ctx: { svg: Svg; index: SelectCommandIndex }
-    ) => void,
-    pointExec?: (
-      point: Point,
-      ctx: {
-        svg: Svg
-        index: SelectPointIndex
-      }
-    ) => void
+    pathExec: (path: Path) => Path,
+    commandExec?: (command: Command) => Command,
+    pointExec?: (point: Point) => Point
   ): void {
     const svg = this.generateAbsolutePathSvg()
 
     for (const pathKey in this.selecting) {
-      const path = svg.paths.find((path) => path.key === pathKey)
+      const pathIndex = svg.paths.findIndex((path) => path.key === pathKey)
       const selectingCommand = this.selecting[pathKey]
 
-      if (!path) continue
+      if (!svg.paths[pathIndex]) continue
 
       if (Object.keys(selectingCommand).length === 0 || !commandExec) {
-        pathExec(path, { svg, index: { path: pathKey } })
+        svg.paths[pathIndex] = pathExec(svg.paths[pathIndex])
         continue
       }
 
       for (const commandKey in selectingCommand) {
-        const command = path.commands[+commandKey]
         const selectingPoint = selectingCommand[+commandKey]
         if (Object.keys(selectingPoint).length === 0 || !pointExec) {
-          commandExec(command, {
-            svg,
-            index: { path: pathKey, command: +commandKey },
-          })
+          svg.paths[pathIndex].commands[+commandKey] = commandExec(
+            svg.paths[pathIndex].commands[+commandKey]
+          )
           continue
         }
 
         selectingPoint.map((pointKey: number) => {
-          pointExec(command.points[pointKey], {
-            svg,
-            index: { path: pathKey, command: +commandKey, point: +pointKey },
-          })
+          svg.paths[pathIndex].commands[+commandKey].points[pointKey] =
+            pointExec(
+              svg.paths[pathIndex].commands[+commandKey].points[pointKey]
+            )
         })
       }
     }
