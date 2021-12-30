@@ -82,6 +82,7 @@ export class Path {
 
   public translate(po: PointObject): void {
     for (let i = 0; i < this.commands.length; i += 1) {
+      if (isRelativeCommand(this.commands[i])) continue
       this.commands[i].translate(po)
     }
   }
