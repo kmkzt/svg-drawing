@@ -1,6 +1,6 @@
 import { roundUp, camel2kebab } from '../utils'
-import type { Path } from '../svg'
 import type {
+  PathClass,
   AnimationOption,
   FrameAnimation,
   AnimateAttribute,
@@ -8,15 +8,15 @@ import type {
 } from '../types'
 
 const createAnimateAttributeValues = (
-  animationPaths: (Path | undefined)[],
+  animationPaths: (PathClass | undefined)[],
   attributeName: string,
   defaultValue: string
 ): string[] =>
   animationPaths.map((p) => p?.attrs[attributeName] || defaultValue)
 
 const createAnimateCommandValues = (
-  animationPaths: (Path | undefined)[],
-  originPath: Path
+  animationPaths: (PathClass | undefined)[],
+  originPath: PathClass
 ): string[] =>
   animationPaths.map(
     (p) => p?.getCommandString() || originPath.commands[0].toString()
@@ -24,8 +24,8 @@ const createAnimateCommandValues = (
 
 export class Animation {
   public ms: number
-  public paths: Path[]
-  public generator?: Generator<Path[], void, unknown>
+  public paths: PathClass[]
+  public generator?: Generator<PathClass[], void, unknown>
   private _frame: FrameAnimation | null = null
   private _repeatCount?: number
   constructor({ ms }: AnimationOption = { ms: 60 }) {
@@ -52,7 +52,7 @@ export class Animation {
     this.generator = this.setupGenerator()
   }
 
-  public getFramePaths(key: number): Path[] {
+  public getFramePaths(key: number): PathClass[] {
     const paths = this.paths.map((p) => p.clone())
 
     if (!paths.length || !this._frame) return paths
@@ -81,7 +81,7 @@ export class Animation {
     }
   }
 
-  public initialize(paths: Path[]) {
+  public initialize(paths: PathClass[]) {
     this.paths = paths.map((p) => p.clone())
     this.generator = this.setupGenerator()
     return this
@@ -93,7 +93,7 @@ export class Animation {
     const loop = this._frame.loops
     const frameLoop = Array(this._frame.loops).fill(null)
 
-    const animPathsList: Path[][] = frameLoop.map((_: any, i: number) =>
+    const animPathsList: PathClass[][] = frameLoop.map((_: any, i: number) =>
       this.getFramePaths(i)
     )
 

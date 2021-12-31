@@ -4,38 +4,44 @@ import {
   isRelativeCommand,
   toAbsoluteCommand,
 } from './command'
-import type { Command, PathAttributes, PointObject, PathObject } from '../types'
+import type {
+  PathClass,
+  CommandClass,
+  PathAttributes,
+  PointObject,
+  PathObject,
+} from '../types'
 
 /**
  * @todo: refactor command. The following commands are not supported.
  *
  * Cannot support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
  */
-export class Path {
+export class Path implements PathClass {
   private static index = 0
   private static genIndex = () => (Path.index += 1)
-  public commands: Command[] = []
+  public commands: CommandClass[] = []
   public key: string
   constructor(public attrs: PathAttributes = {}, _key?: string) {
     this.key = _key || `p${Path.genIndex()}`
   }
 
   public scale(r: number): this {
-    this.commands = this.commands.map((c: Command) => c.scale(r))
+    this.commands = this.commands.map((c: CommandClass) => c.scale(r))
     return this
   }
 
   public scaleX(r: number): this {
-    this.commands = this.commands.map((c: Command) => c.scaleX(r))
+    this.commands = this.commands.map((c: CommandClass) => c.scaleX(r))
     return this
   }
 
   public scaleY(r: number): this {
-    this.commands = this.commands.map((c: Command) => c.scaleY(r))
+    this.commands = this.commands.map((c: CommandClass) => c.scaleY(r))
     return this
   }
 
-  public addCommand(param: Command | Command[]): this {
+  public addCommand(param: CommandClass | CommandClass[]): this {
     if (Array.isArray(param)) {
       this.commands.push(...param)
     } else {
@@ -52,7 +58,7 @@ export class Path {
   public getCommandString(): string {
     return (
       this.commands
-        ?.map((com: Command, _i: number) => com.toString())
+        ?.map((com: CommandClass, _i: number) => com.toString())
         .join(' ')
         .trim() || ''
     )
@@ -69,22 +75,27 @@ export class Path {
     }
   }
 
-  public setAttributes(attrs: PathAttributes) {
+  public setAttributes(attrs: PathAttributes): this {
     this.attrs = attrs
+
+    return this
   }
 
-  public updateAttributes(attrs: PathAttributes) {
+  public updateAttributes(attrs: PathAttributes): this {
     this.attrs = {
       ...this.attrs,
       ...attrs,
     }
+
+    return this
   }
 
-  public translate(po: PointObject): void {
+  public translate(po: PointObject): this {
     for (let i = 0; i < this.commands.length; i += 1) {
       if (isRelativeCommand(this.commands[i])) continue
-      this.commands[i].translate(po)
+      this.commands[i] = this.commands[i].translate(po)
     }
+    return this
   }
 
   public clone(): Path {
@@ -97,7 +108,7 @@ export class Path {
   }
 }
 
-export const toRelativePath = (path: Path): Path => {
+export const toRelativePath = (path: PathClass): PathClass => {
   let basePoint = path.commands[0].point
   const upd = path.clone()
   upd.commands = [path.commands[0]]
@@ -122,7 +133,7 @@ export const toRelativePath = (path: Path): Path => {
   return upd
 }
 
-export const toAbsolutePath = (path: Path): Path => {
+export const toAbsolutePath = (path: PathClass): PathClass => {
   let basePoint = path.commands[0].point
   const upd = path.clone()
   upd.commands = [path.commands[0]]

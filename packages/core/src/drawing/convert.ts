@@ -1,6 +1,6 @@
 import { Point, Move, Line, Curve, Close } from '../svg'
 import type {
-  Command,
+  CommandClass,
   PointObject,
   ConvertOption,
   CreateCommand,
@@ -44,7 +44,7 @@ export class BezierCurve implements GenerateCommandsConverter {
     p2: PointObject,
     p3: PointObject,
     p4: PointObject
-  ): Command {
+  ): CommandClass {
     const value = distance({ prev: p2, next: p3 }) * this.ratio
     const vPrev = Point.fromVector({
       degrees: calculateDegrees({ prev: p1, next: p3 }),
@@ -60,8 +60,8 @@ export class BezierCurve implements GenerateCommandsConverter {
     return new Curve([cPrev, cNext, new Point(p3.x, p3.y)])
   }
 
-  public create(p: PointObject[]): Command[] {
-    const commands: Command[] = []
+  public create(p: PointObject[]): CommandClass[] {
+    const commands: CommandClass[] = []
     if (p.length < 3) {
       return createLineCommands(p)
     }
@@ -83,7 +83,7 @@ export class BezierCurve implements GenerateCommandsConverter {
   }
 }
 
-export const closeCommands = (commands: Command[]): Command[] => [
+export const closeCommands = (commands: CommandClass[]): CommandClass[] => [
   ...commands,
   new Close(),
 ]

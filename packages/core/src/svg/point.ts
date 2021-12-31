@@ -1,4 +1,4 @@
-import type { PointObject } from '../types'
+import type { PointClass, PointObject } from '../types'
 
 /**
  * Maximum number of decimal places is 5
@@ -8,7 +8,7 @@ import type { PointObject } from '../types'
 const coeffecient = 100000
 const roundNumber = (num: number) => Math.round(num * coeffecient) / coeffecient
 
-export class Point implements PointObject {
+export class Point implements PointClass {
   private _x: number
   private _y: number
   constructor(x: number, y: number) {
@@ -32,27 +32,27 @@ export class Point implements PointObject {
     return Math.sqrt(Math.pow(this._x, 2.0) + Math.pow(this._y, 2.0))
   }
 
-  public scale(r: number): Point {
+  public scale(r: number) {
     return new Point(this._x * r, this._y * r)
   }
 
-  public scaleX(r: number): Point {
+  public scaleX(r: number) {
     return new Point(this._x * r, this._y)
   }
 
-  public scaleY(r: number): Point {
+  public scaleY(r: number) {
     return new Point(this._x, this._y * r)
   }
 
-  public add(p: PointObject): Point {
+  public add(p: PointObject) {
     return new Point(this._x + p.x, this._y + p.y)
   }
 
-  public sub(p: PointObject): Point {
+  public sub(p: PointObject) {
     return new Point(this._x - p.x, this._y - p.y)
   }
 
-  public eql(p: PointObject): boolean {
+  public eql(p: PointObject) {
     return this._x === p.x && this._y === p.y
   }
 

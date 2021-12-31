@@ -99,7 +99,7 @@ describe('Curve', () => {
         .point
     ).toMatchSnapshot()
   })
-  it.todo('points', () => {
+  it('points', () => {
     expect(
       new Curve([new Point(0.25, 0.25), new Point(0.75, 0.25), new Point(1, 1)])
         .points
@@ -152,7 +152,7 @@ describe('Curve', () => {
         .toString()
     ).toBe('C0.25 0.5 0.75 0.5 1 2')
   })
-  it.todo('translate', () => {
+  it('translate', () => {
     const curve = new Curve([
       new Point(0.25, 0.25),
       new Point(0.75, 0.25),
@@ -232,7 +232,7 @@ describe('RelativeMove', () => {
   it('scaleY', () => {
     expect(new RelativeMove(new Point(1, 1)).scaleY(2).toString()).toBe('m1 2')
   })
-  it.todo('translate', () => {
+  it('translate', () => {
     const move = new RelativeMove(new Point(1, 1))
     move.translate({ x: 1, y: 1 })
 
@@ -272,7 +272,7 @@ describe('RelativeLine', () => {
   it('scaleY', () => {
     expect(new RelativeLine(new Point(1, 1)).scaleY(2).toString()).toBe('l1 2')
   })
-  it.todo('translate', () => {
+  it('translate', () => {
     const move = new RelativeLine(new Point(1, 1))
     move.translate({ x: 1, y: 1 })
 
@@ -370,7 +370,7 @@ describe('RelativeCurve', () => {
         .toString()
     ).toBe('c0.25 0.5 0.75 0.5 1 2')
   })
-  it.todo('translate', () => {
+  it('translate', () => {
     const curve = new RelativeCurve([
       new Point(0.25, 0.25),
       new Point(0.75, 0.25),

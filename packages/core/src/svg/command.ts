@@ -1,17 +1,18 @@
 import { Point } from './point'
 import { roundUp } from '../utils'
 import type {
-  Command,
+  CommandClass,
   CommandType,
   OtherCommandType,
   PointObject,
+  PointClass,
   AbsoluteCommandType,
   RelativeCommandType,
 } from '../types'
 
 /** @deprecated */
 export class OtherCommand<T extends OtherCommandType>
-  implements Command<OtherCommandType>
+  implements CommandClass<OtherCommandType>
 {
   static Types = {
     /**
@@ -55,12 +56,12 @@ export class OtherCommand<T extends OtherCommandType>
   // TODO: Convert data format to number array.
   constructor(public type: T, public values: number[] = []) {}
 
-  public set points(p: Point[]) {
+  public set points(p: PointClass[]) {
     if (!p) return
     this.values = p.reduce((acc: number[], p) => [...acc, p.x, p.y], [])
   }
 
-  public get points(): Point[] {
+  public get points() {
     return this.values.reduce(
       (acc: Point[], _, i: number) =>
         i % 2 ? acc : [...acc, new Point(this.values[i - 1], this.values[i])],
@@ -87,7 +88,7 @@ export class OtherCommand<T extends OtherCommandType>
   public scaleX(r: number) {
     return new OtherCommand(
       this.type,
-      this.points.reduce((res: number[], po: Point) => {
+      this.points.reduce((res: number[], po: PointClass) => {
         const upd = po.scale(r)
         return [...res, upd.x, upd.y]
       }, [])
@@ -97,7 +98,7 @@ export class OtherCommand<T extends OtherCommandType>
   public scaleY(r: number) {
     return new OtherCommand(
       this.type,
-      this.points.reduce((res: number[], po: Point) => {
+      this.points.reduce((res: number[], po: PointClass) => {
         const upd = po.scaleY(r)
         return [...res, upd.x, upd.y]
       }, [])
@@ -109,8 +110,9 @@ export class OtherCommand<T extends OtherCommandType>
   }
 
   public translate(p: PointObject) {
-    if (OtherCommand.Types.a === this.type) return
+    if (OtherCommand.Types.a === this.type) return this
     this.points = this.points.map((po) => po.add(p))
+    return this
   }
 
   public static validTypes(t: any): t is OtherCommandType {
@@ -123,11 +125,11 @@ export class OtherCommand<T extends OtherCommandType>
  *
  * `m 0 0`
  */
-export class RelativeMove implements Command<'m'> {
+export class RelativeMove implements CommandClass<'m'> {
   public readonly type = 'm'
   public readonly relative = false
-  public points: [Point]
-  constructor(point: Point) {
+  public points: [PointClass]
+  constructor(point: PointClass) {
     this.points = [point]
   }
 
@@ -135,7 +137,7 @@ export class RelativeMove implements Command<'m'> {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[0]
   }
 
@@ -144,7 +146,7 @@ export class RelativeMove implements Command<'m'> {
   }
 
   public translate(p: PointObject) {
-    return
+    return new RelativeMove(this.point.add(p))
   }
 
   public scale(r: number) {
@@ -169,10 +171,10 @@ export class RelativeMove implements Command<'m'> {
  *
  * `M 0 0`
  */
-export class Move implements Command<'M'> {
+export class Move implements CommandClass<'M'> {
   public readonly type = 'M'
-  public points: [Point]
-  constructor(point: Point) {
+  public points: [PointClass]
+  constructor(point: PointClass) {
     this.points = [point]
   }
 
@@ -180,7 +182,7 @@ export class Move implements Command<'M'> {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[0]
   }
 
@@ -189,7 +191,7 @@ export class Move implements Command<'M'> {
   }
 
   public translate(p: PointObject) {
-    this.points = this.points.map((po) => po.add(p)) as [Point]
+    return new Move(this.point.add(p))
   }
 
   public scale(r: number) {
@@ -214,10 +216,10 @@ export class Move implements Command<'M'> {
  *
  * `l 0 0`
  */
-export class RelativeLine implements Command<'l'> {
+export class RelativeLine implements CommandClass<'l'> {
   public readonly type = 'l'
-  public points: [Point]
-  constructor(point: Point) {
+  public points: [PointClass]
+  constructor(point: PointClass) {
     this.points = [point]
   }
 
@@ -225,7 +227,7 @@ export class RelativeLine implements Command<'l'> {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[0]
   }
 
@@ -234,23 +236,23 @@ export class RelativeLine implements Command<'l'> {
   }
 
   public translate(p: PointObject) {
-    this.points = this.points.map((po) => po.add(p)) as [Point]
+    return new RelativeLine(this.point.add(p))
   }
 
   public scale(r: number) {
-    return new RelativeLine(this.points[0].scale(r))
+    return new RelativeLine(this.point.scale(r))
   }
 
   public scaleX(r: number) {
-    return new RelativeLine(this.points[0].scaleX(r))
+    return new RelativeLine(this.point.scaleX(r))
   }
 
   public scaleY(r: number) {
-    return new RelativeLine(this.points[0].scaleY(r))
+    return new RelativeLine(this.point.scaleY(r))
   }
 
   public clone() {
-    return new RelativeLine(this.points[0].clone())
+    return new RelativeLine(this.point.clone())
   }
 }
 
@@ -259,10 +261,10 @@ export class RelativeLine implements Command<'l'> {
  *
  * `L 0 0`
  */
-export class Line implements Command<'L'> {
+export class Line implements CommandClass<'L'> {
   public readonly type = 'L'
-  public points: [Point]
-  constructor(point: Point) {
+  public points: [PointClass]
+  constructor(point: PointClass) {
     this.points = [point]
   }
 
@@ -270,7 +272,7 @@ export class Line implements Command<'L'> {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[0]
   }
 
@@ -279,23 +281,23 @@ export class Line implements Command<'L'> {
   }
 
   public translate(p: PointObject) {
-    this.points = this.points.map((po) => po.add(p)) as [Point]
+    return new Line(this.point.add(p))
   }
 
   public scale(r: number) {
-    return new Line(this.points[0].scale(r))
+    return new Line(this.point.scale(r))
   }
 
   public scaleX(r: number) {
-    return new Line(this.points[0].scaleX(r))
+    return new Line(this.point.scaleX(r))
   }
 
   public scaleY(r: number) {
-    return new Line(this.points[0].scaleY(r))
+    return new Line(this.point.scaleY(r))
   }
 
   public clone() {
-    return new Line(this.points[0].clone())
+    return new Line(this.point.clone())
   }
 }
 
@@ -304,15 +306,15 @@ export class Line implements Command<'L'> {
  *
  * `c 1 1 2 2 3 3`
  */
-export class RelativeCurve implements Command<'c'> {
+export class RelativeCurve implements CommandClass<'c'> {
   public readonly type = 'c'
-  constructor(public points: [Point, Point, Point]) {}
+  constructor(public points: [PointClass, PointClass, PointClass]) {}
 
   public get values(): number[] {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[2]
   }
 
@@ -321,30 +323,48 @@ export class RelativeCurve implements Command<'c'> {
   }
 
   public translate(p: PointObject) {
-    this.points = this.points.map((po) => po.add(p)) as [Point, Point, Point]
+    return new RelativeCurve(
+      this.points.map((po) => po.add(p)) as [PointClass, PointClass, PointClass]
+    )
   }
 
   public scale(r: number) {
     return new RelativeCurve(
-      this.points.map((p) => p.scaleX(r)) as [Point, Point, Point]
+      this.points.map((p) => p.scaleX(r)) as [
+        PointClass,
+        PointClass,
+        PointClass
+      ]
     )
   }
 
   public scaleX(r: number) {
     return new RelativeCurve(
-      this.points.map((p) => p.scaleX(r)) as [Point, Point, Point]
+      this.points.map((p) => p.scaleX(r)) as [
+        PointClass,
+        PointClass,
+        PointClass
+      ]
     )
   }
 
   public scaleY(r: number) {
     return new RelativeCurve(
-      this.points.map((p) => p.scaleY(r)) as [Point, Point, Point]
+      this.points.map((p) => p.scaleY(r)) as [
+        PointClass,
+        PointClass,
+        PointClass
+      ]
     )
   }
 
   public clone() {
     return new RelativeCurve(
-      this.points.map((po) => po.clone()) as [Point, Point, Point]
+      this.points.map((po) => po.clone()) as [
+        PointClass,
+        PointClass,
+        PointClass
+      ]
     )
   }
 }
@@ -354,9 +374,9 @@ export class RelativeCurve implements Command<'c'> {
  *
  * `C 1 1 2 2 3 3`
  */
-export class Curve implements Command<'C'> {
+export class Curve implements CommandClass<'C'> {
   public readonly type = 'C'
-  constructor(public points: [Point, Point, Point]) {}
+  constructor(public points: [PointClass, PointClass, PointClass]) {}
 
   public get values(): [number, number, number, number, number, number] {
     return this.points.reduce(
@@ -365,7 +385,7 @@ export class Curve implements Command<'C'> {
     ) as [number, number, number, number, number, number]
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[2]
   }
 
@@ -374,29 +394,41 @@ export class Curve implements Command<'C'> {
   }
 
   public translate(p: PointObject) {
-    this.points = this.points.map((po) => po.add(p)) as [Point, Point, Point]
+    return new Curve(
+      this.points.map((po) => po.add(p)) as [PointClass, PointClass, PointClass]
+    )
   }
 
   public scale(r: number) {
     return new Curve(
-      this.points.map((p) => p.scale(r)) as [Point, Point, Point]
+      this.points.map((p) => p.scale(r)) as [PointClass, PointClass, PointClass]
     )
   }
 
   public scaleX(r: number) {
     return new Curve(
-      this.points.map((p) => p.scaleX(r)) as [Point, Point, Point]
+      this.points.map((p) => p.scaleX(r)) as [
+        PointClass,
+        PointClass,
+        PointClass
+      ]
     )
   }
 
   public scaleY(r: number) {
     return new Curve(
-      this.points.map((p) => p.scaleY(r)) as [Point, Point, Point]
+      this.points.map((p) => p.scaleY(r)) as [
+        PointClass,
+        PointClass,
+        PointClass
+      ]
     )
   }
 
   public clone() {
-    return new Curve(this.points.map((p) => p.clone()) as [Point, Point, Point])
+    return new Curve(
+      this.points.map((p) => p.clone()) as [PointClass, PointClass, PointClass]
+    )
   }
 }
 
@@ -405,9 +437,9 @@ export class Curve implements Command<'C'> {
  *
  * `S 10 60 10 30`
  */
-export class ShortcutCurve implements Command<'S'> {
+export class ShortcutCurve implements CommandClass<'S'> {
   public readonly type = 'S'
-  constructor(public points: [Point, Point]) {}
+  constructor(public points: [PointClass, PointClass]) {}
 
   public get values(): [number, number, number, number] {
     return this.points.reduce(
@@ -416,7 +448,7 @@ export class ShortcutCurve implements Command<'S'> {
     ) as [number, number, number, number]
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[1]
   }
 
@@ -425,30 +457,32 @@ export class ShortcutCurve implements Command<'S'> {
   }
 
   public translate(p: PointObject) {
-    this.points = this.points.map((po) => po.add(p)) as [Point, Point]
+    return new ShortcutCurve(
+      this.points.map((po) => po.add(p)) as [PointClass, PointClass]
+    )
   }
 
   public scale(r: number) {
     return new ShortcutCurve(
-      this.points.map((p) => p.scale(r)) as [Point, Point]
+      this.points.map((p) => p.scale(r)) as [PointClass, PointClass]
     )
   }
 
   public scaleX(r: number) {
     return new ShortcutCurve(
-      this.points.map((p) => p.scaleX(r)) as [Point, Point]
+      this.points.map((p) => p.scaleX(r)) as [PointClass, PointClass]
     )
   }
 
   public scaleY(r: number) {
     return new ShortcutCurve(
-      this.points.map((p) => p.scaleY(r)) as [Point, Point]
+      this.points.map((p) => p.scaleY(r)) as [PointClass, PointClass]
     )
   }
 
   public clone() {
     return new ShortcutCurve(
-      this.points.map((p) => p.clone()) as [Point, Point]
+      this.points.map((p) => p.clone()) as [PointClass, PointClass]
     )
   }
 }
@@ -458,9 +492,9 @@ export class ShortcutCurve implements Command<'S'> {
  *
  * `s 10 60 10 30`
  */
-export class RelativeShortcutCurve implements Command<'s'> {
+export class RelativeShortcutCurve implements CommandClass<'s'> {
   public readonly type = 's'
-  constructor(public points: [Point, Point]) {}
+  constructor(public points: [PointClass, PointClass]) {}
 
   public get values(): [number, number, number, number] {
     return this.points.reduce(
@@ -469,7 +503,7 @@ export class RelativeShortcutCurve implements Command<'s'> {
     ) as [number, number, number, number]
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[1]
   }
 
@@ -478,30 +512,32 @@ export class RelativeShortcutCurve implements Command<'s'> {
   }
 
   public translate(p: PointObject) {
-    this.points = this.points.map((po) => po.add(p)) as [Point, Point]
+    return new RelativeShortcutCurve(
+      this.points.map((po) => po.add(p)) as [PointClass, PointClass]
+    )
   }
 
   public scale(r: number) {
     return new RelativeShortcutCurve(
-      this.points.map((p) => p.scaleX(r)) as [Point, Point]
+      this.points.map((p) => p.scaleX(r)) as [PointClass, PointClass]
     )
   }
 
   public scaleX(r: number) {
     return new RelativeShortcutCurve(
-      this.points.map((p) => p.scaleX(r)) as [Point, Point]
+      this.points.map((p) => p.scaleX(r)) as [PointClass, PointClass]
     )
   }
 
   public scaleY(r: number) {
     return new RelativeShortcutCurve(
-      this.points.map((p) => p.scaleY(r)) as [Point, Point]
+      this.points.map((p) => p.scaleY(r)) as [PointClass, PointClass]
     )
   }
 
   public clone() {
     return new RelativeShortcutCurve(
-      this.points.map((po) => po.clone()) as [Point, Point]
+      this.points.map((po) => po.clone()) as [PointClass, PointClass]
     )
   }
 }
@@ -512,9 +548,9 @@ export class RelativeShortcutCurve implements Command<'s'> {
  * Q 10 60 10 30
  */
 
-export class QuadraticCurve implements Command<'Q'> {
+export class QuadraticCurve implements CommandClass<'Q'> {
   public readonly type = 'Q'
-  constructor(public points: [Point, Point]) {}
+  constructor(public points: [PointClass, PointClass]) {}
 
   public get values(): [number, number, number, number] {
     return this.points.reduce(
@@ -523,7 +559,7 @@ export class QuadraticCurve implements Command<'Q'> {
     ) as [number, number, number, number]
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[1]
   }
 
@@ -532,30 +568,32 @@ export class QuadraticCurve implements Command<'Q'> {
   }
 
   public translate(p: PointObject) {
-    this.points = this.points.map((po) => po.add(p)) as [Point, Point]
+    return new QuadraticCurve(
+      this.points.map((po) => po.add(p)) as [PointClass, PointClass]
+    )
   }
 
   public scale(r: number) {
     return new QuadraticCurve(
-      this.points.map((p) => p.scale(r)) as [Point, Point]
+      this.points.map((p) => p.scale(r)) as [PointClass, PointClass]
     )
   }
 
   public scaleX(r: number) {
     return new QuadraticCurve(
-      this.points.map((p) => p.scaleX(r)) as [Point, Point]
+      this.points.map((p) => p.scaleX(r)) as [PointClass, PointClass]
     )
   }
 
   public scaleY(r: number) {
     return new QuadraticCurve(
-      this.points.map((p) => p.scaleY(r)) as [Point, Point]
+      this.points.map((p) => p.scaleY(r)) as [PointClass, PointClass]
     )
   }
 
   public clone() {
     return new QuadraticCurve(
-      this.points.map((p) => p.clone()) as [Point, Point]
+      this.points.map((p) => p.clone()) as [PointClass, PointClass]
     )
   }
 }
@@ -565,9 +603,9 @@ export class QuadraticCurve implements Command<'Q'> {
  *
  * `q 10 60 10 30`
  */
-export class RelativeQuadraticCurve implements Command<'q'> {
+export class RelativeQuadraticCurve implements CommandClass<'q'> {
   public readonly type = 'q'
-  constructor(public points: [Point, Point]) {}
+  constructor(public points: [PointClass, PointClass]) {}
 
   public get values(): [number, number, number, number] {
     return this.points.reduce(
@@ -576,7 +614,7 @@ export class RelativeQuadraticCurve implements Command<'q'> {
     ) as [number, number, number, number]
   }
 
-  public get point(): Point {
+  public get point(): PointClass {
     return this.points[1]
   }
 
@@ -585,30 +623,32 @@ export class RelativeQuadraticCurve implements Command<'q'> {
   }
 
   public translate(p: PointObject) {
-    this.points = this.points.map((po) => po.add(p)) as [Point, Point]
+    return new RelativeQuadraticCurve(
+      this.points.map((po) => po.add(p)) as [PointClass, PointClass]
+    )
   }
 
   public scale(r: number) {
     return new RelativeQuadraticCurve(
-      this.points.map((p) => p.scaleX(r)) as [Point, Point]
+      this.points.map((p) => p.scaleX(r)) as [PointClass, PointClass]
     )
   }
 
   public scaleX(r: number) {
     return new RelativeQuadraticCurve(
-      this.points.map((p) => p.scaleX(r)) as [Point, Point]
+      this.points.map((p) => p.scaleX(r)) as [PointClass, PointClass]
     )
   }
 
   public scaleY(r: number) {
     return new RelativeQuadraticCurve(
-      this.points.map((p) => p.scaleY(r)) as [Point, Point]
+      this.points.map((p) => p.scaleY(r)) as [PointClass, PointClass]
     )
   }
 
   public clone() {
     return new RelativeQuadraticCurve(
-      this.points.map((po) => po.clone()) as [Point, Point]
+      this.points.map((po) => po.clone()) as [PointClass, PointClass]
     )
   }
 }
@@ -618,7 +658,7 @@ export class RelativeQuadraticCurve implements Command<'q'> {
  *
  * 'z'
  */
-export class Close implements Command<'z'> {
+export class Close implements CommandClass<'z'> {
   public readonly type = 'z'
 
   public get values(): [] {
@@ -638,7 +678,7 @@ export class Close implements Command<'z'> {
   }
 
   public translate(_p: PointObject) {
-    return
+    return new Close()
   }
 
   public scale(_r: number) {
@@ -661,7 +701,7 @@ export class Close implements Command<'z'> {
 export const createCommand = (
   type: CommandType,
   values: number[] = []
-): Command => {
+): CommandClass => {
   switch (type) {
     case 'M': {
       return new Move(new Point(values[0], values[1]))
@@ -725,28 +765,28 @@ export const createCommand = (
 }
 
 export const isAbsoluteCommand = (
-  command: Command
-): command is Command<AbsoluteCommandType> =>
+  command: CommandClass
+): command is CommandClass<AbsoluteCommandType> =>
   ['M', 'L', 'C', 'Q', 'S'].includes(command.type)
 
 export const isRelativeCommand = (
-  command: Command
-): command is Command<RelativeCommandType> =>
+  command: CommandClass
+): command is CommandClass<RelativeCommandType> =>
   ['m', 'l', 'c', 'q', 's'].includes(command.type)
 
 export const isCurveCommand = (
-  command: Command
-): command is Command<'C' | 'c'> => ['c', 'C'].includes(command.type)
+  command: CommandClass
+): command is CommandClass<'C' | 'c'> => ['c', 'C'].includes(command.type)
 
 export const isOtherCommand = (
-  command: Command
-): command is Command<OtherCommandType> =>
+  command: CommandClass
+): command is CommandClass<OtherCommandType> =>
   ['h', 'H', 'v', 'V', 'a', 'A', 'z', 'Z'].includes(command.type)
 
 export const toRelativeCommand = (
-  command: Command<AbsoluteCommandType>,
+  command: CommandClass<AbsoluteCommandType>,
   basePoint: PointObject
-): Command<RelativeCommandType> => {
+): CommandClass<RelativeCommandType> => {
   switch (command.type) {
     case 'M':
       return new RelativeMove(command.point.sub(basePoint))
@@ -754,15 +794,19 @@ export const toRelativeCommand = (
       return new RelativeLine(command.point.sub(basePoint))
     case 'C':
       return new RelativeCurve(
-        command.points.map((p) => p.sub(basePoint)) as [Point, Point, Point]
+        command.points.map((p) => p.sub(basePoint)) as [
+          PointClass,
+          PointClass,
+          PointClass
+        ]
       )
     case 'Q':
       return new RelativeQuadraticCurve(
-        command.points.map((p) => p.sub(basePoint)) as [Point, Point]
+        command.points.map((p) => p.sub(basePoint)) as [PointClass, PointClass]
       )
     case 'S':
       return new RelativeShortcutCurve(
-        command.points.map((p) => p.sub(basePoint)) as [Point, Point]
+        command.points.map((p) => p.sub(basePoint)) as [PointClass, PointClass]
       )
     default:
       throw new Error('toRelativeCommand error')
@@ -770,9 +814,9 @@ export const toRelativeCommand = (
 }
 
 export const toAbsoluteCommand = (
-  command: Command<RelativeCommandType>,
+  command: CommandClass<RelativeCommandType>,
   basePoint: PointObject
-): Command<AbsoluteCommandType> => {
+): CommandClass<AbsoluteCommandType> => {
   switch (command.type) {
     case 'm':
       return new Move(command.point.add(basePoint))
@@ -780,15 +824,19 @@ export const toAbsoluteCommand = (
       return new Line(command.point.add(basePoint))
     case 'c':
       return new Curve(
-        command.points.map((p) => p.add(basePoint)) as [Point, Point, Point]
+        command.points.map((p) => p.add(basePoint)) as [
+          PointClass,
+          PointClass,
+          PointClass
+        ]
       )
     case 'q':
       return new QuadraticCurve(
-        command.points.map((p) => p.add(basePoint)) as [Point, Point]
+        command.points.map((p) => p.add(basePoint)) as [PointClass, PointClass]
       )
     case 's':
       return new ShortcutCurve(
-        command.points.map((p) => p.add(basePoint)) as [Point, Point]
+        command.points.map((p) => p.add(basePoint)) as [PointClass, PointClass]
       )
     default:
       throw new Error('toAbsoluteCommand error')

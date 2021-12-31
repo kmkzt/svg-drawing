@@ -1,8 +1,7 @@
-import type { SvgObject, SvgOption } from '../types'
-import type { Path } from './path'
+import type { SvgObject, SvgOption, PathClass } from '../types'
 
 export class Svg {
-  public paths: Path[]
+  public paths: PathClass[]
   public width: number
   public height: number
   public background?: string
@@ -48,7 +47,7 @@ export class Svg {
     return this
   }
 
-  public addPath(pa: Path | Path[]): this {
+  public addPath(pa: PathClass | PathClass[]): this {
     if (Array.isArray(pa)) {
       this.paths.push(...pa)
     } else {
@@ -57,12 +56,12 @@ export class Svg {
     return this
   }
 
-  public deletePath(deletePath: Path): this {
+  public deletePath(deletePath: PathClass): this {
     this.paths = this.paths.filter((path) => path.key !== deletePath.key)
     return this
   }
 
-  public clonePaths(): Path[] {
+  public clonePaths(): PathClass[] {
     return this.paths.map((p) => p.clone())
   }
 

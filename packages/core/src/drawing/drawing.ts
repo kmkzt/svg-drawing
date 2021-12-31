@@ -1,10 +1,11 @@
 import { isAlmostSameNumber } from '../utils'
-import type { Path, Svg } from '../svg'
+import type { Svg } from '../svg'
 import type {
   DrawHandler,
   PointObject,
   DrawFactory,
   ResizeCallback,
+  PathClass,
 } from '../types'
 import type { BasicDrawFactory } from './factory'
 import type { PencilHandler } from './handler'
@@ -14,7 +15,7 @@ export class Drawing<
   P extends DrawFactory = BasicDrawFactory,
   H extends DrawHandler = PencilHandler
 > {
-  private _drawPath: Path | null
+  private _drawPath: PathClass | null
   private _drawPoints: PointObject[]
   constructor(
     public svg: S,
@@ -41,14 +42,14 @@ export class Drawing<
     })
   }
 
-  public clear(): Path[] {
+  public clear(): PathClass[] {
     const paths = this.svg.paths
     this.svg.paths = []
     this.update(this.svg)
     return paths
   }
 
-  public undo(): Path | undefined {
+  public undo(): PathClass | undefined {
     const path = this.svg.paths.pop()
     this.update(this.svg)
     return path
@@ -101,7 +102,7 @@ export class Drawing<
     this._createCommand()
   }
 
-  private _createDrawPath(): Path {
+  private _createDrawPath(): PathClass {
     this._drawPoints = []
     return this.pathFactory.createPath()
   }

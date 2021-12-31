@@ -4,7 +4,8 @@ import type {
   CreateCommand,
   DrawFactory,
   PathAttributes,
-  Command,
+  CommandClass,
+  PathClass,
 } from '../types'
 
 export class BasicDrawFactory implements DrawFactory {
@@ -19,7 +20,7 @@ export class BasicDrawFactory implements DrawFactory {
     }
   }
 
-  createPath(): Path {
+  createPath(): PathClass {
     return new Path({
       ...this.attrs,
       ...this.curveAttribute,
@@ -28,7 +29,7 @@ export class BasicDrawFactory implements DrawFactory {
 
   /** @todo Refactor */
   get createCommand(): CreateCommand {
-    const toRelativeCommand = (commands: Command[]): Command[] =>
+    const toRelativeCommand = (commands: CommandClass[]): CommandClass[] =>
       toRelativePath(new Path().addCommand(commands)).commands
 
     const createCommand = this.opts.curve

@@ -1,5 +1,3 @@
-import type { Path, Point } from './svg'
-
 /** Svg Path JSON TODO: improve key types */
 export type PathAttributes = {
   [camelCase: string]: string | undefined
@@ -11,6 +9,23 @@ export type PathObject = {
   attributes: PathAttributes
 }
 
+export interface PathClass {
+  key: string
+  attrs: PathAttributes
+  commands: CommandClass[]
+  scale: (r: number) => this
+  scaleX: (r: number) => this
+  scaleY: (r: number) => this
+  addCommand: (params: CommandClass | CommandClass[]) => this
+  deleteCommand: (i: number) => this
+  translate: (p: PointObject) => this
+  setAttributes: (attr: PathAttributes) => this
+  updateAttributes: (attr: PathAttributes) => this
+  clone: () => PathClass
+  getCommandString: () => string
+  toJson: () => PathObject
+}
+
 /** Svg JSON */
 export type SvgObject = {
   width: number
@@ -20,9 +35,24 @@ export type SvgObject = {
 }
 
 /** Point Object */
-export interface PointObject {
+export type PointObject = Readonly<{
   x: number
   y: number
+}>
+
+export interface PointClass {
+  readonly x: number
+  readonly y: number
+  degrees: number
+  absoluteValue: number
+  scale: (r: number) => PointClass
+  scaleX: (r: number) => PointClass
+  scaleY: (r: number) => PointClass
+  add: (p: PointObject) => PointClass
+  sub: (p: PointObject) => PointClass
+  eql: (p: PointObject) => boolean
+  clone: () => PointClass
+  toJson: () => PointObject
 }
 
 /** @todo Be used `factory.createCommand` */
@@ -43,24 +73,24 @@ export type CommandType =
   | OtherCommandType
 
 type PointsLengthMap<T = CommandType> = T extends OtherCommandType
-  ? Point[]
+  ? PointClass[]
   : T extends 'm' | 'M' | 'l' | 'L'
-  ? [Point]
+  ? [PointClass]
   : T extends 'C' | 'c'
-  ? [Point, Point, Point]
-  : [Point, Point]
+  ? [PointClass, PointClass, PointClass]
+  : [PointClass, PointClass]
 
-export interface Command<T = CommandType> {
+export interface CommandClass<T = CommandType> {
   type: T
   values: number[]
   points: PointsLengthMap<T>
-  point: T extends OtherCommandType ? undefined : Point
+  point: T extends OtherCommandType ? undefined : PointClass
   toString: () => string
-  clone: () => Command<T>
-  scale: (r: number) => Command<T>
-  scaleX: (r: number) => Command<T>
-  scaleY: (r: number) => Command<T>
-  translate: (po: PointObject) => void
+  clone: () => CommandClass<T>
+  scale: (r: number) => CommandClass<T>
+  scaleX: (r: number) => CommandClass<T>
+  scaleY: (r: number) => CommandClass<T>
+  translate: (po: PointObject) => CommandClass<T>
 }
 
 export type CommandObject = {
@@ -128,7 +158,7 @@ export type DrawEventName = Extract<
 export type ClearListener = () => void
 
 export interface DrawFactory {
-  createPath: () => Path
+  createPath: () => PathClass
   createCommand: CreateCommand
 }
 
@@ -216,7 +246,7 @@ export type ResizeBoundingBoxBase = {
   point: PointObject
 }
 
-export type CreateCommand = (points: PointObject[]) => Command[]
+export type CreateCommand = (points: PointObject[]) => CommandClass[]
 
 export type AnimationOption = {
   ms: number
@@ -224,7 +254,7 @@ export type AnimationOption = {
 
 export interface FrameAnimation {
   loops: number
-  animation: (origin: Path[], key: number) => Path[]
+  animation: (origin: PathClass[], key: number) => PathClass[]
 }
 
 export type AnimateAttribute = {

@@ -1,6 +1,6 @@
 import { Path, Svg, createCommand } from './svg'
 import { kebab2camel } from './utils'
-import type { Command, CommandType } from './types'
+import type { CommandClass, CommandType } from './types'
 
 export const parseSVGString = (svgStr: string): Svg => {
   const svgEl: SVGSVGElement | null = new DOMParser()
@@ -40,13 +40,13 @@ export const parsePathElement = (pathEl: SVGPathElement): Path => {
   return path
 }
 
-export const parseCommandString = (d: string): Command[] => {
+export const parseCommandString = (d: string): CommandClass[] => {
   const commandsTypes = 'mlsqlhvcsqaz'
   // expect ['M 0 0 ', 'M', ' 0 0 ', ...]
   const regexp = new RegExp(`([${commandsTypes}])([^${commandsTypes}]*)`, 'gi')
 
   return Array.from(d.matchAll(regexp) || []).reduce(
-    (acc: Command<any>[], match: RegExpMatchArray, i) => {
+    (acc: CommandClass<any>[], match: RegExpMatchArray, i) => {
       const values: number[] =
         match[2]
           ?.split(/[,\s]/)

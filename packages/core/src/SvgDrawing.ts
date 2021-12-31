@@ -3,7 +3,7 @@ import { BasicDrawFactory } from './drawing/factory'
 import { PencilHandler } from './drawing/handler'
 import { Renderer } from './renderer'
 import { Svg } from './svg'
-import type { DrawHandler, DrawingOption, DrawFactory } from './types'
+import type { DrawingOption } from './types'
 
 /**
  * @example <caption>Default.</caption>

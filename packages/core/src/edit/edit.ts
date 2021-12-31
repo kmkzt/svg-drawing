@@ -1,6 +1,6 @@
 import { calculatePoint } from '../curve'
 import { Point, isCurveCommand, toAbsolutePath, toRelativePath } from '../svg'
-import type { Path, Svg } from '../svg'
+import type { Svg } from '../svg'
 import type {
   PointObject,
   EditVertex,
@@ -12,7 +12,9 @@ import type {
   ResizeBoundingBoxBase,
   SelectingCommands,
   SelectingPoints,
-  Command,
+  CommandClass,
+  PathClass,
+  PointClass,
 } from '../types'
 
 const genOutline = (points: PointObject[]) =>
@@ -320,9 +322,9 @@ export class EditSvg {
   }
 
   private exec(
-    pathExec: (path: Path) => Path,
-    commandExec?: (command: Command) => Command,
-    pointExec?: (point: Point) => Point
+    pathExec: (path: PathClass) => PathClass,
+    commandExec?: (command: CommandClass) => CommandClass,
+    pointExec?: (point: PointClass) => PointClass
   ): void {
     const svg = this.generateAbsolutePathSvg()
 
@@ -361,7 +363,7 @@ export class EditSvg {
 
 /** @todo Rename PathEdit ? */
 export class EditPath {
-  constructor(public path: Path, public selecting?: SelectingCommands) {}
+  constructor(public path: PathClass, public selecting?: SelectingCommands) {}
 
   private get absolutePath() {
     return toAbsolutePath(this.path)
