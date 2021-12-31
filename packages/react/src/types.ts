@@ -10,7 +10,7 @@ import type {
   SvgEditing,
   SelectIndex,
   SvgOption,
-  Path,
+  PathClass,
   Drawing,
   AnimationObject,
 } from '@svg-drawing/core'
@@ -85,7 +85,7 @@ export type UseAnimation = (arg: {
   onChangeAnimation: (obj: AnimationObject | null) => void
 }) => {
   instance: Animation
-  update: (paths: Path[]) => void
+  update: (paths: PathClass[]) => void
   clear: () => void
   setup: Animation['setup']
 }

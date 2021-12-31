@@ -9,7 +9,7 @@ import {
 } from '@svg-drawing/core'
 import { convertRGBAImage } from './utils/convertRGBAImage'
 import type { Rgba } from './palette'
-import type { Command, PathAttributes } from '@svg-drawing/core'
+import type { CommandClass, PathClass, PathAttributes } from '@svg-drawing/core'
 
 type ColorQuantization = number[][]
 // Edge node types ( ▓: this layer or 1; ░: not this layer or 0 )
@@ -37,8 +37,8 @@ type EdgeType =
 type EdgeLayer = EdgeType[][]
 
 interface PathInfo {
-  commands: Command[]
-  holeCommands: Command[]
+  commands: CommandClass[]
+  holeCommands: CommandClass[]
   holechildren: number[]
   isholepath: boolean
 }
@@ -560,8 +560,8 @@ export class ImgTrace {
 
   private _tracePath(path: PointInfo): PathInfo {
     let pcnt = 0
-    const comms: Command[] = []
-    const holes: Command[] = []
+    const comms: CommandClass[] = []
+    const holes: CommandClass[] = []
     while (pcnt < path.points.length) {
       // 5.1. Find sequences of points with only 2 segment types
       const segtype1: DirectionValue = path.points[pcnt].direction
@@ -618,7 +618,7 @@ export class ImgTrace {
     seqstart: number,
     seqend: number,
     isHolePath?: boolean
-  ): Command[] {
+  ): CommandClass[] {
     const ltres = this.ltres
     const qtres = this.qtres
     if (seqend > path.points.length || seqend < 0) {
@@ -724,7 +724,10 @@ export class ImgTrace {
     )
   }
 
-  private _complementCommand(info: PathInfo[], layerIndex: number): Command[] {
+  private _complementCommand(
+    info: PathInfo[],
+    layerIndex: number
+  ): CommandClass[] {
     const p = info[layerIndex]
     const complement = []
     for (let hcnt = 0; hcnt < p.holechildren.length; hcnt++) {
@@ -733,8 +736,8 @@ export class ImgTrace {
     return complement
   }
 
-  private _createPaths(pathLayer: PathInfo[][]): Path[] {
-    const result: Path[] = []
+  private _createPaths(pathLayer: PathInfo[][]): PathClass[] {
+    const result: PathClass[] = []
     for (let lcnt = 0; lcnt < pathLayer.length; lcnt++) {
       for (let pcnt = 0; pcnt < pathLayer[lcnt].length; pcnt++) {
         const layer = pathLayer[lcnt]

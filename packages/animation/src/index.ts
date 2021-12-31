@@ -1,7 +1,6 @@
 import { Point } from '@svg-drawing/core'
 import type {
-  Command,
-  Path,
+  PathClass,
   PathAttributes,
   FrameAnimation,
 } from '@svg-drawing/core'
@@ -16,9 +15,9 @@ export class ShakeFrame implements FrameAnimation {
     return Math.random() * this.range - this.range / 2
   }
 
-  public animation(paths: Path[]) {
+  public animation(paths: PathClass[]) {
     for (let i = 0; i < paths.length; i += 1) {
-      paths[i].commands = paths[i].commands.map((c: Command) => {
+      paths[i].commands = paths[i].commands.map((c) => {
         c.points = c.points.map((po) =>
           po.add(new Point(this.randomNumber(), this.randomNumber()))
         )
@@ -38,7 +37,7 @@ export class AttributeFrame implements FrameAnimation {
     return this.attributesList.length
   }
 
-  animation(paths: Path[], key: number) {
+  animation(paths: PathClass[], key: number) {
     const attr = this.attributesList[key]
     if (!attr) return paths
 
@@ -50,7 +49,7 @@ export class AttributeFrame implements FrameAnimation {
 }
 
 export class DrawFrame implements FrameAnimation {
-  constructor(private paths: Path[]) {
+  constructor(private paths: PathClass[]) {
     this.animation = this.animation.bind(this)
   }
 
@@ -58,7 +57,7 @@ export class DrawFrame implements FrameAnimation {
     return this.paths.reduce((acc, p) => acc + p.commands.length, 0)
   }
 
-  animation(paths: Path[], key: number) {
+  animation(paths: PathClass[], key: number) {
     let count = key
     const update = []
     for (let i = 0; i < paths.length; i += 1) {
