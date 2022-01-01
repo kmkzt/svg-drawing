@@ -79,7 +79,7 @@ export class Download {
     })
   }
 
-  private toBase64() {
+  public toBase64() {
     return `data:image/svg+xml;base64,${btoa(this.el.outerHTML)}`
   }
 

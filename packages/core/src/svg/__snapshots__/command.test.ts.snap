@@ -27,6 +27,34 @@ Point {
 }
 `;
 
+exports[`Curve points 1`] = `
+Array [
+  Point {
+    "_x": 0.25,
+    "_y": 0.25,
+  },
+  Point {
+    "_x": 0.75,
+    "_y": 0.25,
+  },
+  Point {
+    "_x": 1,
+    "_y": 1,
+  },
+]
+`;
+
+exports[`Curve values 1`] = `
+Array [
+  0.25,
+  0.25,
+  0.75,
+  0.25,
+  1,
+  1,
+]
+`;
+
 exports[`Line new Line() 1`] = `
 Line {
   "points": Array [
@@ -124,6 +152,34 @@ Point {
   "_x": 1,
   "_y": 1,
 }
+`;
+
+exports[`RelativeCurve points 1`] = `
+Array [
+  Point {
+    "_x": 0.25,
+    "_y": 0.25,
+  },
+  Point {
+    "_x": 0.75,
+    "_y": 0.25,
+  },
+  Point {
+    "_x": 1,
+    "_y": 1,
+  },
+]
+`;
+
+exports[`RelativeCurve values 1`] = `
+Array [
+  0.25,
+  0.25,
+  0.75,
+  0.25,
+  1,
+  1,
+]
 `;
 
 exports[`RelativeLine new RelativeLine() 1`] = `

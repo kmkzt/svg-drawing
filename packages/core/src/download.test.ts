@@ -1,6 +1,6 @@
-import { download, toBase64 } from './download'
+import { Download } from './download'
+import { svgObjectToElement } from './renderer'
 import { Svg, Path, Move, Point, Curve, Line, Close } from './svg'
-
 describe('download.ts', () => {
   const svg = new Svg({ width: 4, height: 4 })
     .addPath(
@@ -30,9 +30,10 @@ describe('download.ts', () => {
         .addCommand(new Line(new Point(3, 0)))
         .addCommand(new Close())
     )
+  const svgElement = svgObjectToElement(svg.toJson())
 
   it('toBase64', () => {
-    expect(toBase64(svg.toJson())).toMatchSnapshot()
+    expect(new Download(svgElement).toBase64()).toMatchSnapshot()
   })
 
   it('download', () => {
@@ -40,7 +41,7 @@ describe('download.ts', () => {
     const testDownload = (param: any): void => {
       expect(param).toMatchSnapshot()
     }
-    download(svg, { extension: 'svg' }, testDownload)
+    new Download(svgElement, testDownload).svg('download.svg')
   })
 
   it.skip('jpg download', (done) => { // eslint-disable-line
@@ -48,7 +49,7 @@ describe('download.ts', () => {
     const testDownload = (param: any): void => {
       expect(param).toMatchSnapshot()
     }
-    download(svg, { extension: 'jpg' }, testDownload)
+    new Download(svgElement, testDownload).jpg('download.jpg')
   }, 30000)
 
   it.skip('png download', (done) => { // eslint-disable-line
@@ -56,6 +57,6 @@ describe('download.ts', () => {
     const testDownload = (param: any): void => {
       expect(param).toMatchSnapshot()
     }
-    download(svg, { extension: 'png' }, testDownload)
+    new Download(svgElement, testDownload).png('download.png')
   }, 30000)
 })

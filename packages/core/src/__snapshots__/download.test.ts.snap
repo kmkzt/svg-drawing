@@ -4,7 +4,7 @@ exports[`download.ts download 1`] = `
 Object {
   "data": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0wIDAgQzAuMiAwLjIgMC42IDAuOCAxIDEgQzEuNCAxLjIgMS42IDEuMiAyIDEgQzEuNCAxLjIgMS42IDEuMiAyIDEgQzIuNCAwLjggMi44IDAuMiAzIDAiPjwvcGF0aD48cGF0aCBkPSJNNCA0IEw5IDQgTDkgOCBMMyAwIHoiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1saW5lam9pbj0ibWl0dGVyIj48L3BhdGg+PC9zdmc+",
   "extension": "svg",
-  "filename": undefined,
+  "filename": "download.svg",
 }
 `;
 
