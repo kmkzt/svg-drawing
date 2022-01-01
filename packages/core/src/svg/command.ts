@@ -330,11 +330,7 @@ export class RelativeCurve implements CommandClass<'c'> {
 
   public scale(r: number) {
     return new RelativeCurve(
-      this.points.map((p) => p.scaleX(r)) as [
-        PointClass,
-        PointClass,
-        PointClass
-      ]
+      this.points.map((p) => p.scale(r)) as [PointClass, PointClass, PointClass]
     )
   }
 
