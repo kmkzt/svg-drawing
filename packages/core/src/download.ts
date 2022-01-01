@@ -80,7 +80,9 @@ export class Download {
   }
 
   public toBase64() {
-    return `data:image/svg+xml;base64,${btoa(this.el.outerHTML)}`
+    return `data:image/svg+xml;base64,${Buffer.from(this.el.outerHTML).toString(
+      'base64'
+    )}`
   }
 
   private renderCanvas({
