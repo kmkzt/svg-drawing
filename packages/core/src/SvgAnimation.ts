@@ -6,14 +6,19 @@ import {
   pathObjectToElement,
 } from './renderer'
 import { Svg } from './svg'
-import type { AnimationOption, RendererOption, ResizeCallback } from './types'
+import type {
+  AnimationOption,
+  RendererOption,
+  ResizeCallback,
+  SvgClass,
+} from './types'
 
 export class SvgAnimation {
   private _stopId?: number
   constructor(
-    public svg: Svg,
+    public svg: SvgClass,
     public animation: Animation,
-    private update: (svg: Svg) => void
+    private update: (svg: SvgClass) => void
   ) {
     this.resize = this.resize.bind(this)
   }

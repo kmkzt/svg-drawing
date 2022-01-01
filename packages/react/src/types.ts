@@ -1,7 +1,7 @@
 import type {
   Animation,
   SvgObject,
-  Svg,
+  SvgClass,
   EditSvgObject,
   DrawHandler,
   DrawFactory,
@@ -17,7 +17,7 @@ import type {
 import type { RefObject, HTMLAttributes } from 'react'
 
 /** UseSvg */
-export type UseSvg = (opts: Partial<SvgOption>) => Svg
+export type UseSvg = (opts: Partial<SvgOption>) => SvgClass
 export type SvgProps = HTMLAttributes<SVGSVGElement> & {
   background?: SvgObject['background']
   children: React.ReactNode
@@ -36,19 +36,19 @@ export type UseDraw<P extends DrawFactory, H extends DrawHandler> = (
 export type UseDrawOptions<P extends DrawFactory, H extends DrawHandler> = {
   factory: P
   handler: H
-  svg: Svg
+  svg: SvgClass
   onChangeSvg: (obj: SvgObject) => void
 }
 export type DrawAction<P extends DrawFactory, H extends DrawHandler> = {
-  draw: Drawing<Svg, P, H>
+  draw: Drawing<P, H>
   update: () => void
-  clear: Drawing<Svg, P, H>['clear']
-  undo: Drawing<Svg, P, H>['undo']
+  clear: Drawing<P, H>['clear']
+  undo: Drawing<P, H>['undo']
 }
 
 /** UseEdit */
 export type UseEdit = (opts: {
-  svg: Svg
+  svg: SvgClass
   editSvgObject: EditSvgObject | null
   multipleSelectBindKey?: string
   onChangeEdit: (arg: EditSvgObject | null) => void
@@ -110,4 +110,6 @@ export type KeyboardMap = {
   [key: string]: (() => void) | undefined
 }
 
-export type UseParseFile = (opts: { svg: Svg }) => (file: File) => Promise<void>
+export type UseParseFile = (opts: {
+  svg: SvgClass
+}) => (file: File) => Promise<void>

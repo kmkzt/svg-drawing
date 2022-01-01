@@ -69,11 +69,11 @@ export class OtherCommand<T extends OtherCommandType>
     )
   }
 
-  public get point(): undefined {
+  public get point() {
     return undefined
   }
 
-  public toString(): string {
+  public toString() {
     return `${this.type}${this.values.map((v) => roundUp(v)).join(' ')}`
   }
 
@@ -133,11 +133,11 @@ export class RelativeMove implements CommandClass<'m'> {
     this.points = [point]
   }
 
-  public get values(): number[] {
+  public get values() {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[0]
   }
 
@@ -150,19 +150,19 @@ export class RelativeMove implements CommandClass<'m'> {
   }
 
   public scale(r: number) {
-    return new RelativeMove(this.points[0].scale(r))
+    return new RelativeMove(this.point.scale(r))
   }
 
   public scaleX(r: number) {
-    return new RelativeMove(this.points[0].scaleX(r))
+    return new RelativeMove(this.point.scaleX(r))
   }
 
   public scaleY(r: number) {
-    return new RelativeMove(this.points[0].scaleY(r))
+    return new RelativeMove(this.point.scaleY(r))
   }
 
   public clone() {
-    return new RelativeMove(this.points[0].clone())
+    return new RelativeMove(this.point.clone())
   }
 }
 
@@ -178,11 +178,11 @@ export class Move implements CommandClass<'M'> {
     this.points = [point]
   }
 
-  public get values(): number[] {
+  public get values() {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[0]
   }
 
@@ -195,19 +195,19 @@ export class Move implements CommandClass<'M'> {
   }
 
   public scale(r: number) {
-    return new Move(this.points[0].scale(r))
+    return new Move(this.point.scale(r))
   }
 
   public scaleX(r: number) {
-    return new Move(this.points[0].scaleX(r))
+    return new Move(this.point.scaleX(r))
   }
 
   public scaleY(r: number) {
-    return new Move(this.points[0].scaleY(r))
+    return new Move(this.point.scaleY(r))
   }
 
   public clone() {
-    return new Move(this.points[0].clone())
+    return new Move(this.point.clone())
   }
 }
 
@@ -223,11 +223,11 @@ export class RelativeLine implements CommandClass<'l'> {
     this.points = [point]
   }
 
-  public get values(): number[] {
+  public get values() {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[0]
   }
 
@@ -272,7 +272,7 @@ export class Line implements CommandClass<'L'> {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[0]
   }
 
@@ -310,11 +310,11 @@ export class RelativeCurve implements CommandClass<'c'> {
   public readonly type = 'c'
   constructor(public points: [PointClass, PointClass, PointClass]) {}
 
-  public get values(): number[] {
+  public get values() {
     return this.points.reduce((acc: number[], po) => [...acc, po.x, po.y], [])
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[2]
   }
 
@@ -385,7 +385,7 @@ export class Curve implements CommandClass<'C'> {
     ) as [number, number, number, number, number, number]
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[2]
   }
 
@@ -448,7 +448,7 @@ export class ShortcutCurve implements CommandClass<'S'> {
     ) as [number, number, number, number]
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[1]
   }
 
@@ -503,7 +503,7 @@ export class RelativeShortcutCurve implements CommandClass<'s'> {
     ) as [number, number, number, number]
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[1]
   }
 
@@ -559,7 +559,7 @@ export class QuadraticCurve implements CommandClass<'Q'> {
     ) as [number, number, number, number]
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[1]
   }
 
@@ -614,7 +614,7 @@ export class RelativeQuadraticCurve implements CommandClass<'q'> {
     ) as [number, number, number, number]
   }
 
-  public get point(): PointClass {
+  public get point() {
     return this.points[1]
   }
 
@@ -669,7 +669,7 @@ export class Close implements CommandClass<'z'> {
     return []
   }
 
-  public get point(): undefined {
+  public get point() {
     return undefined
   }
 

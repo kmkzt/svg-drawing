@@ -1,7 +1,7 @@
 import { calculatePoint } from '../curve'
 import { Point, isCurveCommand, toAbsolutePath, toRelativePath } from '../svg'
-import type { Svg } from '../svg'
 import type {
+  SvgClass,
   PointObject,
   EditVertex,
   BoundingBox,
@@ -101,7 +101,7 @@ export class EditSvg {
   private selecting: Selecting | null = null
   private translateBasePoint: PointObject | null = null
   private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
-  constructor(public svg: Svg) {}
+  constructor(public svg: SvgClass) {}
 
   public select(sel: Selecting, multipleSelect?: boolean) {
     this.selecting = multipleSelect ? { ...this.selecting, ...sel } : sel
@@ -315,7 +315,7 @@ export class EditSvg {
     )
   }
 
-  private generateAbsolutePathSvg(): Svg {
+  private generateAbsolutePathSvg() {
     const svg = this.svg.clone()
     svg.paths = svg.paths.map((p) => toAbsolutePath(p))
     return svg

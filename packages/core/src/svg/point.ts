@@ -16,19 +16,19 @@ export class Point implements PointClass {
     this._y = roundNumber(y)
   }
 
-  public get x(): number {
+  public get x() {
     return this._x
   }
 
-  public get y(): number {
+  public get y() {
     return this._y
   }
 
-  public get degrees(): number {
+  public get degrees() {
     return Math.atan2(this._y, this._x) * (180 / Math.PI)
   }
 
-  public get absoluteValue(): number {
+  public get absoluteValue() {
     return Math.sqrt(Math.pow(this._x, 2.0) + Math.pow(this._y, 2.0))
   }
 
@@ -56,11 +56,11 @@ export class Point implements PointClass {
     return this._x === p.x && this._y === p.y
   }
 
-  public clone(): Point {
+  public clone() {
     return new Point(this._x, this._y)
   }
 
-  public toJson(): PointObject {
+  public toJson() {
     return {
       x: this._x,
       y: this._y,

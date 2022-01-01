@@ -1,6 +1,6 @@
-import type { SvgObject, SvgOption, PathClass } from '../types'
+import type { SvgOption, PathClass, SvgClass } from '../types'
 
-export class Svg {
+export class Svg implements SvgClass {
   public paths: PathClass[]
   public width: number
   public height: number
@@ -20,7 +20,7 @@ export class Svg {
     this.height = height
   }
 
-  public scale(r: number): this {
+  public scale(r: number) {
     if (r !== 1) {
       for (let i = 0; i < this.paths.length; i += 1) {
         this.paths[i].scale(r)
@@ -29,7 +29,7 @@ export class Svg {
     return this
   }
 
-  public scaleX(r: number): this {
+  public scaleX(r: number) {
     if (r !== 1) {
       for (let i = 0; i < this.paths.length; i += 1) {
         this.paths[i].scaleX(r)
@@ -38,7 +38,7 @@ export class Svg {
     return this
   }
 
-  public scaleY(r: number): this {
+  public scaleY(r: number) {
     if (r !== 1) {
       for (let i = 0; i < this.paths.length; i += 1) {
         this.paths[i].scaleY(r)
@@ -47,7 +47,7 @@ export class Svg {
     return this
   }
 
-  public addPath(pa: PathClass | PathClass[]): this {
+  public addPath(pa: PathClass | PathClass[]) {
     if (Array.isArray(pa)) {
       this.paths.push(...pa)
     } else {
@@ -56,16 +56,16 @@ export class Svg {
     return this
   }
 
-  public deletePath(deletePath: PathClass): this {
+  public deletePath(deletePath: PathClass) {
     this.paths = this.paths.filter((path) => path.key !== deletePath.key)
     return this
   }
 
-  public clonePaths(): PathClass[] {
+  public clonePaths() {
     return this.paths.map((p) => p.clone())
   }
 
-  public toJson(): SvgObject {
+  public toJson() {
     return {
       width: this.width,
       height: this.height,
@@ -74,7 +74,7 @@ export class Svg {
     }
   }
 
-  public copy(svg: any extends Svg ? Svg : never): this {
+  public copy(svg: SvgClass) {
     this.paths = svg.clonePaths()
     if (svg.width && this.width) {
       this.scale(this.width / svg.width)
@@ -82,7 +82,7 @@ export class Svg {
     return this
   }
 
-  public clone(): Svg {
+  public clone() {
     const svg = new Svg({
       width: this.width,
       height: this.height,

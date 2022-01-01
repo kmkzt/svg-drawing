@@ -1,27 +1,26 @@
 import { isAlmostSameNumber } from '../utils'
-import type { Svg } from '../svg'
 import type {
   DrawHandler,
   PointObject,
   DrawFactory,
   ResizeCallback,
   PathClass,
+  SvgClass,
 } from '../types'
 import type { BasicDrawFactory } from './factory'
 import type { PencilHandler } from './handler'
 
 export class Drawing<
-  S extends Svg = Svg,
   P extends DrawFactory = BasicDrawFactory,
   H extends DrawHandler = PencilHandler
 > {
   private _drawPath: PathClass | null
   private _drawPoints: PointObject[]
   constructor(
-    public svg: S,
+    public svg: SvgClass,
     public pathFactory: P,
     public handler: H,
-    private update: (svg: Svg) => void
+    private update: (svg: SvgClass) => void
   ) {
     /** Setup property */
     this._drawPath = null

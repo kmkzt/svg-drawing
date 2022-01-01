@@ -1,8 +1,8 @@
 import { Path, Svg, createCommand } from './svg'
 import { kebab2camel } from './utils'
-import type { CommandClass, CommandType } from './types'
+import type { PathClass, CommandClass, CommandType, SvgClass } from './types'
 
-export const parseSVGString = (svgStr: string): Svg => {
+export const parseSVGString = (svgStr: string): SvgClass => {
   const svgEl: SVGSVGElement | null = new DOMParser()
     .parseFromString(svgStr, 'image/svg+xml')
     .querySelector('svg')
@@ -10,7 +10,7 @@ export const parseSVGString = (svgStr: string): Svg => {
   return svgEl ? parseSVGElement(svgEl) : new Svg({ width: 0, height: 0 })
 }
 
-export const parseSVGElement = (svgEl: SVGSVGElement): Svg => {
+export const parseSVGElement = (svgEl: SVGSVGElement): SvgClass => {
   const width = Number(svgEl.getAttribute('width'))
   const height = Number(svgEl.getAttribute('height'))
 
@@ -22,7 +22,7 @@ export const parseSVGElement = (svgEl: SVGSVGElement): Svg => {
   return svg
 }
 
-export const parsePathElement = (pathEl: SVGPathElement): Path => {
+export const parsePathElement = (pathEl: SVGPathElement): PathClass => {
   const path = new Path()
   for (let i = 0; i < pathEl.attributes.length; i += 1) {
     const attr: Attr | null = pathEl.attributes.item(i)

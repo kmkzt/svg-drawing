@@ -1,3 +1,62 @@
+/** Point Object */
+export type PointObject = Readonly<{
+  x: number
+  y: number
+}>
+
+export interface PointClass {
+  readonly x: number
+  readonly y: number
+  degrees: number
+  absoluteValue: number
+  scale: (r: number) => PointClass
+  scaleX: (r: number) => PointClass
+  scaleY: (r: number) => PointClass
+  add: (p: PointObject) => PointClass
+  sub: (p: PointObject) => PointClass
+  eql: (p: PointObject) => boolean
+  clone: () => PointClass
+  toJson: () => PointObject
+}
+
+/** Command Object */
+export type RelativeCommandType = 'm' | 'l' | 'c' | 'q' | 's'
+
+export type AbsoluteCommandType = Uppercase<RelativeCommandType>
+
+export type OtherCommandType = 'h' | 'v' | 'a' | 'H' | 'V' | 'A' | 'Z' | 'z'
+
+export type CommandType =
+  | RelativeCommandType
+  | AbsoluteCommandType
+  | OtherCommandType
+
+type PointsLengthMap<T = CommandType> = T extends OtherCommandType
+  ? PointClass[]
+  : T extends 'm' | 'M' | 'l' | 'L'
+  ? [PointClass]
+  : T extends 'C' | 'c'
+  ? [PointClass, PointClass, PointClass]
+  : [PointClass, PointClass]
+
+export type CommandObject = {
+  type: CommandType
+  value: number[]
+}
+
+export interface CommandClass<T = CommandType> {
+  type: T
+  values: number[]
+  points: PointsLengthMap<T>
+  point: T extends OtherCommandType ? undefined : PointClass
+  toString: () => string
+  clone: () => CommandClass<T>
+  scale: (r: number) => CommandClass<T>
+  scaleX: (r: number) => CommandClass<T>
+  scaleY: (r: number) => CommandClass<T>
+  translate: (po: PointObject) => CommandClass<T>
+}
+
 /** Svg Path JSON TODO: improve key types */
 export type PathAttributes = {
   [camelCase: string]: string | undefined
@@ -34,25 +93,28 @@ export type SvgObject = {
   paths: PathObject[]
 }
 
-/** Point Object */
-export type PointObject = Readonly<{
-  x: number
-  y: number
-}>
+/** Svg options */
+export type SvgOption = {
+  width: number
+  height: number
+  background?: string
+}
 
-export interface PointClass {
-  readonly x: number
-  readonly y: number
-  degrees: number
-  absoluteValue: number
-  scale: (r: number) => PointClass
-  scaleX: (r: number) => PointClass
-  scaleY: (r: number) => PointClass
-  add: (p: PointObject) => PointClass
-  sub: (p: PointObject) => PointClass
-  eql: (p: PointObject) => boolean
-  clone: () => PointClass
-  toJson: () => PointObject
+export interface SvgClass {
+  paths: PathClass[]
+  width: number
+  height: number
+  background?: string
+  resize: (arg: { width: number; height: number }) => void
+  scale: (r: number) => this
+  scaleX: (r: number) => this
+  scaleY: (r: number) => this
+  addPath: (path: PathClass | PathClass[]) => this
+  deletePath: (path: PathClass) => this
+  clonePaths: () => PathClass[]
+  toJson: () => SvgObject
+  copy: (svg: SvgClass) => this
+  clone: () => SvgClass
 }
 
 /** @todo Be used `factory.createCommand` */
@@ -60,49 +122,6 @@ export interface DrawPoint extends PointObject {
   pressure?: number
 }
 
-/** Command Object */
-export type RelativeCommandType = 'm' | 'l' | 'c' | 'q' | 's'
-
-export type AbsoluteCommandType = Uppercase<RelativeCommandType>
-
-export type OtherCommandType = 'h' | 'v' | 'a' | 'H' | 'V' | 'A' | 'Z' | 'z'
-
-export type CommandType =
-  | RelativeCommandType
-  | AbsoluteCommandType
-  | OtherCommandType
-
-type PointsLengthMap<T = CommandType> = T extends OtherCommandType
-  ? PointClass[]
-  : T extends 'm' | 'M' | 'l' | 'L'
-  ? [PointClass]
-  : T extends 'C' | 'c'
-  ? [PointClass, PointClass, PointClass]
-  : [PointClass, PointClass]
-
-export interface CommandClass<T = CommandType> {
-  type: T
-  values: number[]
-  points: PointsLengthMap<T>
-  point: T extends OtherCommandType ? undefined : PointClass
-  toString: () => string
-  clone: () => CommandClass<T>
-  scale: (r: number) => CommandClass<T>
-  scaleX: (r: number) => CommandClass<T>
-  scaleY: (r: number) => CommandClass<T>
-  translate: (po: PointObject) => CommandClass<T>
-}
-
-export type CommandObject = {
-  type: CommandType
-  value: number[]
-}
-/** Svg options */
-export type SvgOption = {
-  width: number
-  height: number
-  background?: string
-}
 /** Convert options */
 export interface ConvertOption {
   ratio?: number

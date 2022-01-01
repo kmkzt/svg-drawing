@@ -1,11 +1,11 @@
 import { EditSvg } from './edit'
-import type { Svg } from '../svg'
 import type {
   PointObject,
   PathAttributes,
   Selecting,
   ResizeBoundingBoxBase,
   SelectIndex,
+  SvgClass,
 } from '../types'
 
 /** @todo Separate SvgEditing and Editing */
@@ -155,7 +155,7 @@ export class SvgEditing {
   }
 
   /** @deprecated */
-  public static init(svg: Svg) {
+  public static init(svg: SvgClass) {
     return new SvgEditing(new EditSvg(svg))
   }
 }

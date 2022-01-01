@@ -26,22 +26,22 @@ export class Path implements PathClass {
     this.key = _key || `p${Path.genIndex()}`
   }
 
-  public scale(r: number): this {
+  public scale(r: number) {
     this.commands = this.commands.map((c: CommandClass) => c.scale(r))
     return this
   }
 
-  public scaleX(r: number): this {
+  public scaleX(r: number) {
     this.commands = this.commands.map((c: CommandClass) => c.scaleX(r))
     return this
   }
 
-  public scaleY(r: number): this {
+  public scaleY(r: number) {
     this.commands = this.commands.map((c: CommandClass) => c.scaleY(r))
     return this
   }
 
-  public addCommand(param: CommandClass | CommandClass[]): this {
+  public addCommand(param: CommandClass | CommandClass[]) {
     if (Array.isArray(param)) {
       this.commands.push(...param)
     } else {
@@ -50,12 +50,12 @@ export class Path implements PathClass {
     return this
   }
 
-  public deleteCommand(i: number): this {
+  public deleteCommand(i: number) {
     this.commands.splice(i, 1)
     return this
   }
 
-  public getCommandString(): string {
+  public getCommandString() {
     return (
       this.commands
         ?.map((com: CommandClass, _i: number) => com.toString())
@@ -75,13 +75,13 @@ export class Path implements PathClass {
     }
   }
 
-  public setAttributes(attrs: PathAttributes): this {
+  public setAttributes(attrs: PathAttributes) {
     this.attrs = attrs
 
     return this
   }
 
-  public updateAttributes(attrs: PathAttributes): this {
+  public updateAttributes(attrs: PathAttributes) {
     this.attrs = {
       ...this.attrs,
       ...attrs,
@@ -90,7 +90,7 @@ export class Path implements PathClass {
     return this
   }
 
-  public translate(po: PointObject): this {
+  public translate(po: PointObject) {
     for (let i = 0; i < this.commands.length; i += 1) {
       if (isRelativeCommand(this.commands[i])) continue
       this.commands[i] = this.commands[i].translate(po)
@@ -98,7 +98,7 @@ export class Path implements PathClass {
     return this
   }
 
-  public clone(): Path {
+  public clone() {
     return new Path(
       {
         ...this.attrs,
