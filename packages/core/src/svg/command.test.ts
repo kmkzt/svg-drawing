@@ -152,9 +152,9 @@ describe('Curve', () => {
   })
   it('translate', () => {
     const curve = new Curve([
-      new Point(0.25, 0.25),
-      new Point(0.75, 0.25),
-      new Point(1, 1),
+      new Point(0.25, 0.5),
+      new Point(0.75, 0.5),
+      new Point(1, 2),
     ]).translate({ x: 1, y: 1 })
 
     expect(curve.toString()).toBe('C1.25 1.5 1.75 1.5 2 3')
@@ -269,8 +269,7 @@ describe('RelativeLine', () => {
     expect(new RelativeLine(new Point(1, 1)).scaleY(2).toString()).toBe('l1 2')
   })
   it('translate', () => {
-    const move = new RelativeLine(new Point(1, 1))
-    move.translate({ x: 1, y: 1 })
+    const move = new RelativeLine(new Point(1, 1)).translate({ x: 1, y: 1 })
 
     expect(move.toString()).toBe('l2 2')
   })
@@ -368,9 +367,9 @@ describe('RelativeCurve', () => {
   })
   it('translate', () => {
     const curve = new RelativeCurve([
-      new Point(0.25, 0.25),
-      new Point(0.75, 0.25),
-      new Point(1, 1),
+      new Point(0.25, 0.5),
+      new Point(0.75, 0.5),
+      new Point(1, 2),
     ]).translate({ x: 1, y: 1 })
 
     expect(curve.toString()).toBe('c1.25 1.5 1.75 1.5 2 3')

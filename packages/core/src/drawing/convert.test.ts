@@ -1,6 +1,7 @@
 import { BezierCurve } from './convert'
 
 describe('BezierCurve', () => {
+  /** @todo Improve test case. */
   it('genCommand', () => {
     const bezierCurve = new BezierCurve()
     expect(
@@ -12,6 +13,6 @@ describe('BezierCurve', () => {
           { x: 3, y: 0 }
         )
         .toString()
-    ).toBe('C1.4 1.2 1.6 1.2 2 1')
+    ).toBe('C1.35777 1.17889 1.64223 1.17889 2 1')
   })
 })
