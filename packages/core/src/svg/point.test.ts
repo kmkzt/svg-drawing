@@ -42,8 +42,9 @@ describe('Point', () => {
   it('clone', () => {
     const po = new Point(0, 0)
     const clone = po.clone()
-    expect(po.x).toBe(0)
-    expect(clone.x).toBe(2)
+
+    expect(po === clone).toBe(false)
+    expect(po.toJson()).toEqual(clone.toJson())
   })
 
   describe('Point.fromVector', () => {
