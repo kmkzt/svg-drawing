@@ -24,10 +24,18 @@ export class Point implements PointClass {
     return this._y
   }
 
+  /**
+   * @example
+   *   new Point(1, 1).degrees // 45
+   */
   public get degrees() {
     return Math.atan2(this._y, this._x) * (180 / Math.PI)
   }
 
+  /**
+   * @example
+   *   new Point(1, 1).absoluteValue // 1.4142135623730951
+   */
   public get absoluteValue() {
     return Math.sqrt(Math.pow(this._x, 2.0) + Math.pow(this._y, 2.0))
   }

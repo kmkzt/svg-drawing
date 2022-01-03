@@ -4,7 +4,43 @@ import { usePressedKey } from './usePressedKey'
 import { useRenderInterval } from './useRenderInterval'
 import type { UseEdit, EditSvgAction, EditProps } from '../types'
 
-/** @todo Fix onClear and onResize. */
+/**
+ * @example
+ *   import { useEdit, Svg, EditPaths } from '@svg-drawing/react'
+ *   import type { EditSvgObject } from '@svg-drawing/core'
+ *
+ *   const EditExample = ({ sharedSvg }) => {
+ *     const [{ paths, ...svgProps }, onChangeSvg] = useState(
+ *       sharedSvg.toJson()
+ *     )
+ *     const [editSvgObject, onChangeEdit] = useState<EditSvgObject | null>(
+ *       null
+ *     )
+ *
+ *     const { editProps, cancelSelect } = useEdit({
+ *       svg: sharedSvg,
+ *       editSvgObject,
+ *       onChangeEdit,
+ *       onChangeSvg,
+ *     })
+ *
+ *     return (
+ *       <div
+ *         style={{
+ *           border: '1px solid #333',
+ *           width: 500,
+ *           height: 500,
+ *           touchAction: 'none',
+ *           boxSizing: 'border-box',
+ *         }}
+ *       >
+ *         <Svg {...svgProps} onSelectSvg={cancelSelect}>
+ *           <EditPaths paths={paths} {...editProps} />
+ *         </Svg>
+ *       </div>
+ *     )
+ *   }
+ */
 export const useEdit: UseEdit = ({
   multipleSelectBindKey = 'Shift',
   editSvgObject,

@@ -10,6 +10,26 @@ import type {
 import type { BasicDrawFactory } from './factory'
 import type { PencilHandler } from './handler'
 
+/**
+ * @example
+ *   import {
+ *     Svg,
+ *     Drawing,
+ *     PenHandler,
+ *     Renderer,
+ *     BasicDrawFactory,
+ *   } from '@svg-drawing/core'
+ *
+ *   const el = document.getElementById('draw')
+ *   const { width, height } = el.getBoundingClientRect()
+ *
+ *   new Drawing(
+ *     new Svg({ width, height }),
+ *     new BasicDrawFactory({ stroke: '#000' }),
+ *     new PenHandler(el),
+ *     new Renderer(el).update
+ *   )
+ */
 export class Drawing<
   P extends DrawFactory = BasicDrawFactory,
   H extends DrawHandler = PencilHandler

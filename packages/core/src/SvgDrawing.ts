@@ -6,7 +6,7 @@ import { Svg } from './svg'
 import type { DrawingOption } from './types'
 
 /**
- * @example <caption>Default.</caption>
+ * @example
  *   import { SvgDrawing } from '@svg-drawing/core'
  *
  *   const el = document.getElementById('draw')
@@ -22,35 +22,8 @@ import type { DrawingOption } from './types'
  *     fill: '#F00',
  *     background: '#ff0',
  *   })
- *
- * @example <caption>Customize.</caption>
- *   import {
- *     Svg,
- *     SvgDrawing,
- *     PenHandler,
- *     Renderer,
- *     BasicDrawFactory,
- *   } from '@svg-drawing/core'
- *
- *   const el = document.getElementById('draw')
- *   const { width, height } = el.getBoundingClientRect()
- *
- *   new SvgDrawing(
- *     new Svg({ width, height }),
- *     new BasicDrawFactory({ stroke: '#000' }),
- *     new PenHandler(el),
- *     new Renderer(el).update
- *   )
- *
- * @class SvgDrawing
- * @export
- * @todo Separate SvgDrawing and Drawing
  */
 export class SvgDrawing {
-  /**
-   * @deprecated
-   * @todo Separate methods
-   */
   public static init(
     el: HTMLElement,
     {

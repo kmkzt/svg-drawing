@@ -1,6 +1,19 @@
 import type { ResizeEventHandler, ResizeCallback } from './types'
 
 const SUPPORT_RESIZE_OBSERVER = typeof ResizeObserver !== 'undefined'
+
+/**
+ * @example
+ *   const svg = new Svg()
+ *   const resizeHandler = new ResizeHandler(
+ *     document.getElementById('draw-area')
+ *   )
+ *
+ *   resizeHandler.setHandler(({ width, height }) =>
+ *     svg.resize({ width, height })
+ *   )
+ *   resizeHandler.on()
+ */
 export class ResizeHandler implements ResizeEventHandler {
   /** Remove EventList */
   private _clearEventList: Array<() => void>
