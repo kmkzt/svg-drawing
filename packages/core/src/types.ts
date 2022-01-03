@@ -57,7 +57,11 @@ export interface CommandClass<T = CommandType> {
   translate: (po: PointObject) => CommandClass<T>
 }
 
-/** Svg Path JSON TODO: improve key types */
+/**
+ * Object for SVGPathElement attributes.
+ *
+ * @todo Improve key types
+ */
 export type PathAttributes = {
   [camelCase: string]: string | undefined
 }
@@ -69,8 +73,10 @@ export type PathObject = {
 }
 
 export interface PathClass {
+  /** Identification key. Use for update, delete. Return same key when PathClass cloned. */
   key: string
   attrs: PathAttributes
+  /** Path data. */
   commands: CommandClass[]
   scale: (r: number) => this
   scaleX: (r: number) => this
@@ -101,19 +107,30 @@ export type SvgOption = {
 }
 
 export interface SvgClass {
+  /** Path of children. */
   paths: PathClass[]
   width: number
   height: number
   background?: string
+  /** Resize svg and path of children. */
   resize: (arg: { width: number; height: number }) => void
-  scale: (r: number) => this
-  scaleX: (r: number) => this
-  scaleY: (r: number) => this
+  /** Add multiple paths. */
   addPath: (path: PathClass | PathClass[]) => this
+  /** Delete paths */
   deletePath: (path: PathClass) => this
+  /** Return cloned paths. */
   clonePaths: () => PathClass[]
   toJson: () => SvgObject
+  /**
+   * Copy resized paths.
+   *
+   * @example
+   *   class Svg implements SvgClass { ... }
+   *   const drawSvg = new Svg()
+   *   const animateSvg = new Svg().copy(drawSvg)
+   */
   copy: (svg: SvgClass) => this
+  /** Return cloned class object. */
   clone: () => SvgClass
 }
 
@@ -150,7 +167,15 @@ export interface ResizeEventHandler {
   active: boolean
   on: () => void
   off: () => void
+  /**
+   * @example
+   *   resize.setElement(document.getElementById('draw-area'))
+   */
   setElement: (el: HTMLElement) => void
+  /**
+   * @example
+   *   resize.setHandler(({ width, height }) => console.log(width, height))
+   */
   setHandler: (callback: ResizeCallback) => void
 }
 
@@ -177,7 +202,9 @@ export type DrawEventName = Extract<
 export type ClearListener = () => void
 
 export interface DrawFactory {
+  /** Generate draw path. */
   createPath: () => PathClass
+  /** Generate command from point */
   createCommand: CreateCommand
 }
 
@@ -185,6 +212,7 @@ export type DrawStart = () => void
 export type DrawEnd = () => void
 export type DrawMove = (po: PointObject) => void
 export interface DrawHandler {
+  /** Return active event listener status. */
   isActive: boolean
   on: () => void
   off: () => void

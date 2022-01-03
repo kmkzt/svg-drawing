@@ -20,28 +20,10 @@ export class Svg implements SvgClass {
     this.height = height
   }
 
-  public scale(r: number) {
+  private scale(r: number) {
     if (r !== 1) {
       for (let i = 0; i < this.paths.length; i += 1) {
         this.paths[i].scale(r)
-      }
-    }
-    return this
-  }
-
-  public scaleX(r: number) {
-    if (r !== 1) {
-      for (let i = 0; i < this.paths.length; i += 1) {
-        this.paths[i].scaleX(r)
-      }
-    }
-    return this
-  }
-
-  public scaleY(r: number) {
-    if (r !== 1) {
-      for (let i = 0; i < this.paths.length; i += 1) {
-        this.paths[i].scaleY(r)
       }
     }
     return this
@@ -74,6 +56,13 @@ export class Svg implements SvgClass {
     }
   }
 
+  /**
+   * Copy resized paths.
+   *
+   * @example
+   *   const drawSvg = new Svg()
+   *   const animateSvg = new Svg().copy(drawSvg)
+   */
   public copy(svg: SvgClass) {
     this.paths = svg.clonePaths()
     if (svg.width && this.width) {
