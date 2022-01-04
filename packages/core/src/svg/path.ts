@@ -1,5 +1,8 @@
-import { toAbsoluteCommands, toRelativeCommands } from '.'
-import { isRelativeCommand } from './command'
+import {
+  isRelativeCommand,
+  toAbsoluteCommands,
+  toRelativeCommands,
+} from './command'
 import type {
   PathClass,
   CommandClass,
