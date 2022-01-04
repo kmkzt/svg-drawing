@@ -75,7 +75,8 @@ export class Drawing<
   }
 
   public drawStart(): void {
-    this._drawPath = this._createDrawPath()
+    this._drawPoints = []
+    this._drawPath = this.pathFactory.createPath()
     this.svg.addPath(this._drawPath)
   }
 
@@ -98,10 +99,5 @@ export class Drawing<
 
     this.svg.resize({ width, height })
     this.update(this.svg)
-  }
-
-  private _createDrawPath(): PathClass {
-    this._drawPoints = []
-    return this.pathFactory.createPath()
   }
 }
