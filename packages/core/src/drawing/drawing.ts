@@ -75,26 +75,17 @@ export class Drawing<
   }
 
   public drawStart(): void {
-    if (this._drawPath) return
     this._drawPath = this._createDrawPath()
     this.svg.addPath(this._drawPath)
   }
 
   public drawMove(po: PointObject): void {
     if (!this._drawPath) return
-    this._addDrawPoint(po)
-    this.update(this.svg)
-  }
 
-  public switchPath() {
-    const po =
-      this._drawPath?.commands[
-        this._drawPath.commands.length - 1
-      ]?.point?.clone()
-    if (!po) return
-    this._drawPath = this._createDrawPath()
-    this._addDrawPoint(po.toJson())
-    this.svg.addPath(this._drawPath)
+    this._drawPoints.push(po)
+    this._drawPath.commands = this.pathFactory.createCommand(this._drawPoints)
+
+    this.update(this.svg)
   }
 
   public drawEnd(): void {
@@ -107,18 +98,6 @@ export class Drawing<
 
     this.svg.resize({ width, height })
     this.update(this.svg)
-  }
-
-  private _createCommand() {
-    if (!this._drawPath) return
-
-    /** @todo Refactor */
-    this._drawPath.commands = this.pathFactory.createCommand(this._drawPoints)
-  }
-
-  private _addDrawPoint(p4: PointObject) {
-    this._drawPoints.push(p4)
-    this._createCommand()
   }
 
   private _createDrawPath(): PathClass {
