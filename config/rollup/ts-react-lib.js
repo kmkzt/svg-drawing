@@ -24,8 +24,11 @@ export default build({
       // 'babel-plugin-annotate-pure-calls',
       [
         '@babel/plugin-transform-runtime',
-        { useESModules: esm, regenerator: false },
+        { useESModules: esm, regenerator: true },
       ],
+      ['@babel/plugin-proposal-class-properties', { loose: false }],
+      ['@babel/plugin-proposal-private-methods', { loose: false }],
+      ['@babel/plugin-proposal-private-property-in-object', { loose: false }],
     ],
   }),
   globals: {
