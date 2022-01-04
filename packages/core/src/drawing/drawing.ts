@@ -30,16 +30,13 @@ import type { PencilHandler } from './handler'
  *     new Renderer(el).update
  *   )
  */
-export class Drawing<
-  P extends DrawFactory = BasicDrawFactory,
-  H extends DrawHandler = PencilHandler
-> {
+export class Drawing {
   private _drawPath: PathClass | null
   private _drawPoints: PointObject[]
   constructor(
     public svg: SvgClass,
-    public pathFactory: P,
-    public handler: H,
+    public pathFactory: DrawFactory,
+    public handler: DrawHandler,
     private update: (svg: SvgClass) => void
   ) {
     /** Setup property */

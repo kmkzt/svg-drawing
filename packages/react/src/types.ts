@@ -29,21 +29,19 @@ export type PathsProps = {
 }
 
 /** UseDraw */
-export type UseDraw<P extends DrawFactory, H extends DrawHandler> = (
-  opts: UseDrawOptions<P, H>
-) => DrawAction<P, H>
+export type UseDraw = (opts: UseDrawOptions) => DrawAction
 
-export type UseDrawOptions<P extends DrawFactory, H extends DrawHandler> = {
-  factory: P
-  handler: H
+export type UseDrawOptions = {
+  factory: DrawFactory
+  handler: DrawHandler
   svg: SvgClass
   onChangeSvg: (obj: SvgObject) => void
 }
-export type DrawAction<P extends DrawFactory, H extends DrawHandler> = {
-  draw: Drawing<P, H>
+export type DrawAction = {
+  draw: Drawing
   update: () => void
-  clear: Drawing<P, H>['clear']
-  undo: Drawing<P, H>['undo']
+  clear: Drawing['clear']
+  undo: Drawing['undo']
 }
 
 /** UseEdit */
