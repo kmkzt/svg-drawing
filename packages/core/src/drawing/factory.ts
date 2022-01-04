@@ -1,10 +1,9 @@
 import { BezierCurve, closeCommands, createLineCommands } from './convert'
-import { Path, toRelativePath } from '../svg'
+import { Path, toRelativeCommands } from '../svg'
 import type {
   CreateCommand,
   DrawFactory,
   PathAttributes,
-  CommandClass,
   PathClass,
 } from '../types'
 
@@ -29,15 +28,12 @@ export class BasicDrawFactory implements DrawFactory {
 
   /** @todo Refactor */
   get createCommand(): CreateCommand {
-    const toRelativeCommand = (commands: CommandClass[]): CommandClass[] =>
-      toRelativePath(new Path().addCommand(commands)).commands
-
     const createCommand = this.opts.curve
       ? new BezierCurve().create
       : createLineCommands
 
     return (po) =>
-      toRelativeCommand(
+      toRelativeCommands(
         this.opts.close ? closeCommands(createCommand(po)) : createCommand(po)
       )
   }

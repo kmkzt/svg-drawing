@@ -838,3 +838,55 @@ export const toAbsoluteCommand = (
       throw new Error('toAbsoluteCommand error')
   }
 }
+
+export const toRelativeCommands = (
+  commands: CommandClass[]
+): CommandClass[] => {
+  let basePoint = commands[0].point
+  const upd = [commands[0]]
+
+  for (let i = 1; i < commands.length; i += 1) {
+    const command = commands[i]
+
+    const notAbsoluteCommand =
+      basePoint && isAbsoluteCommand(command)
+        ? toRelativeCommand(command, basePoint)
+        : command.clone()
+
+    basePoint = isAbsoluteCommand(command)
+      ? command.point // Absolute point
+      : basePoint && command.point
+      ? basePoint.add(command.point) // Relative point
+      : undefined // Close
+
+    upd.push(notAbsoluteCommand)
+  }
+
+  return upd
+}
+
+export const toAbsoluteCommands = (
+  commands: CommandClass[]
+): CommandClass[] => {
+  let basePoint = commands[0].point
+  const upd = [commands[0]]
+
+  for (let i = 1; i < commands.length; i += 1) {
+    const command = commands[i]
+
+    const notRelativeCommand =
+      basePoint && isRelativeCommand(command)
+        ? toAbsoluteCommand(command, basePoint)
+        : command.clone()
+
+    basePoint = isAbsoluteCommand(command)
+      ? command.point // Absolute point
+      : basePoint && command.point
+      ? basePoint.add(command.point) // Relative point
+      : undefined // Close
+
+    upd.push(notRelativeCommand)
+  }
+
+  return upd
+}

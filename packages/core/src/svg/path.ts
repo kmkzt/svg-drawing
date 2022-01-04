@@ -1,9 +1,5 @@
-import {
-  isAbsoluteCommand,
-  toRelativeCommand,
-  isRelativeCommand,
-  toAbsoluteCommand,
-} from './command'
+import { toAbsoluteCommands, toRelativeCommands } from '.'
+import { isRelativeCommand } from './command'
 import type {
   PathClass,
   CommandClass,
@@ -109,51 +105,15 @@ export class Path implements PathClass {
 }
 
 export const toRelativePath = (path: PathClass): PathClass => {
-  let basePoint = path.commands[0].point
   const upd = path.clone()
-  upd.commands = [path.commands[0]]
-
-  for (let i = 1; i < path.commands.length; i += 1) {
-    const command = path.commands[i]
-
-    const notAbsoluteCommand =
-      basePoint && isAbsoluteCommand(command)
-        ? toRelativeCommand(command, basePoint)
-        : command.clone()
-
-    basePoint = isAbsoluteCommand(command)
-      ? command.point // Absolute point
-      : basePoint && command.point
-      ? basePoint.add(command.point) // Relative point
-      : undefined // Close
-
-    upd.addCommand(notAbsoluteCommand)
-  }
+  upd.commands = toRelativeCommands(upd.commands)
 
   return upd
 }
 
 export const toAbsolutePath = (path: PathClass): PathClass => {
-  let basePoint = path.commands[0].point
   const upd = path.clone()
-  upd.commands = [path.commands[0]]
-
-  for (let i = 1; i < path.commands.length; i += 1) {
-    const command = path.commands[i]
-
-    const notRelativeCommand =
-      basePoint && isRelativeCommand(command)
-        ? toAbsoluteCommand(command, basePoint)
-        : command.clone()
-
-    basePoint = isAbsoluteCommand(command)
-      ? command.point // Absolute point
-      : basePoint && command.point
-      ? basePoint.add(command.point) // Relative point
-      : undefined // Close
-
-    upd.addCommand(notRelativeCommand)
-  }
+  upd.commands = toAbsoluteCommands(upd.commands)
 
   return upd
 }
