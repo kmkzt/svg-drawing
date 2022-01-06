@@ -1,14 +1,12 @@
 import { isAlmostSameNumber } from '../utils'
+import type { EventPoint } from '..'
 import type {
   DrawHandler,
-  PointObject,
   DrawFactory,
   ResizeCallback,
   PathClass,
   SvgClass,
 } from '../types'
-import type { BasicDrawFactory } from './factory'
-import type { PencilHandler } from './handler'
 
 /**
  * @example
@@ -32,7 +30,7 @@ import type { PencilHandler } from './handler'
  */
 export class Drawing {
   private _drawPath: PathClass | null
-  private _drawPoints: PointObject[]
+  private _drawPoints: EventPoint[]
   constructor(
     public svg: SvgClass,
     public pathFactory: DrawFactory,
@@ -77,7 +75,7 @@ export class Drawing {
     this.svg.addPath(this._drawPath)
   }
 
-  public drawMove(po: PointObject): void {
+  public drawMove(po: EventPoint): void {
     if (!this._drawPath) return
 
     this._drawPoints.push(po)

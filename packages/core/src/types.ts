@@ -134,8 +134,9 @@ export interface SvgClass {
   clone: () => SvgClass
 }
 
-/** @todo Be used `factory.createCommand` */
-export interface DrawPoint extends PointObject {
+export type EventPoint = {
+  x: number
+  y: number
   pressure?: number
 }
 
@@ -210,7 +211,7 @@ export interface DrawFactory {
 
 export type DrawStart = () => void
 export type DrawEnd = () => void
-export type DrawMove = (po: PointObject) => void
+export type DrawMove = (po: EventPoint) => void
 export interface DrawHandler {
   /** Return active event listener status. */
   isActive: boolean
@@ -293,7 +294,7 @@ export type ResizeBoundingBoxBase = {
   point: PointObject
 }
 
-export type CreateCommand = (points: PointObject[]) => CommandClass[]
+export type CreateCommand = (points: EventPoint[]) => CommandClass[]
 
 export type AnimationOption = {
   ms: number

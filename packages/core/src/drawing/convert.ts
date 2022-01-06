@@ -1,5 +1,6 @@
 import { Point, Move, Line, Curve, Close } from '../svg'
 import type {
+  EventPoint,
   CommandClass,
   PointObject,
   ConvertOption,
@@ -60,7 +61,7 @@ export class BezierCurve implements GenerateCommandsConverter {
     return new Curve([cPrev, cNext, new Point(p3.x, p3.y)])
   }
 
-  public create(p: PointObject[]): CommandClass[] {
+  public create(p: EventPoint[]): CommandClass[] {
     const commands: CommandClass[] = []
     if (p.length < 3) {
       return createLineCommands(p)

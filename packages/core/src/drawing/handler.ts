@@ -1,32 +1,20 @@
+import {
+  getEventPoint,
+  SUPPORT_EVENT_LISTENER_PASSIVE_OPTION,
+  SUPPORT_ON_TOUCH_START,
+  SUPPORT_POINTER_EVENT,
+} from '../event'
 import { throttle } from '../throttle'
 import type {
   DrawListenerType,
   DrawHandler,
   ClearListener,
-  DrawPoint,
+  EventPoint,
   DrawEventName,
   DrawEnd,
   DrawStart,
   DrawMove,
 } from '../types'
-
-const SUPPORT_POINTER_EVENT = typeof PointerEvent !== 'undefined'
-
-const SUPPORT_ON_TOUCH_START = typeof ontouchstart !== 'undefined'
-
-const SUPPORT_EVENT_LISTENER_PASSIVE_OPTION = (() => {
-  try {
-    const check = () => null
-    addEventListener('testPassive', check, { passive: true })
-    removeEventListener('testPassive', check)
-    return true
-  } catch (e) {
-    return false
-  }
-})()
-
-const getPassiveOptions = (passive = true): false | { passive: boolean } =>
-  SUPPORT_EVENT_LISTENER_PASSIVE_OPTION ? { passive } : false
 
 export abstract class DrawEventHandler implements DrawHandler {
   /** Remove EventList */
@@ -92,28 +80,13 @@ export abstract class DrawEventHandler implements DrawHandler {
 
   public getPointObjectFromDrawEvent(
     ev: MouseEvent | TouchEvent | PointerEvent
-  ): DrawPoint {
-    if (ev instanceof TouchEvent) {
-      const touch = ev.touches[0]
-      return {
-        x: touch.clientX - this._offset.left,
-        y: touch.clientY - this._offset.top,
-        pressure: touch.force,
-      }
-    }
-
-    if (ev instanceof PointerEvent) {
-      return {
-        x: ev.clientX - this._offset.left,
-        y: ev.clientY - this._offset.top,
-        pressure: ev.pressure,
-      }
-    }
+  ): EventPoint {
+    const { x, y, pressure } = getEventPoint(ev)
 
     return {
-      x: ev.clientX - this._offset.left,
-      y: ev.clientY - this._offset.top,
-      pressure: (ev as any)?.pressure,
+      x: x - this._offset.left,
+      y: y - this._offset.top,
+      pressure,
     }
   }
 
@@ -144,7 +117,7 @@ export class PencilHandler extends DrawEventHandler {
   private _drawMoveThrottle: DrawMove
   private delay = 20
   /** AddEventListener Options */
-  private listenerOption: ReturnType<typeof getPassiveOptions>
+  private listenerOption: { passive: boolean } | false
   constructor(el: HTMLElement | null = null) {
     super(el)
     /** Bind methods */
@@ -156,7 +129,9 @@ export class PencilHandler extends DrawEventHandler {
 
     this._drawMoveThrottle = throttle(this.drawMove, this.delay).bind(this)
 
-    this.listenerOption = getPassiveOptions(false)
+    this.listenerOption = SUPPORT_EVENT_LISTENER_PASSIVE_OPTION
+      ? { passive: false }
+      : false
   }
 
   public changeDelay(delay: number): void {
