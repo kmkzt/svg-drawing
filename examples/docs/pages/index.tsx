@@ -127,7 +127,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const [{ paths, ...svgProps }, onChangeSvg] = useState(svg.toJson())
 
   const {
-    draw,
     update: updateDraw,
     clear,
     undo,
@@ -189,10 +188,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   /** Setup resize */
   const handleResize = useCallback<ResizeCallback>(
     (arg) => {
-      console.log(arg)
       svg.resize(arg)
 
-      console.log(svg)
       updateDraw()
       updateEdit()
     },
