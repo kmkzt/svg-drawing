@@ -1,4 +1,3 @@
-import { EditSvg } from './edit'
 import { getEventPoint } from '../event'
 import type {
   PointObject,
@@ -6,11 +5,10 @@ import type {
   Selecting,
   ResizeBoundingBoxBase,
   SelectIndex,
-  SvgClass,
 } from '../types'
+import type { EditSvg } from './editSvg'
 
-/** @todo Separate SvgEditing and Editing */
-export class SvgEditing {
+export class Editing {
   constructor(
     public editSvg: EditSvg,
     public updater: (eSvg: EditSvg) => void = () => void 0
@@ -154,10 +152,5 @@ export class SvgEditing {
   public cleanup() {
     this.removeTranslateListener()
     this.removeResizeBoundingBoxListener()
-  }
-
-  /** @deprecated */
-  public static init(svg: SvgClass) {
-    return new SvgEditing(new EditSvg(svg))
   }
 }

@@ -7,7 +7,7 @@ import type {
   DrawFactory,
   ResizeCallback,
   DrawEventHandler,
-  SvgEditing,
+  Editing,
   SelectIndex,
   SvgOption,
   PathClass,
@@ -55,12 +55,12 @@ export type UseEdit = (opts: {
 
 /** @todo Added return props for EditSvg */
 export type EditSvgAction = {
-  edit: SvgEditing
+  edit: Editing
   keyboardMap: KeyboardMap
   update: () => void
   deletePaths: () => void
-  translate: SvgEditing['translate']
-  changeAttributes: SvgEditing['changeAttributes']
+  translate: Editing['translate']
+  changeAttributes: Editing['changeAttributes']
   selectPaths: (sel: SelectIndex) => void
   cancelSelect: () => void
   editProps: EditProps
@@ -69,8 +69,8 @@ export type EditSvgAction = {
 export type EditProps = {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
-  onResizeBoundingBoxStart: SvgEditing['startResizeBoundingBox']
-  onTranslateStart: SvgEditing['startTranslate']
+  onResizeBoundingBoxStart: Editing['startResizeBoundingBox']
+  onTranslateStart: Editing['startTranslate']
   onSelectPaths: (sel: SelectIndex) => void
 }
 

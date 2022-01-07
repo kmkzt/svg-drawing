@@ -1,4 +1,4 @@
-import { EditSvg, SvgEditing } from '@svg-drawing/core'
+import { EditSvg, Editing } from '@svg-drawing/core'
 import { useCallback, useMemo, useEffect } from 'react'
 import { usePressedKey } from './usePressedKey'
 import { useRenderInterval } from './useRenderInterval'
@@ -61,7 +61,7 @@ export const useEdit: UseEdit = ({
 
   const edit = useMemo(
     () =>
-      new SvgEditing(editSvg, (eSvg: EditSvg) => {
+      new Editing(editSvg, (eSvg: EditSvg) => {
         render(() => {
           onChangeEdit(eSvg.toJson())
           onChangeSvg(eSvg.svg.toJson())

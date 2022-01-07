@@ -1,13 +1,25 @@
-export * from './drawing'
-export * from './renderer'
-export * from './svg'
-export * from './throttle'
-export * from './utils'
 export * from './types'
-export * from './download'
-export * from './edit'
-export * from './resize'
-export * from './parser'
-export * from './SvgDrawing'
-export * from './SvgAnimation'
-export * from './animation'
+export * from './drawing'
+export * from './svg'
+export { EditSvg } from './edit/editSvg'
+export { EditPath } from './edit/editPath'
+export { Editing } from './edit/editing'
+export { calculateCoefficient, calculatePoint } from './edit/calculatePoint'
+export {
+  Renderer,
+  createSvgChildElement,
+  createSvgElement,
+  pathObjectToElement,
+  svgObjectToElement,
+} from './renderer'
+export { Download } from './download'
+export { ResizeHandler } from './resize'
+export {
+  parseCommandString,
+  parsePathElement,
+  parseSVGElement,
+  parseSVGString,
+} from './parser'
+export { SvgDrawing } from './SvgDrawing'
+export { SvgAnimation } from './SvgAnimation'
+export { Animation } from './animation/animation'

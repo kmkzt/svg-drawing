@@ -1,4 +1,4 @@
-import type { PointObject } from './types'
+import type { PointObject } from '../types'
 
 type BezierCurvePoint = [PointObject, PointObject, PointObject, PointObject]
 

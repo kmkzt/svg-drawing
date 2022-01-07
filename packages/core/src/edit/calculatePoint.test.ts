@@ -1,4 +1,4 @@
-import { calculateCoefficient, calculatePoint } from './curve'
+import { calculateCoefficient, calculatePoint } from './calculatePoint'
 
 describe('BezierCurve calculate point', () => {
   const testData: Parameters<typeof calculateCoefficient>[0] = [
