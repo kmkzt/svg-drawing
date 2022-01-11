@@ -7,8 +7,6 @@ export type PointObject = Readonly<{
 export interface PointClass {
   readonly x: number
   readonly y: number
-  degrees: number
-  absoluteValue: number
   scale: (r: number) => PointClass
   scaleX: (r: number) => PointClass
   scaleY: (r: number) => PointClass
@@ -17,6 +15,19 @@ export interface PointClass {
   eql: (p: PointObject) => boolean
   clone: () => PointClass
   toJson: () => PointObject
+}
+
+export type VectorObject = Readonly<{
+  value: number
+  angle: number
+}>
+
+export interface VectorClass {
+  readonly value: number
+  readonly angle: number
+  scale: (r: number) => VectorClass
+  rotate: (a: number) => VectorClass
+  toJson: () => VectorObject
 }
 
 /** Command Object */

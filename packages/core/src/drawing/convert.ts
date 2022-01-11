@@ -1,4 +1,4 @@
-import { Point, Move, Line, Curve, Close } from '../svg'
+import { Point, Move, Line, Curve, Close, Vector } from '../svg'
 import type {
   EventPoint,
   CommandClass,
@@ -16,23 +16,6 @@ export const createLineCommands: CreateCommand = (points) =>
     i === 0 ? new Move(new Point(p.x, p.y)) : new Line(new Point(p.x, p.y))
   )
 
-const distance = ({
-  prev,
-  next,
-}: {
-  prev: PointObject
-  next: PointObject
-}): number =>
-  new Point(next.x, next.y).sub(new Point(prev.x, prev.y)).absoluteValue
-
-const calculateDegrees = ({
-  prev,
-  next,
-}: {
-  prev: PointObject
-  next: PointObject
-}): number => new Point(next.x, next.y).sub(new Point(prev.x, prev.y)).degrees
-
 export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number
   constructor({ ratio }: ConvertOption = {}) {
@@ -46,13 +29,18 @@ export class BezierCurve implements GenerateCommandsConverter {
     p3: PointObject,
     p4: PointObject
   ): CommandClass {
-    const value = distance({ prev: p2, next: p3 }) * this.ratio
+    const value = Vector.fromPoint(
+      new Point(p3.x, p3.y).sub(new Point(p2.x, p2.y))
+    ).scale(this.ratio).value
+
     const vPrev = Point.fromVector({
-      degrees: calculateDegrees({ prev: p1, next: p3 }),
+      angle: Vector.fromPoint(new Point(p3.x, p3.y).sub(new Point(p1.x, p1.y)))
+        .angle,
       value,
     })
     const vNext = Point.fromVector({
-      degrees: calculateDegrees({ prev: p4, next: p2 }),
+      angle: Vector.fromPoint(new Point(p2.x, p2.y).sub(new Point(p4.x, p4.y)))
+        .angle,
       value,
     })
 

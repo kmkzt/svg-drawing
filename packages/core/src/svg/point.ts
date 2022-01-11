@@ -1,4 +1,4 @@
-import type { PointClass, PointObject } from '../types'
+import type { VectorObject, PointClass, PointObject } from '../types'
 
 /**
  * Maximum number of decimal places is 5
@@ -22,22 +22,6 @@ export class Point implements PointClass {
 
   public get y() {
     return this._y
-  }
-
-  /**
-   * @example
-   *   new Point(1, 1).degrees // 45
-   */
-  public get degrees() {
-    return Math.atan2(this._y, this._x) * (180 / Math.PI)
-  }
-
-  /**
-   * @example
-   *   new Point(1, 1).absoluteValue // 1.4142135623730951
-   */
-  public get absoluteValue() {
-    return Math.sqrt(Math.pow(this._x, 2.0) + Math.pow(this._y, 2.0))
   }
 
   public scale(r: number) {
@@ -75,14 +59,15 @@ export class Point implements PointClass {
     }
   }
 
-  public static fromVector({
-    value,
-    degrees,
-  }: {
-    value: number
-    degrees: number
-  }) {
-    const theta = (degrees * Math.PI) / 180
+  /**
+   * @example
+   *   const point = Point.fromVector({ value: 1, 0 })
+   *
+   *   console.log(point.x) // 0
+   *   console.log(point.y) // 1
+   */
+  public static fromVector({ value, angle }: VectorObject): Point {
+    const theta = (angle * Math.PI) / 180
     return new Point(Math.cos(theta) * value, Math.sin(theta) * value)
   }
 }
