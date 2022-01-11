@@ -1,7 +1,7 @@
 import { isAlmostSameNumber } from '../utils'
-import type { EventPoint } from '..'
 import type {
-  DrawHandler,
+  EventPoint,
+  DrawEventHandler,
   DrawFactory,
   ResizeCallback,
   PathClass,
@@ -34,7 +34,7 @@ export class Drawing {
   constructor(
     public svg: SvgClass,
     public pathFactory: DrawFactory,
-    public handler: DrawHandler,
+    public handler: DrawEventHandler,
     private update: (svg: SvgClass) => void
   ) {
     /** Setup property */

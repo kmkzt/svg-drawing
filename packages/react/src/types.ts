@@ -3,7 +3,6 @@ import type {
   SvgObject,
   SvgClass,
   EditSvgObject,
-  DrawHandler,
   DrawFactory,
   ResizeCallback,
   DrawEventHandler,
@@ -33,7 +32,7 @@ export type UseDraw = (opts: UseDrawOptions) => DrawAction
 
 export type UseDrawOptions = {
   factory: DrawFactory
-  handler: DrawHandler
+  handler: DrawEventHandler
   svg: SvgClass
   onChangeSvg: (obj: SvgObject) => void
 }
@@ -92,10 +91,11 @@ export type AnimatePathsProps = PathsProps & {
   animatePaths?: AnimationObject
 }
 /** UseDrawEventHandler */
-export type UseDrawEventHandler<
-  D extends DrawEventHandler = any,
-  E extends HTMLElement = HTMLElement
-> = (ref: RefObject<E>, Handler: new () => D, active?: boolean) => D
+export type UseDrawEventHandler<E extends HTMLElement = HTMLElement> = (
+  ref: RefObject<E>,
+  handler: DrawEventHandler,
+  active?: boolean
+) => void
 
 /** UseResize */
 export type UseResize<T extends HTMLElement = HTMLElement> = (

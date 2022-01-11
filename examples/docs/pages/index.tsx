@@ -101,27 +101,17 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const factory = useDrawFactory(pathOptions, { curve, close })
 
   /** Setup draw */
-  const pencilHandler = useDrawEventHandler(
-    targetRef,
-    PencilHandler,
-    drawActive && mode === 'draw' && type === 'pencil'
-  )
-
-  const penHandler = useDrawEventHandler(
-    targetRef,
-    PenHandler,
-    drawActive && mode === 'draw' && type === 'pen'
-  )
-
   const handler = useMemo(() => {
     switch (type) {
       case 'pen':
-        return penHandler
+        return new PenHandler()
       case 'pencil':
       default:
-        return pencilHandler
+        return new PencilHandler()
     }
-  }, [penHandler, pencilHandler, type])
+  }, [type])
+
+  useDrawEventHandler(targetRef, handler, drawActive && mode === 'draw')
 
   const svg = useSvg({})
   const [{ paths, ...svgProps }, onChangeSvg] = useState(svg.toJson())

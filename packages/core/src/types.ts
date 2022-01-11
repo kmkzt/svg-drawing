@@ -212,7 +212,7 @@ export interface DrawFactory {
 export type DrawStart = () => void
 export type DrawEnd = () => void
 export type DrawMove = (po: EventPoint) => void
-export interface DrawHandler {
+export interface DrawEventHandler {
   /** Return active event listener status. */
   isActive: boolean
   on: () => void
@@ -222,6 +222,7 @@ export interface DrawHandler {
     drawMove: DrawMove
     drawEnd: DrawEnd
   }) => void
+  setElement: (el: HTMLElement) => void
 }
 
 export type SelectPathIndex = {

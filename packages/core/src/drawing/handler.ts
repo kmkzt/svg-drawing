@@ -7,7 +7,7 @@ import {
 import { throttle } from '../throttle'
 import type {
   DrawListenerType,
-  DrawHandler,
+  DrawEventHandler,
   ClearListener,
   EventPoint,
   DrawEventName,
@@ -16,7 +16,7 @@ import type {
   DrawMove,
 } from '../types'
 
-export abstract class DrawEventHandler implements DrawHandler {
+export abstract class BaseHandler implements DrawEventHandler {
   /** Remove EventList */
   private _clearEventList: Array<ClearListener>
   /** Offset coordinates */
@@ -71,7 +71,7 @@ export abstract class DrawEventHandler implements DrawHandler {
     drawStart,
     drawMove,
     drawEnd,
-  }: Parameters<DrawHandler['setHandler']>[0]) {
+  }: Parameters<DrawEventHandler['setHandler']>[0]) {
     this.drawEnd = drawEnd
     this.drawStart = drawStart
     this.drawMove = drawMove
@@ -113,7 +113,7 @@ export abstract class DrawEventHandler implements DrawHandler {
   protected abstract setupListener(): Array<ClearListener>
 }
 
-export class PencilHandler extends DrawEventHandler {
+export class PencilHandler extends BaseHandler {
   private _drawMoveThrottle: DrawMove
   private delay = 20
   /** AddEventListener Options */
@@ -145,7 +145,7 @@ export class PencilHandler extends DrawEventHandler {
     drawStart,
     drawMove,
     drawEnd,
-  }: Parameters<DrawHandler['setHandler']>[0]) {
+  }: Parameters<DrawEventHandler['setHandler']>[0]) {
     this.drawEnd = drawEnd
     this.drawStart = drawStart
     this.drawMove = drawMove
@@ -236,7 +236,7 @@ export class PencilHandler extends DrawEventHandler {
   }
 }
 
-export class PenHandler extends DrawEventHandler {
+export class PenHandler extends BaseHandler {
   private _editing: boolean
   constructor(el: HTMLElement | null = null) {
     super(el)

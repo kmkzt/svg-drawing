@@ -1,29 +1,41 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import type { UseDrawEventHandler } from '../types'
-import type { DrawEventHandler } from '@svg-drawing/core'
 
 /**
  * @example
  *   import { PencilHandler } from '@svg-drawing/core'
  *
  *   const ref = useRef(null)
- *   const drawHandler = useDrawEventHandler(ref, PencilHandler)
+ *   const handler = useMemo(() => new PencilHandler(), [])
+ *   useDrawEventHandler(ref, handler)
  *
  * @example <caption>Switch active status</caption>
  *   import { PencilHandler } from '@svg-drawing/core'
  *
  *   const ref = useRef(null)
  *   const [active, setActive] = useState(true)
- *   const drawHandler = useDrawEventHandler(ref, PencilHandler, active)
+ *   const handler = useMemo(() => new PencilHandler(), [])
+ *   useDrawEventHandler(ref, handler, active)
+ *
+ * @example <caption>Switch pen and pencil handler</caption>
+ *   import { PencilHandler, PenHandler } from '@svg-drawing/core'
+ *
+ *   const ref = useRef(null)
+ *   const [type, setType] = useState('pencil')
+ *   const handler = useMemo(() => {
+ *     switch (type) {
+ *       case 'pen':
+ *         return new PenHandler()
+ *       case 'pencil':
+ *       default:
+ *         return new PencilHandler()
+ *     }
+ *   }, [type])
+ *   useDrawEventHandler(ref, handler)
  */
-export const useDrawEventHandler = <
-  D extends DrawEventHandler = any,
-  E extends HTMLElement = HTMLElement
->(
-  ...[ref, Handler, active = true]: Parameters<UseDrawEventHandler<D, E>>
-): D => {
-  const handler = useMemo(() => new Handler(), [Handler])
-
+export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>(
+  ...[ref, handler, active = true]: Parameters<UseDrawEventHandler<E>>
+) => {
   useEffect(() => {
     const cleanup = () => handler.off()
 
@@ -39,6 +51,4 @@ export const useDrawEventHandler = <
 
     return cleanup
   }, [active, handler, ref])
-
-  return handler
 }
