@@ -117,10 +117,7 @@ export class EditSvg {
   }
 
   public changeAttributes(attrs: PathAttributes) {
-    this.exec((path) => {
-      path.updateAttributes(attrs)
-      return path
-    })
+    this.exec((path) => path.updateAttributes(attrs))
   }
 
   public translate(po: PointObject) {
@@ -130,14 +127,8 @@ export class EditSvg {
     }
 
     this.exec(
-      (path) => {
-        path.translate(move)
-        return path
-      },
-      (command) => {
-        command.translate(move)
-        return command
-      },
+      (path) => path.translate(move),
+      (command) => command.translate(move),
       (point) => point.add(new Point(move.x, move.y))
     )
   }

@@ -27,35 +27,48 @@ describe('EditSvg', () => {
   })
 
   describe('translate', () => {
-    it('Selecting path', () => {
-      const editKey = edit.svg.paths[0].key
+    const pathIndex = 0
+    it('Translate selected path', () => {
+      const editKey = edit.svg.paths[pathIndex].key
+      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
+        'M1 1 l1 1 c2 2 4 2 6 2 z'
+      )
+
       edit.select({ [editKey]: {} })
       edit.translate({ x: 1, y: -1 })
-      expect(edit.svg.paths[0].getCommandString()).toBe(
+      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
         'M2 0 l1 1 c2 2 4 2 6 2 z'
       )
     })
-    it('Selecting commands', () => {
-      const editKey = edit.svg.paths[0].key
+    it('Translate selected commands', () => {
+      const editKey = edit.svg.paths[pathIndex].key
+      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
+        'M1 1 l1 1 c2 2 4 2 6 2 z'
+      )
+
       edit.select({
         [editKey]: {
           [1]: [],
         },
       })
       edit.translate({ x: 1, y: -1 })
-      expect(edit.svg.paths[0].getCommandString()).toBe(
+      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
         'M1 1 l2 0 c1 3 3 3 5 3 z'
       )
     })
-    it('Selecting point', () => {
-      const editKey = edit.svg.paths[0].key
+    it('Translate selected point', () => {
+      const editKey = edit.svg.paths[pathIndex].key
+      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
+        'M1 1 l1 1 c2 2 4 2 6 2 z'
+      )
+
       edit.select({
         [editKey]: {
           [2]: [0],
         },
       })
       edit.translate({ x: 1, y: -1 })
-      expect(edit.svg.paths[0].getCommandString()).toBe(
+      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
         'M1 1 l1 1 c3 1 4 2 6 2 z'
       )
     })
