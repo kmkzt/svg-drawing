@@ -41,7 +41,7 @@ export class Editing {
 
   public deletePaths() {
     this.editSvg.delete()
-    this.cancel()
+    this.updater(this.editSvg)
   }
 
   public changeAttributes(attrs: PathAttributes) {

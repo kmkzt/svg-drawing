@@ -129,6 +129,7 @@ describe('EditSvg', () => {
       expect(edit.svg.paths.length).toBe(2)
       expect(edit.svg.paths[0].attrs.id).toBe('path_1')
       expect(edit.svg.paths[1].attrs.id).toBe('path_2')
+      expect(edit.toJson().index).toEqual({})
     })
     it.todo('Selecting commands')
     it.todo('Selecting point')

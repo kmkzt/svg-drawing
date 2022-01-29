@@ -1,4 +1,10 @@
 import { EditPath } from './editPath'
+import {
+  convertSelectingFromIndex,
+  isSelectCommandIndex,
+  isSelectPathIndex,
+  isSelectPointIndex,
+} from './selecting'
 import { Point, toAbsolutePath, toRelativePath } from '../svg'
 import type {
   SvgClass,
@@ -94,16 +100,46 @@ export class EditSvg {
   constructor(public svg: SvgClass) {}
 
   public select(index: SelectIndex, multipleSelect?: boolean) {
-    const sel: Selecting = {
-      [index.path]:
-        typeof index.command === 'number'
-          ? {
-              [index.command]:
-                typeof index.point === 'number' ? [index.point] : [],
-            }
-          : {},
-    }
+    const sel: Selecting = convertSelectingFromIndex(index)
     this.selecting = multipleSelect ? { ...this.selecting, ...sel } : sel
+  }
+
+  private unselect(index: SelectIndex) {
+    if (!this.selecting) return
+
+    const { [index.path]: selectedPath, ...updateSelecting } = this.selecting
+
+    if (!selectedPath) return
+    if (isSelectPathIndex(index)) {
+      this.selecting = updateSelecting
+      return
+    }
+
+    const { [index.command]: selectedCommand, ...updateCommandSelecting } =
+      selectedPath
+
+    if (!selectedCommand) return
+    if (isSelectCommandIndex(index)) {
+      this.selecting = {
+        ...updateSelecting,
+        [index.path]: updateCommandSelecting,
+      }
+      return
+    }
+
+    const { [index.point]: selectedPoint, ...updatePointSelecting } =
+      selectedCommand
+
+    if (!selectedPoint) return
+    if (isSelectPointIndex(index)) {
+      this.selecting = {
+        ...updateSelecting,
+        [index.path]: {
+          ...updateCommandSelecting,
+          [index.command]: updatePointSelecting,
+        },
+      }
+    }
   }
 
   public cancel() {
@@ -194,11 +230,13 @@ export class EditSvg {
 
       if (Object.keys(selectingCommand).length === 0) {
         const path = this.svg.paths.find((p) => p.key === pathKey)
+        this.unselect({ path: pathKey })
         if (path) svg.deletePath(path)
         continue
       }
 
       for (const commandKey in selectingCommand) {
+        this.unselect({ path: pathKey, command: +commandKey })
         svg.paths.find((p) => p.key === pathKey)?.deleteCommand(+commandKey)
       }
     }
