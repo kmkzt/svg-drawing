@@ -94,7 +94,10 @@ export class EditSvg {
   constructor(public svg: SvgClass) {}
 
   public select(index: SelectIndex, multipleSelect?: boolean) {
-    this.pathSelector.select(index, multipleSelect)
+    if (multipleSelect) {
+      this.pathSelector.selectMerge(index)
+    }
+    this.pathSelector.select(index)
   }
 
   public cancel() {
