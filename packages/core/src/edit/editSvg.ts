@@ -6,6 +6,7 @@ import type {
   BoundingBox,
   PathAttributes,
   Selecting,
+  SelectIndex,
   EditSvgObject,
   ResizeBoundingBoxBase,
   CommandClass,
@@ -92,7 +93,16 @@ export class EditSvg {
   private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(public svg: SvgClass) {}
 
-  public select(sel: Selecting, multipleSelect?: boolean) {
+  public select(index: SelectIndex, multipleSelect?: boolean) {
+    const sel: Selecting = {
+      [index.path]:
+        typeof index.command === 'number'
+          ? {
+              [index.command]:
+                typeof index.point === 'number' ? [index.point] : [],
+            }
+          : {},
+    }
     this.selecting = multipleSelect ? { ...this.selecting, ...sel } : sel
   }
 

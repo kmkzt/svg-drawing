@@ -17,7 +17,9 @@ describe('EditSvg', () => {
   describe('changeAttributes', () => {
     it('Change attributes of selected paths', () => {
       const editKey = edit.svg.paths[0].key
-      edit.select({ [editKey]: {} })
+      edit.select({
+        path: editKey,
+      })
       edit.changeAttributes({ fill: '#ff0' })
       expect(edit.svg.paths[0].attrs.fill).toBe('#ff0')
     })
@@ -34,7 +36,9 @@ describe('EditSvg', () => {
         'M1 1 l1 1 c2 2 4 2 6 2 z'
       )
 
-      edit.select({ [editKey]: {} })
+      edit.select({
+        path: editKey,
+      })
       edit.translate({ x: 1, y: -1 })
       expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
         'M2 0 l1 1 c2 2 4 2 6 2 z'
@@ -47,9 +51,8 @@ describe('EditSvg', () => {
       )
 
       edit.select({
-        [editKey]: {
-          [1]: [],
-        },
+        path: editKey,
+        command: 1,
       })
       edit.translate({ x: 1, y: -1 })
       expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
@@ -63,9 +66,9 @@ describe('EditSvg', () => {
       )
 
       edit.select({
-        [editKey]: {
-          [2]: [0],
-        },
+        path: editKey,
+        command: 2,
+        point: 0,
       })
       edit.translate({ x: 1, y: -1 })
       expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
@@ -78,7 +81,7 @@ describe('EditSvg', () => {
   describe('scale', () => {
     it('Selecting path', () => {
       const editKey = edit.svg.paths[0].key
-      edit.select({ [editKey]: {} })
+      edit.select({ path: editKey })
       edit.scale(2)
       expect(edit.svg.paths[0].getCommandString()).toBe(
         'M2 2 l2 2 c4 4 8 4 12 4 z'
@@ -90,7 +93,7 @@ describe('EditSvg', () => {
   describe('scaleX', () => {
     it('Selecting path', () => {
       const editKey = edit.svg.paths[0].key
-      edit.select({ [editKey]: {} })
+      edit.select({ path: editKey })
       edit.scaleX(2)
       expect(edit.svg.paths[0].getCommandString()).toBe(
         'M2 1 l2 1 c4 2 8 2 12 2 z'
@@ -102,7 +105,7 @@ describe('EditSvg', () => {
   describe('scaleY', () => {
     it('Selecting path', () => {
       const editKey = edit.svg.paths[0].key
-      edit.select({ [editKey]: {} })
+      edit.select({ path: editKey })
       edit.scaleY(2)
       expect(edit.svg.paths[0].getCommandString()).toBe(
         'M1 2 l1 2 c2 4 4 4 6 4 z'
@@ -121,7 +124,7 @@ describe('EditSvg', () => {
   describe('delete', () => {
     it('Delete Selected path', () => {
       const editKey = edit.svg.paths[0].key
-      edit.select({ [editKey]: {} })
+      edit.select({ path: editKey })
       edit.delete()
       expect(edit.svg.paths.length).toBe(2)
       expect(edit.svg.paths[0].attrs.id).toBe('path_1')

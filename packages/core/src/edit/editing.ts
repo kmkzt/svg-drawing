@@ -35,16 +35,7 @@ export class Editing {
   }
 
   public select(index: SelectIndex, multipleSelect?: boolean) {
-    const updateSelecting: Selecting = {
-      [index.path]:
-        typeof index.command === 'number'
-          ? {
-              [index.command]:
-                typeof index.point === 'number' ? [index.point] : [],
-            }
-          : {},
-    }
-    this.editSvg.select(updateSelecting, multipleSelect)
+    this.editSvg.select(index, multipleSelect)
     this.updater(this.editSvg)
   }
 
