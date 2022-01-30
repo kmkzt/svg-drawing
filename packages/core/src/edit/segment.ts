@@ -59,6 +59,7 @@ export const calculateCoefficient = ([p0, p1, p2, p3]: BezierCurvePoint): {
 
 const { pow } = Math
 
+/** @todo Compatible for Quadratic and shortcut curve. */
 export const segmentPoint = (
   bezierCurve: BezierCurvePoint,
   range = 10

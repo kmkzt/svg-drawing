@@ -270,9 +270,13 @@ export type EditVertex = {
 }
 
 /** BoundingBox */
-export type BoundingBox = {
-  min: PointObject
-  max: PointObject
+export type BoundingBoxObject = {
+  x: number
+  y: number
+  width: number
+  height: number
+  vertex: Record<FixedType, PointObject>
+  selected: boolean
 }
 
 export type Selecting = Record<PathObject['key'], SelectingCommands>
@@ -283,20 +287,12 @@ export type EditPathObject = {
   key: PathObject['key']
   d: string
   vertex: EditVertex[]
-  boundingBox: BoundingBox
 }
 
 export type EditSvgObject = {
   index: Selecting
   paths: Record<PathObject['key'], EditPathObject>
-  boundingBox: {
-    x: number
-    y: number
-    width: number
-    height: number
-    vertex: Record<FixedType, PointObject>
-    selected: boolean
-  }
+  boundingBox: BoundingBoxObject
 }
 
 export type FixedType = 'LeftTop' | 'RightTop' | 'RightBottom' | 'LeftBottom'

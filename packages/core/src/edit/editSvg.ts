@@ -1,10 +1,10 @@
+import { BoundingBox, getResizeEditObject } from './boundingBox'
 import { EditPath } from './editPath'
 import { PathSelector } from './pathSelector'
 import { Point, toAbsolutePath, toRelativePath } from '../svg'
 import type {
   SvgClass,
   PointObject,
-  BoundingBox,
   PathAttributes,
   SelectIndex,
   EditSvgObject,
@@ -13,79 +13,6 @@ import type {
   PathClass,
   PointClass,
 } from '../types'
-
-const fallbackBoundingBox: BoundingBox = {
-  min: { x: 0, y: 0 },
-  max: { x: 0, y: 0 },
-}
-
-const getResizeEditObject = (
-  resizeBase: ResizeBoundingBoxBase,
-  boundingBox: BoundingBox,
-  translatePoint: PointObject
-): { scale: PointObject; move: PointObject } => {
-  const movePoint = {
-    x: translatePoint.x - resizeBase.point.x,
-    y: translatePoint.y - resizeBase.point.y,
-  }
-
-  const width = boundingBox.max.x - boundingBox.min.x
-  const height = boundingBox.max.y - boundingBox.min.y
-
-  switch (resizeBase.fixedType) {
-    case 'LeftTop': {
-      const scale = {
-        x: (width - movePoint.x) / width,
-        y: (height - movePoint.y) / height,
-      }
-      const move = {
-        x: -(boundingBox.max.x * scale.x - boundingBox.max.x),
-        y: -(boundingBox.max.y * scale.y - boundingBox.max.y),
-      }
-      return { scale, move }
-    }
-    case 'RightTop': {
-      const scale = {
-        x: (width + movePoint.x) / width,
-        y: (height - movePoint.y) / height,
-      }
-      return {
-        scale,
-        move: {
-          x: -(boundingBox.min.x * scale.x - boundingBox.min.x),
-          y: -(boundingBox.max.y * scale.y - boundingBox.max.y),
-        },
-      }
-    }
-    case 'LeftBottom': {
-      const scale = {
-        x: (width - movePoint.x) / width,
-        y: (height + movePoint.y) / height,
-      }
-
-      return {
-        scale,
-        move: {
-          x: -(boundingBox.max.x * scale.x - boundingBox.max.x),
-          y: -(boundingBox.min.y * scale.y - boundingBox.min.y),
-        },
-      }
-    }
-    case 'RightBottom': {
-      const scale = {
-        x: (width + movePoint.x) / width,
-        y: (height + movePoint.y) / height,
-      }
-      return {
-        scale,
-        move: {
-          x: -(boundingBox.min.x * scale.x - boundingBox.min.x),
-          y: -(boundingBox.min.y * scale.y - boundingBox.min.y),
-        },
-      }
-    }
-  }
-}
 
 export class EditSvg {
   private pathSelector = new PathSelector()
@@ -169,9 +96,10 @@ export class EditSvg {
   public resizeBoundingBox(po: PointObject) {
     if (!this.resizeBoundingBoxBase) return
 
+    const { min, max } = this.boundingBox
     const { move, scale } = getResizeEditObject(
       this.resizeBoundingBoxBase,
-      this.boundingBox,
+      { min, max },
       po
     )
 
@@ -217,78 +145,53 @@ export class EditSvg {
     return preview
   }
 
-  public get boundingBox() {
-    const listX: number[] = []
-    const listY: number[] = []
+  private get boundingBox() {
+    const points: PointObject[] = this.pathSelector.pathsIndex.flatMap(
+      (pathKey) => {
+        const path = this.svg.paths.find((path) => path.key === pathKey)
 
-    this.exec((path) => {
-      const editPath = new EditPath(path.clone())
+        return path ? new EditPath(path.clone(), this.pathSelector).points : []
+      }
+    )
 
-      const {
-        boundingBox: {
-          min: { x: cMinX, y: cMinY },
-          max: { x: cMaxX, y: cMaxY },
-        },
-      } = editPath
-      listX.push(cMinX, cMaxX)
-      listY.push(cMinY, cMaxY)
-
-      return path
-    })
-
-    return listX.length !== 0 && listY.length !== 0
-      ? {
-          min: { x: Math.min(...listX), y: Math.min(...listY) },
-          max: { x: Math.max(...listX), y: Math.max(...listY) },
-        }
-      : fallbackBoundingBox
+    return new BoundingBox(points).toJson()
   }
 
   public toJson(): EditSvgObject | null {
     if (!this.pathSelector.selected) return null
 
-    const listX: number[] = []
-    const listY: number[] = []
+    const paths = this.pathSelector.pathsIndex.reduce(
+      (acc: EditSvgObject['paths'], pathKey) => {
+        const path = this.svg.paths.find((path) => path.key === pathKey)
 
-    const paths: EditSvgObject['paths'] = {}
+        return path
+          ? {
+              ...acc,
+              [path.key]: new EditPath(
+                path.clone(),
+                this.pathSelector
+              ).toJson(),
+            }
+          : acc
+      },
+      {}
+    )
 
-    this.exec((path) => {
-      const editPath = new EditPath(path.clone(), this.pathSelector).toJson()
-
-      const {
-        min: { x: cMinX, y: cMinY },
-        max: { x: cMaxX, y: cMaxY },
-      } = editPath.boundingBox
-      listX.push(cMinX, cMaxX)
-      listY.push(cMinY, cMaxY)
-
-      paths[path.key] = editPath
-
-      return path
-    })
-
-    const { min, max }: BoundingBox =
-      listX.length !== 0 && listY.length !== 0
-        ? {
-            min: { x: Math.min(...listX), y: Math.min(...listY) },
-            max: { x: Math.max(...listX), y: Math.max(...listY) },
-          }
-        : fallbackBoundingBox
+    const {
+      min: { x, y },
+      size: { width, height },
+      vertex,
+    } = this.boundingBox
 
     return {
       index: this.pathSelector.toJson(),
       paths,
       boundingBox: {
-        x: min.x,
-        y: min.y,
-        width: max.x - min.x,
-        height: max.y - min.y,
-        vertex: {
-          ['LeftTop']: { x: min.x, y: min.y },
-          ['RightTop']: { x: max.x, y: min.y },
-          ['RightBottom']: { x: max.x, y: max.y },
-          ['LeftBottom']: { x: min.x, y: max.y },
-        },
+        x,
+        y,
+        width,
+        height,
+        vertex,
         selected: this.pathSelector.selectedPathsOnly,
       },
     }

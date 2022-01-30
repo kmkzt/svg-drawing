@@ -2,7 +2,6 @@ import { getEventPoint } from '../event'
 import type {
   PointObject,
   PathAttributes,
-  Selecting,
   ResizeBoundingBoxBase,
   SelectIndex,
 } from '../types'

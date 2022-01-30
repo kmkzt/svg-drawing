@@ -3,7 +3,6 @@ import { isCurveCommand, toAbsolutePath } from '../svg'
 import type {
   PointObject,
   EditVertex,
-  BoundingBox,
   EditPathObject,
   PathClass,
 } from '../types'
@@ -15,11 +14,6 @@ const genOutline = (points: PointObject[]) =>
     ''
   )
 
-const fallbackBoundingBox: BoundingBox = {
-  min: { x: 0, y: 0 },
-  max: { x: 0, y: 0 },
-}
-
 /** @todo Rename PathEdit ? */
 export class EditPath {
   constructor(private path: PathClass, private selector?: PathSelector) {}
@@ -29,7 +23,7 @@ export class EditPath {
   }
 
   /** @todo Compatible for Quadratic and shortcut curve */
-  private get points(): PointObject[] {
+  get points(): PointObject[] {
     const points: PointObject[] = []
     let prev: PointObject | undefined = undefined
 
@@ -90,32 +84,10 @@ export class EditPath {
     return vertex
   }
 
-  public get boundingBox(): BoundingBox {
-    const points = this.points
-    if (points.length === 0) return fallbackBoundingBox
-    let minX = points[0].x
-    let minY = points[0].y
-    let maxX = points[0].x
-    let maxY = points[0].y
-    for (let i = 1; i < points.length; i += 1) {
-      const po = points[i]
-      if (po.x < minX) minX = po.x
-      if (po.x > maxX) maxX = po.x
-      if (po.y < minY) minY = po.y
-      if (po.y > maxY) maxY = po.y
-    }
-
-    return {
-      min: { x: minX, y: minY },
-      max: { x: maxX, y: maxY },
-    }
-  }
-
   public toJson(): EditPathObject {
     return {
       key: this.path.key,
       d: this.path.getCommandString(),
-      boundingBox: this.boundingBox,
       vertex: this.vertex,
     }
   }
