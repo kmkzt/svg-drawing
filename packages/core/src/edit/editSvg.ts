@@ -319,18 +319,18 @@ export class EditSvg {
       }
 
       commandsIndex.forEach((commandKey) => {
-        const selectingPoints = this.pathSelector.getPointsIndex(
+        const pointsIndex = this.pathSelector.getPointsIndex(
           pathKey,
           commandKey
         )
-        if (!selectingPoints || !pointExec) {
+        if (!pointsIndex || !pointExec) {
           svg.paths[pathIndex].commands[commandKey] = commandExec(
             svg.paths[pathIndex].commands[+commandKey]
           )
           return
         }
 
-        selectingPoints.map((pointKey: number) => {
+        pointsIndex.map((pointKey: number) => {
           svg.paths[pathIndex].commands[commandKey].points[pointKey] =
             pointExec(
               svg.paths[pathIndex].commands[commandKey].points[pointKey]
