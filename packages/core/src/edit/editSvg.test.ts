@@ -122,14 +122,30 @@ describe('EditSvg', () => {
   })
 
   describe('delete', () => {
-    it('Delete Selected path', () => {
-      const editKey = edit.svg.paths[0].key
-      edit.select({ path: editKey })
-      edit.delete()
-      expect(edit.svg.paths.length).toBe(2)
-      expect(edit.svg.paths[0].attrs.id).toBe('path_1')
-      expect(edit.svg.paths[1].attrs.id).toBe('path_2')
-      expect(edit.toJson().index).toEqual({})
+    describe('Delete Selected path.', () => {
+      it('Update paths', () => {
+        const editKey = edit.svg.paths[0].key
+        edit.select({ path: editKey })
+
+        expect(edit.svg.paths.length).toBe(3)
+        expect(edit.svg.paths[0].attrs.id).toBe('path_0')
+        expect(edit.svg.paths[1].attrs.id).toBe('path_1')
+        expect(edit.svg.paths[2].attrs.id).toBe('path_2')
+
+        edit.delete()
+        expect(edit.svg.paths.length).toBe(2)
+        expect(edit.svg.paths[0].attrs.id).toBe('path_1')
+        expect(edit.svg.paths[1].attrs.id).toBe('path_2')
+      })
+      it('Update selected status.', () => {
+        const editKey = edit.svg.paths[0].key
+        edit.select({ path: editKey })
+
+        expect(edit.selected).toBe(true)
+
+        edit.delete()
+        expect(edit.selected).toBe(false)
+      })
     })
     it.todo('Selecting commands')
     it.todo('Selecting point')

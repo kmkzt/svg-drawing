@@ -5,10 +5,9 @@ import type {
   EditVertex,
   BoundingBox,
   EditPathObject,
-  SelectingCommands,
-  SelectingPoints,
   PathClass,
 } from '../types'
+import type { PathSelector } from './pathSelector'
 
 const genOutline = (points: PointObject[]) =>
   points.reduce(
@@ -23,7 +22,7 @@ const fallbackBoundingBox: BoundingBox = {
 
 /** @todo Rename PathEdit ? */
 export class EditPath {
-  constructor(public path: PathClass, public selecting?: SelectingCommands) {}
+  constructor(private path: PathClass, private selector?: PathSelector) {}
 
   private get absolutePath() {
     return toAbsolutePath(this.path)
@@ -34,10 +33,10 @@ export class EditPath {
     const points: PointObject[] = []
     let prev: PointObject | undefined = undefined
 
-    for (const command of this.absolutePath.commands) {
+    this.absolutePath.commands.forEach((command) => {
       if (!command.point) {
         prev = undefined
-        continue
+        return
       }
 
       const addPoints: PointObject[] = isCurveCommand(command)
@@ -54,12 +53,12 @@ export class EditPath {
       points.push(...addPoints)
 
       prev = command.point?.toJson()
-    }
+    })
 
     return points
   }
 
-  public get vertex(): EditVertex[] {
+  private get vertex(): EditVertex[] {
     const vertex: EditVertex[] = []
     const commands = this.absolutePath.commands
     for (let c = 0; c < commands.length; c += 1) {
@@ -72,8 +71,7 @@ export class EditPath {
         next?.points[0]?.toJson(),
       ].filter((p): p is PointObject => !!p)
 
-      const selectingPoints: SelectingPoints | null =
-        this.selecting?.[c] ?? null
+      const pointIndex = this.selector?.getPointsIndex(this.path.key, c)
 
       vertex.push({
         points: curr.points.map((point, pIndex) => ({
@@ -83,7 +81,7 @@ export class EditPath {
             point: pIndex,
           },
           value: point.toJson(),
-          selected: selectingPoints?.includes(pIndex) ?? false,
+          selected: pointIndex?.includes(pIndex) ?? false,
         })),
         d: genOutline(outlinePoints),
       })

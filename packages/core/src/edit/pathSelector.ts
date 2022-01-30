@@ -1,4 +1,3 @@
-import type { SelectingCommands, SelectingPoints } from '..'
 import type {
   SelectIndex,
   SelectPathIndex,
@@ -31,69 +30,66 @@ const isObjectEmpty = (obj: object): obj is Record<any, never> =>
   Object.keys(obj).length === 0
 
 export class PathSelector {
-  private _selecting: Selecting = {}
-
-  get selecting() {
-    return this._selecting
-  }
+  private selecting: Selecting = {}
 
   get selectedPathsOnly(): boolean {
     return (
       this.selected &&
-      Object.keys(this._selecting).every(
+      Object.keys(this.selecting).every(
         (key: string) =>
-          this._selecting && Object.keys(this._selecting[key]).length === 0
+          this.selecting && Object.keys(this.selecting[key]).length === 0
       )
     )
   }
 
   get selected(): boolean {
-    return !isObjectEmpty(this._selecting)
+    return !isObjectEmpty(this.selecting)
   }
 
-  getCommandsIndex(pathKey: string): SelectingCommands | undefined {
-    const selectingCommands = this._selecting[pathKey]
+  get pathsIndex(): string[] {
+    return Object.keys(this.selecting)
+  }
+
+  getCommandsIndex(pathKey: string): number[] | undefined {
+    const selectingCommands = this.selecting[pathKey]
 
     return selectingCommands && !isObjectEmpty(selectingCommands)
-      ? selectingCommands
+      ? Object.keys(selectingCommands).map(Number)
       : undefined
   }
 
-  getPointsIndex(
-    pathKey: string,
-    commandKey: number
-  ): SelectingPoints | undefined {
-    const selectingPoints = this._selecting[pathKey]?.[commandKey]
+  getPointsIndex(pathKey: string, commandKey: number): number[] | undefined {
+    const selectingPoints = this.selecting[pathKey]?.[commandKey]
 
     return selectingPoints && !isObjectEmpty(selectingPoints)
-      ? selectingPoints
+      ? Object.keys(selectingPoints).map(Number)
       : undefined
   }
 
   clear() {
-    this._selecting = {}
+    this.selecting = {}
   }
 
   select(index: SelectIndex) {
-    this._selecting = convertSelectingFromIndex(index)
+    this.selecting = convertSelectingFromIndex(index)
   }
 
   /** @todo Currently only path index is supported. Changed to merge deeply. */
   selectMerge(index: SelectIndex) {
-    this._selecting = {
-      ...this._selecting,
+    this.selecting = {
+      ...this.selecting,
       ...convertSelectingFromIndex(index),
     }
   }
 
   unselect(index: SelectIndex) {
-    if (!this._selecting) return
+    if (!this.selecting) return
 
-    const { [index.path]: selectedPath, ...updateSelecting } = this._selecting
+    const { [index.path]: selectedPath, ...updateSelecting } = this.selecting
 
     if (!selectedPath) return
     if (isSelectPathIndex(index)) {
-      this._selecting = updateSelecting
+      this.selecting = updateSelecting
       return
     }
 
@@ -102,7 +98,7 @@ export class PathSelector {
 
     if (!selectedCommand) return
     if (isSelectCommandIndex(index)) {
-      this._selecting = {
+      this.selecting = {
         ...updateSelecting,
         [index.path]: updateCommandSelecting,
       }
@@ -114,7 +110,7 @@ export class PathSelector {
 
     if (!selectedPoint) return
     if (isSelectPointIndex(index)) {
-      this._selecting = {
+      this.selecting = {
         ...updateSelecting,
         [index.path]: {
           ...updateCommandSelecting,
@@ -122,5 +118,9 @@ export class PathSelector {
         },
       }
     }
+  }
+
+  toJson(): Selecting {
+    return this.selecting
   }
 }
