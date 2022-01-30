@@ -62,7 +62,7 @@ export class PathSelector {
     const selectingPoints = this.selecting[pathKey]?.[commandKey]
 
     return selectingPoints && !isObjectEmpty(selectingPoints)
-      ? Object.keys(selectingPoints).map(Number)
+      ? selectingPoints
       : undefined
   }
 
