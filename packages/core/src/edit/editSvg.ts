@@ -96,6 +96,7 @@ export class EditSvg {
   public select(index: SelectIndex, multipleSelect?: boolean) {
     if (multipleSelect) {
       this.pathSelector.selectMerge(index)
+      return
     }
     this.pathSelector.select(index)
   }
