@@ -239,7 +239,7 @@ export class EditSvg {
   }
 
   public toJson(): EditSvgObject | null {
-    if (this.pathSelector.notSelected) return null
+    if (!this.pathSelector.selected) return null
 
     const listX: number[] = []
     const listY: number[] = []

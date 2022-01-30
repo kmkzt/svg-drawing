@@ -27,6 +27,9 @@ const isSelectCommandIndex = (
 const isSelectPointIndex = (index: SelectIndex): index is SelectPointIndex =>
   !!(index.path && index.command && index.point)
 
+const isObjectEmpty = (obj: object): obj is Record<any, never> =>
+  Object.keys(obj).length === 0
+
 export class PathSelector {
   private _selecting: Selecting = {}
 
@@ -35,9 +38,8 @@ export class PathSelector {
   }
 
   get selectedPathsOnly(): boolean {
-    return !!(
-      this._selecting &&
-      Object.keys(this._selecting).length > 0 &&
+    return (
+      this.selected &&
       Object.keys(this._selecting).every(
         (key: string) =>
           this._selecting && Object.keys(this._selecting[key]).length === 0
@@ -45,15 +47,15 @@ export class PathSelector {
     )
   }
 
-  get notSelected(): boolean {
-    return Object.keys(this._selecting).length === 0
+  get selected(): boolean {
+    return !isObjectEmpty(this._selecting)
   }
 
   getCommandsIndex(pathKey: string): SelectingCommands | undefined {
-    const selectingCommand = this._selecting[pathKey]
+    const selectingCommands = this._selecting[pathKey]
 
-    return selectingCommand && Object.keys(selectingCommand).length === 0
-      ? selectingCommand
+    return selectingCommands && !isObjectEmpty(selectingCommands)
+      ? selectingCommands
       : undefined
   }
 
@@ -62,9 +64,8 @@ export class PathSelector {
     commandKey: number
   ): SelectingPoints | undefined {
     const selectingPoints = this._selecting[pathKey]?.[commandKey]
-    if (!selectingPoints) return
 
-    return selectingPoints && Object.keys(selectingPoints).length === 0
+    return selectingPoints && !isObjectEmpty(selectingPoints)
       ? selectingPoints
       : undefined
   }
@@ -73,7 +74,7 @@ export class PathSelector {
     this._selecting = {}
   }
 
-  select(index: SelectIndex, multipleSelect?: boolean) {
+  select(index: SelectIndex) {
     this._selecting = convertSelectingFromIndex(index)
   }
 
