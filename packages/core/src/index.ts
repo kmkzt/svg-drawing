@@ -4,7 +4,7 @@ export * from './svg'
 export { EditSvg } from './edit/editSvg'
 export { EditPath } from './edit/editPath'
 export { Editing } from './edit/editing'
-export { calculateCoefficient, calculatePoint } from './edit/calculatePoint'
+export { segmentPoint } from './edit/segment'
 export {
   Renderer,
   createSvgChildElement,

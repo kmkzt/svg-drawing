@@ -1,4 +1,4 @@
-import { calculatePoint } from './calculatePoint'
+import { segmentPoint } from './segment'
 import { isCurveCommand, toAbsolutePath } from '../svg'
 import type {
   PointObject,
@@ -41,7 +41,7 @@ export class EditPath {
       }
 
       const addPoints: PointObject[] = isCurveCommand(command)
-        ? calculatePoint([
+        ? segmentPoint([
             prev || (command.points[0].toJson() as PointObject),
             ...(command.points.map((p) => p.toJson()) as [
               PointObject,

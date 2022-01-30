@@ -59,7 +59,7 @@ export const calculateCoefficient = ([p0, p1, p2, p3]: BezierCurvePoint): {
 
 const { pow } = Math
 
-export const calculatePoint = (
+export const segmentPoint = (
   bezierCurve: BezierCurvePoint,
   range = 10
 ): PointObject[] => {
