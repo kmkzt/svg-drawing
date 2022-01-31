@@ -16,15 +16,27 @@ const convertSelectingFromIndex = (index: SelectIndex): Selecting => ({
 })
 
 const isSelectPathIndex = (index: SelectIndex): index is SelectPathIndex =>
-  !!(index.path && !index.command && !index.point)
+  !!(
+    index.path &&
+    typeof index.command !== 'number' &&
+    typeof index.point !== 'number'
+  )
 
 const isSelectCommandIndex = (
   index: SelectIndex
 ): index is SelectCommandIndex =>
-  !!(index.path && index.command && !index.point)
+  !!(
+    index.path &&
+    typeof index.command === 'number' &&
+    typeof index.point !== 'number'
+  )
 
 const isSelectPointIndex = (index: SelectIndex): index is SelectPointIndex =>
-  !!(index.path && index.command && index.point)
+  !!(
+    index.path &&
+    typeof index.command === 'number' &&
+    typeof index.point === 'number'
+  )
 
 const isObjectEmpty = (obj: object): obj is Record<any, never> =>
   Object.keys(obj).length === 0
@@ -85,36 +97,34 @@ export class PathSelector {
   unselect(index: SelectIndex) {
     if (!this.selecting) return
 
-    const { [index.path]: selectedPath, ...updateSelecting } = this.selecting
+    const { [index.path]: unselectedPath, ...updateSelecting } = this.selecting
 
-    if (!selectedPath) return
+    if (!unselectedPath) return
     if (isSelectPathIndex(index)) {
       this.selecting = updateSelecting
       return
     }
 
-    const { [index.command]: selectedCommand, ...updateCommandSelecting } =
-      selectedPath
+    const { [index.command]: unselectedCommand, ...updateCommandSelecting } =
+      unselectedPath
 
-    if (!selectedCommand) return
+    if (!unselectedCommand) return
     if (isSelectCommandIndex(index)) {
       this.selecting = {
-        ...updateSelecting,
+        ...this.selecting,
         [index.path]: updateCommandSelecting,
       }
       return
     }
 
-    const { [index.point]: selectedPoint, ...updatePointSelecting } =
-      selectedCommand
-
-    if (!selectedPoint) return
     if (isSelectPointIndex(index)) {
       this.selecting = {
-        ...updateSelecting,
+        ...this.selecting,
         [index.path]: {
-          ...updateCommandSelecting,
-          [index.command]: updatePointSelecting,
+          ...this.selecting[index.path],
+          [index.command]: unselectedCommand.filter(
+            (pointIndex) => pointIndex !== index.point
+          ),
         },
       }
     }
