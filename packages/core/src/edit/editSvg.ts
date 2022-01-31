@@ -1,4 +1,4 @@
-import { BoundingBox, getResizeEditObject } from './boundingBox'
+import { BoundingBox } from './boundingBox'
 import { EditPath } from './editPath'
 import { PathSelector } from './pathSelector'
 import { Point, toAbsolutePath, toRelativePath } from '../svg'
@@ -96,10 +96,8 @@ export class EditSvg {
   public resizeBoundingBox(po: PointObject) {
     if (!this.resizeBoundingBoxBase) return
 
-    const { min, max } = this.boundingBox
-    const { move, scale } = getResizeEditObject(
+    const { move, scale } = new BoundingBox(this.points).resizeParams(
       this.resizeBoundingBoxBase,
-      { min, max },
       po
     )
 
@@ -145,16 +143,12 @@ export class EditSvg {
     return preview
   }
 
-  private get boundingBox() {
-    const points: PointObject[] = this.pathSelector.pathsIndex.flatMap(
-      (pathKey) => {
-        const path = this.svg.paths.find((path) => path.key === pathKey)
+  private get points() {
+    return this.pathSelector.pathsIndex.flatMap((pathKey) => {
+      const path = this.svg.paths.find((path) => path.key === pathKey)
 
-        return path ? new EditPath(path.clone(), this.pathSelector).points : []
-      }
-    )
-
-    return new BoundingBox(points).toJson()
+      return path ? new EditPath(path.clone(), this.pathSelector).points : []
+    })
   }
 
   public toJson(): EditSvgObject | null {
@@ -179,9 +173,10 @@ export class EditSvg {
 
     const {
       min: { x, y },
-      size: { width, height },
+      width,
+      height,
       vertex,
-    } = this.boundingBox
+    } = new BoundingBox(this.points)
 
     return {
       index: this.pathSelector.toJson(),

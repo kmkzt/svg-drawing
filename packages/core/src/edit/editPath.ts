@@ -22,7 +22,11 @@ export class EditPath {
     return toAbsolutePath(this.path)
   }
 
-  /** @todo Compatible for Quadratic and shortcut curve */
+  /**
+   * @todo Compatible for Quadratic and shortcut curve
+   *
+   * @todo Move BoundingBox
+   */
   get points(): PointObject[] {
     const points: PointObject[] = []
     let prev: PointObject | undefined = undefined
