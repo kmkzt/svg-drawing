@@ -2,17 +2,16 @@ import { BoundingBox } from './boundingBox'
 import { EditPath } from './editPath'
 import { PathSelector } from './pathSelector'
 import { Point, toAbsolutePath, toRelativePath } from '../svg'
-import type { FixedType } from '..'
 import type {
   SvgClass,
   PointObject,
   PathAttributes,
   SelectIndex,
   EditSvgObject,
-  ResizeBoundingBoxBase,
   CommandClass,
   PathClass,
   PointClass,
+  FixedType,
 } from '../types'
 
 export class EditSvg {
