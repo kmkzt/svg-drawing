@@ -1,7 +1,6 @@
 import { BoundingBox } from './boundingBox'
 import { EditPath } from './editPath'
 import { PathSelector } from './pathSelector'
-import { toAbsolutePath, toRelativePath } from '../svg'
 import type {
   SvgClass,
   PointObject,
@@ -22,7 +21,7 @@ export class EditSvg {
     return this.pathSelector.selected
   }
 
-  public select(index: SelectIndex, multipleSelect?: boolean) {
+  select(index: SelectIndex, multipleSelect?: boolean) {
     if (multipleSelect) {
       this.pathSelector.selectMerge(index)
       return
@@ -30,15 +29,15 @@ export class EditSvg {
     this.pathSelector.select(index)
   }
 
-  public cancel() {
+  cancel() {
     this.pathSelector.clear()
   }
 
-  public changeAttributes(attrs: PathAttributes) {
+  changeAttributes(attrs: PathAttributes) {
     this.exec((path) => path.updateAttributes(attrs))
   }
 
-  public translate(move: PointObject) {
+  translate(move: PointObject) {
     this.exec(
       (path) => path.translate(move),
       (command) => command.translate(move),
@@ -46,7 +45,7 @@ export class EditSvg {
     )
   }
 
-  public scale(r: number) {
+  scale(r: number) {
     this.exec(
       (path) => path.scale(r),
       (command) => command.scale(r),
@@ -54,7 +53,7 @@ export class EditSvg {
     )
   }
 
-  public scaleX(r: number) {
+  scaleX(r: number) {
     this.exec(
       (path) => path.scaleX(r),
       (command) => command.scaleX(r),
@@ -62,7 +61,7 @@ export class EditSvg {
     )
   }
 
-  public scaleY(r: number) {
+  scaleY(r: number) {
     this.exec(
       (path) => path.scaleY(r),
       (command) => command.scaleY(r),
@@ -70,7 +69,7 @@ export class EditSvg {
     )
   }
 
-  public resizeBoundingBox(type: FixedType, po: PointObject) {
+  resizeBoundingBox(type: FixedType, po: PointObject) {
     const { move, scale } = new BoundingBox(this.absolutePath).resizeParams(
       type,
       po
@@ -86,7 +85,7 @@ export class EditSvg {
   }
 
   /** @todo Delete points */
-  public delete() {
+  delete() {
     this.pathSelector.pathsIndex.forEach((pathKey) => {
       const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
 
@@ -101,14 +100,12 @@ export class EditSvg {
 
       commandsIndex.forEach((command) => {
         this.pathSelector.unselect({ path: pathKey, command })
-        path.deleteCommand(command)
+        this.svg.updatePath(path.deleteCommand(command))
       })
-
-      this.svg.updatePath(path)
     })
   }
 
-  public preview(): EditSvg {
+  preview(): EditSvg {
     const preview = new EditSvg(this.svg.clone())
     preview.pathSelector = this.pathSelector
     return preview
@@ -124,7 +121,7 @@ export class EditSvg {
     })
   }
 
-  public toJson(): EditSvgObject | null {
+  toJson(): EditSvgObject | null {
     if (!this.pathSelector.selected) return null
 
     const paths = this.pathSelector.pathsIndex.reduce(
@@ -165,27 +162,19 @@ export class EditSvg {
     }
   }
 
-  private generateAbsolutePathSvg() {
-    const svg = this.svg.clone()
-    svg.paths = svg.paths.map((p) => toAbsolutePath(p))
-    return svg
-  }
-
   private exec(
     pathExec: (path: PathClass) => PathClass,
     commandExec?: (command: CommandClass) => CommandClass,
     pointExec?: (point: PointClass) => PointClass
   ): void {
-    const svg = this.generateAbsolutePathSvg()
-
     this.pathSelector.pathsIndex.forEach((pathKey) => {
-      const path = svg.getPath(pathKey)
+      const path = this.svg.getPath(pathKey)
       const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
 
       if (!path) return
 
       if (!commandsIndex || !commandExec) {
-        svg.updatePath(pathExec(path))
+        this.svg.updatePath(pathExec(path))
         return
       }
 
@@ -195,25 +184,22 @@ export class EditSvg {
           commandKey
         )
         if (!pointsIndex || !pointExec) {
-          svg.updatePath(
-            path.updateCommand(
-              commandKey,
-              commandExec(path.commands[commandKey])
-            )
-          )
+          this.svg.updatePath(path.updateCommand(commandKey, commandExec))
           return
         }
 
-        pointsIndex.map((pointKey: number) => {
-          path.commands[commandKey].points[pointKey] = pointExec(
-            path.commands[commandKey].points[pointKey]
-          )
-        })
+        this.svg.updatePath(
+          path.updateCommand(commandKey, (com) => {
+            const command = com.clone()
 
-        svg.updatePath(path)
+            pointsIndex.forEach((pointKey: number) => {
+              command.points[pointKey] = pointExec(command.points[pointKey])
+            })
+
+            return command
+          })
+        )
       })
     })
-
-    this.svg.paths = svg.paths.map((p) => toRelativePath(p))
   }
 }

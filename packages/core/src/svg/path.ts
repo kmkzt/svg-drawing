@@ -49,8 +49,14 @@ export class Path implements PathClass {
     return this
   }
 
-  public updateCommand(i: number, command: CommandClass) {
-    this.commands[i] = command
+  public updateCommand(
+    i: number,
+    update: (absoluteCommand: CommandClass) => CommandClass
+  ) {
+    const commands = toAbsoluteCommands(this.commands)
+    commands[i] = update(commands[i])
+
+    this.commands = toRelativeCommands(commands)
     return this
   }
 
