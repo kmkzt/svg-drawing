@@ -38,6 +38,18 @@ export class Svg implements SvgClass {
     return this
   }
 
+  public getPath(key: string): PathClass | undefined {
+    return this.paths.find((p) => p.key === key)
+  }
+
+  public updatePath(path: PathClass) {
+    const index = this.paths.findIndex((p) => p.key === path.key)
+    if (index !== -1) {
+      this.paths[index] = path
+    }
+    return this
+  }
+
   public deletePath(deletePath: PathClass) {
     this.paths = this.paths.filter((path) => path.key !== deletePath.key)
     return this

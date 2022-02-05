@@ -93,6 +93,7 @@ export interface PathClass {
   scaleX: (r: number) => this
   scaleY: (r: number) => this
   addCommand: (params: CommandClass | CommandClass[]) => this
+  updateCommand: (i: number, command: CommandClass) => this
   deleteCommand: (i: number) => this
   translate: (p: PointObject) => this
   setAttributes: (attr: PathAttributes) => this
@@ -127,6 +128,10 @@ export interface SvgClass {
   resize: (arg: { width: number; height: number }) => void
   /** Add multiple paths. */
   addPath: (path: PathClass | PathClass[]) => this
+  /** Get path */
+  getPath: (key: string) => PathClass | undefined
+  /** Update path */
+  updatePath: (path: PathClass) => this
   /** Delete paths */
   deletePath: (path: PathClass) => this
   /** Return cloned paths. */

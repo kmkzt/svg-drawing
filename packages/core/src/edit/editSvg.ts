@@ -92,18 +92,18 @@ export class EditSvg {
     this.pathSelector.pathsIndex.forEach((pathKey) => {
       const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
 
-      const path = this.svg.paths.find((p) => p.key === pathKey)
+      const path = this.svg.getPath(pathKey)
+      if (!path) return
+
       if (!commandsIndex) {
         this.pathSelector.unselect({ path: pathKey })
-        if (path) svg.deletePath(path)
+        svg.deletePath(path)
         return
       }
 
       commandsIndex.forEach((commandKey) => {
         this.pathSelector.unselect({ path: pathKey, command: +commandKey })
-
-        /** @todo Added svg.updatePaths() */
-        svg.paths.find((p) => p.key === pathKey)?.deleteCommand(+commandKey)
+        svg.getPath(pathKey)?.deleteCommand(+commandKey)
       })
     })
 
@@ -181,13 +181,13 @@ export class EditSvg {
     const svg = this.generateAbsolutePathSvg()
 
     this.pathSelector.pathsIndex.forEach((pathKey) => {
-      const pathIndex = svg.paths.findIndex((path) => path.key === pathKey)
+      const path = svg.getPath(pathKey)
       const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
 
-      if (!svg.paths[pathIndex]) return
+      if (!path) return
 
       if (!commandsIndex || !commandExec) {
-        svg.paths[pathIndex] = pathExec(svg.paths[pathIndex])
+        svg.updatePath(pathExec(path))
         return
       }
 
@@ -197,18 +197,22 @@ export class EditSvg {
           commandKey
         )
         if (!pointsIndex || !pointExec) {
-          svg.paths[pathIndex].commands[commandKey] = commandExec(
-            svg.paths[pathIndex].commands[+commandKey]
+          svg.updatePath(
+            path.updateCommand(
+              commandKey,
+              commandExec(path.commands[commandKey])
+            )
           )
           return
         }
 
         pointsIndex.map((pointKey: number) => {
-          svg.paths[pathIndex].commands[commandKey].points[pointKey] =
-            pointExec(
-              svg.paths[pathIndex].commands[commandKey].points[pointKey]
-            )
+          path.commands[commandKey].points[pointKey] = pointExec(
+            path.commands[commandKey].points[pointKey]
+          )
         })
+
+        svg.updatePath(path)
       })
     })
 

@@ -49,6 +49,11 @@ export class Path implements PathClass {
     return this
   }
 
+  public updateCommand(i: number, command: CommandClass) {
+    this.commands[i] = command
+    return this
+  }
+
   public deleteCommand(i: number) {
     this.commands.splice(i, 1)
     return this
