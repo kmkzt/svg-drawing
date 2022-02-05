@@ -1,4 +1,4 @@
-import { segmentPoint } from './segment'
+import { segmentPointsFromCommand } from './segment'
 import { isCurveCommand } from '../svg'
 import type {
   PointObject,
@@ -12,29 +12,16 @@ const fallbackPointObject: PointObject = { x: 0, y: 0 }
 export class BoundingBox {
   constructor(private absolutePaths: PathClass[]) {}
 
-  /** @todo Compatible for Quadratic and shortcut curve */
   private get points(): PointObject[] {
     return this.absolutePaths.flatMap((absolutePath) => {
       let prev: PointObject | undefined = undefined
 
       return absolutePath.commands.flatMap((command) => {
-        if (!command.point) {
-          prev = undefined
-          return []
-        }
+        const pts: PointObject[] = segmentPointsFromCommand(command, {
+          base: prev,
+        })
 
-        const pts: PointObject[] = isCurveCommand(command)
-          ? segmentPoint([
-              prev || (command.points[0].toJson() as PointObject),
-              ...(command.points.map((p) => p.toJson()) as [
-                PointObject,
-                PointObject,
-                PointObject
-              ]),
-            ])
-          : [command.point]
-
-        prev = command.point?.toJson()
+        prev = command.point ? command.point.toJson() : undefined
 
         return pts
       })

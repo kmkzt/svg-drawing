@@ -1,4 +1,5 @@
-import type { PointObject } from '../types'
+import { isCurveCommand } from '../svg/command'
+import type { PointObject, CommandClass } from '../types'
 
 type BezierCurvePoint = [PointObject, PointObject, PointObject, PointObject]
 
@@ -76,4 +77,31 @@ export const segmentPoint = (
   return Array.from({ length: range + 1 }).map((_, i) =>
     calc(i === 0 ? 0 : i === range ? 1 : i * step)
   )
+}
+
+/** @todo Compatible for Quadratic and shortcut curve */
+export const segmentPointsFromCommand = (
+  command: CommandClass,
+  {
+    base,
+    range = 10,
+  }: {
+    base?: PointObject
+    range?: number
+  }
+): PointObject[] => {
+  if (!command.point) return []
+
+  if (isCurveCommand(command)) {
+    const basePoint = base || (command.points[0].toJson() as PointObject)
+    const commandPoints = command.points.map((p) => p.toJson()) as [
+      PointObject,
+      PointObject,
+      PointObject
+    ]
+
+    return segmentPoint([basePoint, ...commandPoints], range)
+  }
+
+  return [command.point.toJson()]
 }
