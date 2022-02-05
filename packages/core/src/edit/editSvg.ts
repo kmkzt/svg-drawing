@@ -2,6 +2,7 @@ import { BoundingBox } from './boundingBox'
 import { EditPath } from './editPath'
 import { PathSelector } from './pathSelector'
 import { Point, toAbsolutePath, toRelativePath } from '../svg'
+import type { FixedType } from '..'
 import type {
   SvgClass,
   PointObject,
@@ -16,8 +17,6 @@ import type {
 
 export class EditSvg {
   private pathSelector = new PathSelector()
-  private translateBasePoint: PointObject | null = null
-  private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(public svg: SvgClass) {}
 
   get selected() {
@@ -36,32 +35,11 @@ export class EditSvg {
     this.pathSelector.clear()
   }
 
-  public setupTranslateBsePoint(base: PointObject) {
-    this.translateBasePoint = base
-  }
-
-  public resetTranslateBsePoint() {
-    this.translateBasePoint = null
-  }
-
-  public setupResizeBoundingBox(base: ResizeBoundingBoxBase) {
-    this.resizeBoundingBoxBase = base
-  }
-
-  public resetResizeBoundingBox() {
-    this.resizeBoundingBoxBase = null
-  }
-
   public changeAttributes(attrs: PathAttributes) {
     this.exec((path) => path.updateAttributes(attrs))
   }
 
-  public translate(po: PointObject) {
-    const move: PointObject = {
-      x: po.x - (this.translateBasePoint?.x ?? 0),
-      y: po.y - (this.translateBasePoint?.y ?? 0),
-    }
-
+  public translate(move: PointObject) {
     this.exec(
       (path) => path.translate(move),
       (command) => command.translate(move),
@@ -93,11 +71,9 @@ export class EditSvg {
     )
   }
 
-  public resizeBoundingBox(po: PointObject) {
-    if (!this.resizeBoundingBoxBase) return
-
+  public resizeBoundingBox(type: FixedType, po: PointObject) {
     const { move, scale } = new BoundingBox(this.absolutePath).resizeParams(
-      this.resizeBoundingBoxBase,
+      type,
       po
     )
 
@@ -138,8 +114,6 @@ export class EditSvg {
   public preview(): EditSvg {
     const preview = new EditSvg(this.svg.clone())
     preview.pathSelector = this.pathSelector
-    preview.translateBasePoint = this.translateBasePoint
-    preview.resizeBoundingBoxBase = this.resizeBoundingBoxBase
     return preview
   }
 

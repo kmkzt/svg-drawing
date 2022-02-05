@@ -71,14 +71,9 @@ export class BoundingBox {
   }
 
   public resizeParams(
-    { point, fixedType }: ResizeBoundingBoxBase,
-    translatePoint: PointObject
+    fixedType: FixedType,
+    movePoint: PointObject
   ): { scale: PointObject; move: PointObject } {
-    const movePoint = {
-      x: translatePoint.x - point.x,
-      y: translatePoint.y - point.y,
-    }
-
     const width = this.width
     const height = this.height
 
