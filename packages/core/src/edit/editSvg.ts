@@ -96,7 +96,7 @@ export class EditSvg {
   public resizeBoundingBox(po: PointObject) {
     if (!this.resizeBoundingBoxBase) return
 
-    const { move, scale } = new BoundingBox(this.points).resizeParams(
+    const { move, scale } = new BoundingBox(this.absolutePath).resizeParams(
       this.resizeBoundingBoxBase,
       po
     )
@@ -143,11 +143,13 @@ export class EditSvg {
     return preview
   }
 
-  private get points() {
+  private get absolutePath() {
     return this.pathSelector.pathsIndex.flatMap((pathKey) => {
       const path = this.svg.paths.find((path) => path.key === pathKey)
 
-      return path ? new EditPath(path.clone(), this.pathSelector).points : []
+      return path
+        ? new EditPath(path.clone(), this.pathSelector).absolutePath
+        : []
     })
   }
 
@@ -176,7 +178,7 @@ export class EditSvg {
       width,
       height,
       vertex,
-    } = new BoundingBox(this.points)
+    } = new BoundingBox(this.absolutePath)
 
     return {
       index: this.pathSelector.toJson(),

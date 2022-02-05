@@ -1,9 +1,45 @@
-import type { PointObject, FixedType, ResizeBoundingBoxBase } from '../types'
+import { segmentPoint } from './segment'
+import { isCurveCommand } from '../svg'
+import type {
+  PointObject,
+  FixedType,
+  ResizeBoundingBoxBase,
+  PathClass,
+} from '../types'
 
 const fallbackPointObject: PointObject = { x: 0, y: 0 }
 
 export class BoundingBox {
-  constructor(private points: PointObject[]) {}
+  constructor(private absolutePaths: PathClass[]) {}
+
+  /** @todo Compatible for Quadratic and shortcut curve */
+  private get points(): PointObject[] {
+    return this.absolutePaths.flatMap((absolutePath) => {
+      let prev: PointObject | undefined = undefined
+
+      return absolutePath.commands.flatMap((command) => {
+        if (!command.point) {
+          prev = undefined
+          return []
+        }
+
+        const pts: PointObject[] = isCurveCommand(command)
+          ? segmentPoint([
+              prev || (command.points[0].toJson() as PointObject),
+              ...(command.points.map((p) => p.toJson()) as [
+                PointObject,
+                PointObject,
+                PointObject
+              ]),
+            ])
+          : [command.point]
+
+        prev = command.point?.toJson()
+
+        return pts
+      })
+    })
+  }
 
   private get pointsX(): number[] {
     return this.points.map((point) => point.x)

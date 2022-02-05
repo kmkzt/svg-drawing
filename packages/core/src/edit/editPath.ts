@@ -1,5 +1,4 @@
-import { segmentPoint } from './segment'
-import { isCurveCommand, toAbsolutePath } from '../svg'
+import { toAbsolutePath } from '../svg'
 import type {
   PointObject,
   EditVertex,
@@ -18,42 +17,16 @@ const genOutline = (points: PointObject[]) =>
 export class EditPath {
   constructor(private path: PathClass, private selector?: PathSelector) {}
 
-  private get absolutePath() {
+  get absolutePath() {
     return toAbsolutePath(this.path)
   }
 
-  /**
-   * @todo Compatible for Quadratic and shortcut curve
-   *
-   * @todo Move BoundingBox
-   */
-  get points(): PointObject[] {
-    const points: PointObject[] = []
-    let prev: PointObject | undefined = undefined
-
-    this.absolutePath.commands.forEach((command) => {
-      if (!command.point) {
-        prev = undefined
-        return
-      }
-
-      const addPoints: PointObject[] = isCurveCommand(command)
-        ? segmentPoint([
-            prev || (command.points[0].toJson() as PointObject),
-            ...(command.points.map((p) => p.toJson()) as [
-              PointObject,
-              PointObject,
-              PointObject
-            ]),
-          ])
-        : [command.point]
-
-      points.push(...addPoints)
-
-      prev = command.point?.toJson()
-    })
-
-    return points
+  public toJson(): EditPathObject {
+    return {
+      key: this.path.key,
+      d: this.path.getCommandString(),
+      vertex: this.vertex,
+    }
   }
 
   private get vertex(): EditVertex[] {
@@ -86,13 +59,5 @@ export class EditPath {
     }
 
     return vertex
-  }
-
-  public toJson(): EditPathObject {
-    return {
-      key: this.path.key,
-      d: this.path.getCommandString(),
-      vertex: this.vertex,
-    }
   }
 }
