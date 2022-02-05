@@ -55,7 +55,10 @@ export class Path implements PathClass {
   }
 
   public deleteCommand(i: number) {
-    this.commands.splice(i, 1)
+    const commands = toAbsoluteCommands(this.commands)
+    commands.splice(i, 1)
+
+    this.commands = toRelativeCommands(commands)
     return this
   }
 

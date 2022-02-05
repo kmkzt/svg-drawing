@@ -1,7 +1,7 @@
 import { BoundingBox } from './boundingBox'
 import { EditPath } from './editPath'
 import { PathSelector } from './pathSelector'
-import { Point, toAbsolutePath, toRelativePath } from '../svg'
+import { toAbsolutePath, toRelativePath } from '../svg'
 import type {
   SvgClass,
   PointObject,
@@ -42,7 +42,7 @@ export class EditSvg {
     this.exec(
       (path) => path.translate(move),
       (command) => command.translate(move),
-      (point) => point.add(new Point(move.x, move.y))
+      (point) => point.add(move)
     )
   }
 
@@ -87,8 +87,6 @@ export class EditSvg {
 
   /** @todo Delete points */
   public delete() {
-    const svg = this.generateAbsolutePathSvg()
-
     this.pathSelector.pathsIndex.forEach((pathKey) => {
       const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
 
@@ -97,17 +95,17 @@ export class EditSvg {
 
       if (!commandsIndex) {
         this.pathSelector.unselect({ path: pathKey })
-        svg.deletePath(path)
+        this.svg.deletePath(path)
         return
       }
 
-      commandsIndex.forEach((commandKey) => {
-        this.pathSelector.unselect({ path: pathKey, command: +commandKey })
-        svg.getPath(pathKey)?.deleteCommand(+commandKey)
+      commandsIndex.forEach((command) => {
+        this.pathSelector.unselect({ path: pathKey, command })
+        path.deleteCommand(command)
       })
-    })
 
-    this.svg.paths = svg.paths.map((p) => toRelativePath(p))
+      this.svg.updatePath(path)
+    })
   }
 
   public preview(): EditSvg {
