@@ -1,5 +1,4 @@
 import { segmentPointsFromCommand } from './segment'
-import { isCurveCommand } from '../svg'
 import type {
   PointObject,
   FixedType,
