@@ -104,10 +104,10 @@ export class Path implements PathClass {
   }
 
   public translate(po: PointObject) {
-    for (let i = 0; i < this.commands.length; i += 1) {
-      if (isRelativeCommand(this.commands[i])) continue
-      this.commands[i] = this.commands[i].translate(po)
-    }
+    this.commands = this.commands.map((com) => {
+      return isRelativeCommand(com) ? com : com.translate(po)
+    })
+
     return this
   }
 
