@@ -21,7 +21,7 @@ describe('BoundingBox', () => {
       expect(boundingBox.max).toEqual({ x: 300, y: 115 })
 
       expect(boundingBox.width).toEqual(300)
-      expect(boundingBox.height).toEqual(120)
+      expect(boundingBox.height).toEqual(115)
       expect(boundingBox.vertex).toEqual({
         LeftTop: { x: 0, y: 0 },
         RightTop: { x: 300, y: 0 },
@@ -31,9 +31,44 @@ describe('BoundingBox', () => {
     })
 
     it('boundingBox.resizeParams', () => {
-      expect(boundingBox.resizeParams('LeftTop', { x: 0, y: 0 })).toEqual({
-        scale: { x: 1, y: 1 },
+      expect(
+        boundingBox.resizeParams('LeftTop', {
+          x: -boundingBox.width,
+          y: -boundingBox.height,
+        })
+      ).toEqual({
+        scale: { x: 2, y: 2 },
+        move: { x: -boundingBox.width, y: -boundingBox.height },
+      })
+
+      expect(
+        boundingBox.resizeParams('RightTop', {
+          x: boundingBox.width,
+          y: -boundingBox.height,
+        })
+      ).toEqual({
+        scale: { x: 2, y: 2 },
+        move: { x: 0, y: -boundingBox.height },
+      })
+
+      expect(
+        boundingBox.resizeParams('RightBottom', {
+          x: boundingBox.width,
+          y: boundingBox.height,
+        })
+      ).toEqual({
+        scale: { x: 2, y: 2 },
         move: { x: 0, y: 0 },
+      })
+
+      expect(
+        boundingBox.resizeParams('LeftBottom', {
+          x: -boundingBox.width,
+          y: boundingBox.height,
+        })
+      ).toEqual({
+        scale: { x: 2, y: 2 },
+        move: { x: -boundingBox.width, y: 0 },
       })
     })
   })
