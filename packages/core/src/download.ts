@@ -8,7 +8,7 @@ const base64ToBlob = (
   data: string,
   type: typeof mimeTypeMap[keyof typeof mimeTypeMap]
 ) => {
-  const bin = atob(data.replace(/^.*,/, ''))
+  const bin = Buffer.from(data.replace(/^.*,/, '')).toString()
   const buffer = new Uint8Array(bin.length)
 
   for (let i = 0; i < bin.length; i += 1) {
