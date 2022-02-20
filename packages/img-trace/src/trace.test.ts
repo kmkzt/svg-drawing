@@ -27,7 +27,7 @@ describe('trace.ts', () => {
   const testimage = resolve(__dirname, '__test__/panda.png')
   it('TestPattern', () => {
     // TestPattern
-    expect(testPattern).toMatchSnapshot()
+    expect(testPattern).toMatchInlineSnapshot()
   })
   describe('ImgTrace', () => {
     Object.entries(testPattern).map(([testname, testopts]) => {
@@ -51,10 +51,10 @@ describe('trace.ts', () => {
 
           // Effect Image
           // TODO: visual regression
-          // expect(imgd).toMatchSnapshot()
+          // expect(imgd).toMatchInlineSnapshot()
 
           // SvgString
-          expect(data).toMatchSnapshot()
+          expect(data).toMatchInlineSnapshot()
           done()
         })
       })

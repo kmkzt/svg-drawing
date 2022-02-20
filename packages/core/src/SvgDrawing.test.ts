@@ -10,7 +10,24 @@ describe('SvgDrawing', () => {
     draw.drawMove({ x: 2, y: 1 })
     draw.drawMove({ x: 3, y: 0 })
     draw.drawEnd()
-    expect(svgObjectToElement(draw.svg.toJson())).toMatchSnapshot()
+    expect(svgObjectToElement(draw.svg.toJson())).toMatchInlineSnapshot(`
+      <svg
+        height="0"
+        version="1.1"
+        width="0"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      >
+        <path
+          d="M0 0 c0.4 0.4 0.49404 0.74702 1 1 c0.35777 0.17889 0.64223 0.17889 1 0 c0.50596 -0.25298 0.6 -0.6 1 -1"
+          fill="none"
+          stroke="#000"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1"
+        />
+      </svg>
+    `)
   })
 
   it('close', () => {
@@ -23,7 +40,24 @@ describe('SvgDrawing', () => {
     draw.drawMove({ x: 3, y: 0 })
     draw.drawEnd()
     const el = svgObjectToElement(draw.svg.toJson())
-    expect(el).toMatchSnapshot()
+    expect(el).toMatchInlineSnapshot(`
+      <svg
+        height="0"
+        version="1.1"
+        width="0"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      >
+        <path
+          d="M0 0 c0.4 0.4 0.49404 0.74702 1 1 c0.35777 0.17889 0.64223 0.17889 1 0 c0.50596 -0.25298 0.6 -0.6 1 -1"
+          fill="none"
+          stroke="#000"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1"
+        />
+      </svg>
+    `)
   })
 
   it('curve = false', () => {
@@ -36,7 +70,24 @@ describe('SvgDrawing', () => {
     draw.drawMove({ x: 3, y: 0 })
     draw.drawEnd()
     const el = svgObjectToElement(draw.svg.toJson())
-    expect(el).toMatchSnapshot()
+    expect(el).toMatchInlineSnapshot(`
+      <svg
+        height="0"
+        version="1.1"
+        width="0"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      >
+        <path
+          d="M0 0 l1 1 l1 0 l1 -1"
+          fill="none"
+          stroke="#000"
+          stroke-linecap="mitter"
+          stroke-linejoin="square"
+          stroke-width="1"
+        />
+      </svg>
+    `)
   })
 
   it('clear()', () => {
@@ -47,7 +98,15 @@ describe('SvgDrawing', () => {
     draw.drawEnd()
     draw.clear()
     const el = svgObjectToElement(draw.svg.toJson())
-    expect(el).toMatchSnapshot()
+    expect(el).toMatchInlineSnapshot(`
+      <svg
+        height="0"
+        version="1.1"
+        width="0"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      />
+    `)
   })
 
   /** TODO: Fix NaN */
@@ -61,7 +120,24 @@ describe('SvgDrawing', () => {
     draw.drawEnd()
     draw.undo()
     const el = svgObjectToElement(draw.svg.toJson())
-    expect(el).toMatchSnapshot()
+    expect(el).toMatchInlineSnapshot(`
+      <svg
+        height="0"
+        version="1.1"
+        width="0"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      >
+        <path
+          d="M0 0"
+          fill="none"
+          stroke="#000"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1"
+        />
+      </svg>
+    `)
   })
   it.todo('draw.handler')
   it.todo('draw.resizeListener')

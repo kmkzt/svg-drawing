@@ -14,7 +14,122 @@ describe('SvgAnimation.ts', () => {
       return anim
     }
     it('init', () => {
-      expect(generateAnimation()).toMatchSnapshot()
+      expect(generateAnimation()).toMatchInlineSnapshot(`
+        SvgAnimation {
+          "animation": Animation {
+            "_frame": null,
+            "ms": 60,
+            "paths": Array [],
+          },
+          "resize": [Function],
+          "svg": Svg {
+            "background": undefined,
+            "height": 0,
+            "paths": Array [
+              Path {
+                "attrs": Object {
+                  "fill": "#f00",
+                  "stroke": "#00f",
+                  "strokeLinecap": "round",
+                  "strokeWidth": "4",
+                },
+                "commands": Array [
+                  Move {
+                    "points": Array [
+                      Point {
+                        "_x": 1,
+                        "_y": 1,
+                      },
+                    ],
+                    "type": "M",
+                  },
+                  RelativeLine {
+                    "points": Array [
+                      Point {
+                        "_x": 1,
+                        "_y": 1,
+                      },
+                    ],
+                    "type": "l",
+                  },
+                  RelativeCurve {
+                    "points": Array [
+                      Point {
+                        "_x": 1,
+                        "_y": 1,
+                      },
+                      Point {
+                        "_x": 3,
+                        "_y": 1,
+                      },
+                      Point {
+                        "_x": 5,
+                        "_y": 1,
+                      },
+                    ],
+                    "type": "c",
+                  },
+                  Close {
+                    "type": "z",
+                  },
+                ],
+                "key": "p1",
+              },
+              Path {
+                "attrs": Object {
+                  "fill": "#ff0",
+                  "stroke": "#f0f",
+                  "strokeLinecap": "butt",
+                  "strokeWidth": "2",
+                },
+                "commands": Array [
+                  Move {
+                    "points": Array [
+                      Point {
+                        "_x": 2,
+                        "_y": 2,
+                      },
+                    ],
+                    "type": "M",
+                  },
+                  RelativeLine {
+                    "points": Array [
+                      Point {
+                        "_x": 2,
+                        "_y": 2,
+                      },
+                    ],
+                    "type": "l",
+                  },
+                  RelativeCurve {
+                    "points": Array [
+                      Point {
+                        "_x": 2,
+                        "_y": 2,
+                      },
+                      Point {
+                        "_x": 6,
+                        "_y": 2,
+                      },
+                      Point {
+                        "_x": 10,
+                        "_y": 2,
+                      },
+                    ],
+                    "type": "c",
+                  },
+                  Close {
+                    "type": "z",
+                  },
+                ],
+                "key": "p2",
+              },
+            ],
+            "width": 0,
+          },
+          "update": [Function],
+        }
+      `)
     })
     // TODO: Improve test pattern
     it('toElement', () => {
@@ -25,31 +140,63 @@ describe('SvgAnimation.ts', () => {
           let count = key
           const update = []
           for (let i = 0; i < paths.length; i += 1) {
+            const path = paths[i]
+            const vertexLength = path.absoluteCommands.length
+
             // Test property
-            if (count % 2 === 0) paths[i].updateAttributes({ stroke: '#0ff' })
+            if (count % 2 === 0) {
+              path.updateAttributes({ stroke: '#0ff' })
+            }
+
             // Test Attribute
-            if (count % 3 === 0)
-              paths[i].updateAttributes({
+            if (count % 3 === 0) {
+              path.updateAttributes({
                 strokeLinecap: 'mitter',
               })
-            if (count < paths[i].commands.length) {
-              paths[i].commands = paths[i].commands.slice(0, count)
-              update.push(paths[i])
-              break
             }
-            count -= paths[i].commands.length
-            update.push(paths[i])
+
+            // Test commands
+            path.updateCommands(path.absoluteCommands.slice(0, count))
+
+            update.push(path)
+
+            // check to display path
+            count -= vertexLength
+            if (count < 0) break
           }
           return update
         },
         loops: svg.animation.paths.reduce(
-          (acc, p) => acc + p.commands.length,
+          (acc, p) => acc + p.absoluteCommands.length,
           0
         ),
       })
       svg.start()
 
-      expect(svg.toElement()).toMatchSnapshot()
+      expect(svg.toElement()).toMatchInlineSnapshot(`
+        <svg
+          height="0"
+          version="1.1"
+          width="0"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
+          <path
+            d="M1 1 l1 1 c1 1 3 1 5 1 z"
+            fill="#f00"
+            stroke="#00f"
+            stroke-linecap="round"
+            stroke-width="4"
+          />
+          <path
+            d="M2 2 l2 2 c2 2 6 2 10 2 z"
+            fill="#ff0"
+            stroke="#f0f"
+            stroke-linecap="butt"
+            stroke-width="2"
+          />
+        </svg>
+      `)
     })
 
     it('setup, start, stop', async () => {

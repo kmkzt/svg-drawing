@@ -31,8 +31,8 @@ describe('Path', () => {
       3,
       clone.absoluteCommands[0].point.y
     )
-    expect(origin.getCommandString()).toBe('M1 1')
-    expect(clone.getCommandString()).toBe('M3 1 L2 2')
+    expect(origin.getCommandString()).toMatchInlineSnapshot(`"M1 1"`)
+    expect(clone.getCommandString()).toMatchInlineSnapshot(`"M3 1 l1 1"`)
   })
 
   describe('key', () => {
@@ -53,11 +53,23 @@ describe('Path', () => {
       .addCommand(new Line(new Point(2, 1)))
       .addCommand(new Line(new Point(3, 0)))
     it('toJson', () => {
-      expect(path.toJson()).toMatchSnapshot()
+      expect(path.toJson()).toMatchInlineSnapshot(`
+        Object {
+          "attributes": Object {
+            "d": "M0 0 l1 1 l1 0 l1 -1",
+          },
+          "key": "p1",
+          "type": "path",
+        }
+      `)
     })
     it('toElement', () => {
       const { attributes } = path.toJson()
-      expect(pathObjectToElement(attributes)).toMatchSnapshot()
+      expect(pathObjectToElement(attributes)).toMatchInlineSnapshot(`
+        <path
+          d="M0 0 l1 1 l1 0 l1 -1"
+        />
+      `)
     })
   })
   describe('commands parameter and getCommandString', () => {
@@ -66,8 +78,40 @@ describe('Path', () => {
       .addCommand(new Line(new Point(1, 1)))
       .addCommand(new Line(new Point(-1, -1)))
     it('Normal', () => {
-      expect(path.absoluteCommands).toMatchSnapshot()
-      expect(path.getCommandString()).toMatchSnapshot()
+      expect(path.absoluteCommands).toMatchInlineSnapshot(`
+        Array [
+          Move {
+            "points": Array [
+              Point {
+                "_x": 0,
+                "_y": 0,
+              },
+            ],
+            "type": "M",
+          },
+          Line {
+            "points": Array [
+              Point {
+                "_x": 1,
+                "_y": 1,
+              },
+            ],
+            "type": "L",
+          },
+          Line {
+            "points": Array [
+              Point {
+                "_x": -1,
+                "_y": -1,
+              },
+            ],
+            "type": "L",
+          },
+        ]
+      `)
+      expect(path.getCommandString()).toMatchInlineSnapshot(
+        `"M0 0 l1 1 l-2 -2"`
+      )
     })
   })
 })
