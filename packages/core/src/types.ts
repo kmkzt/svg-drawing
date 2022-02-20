@@ -289,10 +289,6 @@ export type BoundingBoxObject = {
   selected: boolean
 }
 
-export type Selecting = Record<PathObject['key'], SelectingCommands>
-export type SelectingCommands = Record<number, SelectingPoints>
-export type SelectingPoints = Array<number>
-
 export type EditPathObject = {
   key: PathObject['key']
   d: string
@@ -300,7 +296,6 @@ export type EditPathObject = {
 }
 
 export type EditSvgObject = {
-  index: Selecting
   paths: Record<PathObject['key'], EditPathObject>
   boundingBox: BoundingBoxObject
 }

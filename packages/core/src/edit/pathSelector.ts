@@ -3,8 +3,12 @@ import type {
   SelectPathIndex,
   SelectCommandIndex,
   SelectPointIndex,
-  Selecting,
+  PathObject,
 } from '../types'
+
+type Selecting = Record<PathObject['key'], SelectingCommands>
+type SelectingCommands = Record<number, SelectingPoints>
+type SelectingPoints = Array<number>
 
 const convertSelectingFromIndex = (index: SelectIndex): Selecting => ({
   [index.path]:
@@ -128,9 +132,5 @@ export class PathSelector {
         },
       }
     }
-  }
-
-  toJson(): Selecting {
-    return this.selecting
   }
 }

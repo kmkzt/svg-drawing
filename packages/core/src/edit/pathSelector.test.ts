@@ -6,41 +6,62 @@ describe('PathSelector', () => {
   beforeEach(() => {
     pathSelector = new PathSelector()
   })
-  describe('PathSelector.selectedPathsOnly', () => {
-    it('not selected', () => {
+  describe('Return selected paths only status.', () => {
+    it('Return false when paths is not selected', () => {
       expect(pathSelector.selectedPathsOnly).toBe(false)
     })
-
-    it('select path', () => {
+    it('Return true when paths is selected.', () => {
       pathSelector.select({ path: 'path_id' })
 
       expect(pathSelector.selectedPathsOnly).toBe(true)
     })
 
-    it('select command', () => {
+    it('Return false when command is selected.', () => {
       pathSelector.select({ path: 'path_id', command: 0 })
 
-      expect(pathSelector.selectedPathsOnly).toBe(false)
+      expect(pathSelector.pathsIndex).toEqual(['path_id'])
     })
 
-    it('select point', () => {
+    it('Return false when point is selected.', () => {
       pathSelector.select({ path: 'path_id', command: 0, point: 0 })
 
       expect(pathSelector.selectedPathsOnly).toBe(false)
     })
   })
+  describe('Return select index information', () => {
+    it('Return paths index array of selected.', () => {
+      pathSelector.select({ path: 'path_id' })
 
-  describe('PathSelector.selected', () => {
-    it('not selected', () => {
+      expect(pathSelector.selectedPathsOnly).toBe(true)
+      expect(pathSelector.pathsIndex).toEqual(['path_id'])
+    })
+
+    it('Return commands index array of selected.', () => {
+      pathSelector.select({ path: 'path_id', command: 0 })
+
+      expect(pathSelector.pathsIndex).toEqual(['path_id'])
+      expect(pathSelector.getCommandsIndex('path_id')).toEqual([0])
+    })
+
+    it('Return points index array of selected.', () => {
+      pathSelector.select({ path: 'path_id', command: 0, point: 0 })
+
+      expect(pathSelector.getCommandsIndex('path_id')).toEqual([0])
+      expect(pathSelector.getPointsIndex('path_id', 0)).toEqual([0])
+    })
+  })
+
+  describe('Return selected status.', () => {
+    it('Return false when not selected', () => {
       expect(pathSelector.selected).toBe(false)
     })
 
-    it('selected path', () => {
+    it('Return true when path is selected', () => {
       pathSelector.select({ path: 'path_id' })
 
       expect(pathSelector.selected).toBe(true)
     })
-    it('selected command', () => {
+    it('Return true when command is selected', () => {
       pathSelector.select({ path: 'path_id', command: 0 })
 
       expect(pathSelector.selected).toBe(true)
@@ -53,57 +74,36 @@ describe('PathSelector', () => {
     })
   })
 
-  it('PathSelector.pathsIndex', () => {
-    pathSelector.select({ path: 'path_id' })
-
-    expect(pathSelector.pathsIndex).toEqual(['path_id'])
-  })
-
-  it('PathSelector.getCommandsIndex', () => {
-    pathSelector.select({ path: 'path_id', command: 0 })
-
-    expect(pathSelector.getCommandsIndex('path_id')).toEqual([0])
-  })
-
-  it('PathSelector.getPointsIndex', () => {
-    pathSelector.select({ path: 'path_id', command: 0, point: 0 })
-
-    expect(pathSelector.getPointsIndex('path_id', 0)).toEqual([0])
-  })
-
-  it('PathSelector.clear', () => {
+  it('Clear selected status', () => {
     pathSelector.select({ path: 'path_id' })
     pathSelector.clear()
 
     expect(pathSelector.selected).toBe(false)
     expect(pathSelector.pathsIndex).toEqual([])
-    expect(pathSelector.toJson()).toEqual({})
   })
 
-  it('PathSelector.select', () => {
-    pathSelector.select({ path: 'path_id' })
-    pathSelector.select({ path: 'path_id_override' })
-
-    expect(pathSelector.selectedPathsOnly).toBe(true)
-    expect(pathSelector.selected).toBe(true)
-    expect(pathSelector.toJson()).toEqual({ ['path_id_override']: {} })
-  })
-
-  it('PathSelector.selectMerge', () => {
+  it('To select multiple paths by selectMerge method.', () => {
     pathSelector.selectMerge({ path: 'path_id_1' })
     pathSelector.selectMerge({ path: 'path_id_2', command: 0 })
     pathSelector.selectMerge({ path: 'path_id_3', command: 0, point: 0 })
 
     expect(pathSelector.selectedPathsOnly).toBe(false)
     expect(pathSelector.selected).toBe(true)
-    expect(pathSelector.toJson()).toEqual({
-      ['path_id_1']: {},
-      ['path_id_2']: { [0]: [] },
-      ['path_id_3']: { [0]: [0] },
-    })
+
+    expect(pathSelector.pathsIndex).toEqual([
+      'path_id_1',
+      'path_id_2',
+      'path_id_3',
+    ])
+    expect(pathSelector.getCommandsIndex('path_id_1')).toEqual(undefined)
+    expect(pathSelector.getCommandsIndex('path_id_2')).toEqual([0])
+    expect(pathSelector.getCommandsIndex('path_id_3')).toEqual([0])
+
+    expect(pathSelector.getPointsIndex('path_id_2', 0)).toEqual(undefined)
+    expect(pathSelector.getPointsIndex('path_id_3', 0)).toEqual([0])
   })
 
-  describe('PathSelector.unselect', () => {
+  describe('To unselect selected status', () => {
     const setupSelected = (selector: PathSelector) => {
       selector.selectMerge({ path: 'path_id_1' })
       selector.selectMerge({ path: 'path_id_2', command: 0 })
@@ -114,32 +114,32 @@ describe('PathSelector', () => {
       setupSelected(pathSelector)
       pathSelector.unselect({ path: 'path_id_1' })
 
-      expect(pathSelector.toJson()).toEqual({
-        ['path_id_2']: { [0]: [] },
-        ['path_id_3']: { [0]: [0] },
-      })
+      expect(pathSelector.pathsIndex).toEqual(['path_id_2', 'path_id_3'])
     })
 
     it('unselect command', () => {
       setupSelected(pathSelector)
       pathSelector.unselect({ path: 'path_id_2', command: 0 })
 
-      expect(pathSelector.toJson()).toEqual({
-        ['path_id_1']: {},
-        ['path_id_2']: {},
-        ['path_id_3']: { [0]: [0] },
-      })
+      expect(pathSelector.getCommandsIndex('path_id_2')).toEqual(undefined)
+      expect(pathSelector.pathsIndex).toEqual([
+        'path_id_1',
+        'path_id_2',
+        'path_id_3',
+      ])
     })
 
     it('unselect point', () => {
       setupSelected(pathSelector)
 
       pathSelector.unselect({ path: 'path_id_3', command: 0, point: 0 })
-      expect(pathSelector.toJson()).toEqual({
-        ['path_id_1']: {},
-        ['path_id_2']: { [0]: [] },
-        ['path_id_3']: { [0]: [] },
-      })
+
+      expect(pathSelector.getPointsIndex('path_id_3', 0)).toEqual(undefined)
+      expect(pathSelector.pathsIndex).toEqual([
+        'path_id_1',
+        'path_id_2',
+        'path_id_3',
+      ])
     })
   })
 })

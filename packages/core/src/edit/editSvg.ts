@@ -144,7 +144,6 @@ export class EditSvg {
     } = new BoundingBox(this.paths)
 
     return {
-      index: this.pathSelector.toJson(),
       paths,
       boundingBox: {
         x,
