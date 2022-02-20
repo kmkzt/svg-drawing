@@ -1,15 +1,10 @@
-import {
-  isRelativeCommand,
-  toAbsoluteCommands,
-  toRelativeCommands,
-} from './command'
+import { toAbsoluteCommands, toRelativeCommands } from './command'
 import type {
   PathClass,
   CommandClass,
   PathAttributes,
   PointObject,
   PathObject,
-  CommandType,
 } from '../types'
 
 /**
@@ -112,9 +107,7 @@ export class Path implements PathClass {
   }
 
   translate(po: PointObject) {
-    this.commands = this.commands.map((com) => {
-      return isRelativeCommand(com) ? com : com.translate(po)
-    })
+    this.updateCommands(this.absoluteCommands.map((com) => com.translate(po)))
 
     return this
   }
