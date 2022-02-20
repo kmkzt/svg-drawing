@@ -11,23 +11,26 @@ describe('Path', () => {
       .addCommand(new Line(new Point(2, 2)))
   })
   it('addCommand', () => {
-    expect(path.commands.length).toBe(2)
-    expect(path.commands[0].type).toBe('M')
-    expect(path.commands[0].point.x).toBe(1)
-    expect(path.commands[0].point.y).toBe(1)
+    expect(path.absoluteCommands.length).toBe(2)
+    expect(path.absoluteCommands[0].type).toBe('M')
+    expect(path.absoluteCommands[0].point.x).toBe(1)
+    expect(path.absoluteCommands[0].point.y).toBe(1)
   })
   it('scale', () => {
     path.scale(2)
-    expect(path.commands[0].type).toBe('M')
-    expect(path.commands[0].point.x).toBe(2)
-    expect(path.commands[0].point.y).toBe(2)
+    expect(path.absoluteCommands[0].type).toBe('M')
+    expect(path.absoluteCommands[0].point.x).toBe(2)
+    expect(path.absoluteCommands[0].point.y).toBe(2)
   })
   it('clone', () => {
     const origin = new Path({ strokeWidth: '1' }).addCommand(
       new Move(new Point(1, 1))
     )
     const clone = origin.clone().addCommand(new Line(new Point(2, 2)))
-    clone.commands[0].points[0] = new Point(3, clone.commands[0].point.y)
+    clone.absoluteCommands[0].points[0] = new Point(
+      3,
+      clone.absoluteCommands[0].point.y
+    )
     expect(origin.getCommandString()).toBe('M1 1')
     expect(clone.getCommandString()).toBe('M3 1 L2 2')
   })
@@ -63,7 +66,7 @@ describe('Path', () => {
       .addCommand(new Line(new Point(1, 1)))
       .addCommand(new Line(new Point(-1, -1)))
     it('Normal', () => {
-      expect(path.commands).toMatchSnapshot()
+      expect(path.absoluteCommands).toMatchSnapshot()
       expect(path.getCommandString()).toMatchSnapshot()
     })
   })

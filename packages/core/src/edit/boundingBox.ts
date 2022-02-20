@@ -1,10 +1,5 @@
 import { segmentPointsFromCommand } from './segment'
-import type {
-  PointObject,
-  FixedType,
-  ResizeBoundingBoxBase,
-  PathClass,
-} from '../types'
+import type { PointObject, FixedType, PathClass } from '../types'
 
 const fallbackPointObject: PointObject = { x: 0, y: 0 }
 
