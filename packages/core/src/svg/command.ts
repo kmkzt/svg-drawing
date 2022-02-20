@@ -845,6 +845,8 @@ export const toAbsoluteCommand = (
 export const toRelativeCommands = (
   commands: CommandClass[]
 ): CommandClass[] => {
+  if (commands.length === 0) return []
+
   let basePoint = commands[0].point
   const upd = [commands[0]]
 
@@ -872,6 +874,8 @@ export const toRelativeCommands = (
 export const toAbsoluteCommands = (
   commands: CommandClass[]
 ): CommandClass[] => {
+  if (commands.length === 0) return []
+
   let basePoint = commands[0].point
   const upd = [commands[0]]
 

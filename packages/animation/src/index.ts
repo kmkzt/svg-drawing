@@ -17,12 +17,16 @@ export class ShakeFrame implements FrameAnimation {
 
   public animation(paths: PathClass[]) {
     for (let i = 0; i < paths.length; i += 1) {
-      paths[i].commands = paths[i].commands.map((c) => {
-        c.points = c.points.map((po) =>
-          po.add(new Point(this.randomNumber(), this.randomNumber()))
-        )
-        return c
-      })
+      paths[i].updateCommands(
+        paths[i].absoluteCommands.map((c) => {
+          const update = c.clone()
+
+          update.points = c.points.map((po) =>
+            po.add(new Point(this.randomNumber(), this.randomNumber()))
+          )
+          return update
+        })
+      )
     }
     return paths
   }
@@ -54,20 +58,21 @@ export class DrawFrame implements FrameAnimation {
   }
 
   get loops(): number {
-    return this.paths.reduce((acc, p) => acc + p.commands.length, 0)
+    return this.paths.reduce((acc, p) => acc + p.absoluteCommands.length, 0)
   }
 
   animation(paths: PathClass[], key: number) {
     let count = key
     const update = []
     for (let i = 0; i < paths.length; i += 1) {
-      if (count < paths[i].commands.length) {
-        paths[i].commands = paths[i].commands.slice(0, count)
-        update.push(paths[i])
-        break
-      }
-      count -= paths[i].commands.length
-      update.push(paths[i])
+      const path = paths[i]
+      const vertexLength = path.absoluteCommands.length
+
+      path.updateCommands(path.absoluteCommands.slice(0, count))
+      update.push(path)
+
+      count -= vertexLength
+      if (count < 0) break
     }
     return update
   }
