@@ -88,7 +88,8 @@ export interface PathClass {
   key: string
   attrs: PathAttributes
   /** Path data. */
-  commands: CommandClass[]
+  absoluteCommands: CommandClass[]
+  relativeCommands: CommandClass[]
   scale: (r: number) => this
   scaleX: (r: number) => this
   scaleY: (r: number) => this
@@ -97,6 +98,7 @@ export interface PathClass {
     i: number,
     update: (absoluteCommand: CommandClass) => CommandClass
   ) => this
+  updateCommands: (commands: CommandClass[]) => this
   deleteCommand: (i: number) => this
   translate: (p: PointObject) => this
   setAttributes: (attr: PathAttributes) => this

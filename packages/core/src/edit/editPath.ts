@@ -1,4 +1,3 @@
-import { toAbsolutePath } from '../svg'
 import type {
   PointObject,
   EditVertex,
@@ -17,10 +16,6 @@ const genOutline = (points: PointObject[]) =>
 export class EditPath {
   constructor(private path: PathClass, private selector?: PathSelector) {}
 
-  get absolutePath() {
-    return toAbsolutePath(this.path)
-  }
-
   public toJson(): EditPathObject {
     return {
       key: this.path.key,
@@ -31,7 +26,8 @@ export class EditPath {
 
   private get vertex(): EditVertex[] {
     const vertex: EditVertex[] = []
-    const commands = this.absolutePath.commands
+    const commands = this.path.absoluteCommands
+
     for (let c = 0; c < commands.length; c += 1) {
       const curr = commands[c]
       const next = commands[c + 1]

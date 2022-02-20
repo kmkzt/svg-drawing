@@ -9,13 +9,13 @@ import type {
 const fallbackPointObject: PointObject = { x: 0, y: 0 }
 
 export class BoundingBox {
-  constructor(private absolutePaths: PathClass[]) {}
+  constructor(private paths: PathClass[]) {}
 
   private get points(): PointObject[] {
-    return this.absolutePaths.flatMap((absolutePath) => {
+    return this.paths.flatMap((path) => {
       let prev: PointObject | undefined = undefined
 
-      return absolutePath.commands.flatMap((command) => {
+      return path.absoluteCommands.flatMap((command) => {
         const pts: PointObject[] = segmentPointsFromCommand(command, {
           base: prev,
         })

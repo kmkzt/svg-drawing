@@ -9,6 +9,7 @@ import type {
   PathAttributes,
   PointObject,
   PathObject,
+  CommandType,
 } from '../types'
 
 /**
@@ -19,65 +20,72 @@ import type {
 export class Path implements PathClass {
   private static index = 0
   private static genIndex = () => (Path.index += 1)
-  public commands: CommandClass[] = []
+  private commands: CommandClass[] = []
   public key: string
   constructor(public attrs: PathAttributes = {}, _key?: string) {
     this.key = _key || `p${Path.genIndex()}`
   }
 
-  public scale(r: number) {
-    this.commands = this.commands.map((c: CommandClass) => c.scale(r))
+  get absoluteCommands(): CommandClass[] {
+    return toAbsoluteCommands(this.commands)
+  }
+
+  get relativeCommands(): CommandClass[] {
+    return toRelativeCommands(this.commands)
+  }
+
+  updateCommands(commands: CommandClass[]) {
+    this.commands = toRelativeCommands(commands)
+
     return this
   }
 
-  public scaleX(r: number) {
-    this.commands = this.commands.map((c: CommandClass) => c.scaleX(r))
+  scale(r: number) {
+    this.updateCommands(this.commands.map((c: CommandClass) => c.scale(r)))
     return this
   }
 
-  public scaleY(r: number) {
-    this.commands = this.commands.map((c: CommandClass) => c.scaleY(r))
+  scaleX(r: number) {
+    this.updateCommands(this.commands.map((c: CommandClass) => c.scaleX(r)))
     return this
   }
 
-  public addCommand(param: CommandClass | CommandClass[]) {
-    if (Array.isArray(param)) {
-      this.commands.push(...param)
-    } else {
-      this.commands.push(param)
-    }
+  scaleY(r: number) {
+    this.updateCommands(this.commands.map((c: CommandClass) => c.scaleY(r)))
     return this
   }
 
-  public updateCommand(
+  addCommand(param: CommandClass | CommandClass[]) {
+    this.updateCommands([...this.commands, param].flat())
+    return this
+  }
+
+  updateCommand(
     i: number,
     update: (absoluteCommand: CommandClass) => CommandClass
   ) {
-    const commands = toAbsoluteCommands(this.commands)
+    const commands = this.absoluteCommands
     commands[i] = update(commands[i])
 
-    this.commands = toRelativeCommands(commands)
+    this.updateCommands(commands)
     return this
   }
 
-  public deleteCommand(i: number) {
-    const commands = toAbsoluteCommands(this.commands)
-    commands.splice(i, 1)
-
-    this.commands = toRelativeCommands(commands)
+  deleteCommand(i: number) {
+    this.updateCommands(this.absoluteCommands.filter((_, index) => index !== i))
     return this
   }
 
-  public getCommandString() {
+  getCommandString() {
     return (
-      this.commands
+      this.relativeCommands
         ?.map((com: CommandClass, _i: number) => com.toString())
         .join(' ')
         .trim() || ''
     )
   }
 
-  public toJson(): PathObject {
+  toJson(): PathObject {
     return {
       key: this.key,
       type: 'path',
@@ -88,13 +96,13 @@ export class Path implements PathClass {
     }
   }
 
-  public setAttributes(attrs: PathAttributes) {
+  setAttributes(attrs: PathAttributes) {
     this.attrs = attrs
 
     return this
   }
 
-  public updateAttributes(attrs: PathAttributes) {
+  updateAttributes(attrs: PathAttributes) {
     this.attrs = {
       ...this.attrs,
       ...attrs,
@@ -103,7 +111,7 @@ export class Path implements PathClass {
     return this
   }
 
-  public translate(po: PointObject) {
+  translate(po: PointObject) {
     this.commands = this.commands.map((com) => {
       return isRelativeCommand(com) ? com : com.translate(po)
     })
@@ -111,7 +119,7 @@ export class Path implements PathClass {
     return this
   }
 
-  public clone() {
+  clone() {
     return new Path(
       {
         ...this.attrs,
@@ -119,18 +127,4 @@ export class Path implements PathClass {
       this.key
     ).addCommand(this.commands.map((c) => c.clone()))
   }
-}
-
-export const toRelativePath = (path: PathClass): PathClass => {
-  const upd = path.clone()
-  upd.commands = toRelativeCommands(upd.commands)
-
-  return upd
-}
-
-export const toAbsolutePath = (path: PathClass): PathClass => {
-  const upd = path.clone()
-  upd.commands = toAbsoluteCommands(upd.commands)
-
-  return upd
 }

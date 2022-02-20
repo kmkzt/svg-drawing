@@ -79,7 +79,9 @@ export class Drawing {
     if (!this._drawPath) return
 
     this._drawPoints.push(po)
-    this._drawPath.commands = this.pathFactory.createCommand(this._drawPoints)
+    this._drawPath.updateCommands(
+      this.pathFactory.createCommand(this._drawPoints)
+    )
 
     this.update(this.svg)
   }
