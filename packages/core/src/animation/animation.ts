@@ -19,7 +19,7 @@ const createAnimateCommandValues = (
   originPath: PathClass
 ): string[] =>
   animationPaths.map(
-    (p) => p?.getCommandString() || originPath.commands[0].toString()
+    (p) => p?.getCommandString() || originPath.relativeCommands[0].toString()
   )
 
 export class Animation {
