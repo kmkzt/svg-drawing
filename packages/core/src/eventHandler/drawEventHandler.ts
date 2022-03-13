@@ -5,15 +5,13 @@ import {
   SUPPORT_POINTER_EVENT,
 } from '../event'
 import { throttle } from '../throttle'
+import type { DrawingClass } from '..'
 import type {
   DrawListenerType,
   DrawEventHandler,
   ClearListener,
   EventPoint,
   DrawEventName,
-  DrawEnd,
-  DrawStart,
-  DrawMove,
 } from '../types'
 
 export abstract class BaseHandler implements DrawEventHandler {
@@ -26,22 +24,19 @@ export abstract class BaseHandler implements DrawEventHandler {
   }
 
   /** EventHandler */
-  protected drawEnd: DrawEnd
-  protected drawStart: DrawStart
-  protected drawMove: DrawMove
-  constructor(protected el: HTMLElement | null = null) {
+
+  constructor(
+    protected el: HTMLElement | null = null,
+    protected drawing: DrawingClass
+  ) {
     /** Bind method */
     this.on = this.on.bind(this)
     this.off = this.off.bind(this)
-    this.setHandler = this.setHandler.bind(this)
+    this.setDrawing = this.setDrawing.bind(this)
 
     /** Set offset coordinates */
     const { left, top } = el ? el.getBoundingClientRect() : { left: 0, top: 0 }
     this._offset = { left, top }
-    /** Setup property. */
-    this.drawStart = () => void 0
-    this.drawMove = () => void 0
-    this.drawEnd = () => void 0
     this._clearEventList = []
   }
 
@@ -67,14 +62,8 @@ export abstract class BaseHandler implements DrawEventHandler {
     if (this.isActive) this.on()
   }
 
-  public setHandler({
-    drawStart,
-    drawMove,
-    drawEnd,
-  }: Parameters<DrawEventHandler['setHandler']>[0]) {
-    this.drawEnd = drawEnd
-    this.drawStart = drawStart
-    this.drawMove = drawMove
+  public setDrawing(drawing: DrawingClass) {
+    this.drawing = drawing
     if (this.isActive) this.on()
   }
 
@@ -114,20 +103,20 @@ export abstract class BaseHandler implements DrawEventHandler {
 }
 
 export class PencilHandler extends BaseHandler {
-  private _drawMoveThrottle: DrawMove
+  private _drawMoveThrottle: DrawingClass['dot']
   private delay = 20
   /** AddEventListener Options */
   private listenerOption: { passive: boolean } | false
-  constructor(el: HTMLElement | null = null) {
-    super(el)
+  constructor(el: HTMLElement | null = null, drawing: DrawingClass) {
+    super(el, drawing)
     /** Bind methods */
-    this.setHandler = this.setHandler.bind(this)
+    this.setDrawing = this.setDrawing.bind(this)
 
     this._handleStart = this._handleStart.bind(this)
     this._handleMove = this._handleMove.bind(this)
     this._handleEnd = this._handleEnd.bind(this)
 
-    this._drawMoveThrottle = throttle(this.drawMove, this.delay).bind(this)
+    this._drawMoveThrottle = throttle(this.drawing.dot, this.delay).bind(this)
 
     this.listenerOption = SUPPORT_EVENT_LISTENER_PASSIVE_OPTION
       ? { passive: false }
@@ -136,20 +125,14 @@ export class PencilHandler extends BaseHandler {
 
   public changeDelay(delay: number): void {
     this.delay = delay
-    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
+    this._drawMoveThrottle = throttle(this.drawing.dot, this.delay)
 
     if (this.isActive) this.on()
   }
 
-  public setHandler({
-    drawStart,
-    drawMove,
-    drawEnd,
-  }: Parameters<DrawEventHandler['setHandler']>[0]) {
-    this.drawEnd = drawEnd
-    this.drawStart = drawStart
-    this.drawMove = drawMove
-    this._drawMoveThrottle = throttle(this.drawMove, this.delay)
+  public setDrawing(drawing: DrawingClass) {
+    this.drawing = drawing
+    this._drawMoveThrottle = throttle(this.drawing.dot, this.delay)
 
     if (this.isActive) this.on()
   }
@@ -164,12 +147,12 @@ export class PencilHandler extends BaseHandler {
 
   private _handleStart(ev: TouchEvent | MouseEvent | PointerEvent) {
     ev.preventDefault()
-    this.drawStart()
+    this.drawing.start()
   }
 
   private _handleEnd(ev: TouchEvent | MouseEvent | PointerEvent) {
     ev.preventDefault()
-    this.drawEnd()
+    this.drawing.end()
   }
 
   private _handleMove(ev: MouseEvent | PointerEvent | TouchEvent) {
@@ -238,8 +221,8 @@ export class PencilHandler extends BaseHandler {
 
 export class PenHandler extends BaseHandler {
   private _editing: boolean
-  constructor(el: HTMLElement | null = null) {
-    super(el)
+  constructor(el: HTMLElement | null = null, drawing: DrawingClass) {
+    super(el, drawing)
     this._editing = false
     this._handleProt = this._handleProt.bind(this)
   }
@@ -259,20 +242,20 @@ export class PenHandler extends BaseHandler {
     ev.preventDefault()
     const isFrameIn = this._isContainElement(ev)
     if (!this._editing && isFrameIn) {
-      this.drawStart()
-      this.drawMove(this.getPointObjectFromDrawEvent(ev))
+      this.drawing.start()
+      this.drawing.dot(this.getPointObjectFromDrawEvent(ev))
       this._editing = true
       return
     }
 
     if (isFrameIn) {
-      this.drawMove(this.getPointObjectFromDrawEvent(ev))
+      this.drawing.dot(this.getPointObjectFromDrawEvent(ev))
       return
     }
 
     // end
     this._editing = false
-    this.drawEnd()
+    this.drawing.end()
   }
 
   private _isContainElement(
@@ -286,7 +269,7 @@ export class PenHandler extends BaseHandler {
     const stopId = setInterval(() => {
       if (!document.hasFocus()) {
         this._editing = false
-        this.drawEnd()
+        this.drawing.end()
       }
     }, 1000)
     return [() => clearInterval(stopId)]

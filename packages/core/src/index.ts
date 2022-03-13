@@ -1,6 +1,7 @@
 export * from './types'
 export * from './drawing'
 export * from './svg'
+export * from './eventHandler'
 export { EditSvg } from './edit/editSvg'
 export { EditPath } from './edit/editPath'
 export { Editing } from './edit/editing'

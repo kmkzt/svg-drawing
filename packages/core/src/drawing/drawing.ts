@@ -1,12 +1,5 @@
-import { isAlmostSameNumber } from '../utils'
-import type {
-  EventPoint,
-  DrawEventHandler,
-  DrawFactory,
-  ResizeCallback,
-  PathClass,
-  SvgClass,
-} from '../types'
+import type { DrawingClass } from '..'
+import type { EventPoint, DrawFactory, PathClass, SvgClass } from '../types'
 
 /**
  * @example
@@ -28,54 +21,31 @@ import type {
  *     new Renderer(el).update
  *   )
  */
-export class Drawing {
+export class Drawing implements DrawingClass {
   private _drawPath: PathClass | null
   private _drawPoints: EventPoint[]
   constructor(
     public svg: SvgClass,
     public pathFactory: DrawFactory,
-    public handler: DrawEventHandler,
     private update: (svg: SvgClass) => void
   ) {
     /** Setup property */
     this._drawPath = null
     this._drawPoints = []
 
-    /** Setup methods */
-    this.resize = this.resize.bind(this)
-
     /** Setup EventDrawHandler */
-    this.drawStart = this.drawStart.bind(this)
-    this.drawMove = this.drawMove.bind(this)
-    this.drawEnd = this.drawEnd.bind(this)
-
-    this.handler.setHandler({
-      drawStart: this.drawStart,
-      drawMove: this.drawMove,
-      drawEnd: this.drawEnd,
-    })
+    this.start = this.start.bind(this)
+    this.dot = this.dot.bind(this)
+    this.end = this.end.bind(this)
   }
 
-  public clear(): PathClass[] {
-    const paths = this.svg.paths
-    this.svg.paths = []
-    this.update(this.svg)
-    return paths
-  }
-
-  public undo(): PathClass | undefined {
-    const path = this.svg.paths.pop()
-    this.update(this.svg)
-    return path
-  }
-
-  public drawStart(): void {
+  public start(): void {
     this._drawPoints = []
     this._drawPath = this.pathFactory.createPath()
     this.svg.addPath(this._drawPath)
   }
 
-  public drawMove(po: EventPoint): void {
+  public dot(po: EventPoint): void {
     if (!this._drawPath) return
 
     this._drawPoints.push(po)
@@ -86,15 +56,8 @@ export class Drawing {
     this.update(this.svg)
   }
 
-  public drawEnd(): void {
+  public end(): void {
     this._drawPath = null
-    this.update(this.svg)
-  }
-
-  public resize({ width, height }: Parameters<ResizeCallback>[0]) {
-    if (isAlmostSameNumber(this.svg.width, width)) return
-
-    this.svg.resize({ width, height })
     this.update(this.svg)
   }
 }

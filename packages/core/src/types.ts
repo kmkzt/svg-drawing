@@ -230,19 +230,17 @@ export interface DrawFactory {
   createCommand: CreateCommand
 }
 
-export type DrawStart = () => void
-export type DrawEnd = () => void
-export type DrawMove = (po: EventPoint) => void
+export interface DrawingClass {
+  start: () => void
+  dot: (po: EventPoint) => void
+  end: () => void
+}
 export interface DrawEventHandler {
   /** Return active event listener status. */
   isActive: boolean
   on: () => void
   off: () => void
-  setHandler: (handler: {
-    drawStart: DrawStart
-    drawMove: DrawMove
-    drawEnd: DrawEnd
-  }) => void
+  setDrawing: (drawing: DrawingClass) => void
   setElement: (el: HTMLElement) => void
 }
 

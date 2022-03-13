@@ -1,8 +1,16 @@
 import { Drawing } from './drawing'
 import { BasicDrawFactory } from './drawing/factory'
-import { PencilHandler } from './drawing/handler'
+import { PencilHandler } from './event/drawEventHandler'
 import { Renderer } from './renderer'
 import { Svg } from './svg'
+import { isAlmostSameNumber } from './utils'
+import type {
+  DrawEventHandler,
+  SvgClass,
+  DrawingClass,
+  PathClass,
+  ResizeCallback,
+} from '.'
 import type { DrawingOption } from './types'
 
 /**
@@ -24,7 +32,12 @@ import type { DrawingOption } from './types'
  *   })
  */
 export class SvgDrawing {
-  public static init(
+  private svg: SvgClass
+  private drawing: DrawingClass
+  private factory: BasicDrawFactory
+  private handler: DrawEventHandler
+  private renderer: Renderer
+  constructor(
     el: HTMLElement,
     {
       curve = true,
@@ -38,22 +51,50 @@ export class SvgDrawing {
   ) {
     const { width, height } = el.getBoundingClientRect()
 
-    const handler = new PencilHandler(el)
-    handler.changeDelay(delay)
-    handler.on()
+    this.renderer = new Renderer(el, { background })
 
-    return new Drawing(
-      new Svg({ width, height, background }),
-      new BasicDrawFactory(
-        {
-          stroke: penColor ?? '#000',
-          strokeWidth: penWidth || penWidth === 0 ? String(penWidth) : '1',
-          fill: fill ?? 'none',
-        },
-        { curve, close }
-      ),
-      handler,
-      (svg) => new Renderer(el, { background }).update({ svg: svg.toJson() })
+    this.update = this.update.bind(this)
+
+    this.svg = new Svg({ width, height, background })
+
+    this.factory = new BasicDrawFactory(
+      {
+        stroke: penColor ?? '#000',
+        strokeWidth: penWidth || penWidth === 0 ? String(penWidth) : '1',
+        fill: fill ?? 'none',
+      },
+      { curve, close }
     )
+
+    this.drawing = new Drawing(this.svg, this.factory, this.update)
+
+    const pencilHandler = new PencilHandler(el, this.drawing)
+    this.handler = pencilHandler
+    pencilHandler.changeDelay(delay)
+    this.handler.on()
+  }
+
+  public clear(): PathClass[] {
+    const paths = this.svg.paths
+    this.svg.paths = []
+    this.update()
+    return paths
+  }
+
+  public undo(): PathClass | undefined {
+    const path = this.svg.paths.pop()
+    this.update()
+    return path
+  }
+
+  private update(): void {
+    this.renderer.update({ svg: this.svg.toJson() })
+  }
+
+  public resize({ width, height }: Parameters<ResizeCallback>[0]) {
+    if (isAlmostSameNumber(this.svg.width, width)) return
+
+    this.svg.resize({ width, height })
+    this.update()
   }
 }
