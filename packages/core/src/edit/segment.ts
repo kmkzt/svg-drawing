@@ -4,8 +4,6 @@ import type { PointObject, CommandClass } from '../types'
 type BezierCurvePoint = [PointObject, PointObject, PointObject, PointObject]
 
 /**
- * Reference: https://www.moshplant.com/direct-or/bezier/math.html
- *
  * A cubic Bezier curve is defined by four points. Two are endpoints. (x0,y0) is
  * the origin endpoint. (x3,y3) is the destination endpoint. The points (x1,y1)
  * and (x2,y2) are control points.
@@ -34,6 +32,8 @@ type BezierCurvePoint = [PointObject, PointObject, PointObject, PointObject]
  * B(y) = 3 (y2 - y1) - cy
  *
  * A(y) = y3 - y0 - cy - by
+ *
+ * @link https://www.moshplant.com/direct-or/bezier/math.html
  */
 export const calculateCoefficient = ([p0, p1, p2, p3]: BezierCurvePoint): {
   a: PointObject

@@ -32,6 +32,7 @@ export class EditPath {
       const curr = commands[c]
       const next = commands[c + 1]
 
+      /** @todo Move to CommandClass */
       const outlinePoints: PointObject[] = [
         curr.points[1]?.toJson(),
         curr.points[2]?.toJson(),
