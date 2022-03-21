@@ -1,11 +1,6 @@
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import { DrawFrame } from '@svg-drawing/animation'
-import {
-  Download,
-  PenHandler,
-  PencilHandler,
-  svgObjectToElement,
-} from '@svg-drawing/core'
+import { Download, svgObjectToElement } from '@svg-drawing/core'
 import {
   useDraw,
   useEdit,
@@ -14,14 +9,15 @@ import {
   Paths,
   EditPaths,
   AnimatePaths,
-  useDrawEventHandler,
   useParseFile,
   useKeyboardBind,
   useDrawFactory,
   useResize,
   useAnimation,
+  usePencilHandler,
+  usePenHandler,
 } from '@svg-drawing/react'
-import { useCallback, useState, useMemo, useRef } from 'react'
+import { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../components/Layout'
 import type {
@@ -101,18 +97,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const factory = useDrawFactory(pathOptions, { curve, close })
 
   /** Setup draw */
-  const handler = useMemo(() => {
-    switch (type) {
-      case 'pen':
-        return new PenHandler()
-      case 'pencil':
-      default:
-        return new PencilHandler()
-    }
-  }, [type])
-
-  useDrawEventHandler(targetRef, handler, drawActive && mode === 'draw')
-
   const svg = useSvg({})
   const [{ paths, ...svgProps }, onChangeSvg] = useState(svg.toJson())
 
@@ -120,12 +104,24 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     update: updateDraw,
     clear,
     undo,
+    draw,
   } = useDraw({
-    handler,
     factory,
     svg,
     onChangeSvg,
   })
+
+  usePencilHandler(
+    targetRef,
+    draw,
+    drawActive && mode === 'draw' && type === 'pencil'
+  )
+
+  usePenHandler(
+    targetRef,
+    draw,
+    drawActive && mode === 'draw' && type === 'pen'
+  )
 
   /** Setup edit */
 

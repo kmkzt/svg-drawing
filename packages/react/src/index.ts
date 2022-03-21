@@ -5,7 +5,12 @@ export { AnimatePaths } from './components/Animate'
 export { BackgroundRect } from './components/BackgroundRect'
 
 export { useDraw } from './hooks/useDraw'
-export { useDrawEventHandler } from './hooks/useDrawEventHandler'
+export {
+  useDrawEventHandler,
+  useSetupHandler,
+  usePenHandler,
+  usePencilHandler,
+} from './hooks/useDrawEventHandler'
 export { useDrawFactory } from './hooks/useDrawFactory'
 export { useEdit } from './hooks/useEdit'
 export { useSvg } from './hooks/useSvg'

@@ -24,11 +24,9 @@ export abstract class BaseHandler implements DrawEventHandler {
   }
 
   /** EventHandler */
+  protected el: HTMLElement | undefined
 
-  constructor(
-    protected el: HTMLElement | null = null,
-    protected drawing: DrawingClass
-  ) {
+  constructor(protected drawing: DrawingClass, el?: HTMLElement) {
     /** Bind method */
     this.on = this.on.bind(this)
     this.off = this.off.bind(this)
@@ -36,6 +34,7 @@ export abstract class BaseHandler implements DrawEventHandler {
 
     /** Set offset coordinates */
     const { left, top } = el ? el.getBoundingClientRect() : { left: 0, top: 0 }
+    this.el = el ?? undefined
     this._offset = { left, top }
     this._clearEventList = []
   }
@@ -107,8 +106,8 @@ export class PencilHandler extends BaseHandler {
   private delay = 20
   /** AddEventListener Options */
   private listenerOption: { passive: boolean } | false
-  constructor(el: HTMLElement | null = null, drawing: DrawingClass) {
-    super(el, drawing)
+  constructor(drawing: DrawingClass, el?: HTMLElement) {
+    super(drawing, el)
     /** Bind methods */
     this.setDrawing = this.setDrawing.bind(this)
 
@@ -221,8 +220,8 @@ export class PencilHandler extends BaseHandler {
 
 export class PenHandler extends BaseHandler {
   private _editing: boolean
-  constructor(el: HTMLElement | null = null, drawing: DrawingClass) {
-    super(el, drawing)
+  constructor(drawing: DrawingClass, el?: HTMLElement) {
+    super(drawing, el)
     this._editing = false
     this._handleProt = this._handleProt.bind(this)
   }

@@ -5,12 +5,11 @@ import type {
   EditSvgObject,
   DrawFactory,
   ResizeCallback,
-  DrawEventHandler,
+  DrawingClass,
   Editing,
   SelectIndex,
   SvgOption,
   PathClass,
-  Drawing,
   AnimationObject,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
@@ -32,15 +31,14 @@ export type UseDraw = (opts: UseDrawOptions) => DrawAction
 
 export type UseDrawOptions = {
   factory: DrawFactory
-  handler: DrawEventHandler
   svg: SvgClass
   onChangeSvg: (obj: SvgObject) => void
 }
 export type DrawAction = {
-  draw: Drawing
+  draw: DrawingClass
   update: () => void
-  clear: Drawing['clear']
-  undo: Drawing['undo']
+  clear: () => PathClass[]
+  undo: () => PathClass | undefined
 }
 
 /** UseEdit */
@@ -93,7 +91,7 @@ export type AnimatePathsProps = PathsProps & {
 /** UseDrawEventHandler */
 export type UseDrawEventHandler<E extends HTMLElement = HTMLElement> = (
   ref: RefObject<E>,
-  handler: DrawEventHandler,
+  drawing: DrawingClass,
   active?: boolean
 ) => void
 

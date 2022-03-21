@@ -16,9 +16,6 @@ import type { UseDraw } from '../types'
  *     const svg = useSvg({ width: 500, height: 500 })
  *     const [svgObject, setSvgObject] = useState(svg.toJson())
  *
- *     const ref = useRef(null)
- *     const handler = useDrawEventHandler(ref, PencilHandler, true)
- *
  *     const factory = useDrawFactory(
  *       { stroke: '#000', fill: 'none' },
  *       { curve: true, close: false }
@@ -26,10 +23,12 @@ import type { UseDraw } from '../types'
  *
  *     const draw = useDraw({
  *       svg,
- *       handler,
  *       factory,
  *       onChangeSvg: setSvgObject,
  *     })
+ *
+ *     const ref = useRef(null)
+ *     const handler = usePencilHandler(ref, draw, true)
  *
  *     return (
  *       <div ref={ref}>
@@ -38,7 +37,7 @@ import type { UseDraw } from '../types'
  *     )
  *   }
  */
-export const useDraw: UseDraw = ({ factory, handler, svg, onChangeSvg }) => {
+export const useDraw: UseDraw = ({ factory, svg, onChangeSvg }) => {
   const render = useRenderInterval()
 
   const update = useCallback(() => {
@@ -46,13 +45,22 @@ export const useDraw: UseDraw = ({ factory, handler, svg, onChangeSvg }) => {
   }, [render, onChangeSvg, svg])
 
   const draw = useMemo(
-    () => new Drawing(svg, factory, handler, update),
-    [svg, factory, handler, update]
+    () => new Drawing(svg, factory, update),
+    [svg, factory, update]
   )
 
-  const clear = useCallback(() => draw.clear(), [draw])
+  const clear = useCallback(() => {
+    const paths = svg.paths
+    svg.paths = []
+    update()
+    return paths
+  }, [svg, update])
 
-  const undo = useCallback(() => draw.undo(), [draw])
+  const undo = useCallback(() => {
+    const path = svg.paths.pop()
+    update()
+    return path
+  }, [svg.paths, update])
 
   return {
     draw,

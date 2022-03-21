@@ -1,6 +1,6 @@
 import { Drawing } from './drawing'
 import { BasicDrawFactory } from './drawing/factory'
-import { PencilHandler } from './event/drawEventHandler'
+import { PencilHandler } from './eventHandler/drawEventHandler'
 import { Renderer } from './renderer'
 import { Svg } from './svg'
 import { isAlmostSameNumber } from './utils'
@@ -19,10 +19,10 @@ import type { DrawingOption } from './types'
  *
  *   const el = document.getElementById('draw')
  *
- *   SvgDrawing.init(el)
+ *   new SvgDrawing(el)
  *
  *   // Options
- *   SvgDrawing.init(el, {
+ *   new SvgDrawing(el, {
  *     curve: true,
  *     close: false,
  *     penColor: '#00f',
@@ -68,7 +68,7 @@ export class SvgDrawing {
 
     this.drawing = new Drawing(this.svg, this.factory, this.update)
 
-    const pencilHandler = new PencilHandler(el, this.drawing)
+    const pencilHandler = new PencilHandler(this.drawing, el)
     this.handler = pencilHandler
     pencilHandler.changeDelay(delay)
     this.handler.on()
