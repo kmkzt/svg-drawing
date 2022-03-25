@@ -3264,10 +3264,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@17.0.42":
-  version "17.0.42"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.42.tgz#8242b9219bf8a911c47f248e327206fea3f4ee5a"
-  integrity sha512-nuab3x3CpJ7VFeNA+3HTUuEkvClYHXqWtWd7Ud6AZYW7Z3NH9WKtgU+tFB0ZLcHq+niB/HnzLcaZPqMJ95+k5Q==
+"@types/react@17.0.43":
+  version "17.0.43"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.43.tgz#4adc142887dd4a2601ce730bc56c3436fdb07a55"
+  integrity sha512-8Q+LNpdxf057brvPu1lMtC5Vn7J119xrP1aq4qiaefNioQUYANF/CYeK4NsKorSZyUGJ66g0IM+4bbjwx45o2A==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -8854,10 +8854,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-jsdoc@0.3.31:
-  version "0.3.31"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-jsdoc/-/prettier-plugin-jsdoc-0.3.31.tgz#d2401a865118b93dd9161bf8a7a31777880d00db"
-  integrity sha512-/YDoJtEwPLRU4fKKjsWqqWHGII4AEzmNsnLglIDxj3iduWeVinT+fjKyez/eHq4oaawqXVt8JxNpbm5WVakN1Q==
+prettier-plugin-jsdoc@0.3.32:
+  version "0.3.32"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-jsdoc/-/prettier-plugin-jsdoc-0.3.32.tgz#f3595d323f04a9fb3725c620c5078821d942b666"
+  integrity sha512-qhGvkDeHZAPlg6IfePdTfn0L/qb2kqqKmWkV3kKqqVNTl7PgKI35T+k/X4Oe7KGKTaM6H94snvxLUQOCCqNHFg==
   dependencies:
     binary-search-bounds "^2.0.5"
     comment-parser "^1.1.4"
