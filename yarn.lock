@@ -8854,10 +8854,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-jsdoc@0.3.32:
-  version "0.3.32"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-jsdoc/-/prettier-plugin-jsdoc-0.3.32.tgz#f3595d323f04a9fb3725c620c5078821d942b666"
-  integrity sha512-qhGvkDeHZAPlg6IfePdTfn0L/qb2kqqKmWkV3kKqqVNTl7PgKI35T+k/X4Oe7KGKTaM6H94snvxLUQOCCqNHFg==
+prettier-plugin-jsdoc@0.3.33:
+  version "0.3.33"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-jsdoc/-/prettier-plugin-jsdoc-0.3.33.tgz#6d975d7192d9f91c373e4539e117e77588968008"
+  integrity sha512-DvSuTArH2nUFCa0DrSkLfJwsIpXxhpvxwIIvE2Gs0zEyDIdjFGKa9oCj/h17MQk640Gzm4Eey3u4NwyfMq0uiw==
   dependencies:
     binary-search-bounds "^2.0.5"
     comment-parser "^1.1.4"
