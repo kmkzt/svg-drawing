@@ -7,7 +7,7 @@ export const EditPaths = ({
   editPaths,
   boundingBox,
   onTranslateStart,
-  onResizeBoundingBoxStart,
+  onResizeStart,
   onSelectPaths,
 }: EditPathsProps) => {
   const handleMoveStartPoint = useCallback(
@@ -50,7 +50,7 @@ export const EditPaths = ({
         <EditBoundingBox
           {...boundingBox}
           onTranslateStart={onTranslateStart}
-          onResizeBoundingBoxStart={onResizeBoundingBoxStart}
+          onResizeStart={onResizeStart}
         />
       )}
       {editPaths &&
@@ -103,7 +103,7 @@ export const EditBoundingBox = ({
   vertex,
   selected,
   onTranslateStart,
-  onResizeBoundingBoxStart,
+  onResizeStart,
 }: EditBoundingBoxProps) => {
   const handleMovePathsStart = useCallback(
     (
@@ -123,12 +123,12 @@ export const EditBoundingBox = ({
           | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
           | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
       ) => {
-        onResizeBoundingBoxStart({
+        onResizeStart({
           fixedType,
           point: getPointFromEvent(ev),
         })
       },
-    [onResizeBoundingBoxStart]
+    [onResizeStart]
   )
 
   return (

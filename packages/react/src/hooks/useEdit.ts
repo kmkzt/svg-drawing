@@ -1,4 +1,9 @@
-import { EditSvg, Editing } from '@svg-drawing/core'
+import {
+  EditSvg,
+  Editing,
+  TranslatePathHandler,
+  ResizePathHandler,
+} from '@svg-drawing/core'
 import { useCallback, useMemo, useEffect } from 'react'
 import { usePressedKey } from './usePressedKey'
 import { useRenderInterval } from './useRenderInterval'
@@ -70,7 +75,14 @@ export const useEdit: UseEdit = ({
     [editSvg, onChangeEdit, onChangeSvg, render]
   )
 
-  useEffect(() => () => edit.cleanup(), [edit])
+  const translatePathHandler = useMemo(
+    () => new TranslatePathHandler(edit),
+    [edit]
+  )
+  useEffect(() => () => translatePathHandler.end(), [translatePathHandler])
+
+  const resizePathHandler = useMemo(() => new ResizePathHandler(edit), [edit])
+  useEffect(() => () => translatePathHandler.end(), [translatePathHandler])
 
   const multipleSelect = usePressedKey(multipleSelectBindKey)
 
@@ -102,17 +114,19 @@ export const useEdit: UseEdit = ({
   )
 
   const onTranslateStart = useCallback<EditProps['onTranslateStart']>(
-    (po) => edit.startTranslate(po),
-    [edit]
+    (po) => {
+      edit.startTranslate(po)
+      translatePathHandler.start()
+    },
+    [edit, translatePathHandler]
   )
 
-  const onResizeBoundingBoxStart = useCallback<
-    EditProps['onResizeBoundingBoxStart']
-  >(
+  const onResizeStart = useCallback<EditProps['onResizeStart']>(
     (base) => {
-      edit.startResizeBoundingBox(base)
+      edit.startResize(base)
+      resizePathHandler.start()
     },
-    [edit]
+    [edit, resizePathHandler]
   )
 
   const keyboardMap = useMemo<EditSvgAction['keyboardMap']>(
@@ -134,6 +148,7 @@ export const useEdit: UseEdit = ({
     }),
     [editSvgObject]
   )
+
   return {
     edit,
     keyboardMap,
@@ -147,7 +162,7 @@ export const useEdit: UseEdit = ({
       editPaths,
       boundingBox,
       onTranslateStart,
-      onResizeBoundingBoxStart,
+      onResizeStart,
       onSelectPaths: selectPaths,
     },
   }

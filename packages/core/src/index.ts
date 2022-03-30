@@ -1,7 +1,13 @@
 export * from './types'
 export * from './drawing'
 export * from './svg'
-export * from './eventHandler/drawEventHandler'
+export {
+  BaseHandler,
+  PenHandler,
+  PencilHandler,
+} from './eventHandler/drawEventHandler'
+export { ResizePathHandler } from './eventHandler/ResizePathHandler'
+export { TranslatePathHandler } from './eventHandler/TranslatePathHandler'
 export { EditSvg } from './edit/editSvg'
 export { EditPath } from './edit/editPath'
 export { Editing } from './edit/editing'

@@ -1,4 +1,3 @@
-import { getEventPoint } from '../event'
 import type {
   PointObject,
   PathAttributes,
@@ -17,14 +16,9 @@ export class Editing {
   ) {
     this.translate = this.translate.bind(this)
     this.translatePreview = this.translatePreview.bind(this)
-    this.handleTranslateEnd = this.handleTranslateEnd.bind(this)
-    this.handleTranslatePreview = this.handleTranslatePreview.bind(this)
 
-    this.resizeBoundingBox = this.resizeBoundingBox.bind(this)
-    this.resizeBoundingBoxPreview = this.resizeBoundingBoxPreview.bind(this)
-    this.handleResizeBoundingBoxEnd = this.handleResizeBoundingBoxEnd.bind(this)
-    this.handleResizeBoundingBoxPreview =
-      this.handleResizeBoundingBoxPreview.bind(this)
+    this.resize = this.resize.bind(this)
+    this.resizePreview = this.resizePreview.bind(this)
   }
 
   setupUpdater(upd: (eSvg: EditSvg) => void) {
@@ -51,15 +45,8 @@ export class Editing {
     this.updater(this.editSvg)
   }
 
-  cleanup() {
-    this.removeTranslateListener()
-    this.removeResizeBoundingBoxListener()
-  }
-
   startTranslate(po: PointObject) {
     this.translateBasePoint = po
-
-    this.addTranslateListener()
   }
 
   translatePreview(po: PointObject) {
@@ -68,6 +55,7 @@ export class Editing {
 
   translate(po: PointObject) {
     this.translateEditSvg(this.editSvg, po)
+    this.translateBasePoint = null
   }
 
   private translateEditSvg(editSvg: EditSvg, po: PointObject) {
@@ -78,43 +66,16 @@ export class Editing {
     this.updater(editSvg)
   }
 
-  private handleTranslatePreview(ev: MouseEvent | TouchEvent) {
-    this.translatePreview(getEventPoint(ev))
-  }
-
-  private handleTranslateEnd(ev: MouseEvent | TouchEvent) {
-    this.removeTranslateListener()
-
-    this.translate(getEventPoint(ev))
-    this.translateBasePoint = null
-  }
-
-  private addTranslateListener() {
-    addEventListener('mouseup', this.handleTranslateEnd)
-    addEventListener('touchend', this.handleTranslateEnd)
-
-    addEventListener('mousemove', this.handleTranslatePreview)
-    addEventListener('touchmove', this.handleTranslatePreview)
-  }
-
-  private removeTranslateListener() {
-    removeEventListener('mouseup', this.handleTranslateEnd)
-    removeEventListener('touchend', this.handleTranslateEnd)
-
-    removeEventListener('mousemove', this.handleTranslatePreview)
-    removeEventListener('touchmove', this.handleTranslatePreview)
-  }
-
-  startResizeBoundingBox(base: ResizeBoundingBoxBase) {
+  startResize(base: ResizeBoundingBoxBase) {
     this.resizeBoundingBoxBase = base
-    this.addResizeBoundingBoxListener()
   }
 
-  resizeBoundingBox(po: PointObject) {
+  resize(po: PointObject) {
     this.resizeEditSvg(this.editSvg, po)
+    this.resizeBoundingBoxBase = null
   }
 
-  resizeBoundingBoxPreview(po: PointObject) {
+  resizePreview(po: PointObject) {
     this.resizeEditSvg(this.editSvg.preview(), po)
   }
 
@@ -126,32 +87,5 @@ export class Editing {
       y: po.y - (this.resizeBoundingBoxBase?.point.y ?? 0),
     })
     this.updater(editSvg)
-  }
-
-  private handleResizeBoundingBoxPreview(ev: MouseEvent | TouchEvent) {
-    this.resizeBoundingBoxPreview(getEventPoint(ev))
-  }
-
-  private handleResizeBoundingBoxEnd(ev: MouseEvent | TouchEvent) {
-    this.removeResizeBoundingBoxListener()
-
-    this.resizeBoundingBox(getEventPoint(ev))
-    this.resizeBoundingBoxBase = null
-  }
-
-  private addResizeBoundingBoxListener() {
-    addEventListener('mouseup', this.handleResizeBoundingBoxEnd)
-    addEventListener('touchend', this.handleResizeBoundingBoxEnd)
-
-    addEventListener('mousemove', this.handleResizeBoundingBoxPreview)
-    addEventListener('touchmove', this.handleResizeBoundingBoxPreview)
-  }
-
-  private removeResizeBoundingBoxListener() {
-    removeEventListener('mouseup', this.handleResizeBoundingBoxEnd)
-    removeEventListener('touchend', this.handleResizeBoundingBoxEnd)
-
-    removeEventListener('mousemove', this.handleResizeBoundingBoxPreview)
-    removeEventListener('touchmove', this.handleResizeBoundingBoxPreview)
   }
 }
