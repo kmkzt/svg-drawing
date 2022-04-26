@@ -3,14 +3,14 @@ import { SvgDrawing } from './SvgDrawing'
 
 describe('SvgDrawing', () => {
   it('default', () => {
-    const draw = SvgDrawing.init(document.createElement('div'))
+    const draw = new SvgDrawing(document.createElement('div'))
     draw.drawStart()
     draw.drawMove({ x: 0, y: 0 })
     draw.drawMove({ x: 1, y: 1 })
     draw.drawMove({ x: 2, y: 1 })
     draw.drawMove({ x: 3, y: 0 })
     draw.drawEnd()
-    expect(svgObjectToElement(draw.svg.toJson())).toMatchInlineSnapshot(`
+    expect(svgObjectToElement(draw.toJson())).toMatchInlineSnapshot(`
       <svg
         height="0"
         version="1.1"
@@ -31,15 +31,15 @@ describe('SvgDrawing', () => {
   })
 
   it('close', () => {
-    const draw = SvgDrawing.init(document.createElement('div'))
-    draw.pathFactory.changeClose(true)
+    const draw = new SvgDrawing(document.createElement('div'))
+    draw.changeClose(true)
     draw.drawStart()
     draw.drawMove({ x: 0, y: 0 })
     draw.drawMove({ x: 1, y: 1 })
     draw.drawMove({ x: 2, y: 1 })
     draw.drawMove({ x: 3, y: 0 })
     draw.drawEnd()
-    const el = svgObjectToElement(draw.svg.toJson())
+    const el = svgObjectToElement(draw.toJson())
     expect(el).toMatchInlineSnapshot(`
       <svg
         height="0"
@@ -61,15 +61,15 @@ describe('SvgDrawing', () => {
   })
 
   it('curve = false', () => {
-    const draw = SvgDrawing.init(document.createElement('div'))
-    draw.pathFactory.changeCurve(false)
+    const draw = new SvgDrawing(document.createElement('div'))
+    draw.changeCurve(false)
     draw.drawStart()
     draw.drawMove({ x: 0, y: 0 })
     draw.drawMove({ x: 1, y: 1 })
     draw.drawMove({ x: 2, y: 1 })
     draw.drawMove({ x: 3, y: 0 })
     draw.drawEnd()
-    const el = svgObjectToElement(draw.svg.toJson())
+    const el = svgObjectToElement(draw.toJson())
     expect(el).toMatchInlineSnapshot(`
       <svg
         height="0"
@@ -91,13 +91,13 @@ describe('SvgDrawing', () => {
   })
 
   it('clear()', () => {
-    const draw = SvgDrawing.init(document.createElement('div'))
-    draw.pathFactory.changeCurve(false)
+    const draw = new SvgDrawing(document.createElement('div'))
+    draw.changeCurve(false)
     draw.drawStart()
     draw.drawMove({ x: 0, y: 0 })
     draw.drawEnd()
     draw.clear()
-    const el = svgObjectToElement(draw.svg.toJson())
+    const el = svgObjectToElement(draw.toJson())
     expect(el).toMatchInlineSnapshot(`
       <svg
         height="0"
@@ -111,7 +111,7 @@ describe('SvgDrawing', () => {
 
   /** TODO: Fix NaN */
   it('undo()', () => {
-    const draw = SvgDrawing.init(document.createElement('div'))
+    const draw = new SvgDrawing(document.createElement('div'))
     draw.drawStart()
     draw.drawMove({ x: 0, y: 0 })
     draw.drawEnd()
@@ -119,7 +119,7 @@ describe('SvgDrawing', () => {
     draw.drawMove({ x: 0, y: 0 })
     draw.drawEnd()
     draw.undo()
-    const el = svgObjectToElement(draw.svg.toJson())
+    const el = svgObjectToElement(draw.toJson())
     expect(el).toMatchInlineSnapshot(`
       <svg
         height="0"
@@ -139,6 +139,4 @@ describe('SvgDrawing', () => {
       </svg>
     `)
   })
-  it.todo('draw.handler')
-  it.todo('draw.resizeListener')
 })

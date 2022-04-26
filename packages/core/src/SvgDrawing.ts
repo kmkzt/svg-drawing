@@ -10,6 +10,8 @@ import type {
   DrawingClass,
   PathClass,
   ResizeCallback,
+  SvgObject,
+  EventPoint,
 } from '.'
 import type { DrawingOption } from './types'
 
@@ -72,6 +74,30 @@ export class SvgDrawing {
     this.handler = pencilHandler
     pencilHandler.changeDelay(delay)
     this.handler.on()
+  }
+
+  public drawStart(): void {
+    this.drawing.start()
+  }
+
+  public drawMove(po: EventPoint): void {
+    this.drawing.dot(po)
+  }
+
+  public drawEnd(): void {
+    this.drawing.end()
+  }
+
+  public toJson(): SvgObject {
+    return this.svg.toJson()
+  }
+
+  public changeCurve(curve: boolean): void {
+    this.factory.changeCurve(curve)
+  }
+
+  public changeClose(close: boolean): void {
+    this.factory.changeClose(close)
   }
 
   public clear(): PathClass[] {
