@@ -22,7 +22,7 @@ describe('palette.ts', () => {
                 getTestResult(
                   Palette.imageData(imgd, { colorQuantCycles, numberOfColors })
                 )
-              ).toMatchInlineSnapshot()
+              ).toMatchSnapshot()
               done()
             })
           })
@@ -33,14 +33,14 @@ describe('palette.ts', () => {
       // TODO: Rest colors
       ;[8, 27].map((arg: number | undefined) => {
         it(`numberOfColors: ${arg || 'default'}`, () => {
-          expect(getTestResult(Palette.number(arg))).toMatchInlineSnapshot()
+          expect(getTestResult(Palette.number(arg))).toMatchSnapshot()
         })
       })
     })
     describe('Palette.gray', () => {
       ;[2, 7, 16].map((arg: number | undefined) => {
         it(`numberOfColors: ${arg || 'default'}`, () => {
-          expect(getTestResult(Palette.grey(arg))).toMatchInlineSnapshot()
+          expect(getTestResult(Palette.grey(arg))).toMatchSnapshot()
         })
       })
     })

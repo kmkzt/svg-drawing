@@ -27,7 +27,42 @@ describe('trace.ts', () => {
   const testimage = resolve(__dirname, '__test__/panda.png')
   it('TestPattern', () => {
     // TestPattern
-    expect(testPattern).toMatchInlineSnapshot()
+    expect(testPattern).toMatchInlineSnapshot(`
+      Object {
+        "commandOmit": Object {
+          "commandOmit": 3,
+        },
+        "curvy": Object {
+          "rightangleenhance": false,
+        },
+        "default": Object {},
+        "ltres": Object {
+          "ltres": 0.01,
+        },
+        "palettes_custom": Object {
+          "palettes": Array [
+            Object {
+              "a": 255,
+              "b": 100,
+              "g": 0,
+              "r": 0,
+            },
+            Object {
+              "a": 255,
+              "b": 255,
+              "g": 255,
+              "r": 255,
+            },
+          ],
+        },
+        "pathomit_20": Object {
+          "pathOmit": 20,
+        },
+        "qtres": Object {
+          "qtres": 0.01,
+        },
+      }
+    `)
   })
   describe('ImgTrace', () => {
     Object.entries(testPattern).map(([testname, testopts]) => {
@@ -54,7 +89,7 @@ describe('trace.ts', () => {
           // expect(imgd).toMatchInlineSnapshot()
 
           // SvgString
-          expect(data).toMatchInlineSnapshot()
+          expect(data).toMatchSnapshot()
           done()
         })
       })
