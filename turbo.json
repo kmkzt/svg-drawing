@@ -10,7 +10,14 @@
       "dependsOn": ["^build"],
       "outputs": ["snapshots/**"]
     },
+    "lint": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
     "dev": {
+      "cache": false
+    },
+    "dev:tsc": {
       "cache": false
     }
   }
