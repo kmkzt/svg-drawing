@@ -10,6 +10,10 @@
       "dependsOn": ["^build"],
       "outputs": ["snapshots/**"]
     },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
     "lint": {
       "dependsOn": ["^build"],
       "outputs": []
