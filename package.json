@@ -6,18 +6,17 @@
     "examples/*"
   ],
   "scripts": {
-    "clean": "lerna clean; rimraf ./coverage ./packages/**/{lib,dist,node_modules}; yarn cache clean",
-    "build": "lerna run build",
+    "build": "turbo run build",
     "build:gh-page": "export BASE_PATH=\"/svg-drawing\"; yarn build",
     "dev": "concurrently yarn:dev:{main,tsc}",
-    "dev:main": "yarn lerna run dev --concurrency 1 --parallel --stream",
-    "dev:tsc": "yarn lerna run dev:tsc --concurrency 1 --parallel --stream",
+    "dev:main": "turbo run dev --parallel --no-cache",
+    "dev:tsc": "turbo run dev:tsc --parallel --no-cache",
     "dev:test": "DEBUG=debug yarn test --watchAll",
     "test": "NODE_ENV=test jest --ci --passWithNoTests",
-    "lint": "lerna run lint",
-    "fmt": "lerna run fmt",
+    "lint": "turbo run lint",
+    "fmt": "turbo run fmt",
     "lint-fix": "eslint . --ext ts,tsx,js,jsx --fix",
-    "typecheck": "lerna run typecheck",
+    "typecheck": "turbo run typecheck",
     "release": "lerna publish --exact",
     "release:debug": "yarn release -- --npm-tag=debug --no-push",
     "prepare": "yarn lerna bootstrap"
@@ -64,6 +63,7 @@
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-sourcemaps": "0.6.3",
     "rollup-plugin-terser": "7.0.2",
+    "turbo": "1.2.9",
     "typescript": "4.5.5"
   },
   "resolutions": {
