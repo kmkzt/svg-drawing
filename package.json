@@ -17,7 +17,7 @@
     "fmt": "turbo run fmt",
     "lint-fix": "eslint . --ext ts,tsx,js,jsx --fix",
     "typecheck": "turbo run typecheck",
-    "versionup": "lerna version --no-push --no-git-tag-version",
+    "versionup": "lerna version --no-push --exact",
     "release": "lerna publish from-package",
     "release:debug": "yarn release --npm-tag=debug --no-push"
   },
