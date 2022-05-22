@@ -1,7 +1,7 @@
 {
   "name": "@svg-drawing-example/docs",
   "private": true,
-  "version": "4.2.2",
+  "version": "4.2.3",
   "scripts": {
     "clear": "rimraf .next out",
     "start": "next start",
@@ -14,15 +14,15 @@
   "dependencies": {
     "@rebass/forms": "4.0.6",
     "@styled-icons/octicons": "10.6.0",
-    "@svg-drawing/animation": "4.2.2",
-    "@svg-drawing/core": "4.2.2",
-    "@svg-drawing/img-trace": "4.2.2",
-    "@svg-drawing/react": "4.2.2",
+    "@svg-drawing/animation": "4.2.3",
+    "@svg-drawing/core": "4.2.3",
+    "@svg-drawing/img-trace": "4.2.3",
+    "@svg-drawing/react": "4.2.3",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "regenerator-runtime": "0.13.9",
     "rebass": "4.0.7",
+    "regenerator-runtime": "0.13.9",
     "styled-components": "5.1.1",
     "styled-system": "5.1.5"
   },
