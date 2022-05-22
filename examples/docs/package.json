@@ -18,7 +18,7 @@
     "@svg-drawing/core": "4.2.2",
     "@svg-drawing/img-trace": "4.2.2",
     "@svg-drawing/react": "4.2.2",
-    "next": "11.1.3",
+    "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "regenerator-runtime": "0.13.9",
