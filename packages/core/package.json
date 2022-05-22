@@ -18,7 +18,11 @@
   "files": [
     "lib/**/*"
   ],
-  "repository": "github:kmkzt/svg-drawing",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kmkzt/svg-drawing.git",
+    "directory": "packages/core"
+  },
   "homepage": "https://github.com/kmkzt/svg-drawing#readme",
   "bugs": {
     "url": "https://github.com/kmkzt/svg-drawing/issues"

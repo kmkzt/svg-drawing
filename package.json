@@ -17,9 +17,9 @@
     "fmt": "turbo run fmt",
     "lint-fix": "eslint . --ext ts,tsx,js,jsx --fix",
     "typecheck": "turbo run typecheck",
-    "release": "lerna publish --exact",
-    "release:debug": "yarn release -- --npm-tag=debug --no-push",
-    "prepare": "yarn lerna bootstrap"
+    "versionup": "lerna version --no-push --no-git-tag-version --exact",
+    "release": "lerna publish from-package",
+    "release:debug": "yarn release --npm-tag=debug --no-push"
   },
   "devDependencies": {
     "@babel/core": "7.16.12",
@@ -27,6 +27,7 @@
     "@babel/preset-env": "7.16.11",
     "@babel/preset-react": "7.16.7",
     "@babel/preset-typescript": "7.16.7",
+    "@lerna-lite/cli": "1.3.0",
     "@rollup/plugin-commonjs": "21.0.3",
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "13.1.3",
@@ -52,8 +53,6 @@
     "eslint-plugin-react": "7.28.0",
     "eslint-plugin-react-hooks": "4.3.0",
     "jest": "27.4.7",
-    "lerna": "4.0.0",
-    "lerna-changelog": "2.2.0",
     "npm-run-all": "4.1.5",
     "png.js": "0.2.1",
     "prettier": "2.5.1",

@@ -7,7 +7,11 @@
     "name": "Kazuto Kamei",
     "email": "kmkzt0927@gmail.com"
   },
-  "repository": "github:kmkzt/svg-drawing",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kmkzt/svg-drawing.git",
+    "directory": "packages/animation"
+  },
   "homepage": "https://github.com/kmkzt/svg-drawing/tree/master/packages/animation#readme",
   "bugs": {
     "url": "https://github.com/kmkzt/svg-drawing/issues"
