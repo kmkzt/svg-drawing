@@ -1,0 +1,48 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x, 14.x]
+
+    steps:
+      - name: Begin CI...
+        uses: actions/checkout@v2
+
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Use cached node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: nodeModules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            nodeModules-
+      - name: install, build, lint, typecheck, test
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+          yarn build:gh-page
+          yarn lint
+          yarn typecheck
+          yarn test
+        env:
+          CI: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2.1.0
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          file: ./coverage/clover.xml

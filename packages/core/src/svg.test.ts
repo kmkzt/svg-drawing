@@ -1,6 +1,6 @@
-import { Point, Vector, Path, Svg, Command, COMMAND_TYPE } from './svg'
 import { download, toBase64 } from './download'
 import { pathObjectToElement, svgObjectToElement } from './renderer'
+import { Point, Vector, Path, Svg, Command, COMMAND_TYPE } from './svg'
 
 describe('svg.ts', () => {
   describe('Point', () => {
@@ -58,14 +58,10 @@ describe('svg.ts', () => {
       expect(cmd.toString()).toBe('L 1 1')
     })
     it('CURVE', () => {
-      const cmd = new Command(COMMAND_TYPE.CURVE, [
-        0.25,
-        0.25,
-        0.75,
-        0.25,
-        1,
-        1,
-      ])
+      const cmd = new Command(
+        COMMAND_TYPE.CURVE,
+        [0.25, 0.25, 0.75, 0.25, 1, 1]
+      )
       expect(cmd.toString()).toBe('C 0.25 0.25 0.75 0.25 1 1')
     })
 

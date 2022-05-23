@@ -1,11 +1,14 @@
-import { useEffect, useRef, useCallback, useState, ChangeEvent } from 'react'
-import { NextPage } from 'next'
-import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import { Slider, Input, Label } from '@rebass/forms/styled-components'
-import { Command, Point } from '@ranklab-gaming/svg-drawing-core'
-import { SvgAnimation, FrameAnimation } from '@ranklab-gaming/svg-drawing-animation'
+import { SvgAnimation } from '@ranklab-gaming/svg-drawing-animation'
+import { Point } from '@ranklab-gaming/svg-drawing-core'
+import { useEffect, useRef, useCallback, useState } from 'react'
+import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../../components/Layout'
 import { example } from '../../lib/example-svg'
+import type { FrameAnimation } from '@ranklab-gaming/svg-drawing-animation'
+import type { Command } from '@ranklab-gaming/svg-drawing-core'
+import type { NextPage } from 'next'
+import type { ChangeEvent } from 'react'
 const size = 30
 const shake: FrameAnimation = (paths) => {
   const range = 5

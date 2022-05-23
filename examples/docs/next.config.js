@@ -1,27 +1,12 @@
-const isProd = process.env.NODE_ENV === 'production'
-const isGhPages = process.env.IS_GH_PAGE === 'true'
-
 module.exports = {
   // For gh-pages
-  basePath: isGhPages ? '/svg-drawing' : '',
-  assetPrefix: isGhPages ? '/svg-drawing' : '',
+  basePath: process.env.BASE_PATH || '',
+  assetPrefix: process.env.BASE_PATH || '',
   webpack(config, { dev }) {
-    if (dev) {
-      config.module.rules.push({
-        enforce: 'pre',
-        test: /\.[tj]sx?/,
-        exclude: [/node_modules/, /packages/],
-        use: [
-          {
-            loader: 'eslint-loader',
-            options: {
-              fix: true,
-              failOnWarning: false,
-            },
-          },
-        ],
-      })
-    }
+    /**
+     * @todo Add eslint-webpack-plugin.
+     *   https://github.com/webpack-contrib/eslint-webpack-plugin
+     */
     return config
   },
 }

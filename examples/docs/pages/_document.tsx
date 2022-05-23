@@ -1,12 +1,7 @@
-import Document, {
-  Head,
-  Html,
-  Main,
-  NextScript,
-  DocumentContext,
-} from 'next/document'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 import { GA_TRACKING_ID } from '../lib/gtag'
+import type { DocumentContext } from 'next/document'
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {

@@ -1,13 +1,8 @@
-/**
- * Svg Path JSON
- * TODO: improve key types
- */
+/** Svg Path JSON TODO: improve key types */
 export type PathObject = {
   [camelCase: string]: string | undefined
 }
-/**
- * Svg JSON
- */
+/** Svg JSON */
 export type SvgObject = {
   width: number
   height: number
@@ -15,18 +10,14 @@ export type SvgObject = {
   paths: PathObject[]
 }
 
-/**
- * Path Object
- */
+/** Path Object */
 export type PointObject = {
   x: number
   y: number
   pressure?: number
 }
 
-/**
- * Command Object
- */
+/** Command Object */
 export type CommandType =
   | 'M'
   | 'm'
@@ -47,28 +38,20 @@ export type CommandObject = {
   type: CommandType
   value: number[]
 }
-/**
- * Svg options
- */
+/** Svg options */
 export type SvgOption = {
   width: number
   height: number
   background?: string
 }
-/**
- * Convert options
- */
+/** Convert options */
 export interface ConvertOption {
   ratio?: number
 }
-/**
- * Renderer options
- */
+/** Renderer options */
 export type RendererOption = Pick<SvgOption, 'background'>
 
-/**
- * SvgDrawing options
- */
+/** SvgDrawing options */
 export type DrawingOption = RendererOption & {
   penColor?: string
   penWidth?: number
@@ -77,24 +60,18 @@ export type DrawingOption = RendererOption & {
   delay?: number
   fill?: string
 }
-/**
- * Download options
- */
+/** Download options */
 export type DownloadOption = {
   extension: 'svg' | 'png' | 'jpg'
   filename?: string
 }
-/**
- * DrawHandler callback
- */
+/** DrawHandler callback */
 export type DrawHandlerCallback = {
   start: () => void
   end: () => void
   move: (po: PointObject) => void
 }
-/**
- * ResizeHandler callback
- */
+/** ResizeHandler callback */
 export type ResizeHandlerCallback = {
   resize: (
     rect: DOMRect | { width: number; height: number; left: number; top: number }

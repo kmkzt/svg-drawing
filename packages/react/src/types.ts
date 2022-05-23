@@ -1,7 +1,8 @@
-import React, { RefObject } from 'react'
+import React from 'react'
+import type { download } from '@ranklab-gaming/svg-drawing-core/lib/download'
 import type { SvgDrawing } from '@ranklab-gaming/svg-drawing-core/lib/drawing'
 import type { DrawingOption } from '@ranklab-gaming/svg-drawing-core/lib/types'
-import type { download } from '@ranklab-gaming/svg-drawing-core/lib/download'
+import type { RefObject } from 'react'
 
 export type UseSvgDrawing = {
   ref: RefObject<SvgDrawing | null>

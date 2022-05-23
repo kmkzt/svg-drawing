@@ -4,6 +4,7 @@ module.exports = {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  testEnvironment: 'jsdom',
   testRegex: '(\\.|/)(test|spec)\\.(t|j)sx?$',
   moduleNameMapper: {},
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],

@@ -1,11 +1,12 @@
+import { Input } from '@rebass/forms/styled-components'
+import { Renderer, download } from '@ranklab-gaming/svg-drawing-core'
 import {
-  useState,
-  useCallback,
-  ChangeEvent,
-  useRef,
-  RefObject,
-  useEffect,
-} from 'react'
+  ImgTrace,
+  Palette,
+  // Blur,
+  ImgLoader,
+} from '@ranklab-gaming/svg-drawing-img-trace'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import {
   Box,
   Flex,
@@ -14,16 +15,11 @@ import {
   Image,
   Heading,
 } from 'rebass/styled-components'
-import { Input } from '@rebass/forms/styled-components'
-import { Renderer, Svg, download } from '@ranklab-gaming/svg-drawing-core'
-import {
-  ImgTrace,
-  Rgba,
-  Palette,
-  // Blur,
-  ImgLoader,
-} from '@ranklab-gaming/svg-drawing-img-trace'
 import Layout from '../../components/Layout'
+import { basePath } from '../../config/paths'
+import type { Svg } from '@ranklab-gaming/svg-drawing-core'
+import type { Rgba } from '@ranklab-gaming/svg-drawing-img-trace'
+import type { ChangeEvent, RefObject } from 'react'
 
 const IMAGE_LIST = [
   '/img_trace/cat.jpg',
@@ -32,10 +28,7 @@ const IMAGE_LIST = [
   '/img_trace/panda.png',
   '/img_trace/risu.jpg',
   '/img_trace/tanuki.jpg',
-].map((url) =>
-  // For gh-pages
-  process.env.IS_GH_PAGE === 'true' ? `/svg-drawing${url}` : url
-)
+].map((url) => `${basePath}${url}`)
 
 const GRAYSCALE_PALETTE = [
   { r: 0, g: 0, b: 0, a: 255 },
@@ -101,9 +94,7 @@ export default () => {
     }
   }, [imageUrl, imageData, palettes, traceOption])
 
-  /**
-   * Update Svg Render
-   */
+  /** Update Svg Render */
   useEffect(() => {
     if (!renderRef.current) return
     const renderSvg = () => {

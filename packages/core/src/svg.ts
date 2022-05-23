@@ -1,5 +1,5 @@
 import { kebab2camel, roundUp, isNaN } from './utils'
-import { PathObject, SvgObject, SvgOption, CommandType } from './types'
+import type { PathObject, SvgObject, SvgOption, CommandType } from './types'
 
 export class Point {
   public x: number
@@ -143,9 +143,8 @@ export class Vector {
 }
 
 /**
- * TODO: refactor command.
- * The following commands are not supported. Cannot support commands that use `M` or` z` more than once
- * `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
+ * TODO: refactor command. The following commands are not supported. Cannot
+ * support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
  */
 export class Path {
   public attrs: PathObject
@@ -255,9 +254,7 @@ export class Svg {
     this.background = background
   }
 
-  /**
-   * @todo check height
-   */
+  /** @todo Check height */
   public resize({ width, height }: { width: number; height: number }) {
     this.scalePath(width / this.width)
     this.width = width

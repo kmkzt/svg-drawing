@@ -10,19 +10,25 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+
+    // import
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+
+    // react
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',
-    'plugin:prettier/recommended',
-    'prettier/babel',
-    'prettier/react',
 
     // TypeScript
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
 
     // Test
     'plugin:jest/recommended',
+
+    // prettier
+    'plugin:prettier/recommended',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   settings: {
@@ -37,6 +43,27 @@ module.exports = {
     'no-comma-dangle': 'off',
     'no-empty-interface': 'off',
     'no-unused-vars': 'off',
+
+    // import
+    'import/order': [
+      'warn',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'index',
+          'sibling',
+          'parent',
+          'object',
+          'type',
+        ],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
 
     // React
     'react/jsx-uses-react': 'error',
@@ -60,8 +87,14 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        prefer: 'type-imports',
+      },
+    ],
 
     // Test
-    'jest/no-test-callback': 'warn',
+    'jest/no-done-callback': 'warn',
   },
 }

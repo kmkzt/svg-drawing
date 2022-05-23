@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "target": "es6", // TODO: change esnext
     "module": "esnext",
-    "lib": ["es2018", "es2017", "dom"],
+    "lib": ["esnext","es2020","es2019","es2018", "es2017", "dom"],
     "jsx": "react",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
@@ -13,7 +13,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmitOnError": true,
     "noUnusedLocals": false,
-    "removeComments": true,
+    "removeComments": false,
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,

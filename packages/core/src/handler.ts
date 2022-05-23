@@ -1,4 +1,4 @@
-import {
+import type {
   DrawHandlerCallback,
   ResizeHandlerCallback,
   ListenerMaps,
@@ -40,22 +40,14 @@ const listenerMaps: ListenerMaps = {
 }
 
 export class DrawHandler {
-  /**
-   * Remove EventList
-   */
+  /** Remove EventList */
   private _clearEventList: Array<() => void>
-  /**
-   * addEventListener Options
-   */
+  /** AddEventListener Options */
   private _listenerOption: ReturnType<typeof getPassiveOptions>
-  /**
-   * Offset coordinates
-   */
+  /** Offset coordinates */
   private _left: number
   private _top: number
-  /**
-   * EventHandler
-   */
+  /** EventHandler */
   public end: DrawHandlerCallback['end']
   public start: DrawHandlerCallback['start']
   public move: DrawHandlerCallback['move']
@@ -63,42 +55,30 @@ export class DrawHandler {
     private _el: HTMLElement,
     { end, start, move }: DrawHandlerCallback
   ) {
-    /**
-     * Bind property from arguments.
-     */
+    /** Bind property from arguments. */
     this.end = end
     this.start = start
     this.move = move
-    /**
-     * Setup property.
-     */
+    /** Setup property. */
     this._clearEventList = []
     this._listenerOption = getPassiveOptions(false)
-    /**
-     * Set offset coordinates
-     */
+    /** Set offset coordinates */
     const { left, top } = _el.getBoundingClientRect()
     this._left = left
     this._top = top
-    /**
-     * Bind mthods
-     */
+    /** Bind mthods */
     this._handleStart = this._handleStart.bind(this)
     this._handleMove = this._handleMove.bind(this)
     this._handleEnd = this._handleEnd.bind(this)
   }
 
-  /**
-   * Exec removeEventListener
-   */
+  /** Exec removeEventListener */
   public off() {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []
   }
 
-  /**
-   * Exec addEventListener
-   */
+  /** Exec addEventListener */
   public on(): void {
     this.off()
 
@@ -184,9 +164,7 @@ export class DrawHandler {
 }
 
 export class ResizeHandler {
-  /**
-   * Remove EventList
-   */
+  /** Remove EventList */
   private _clearEventList: Array<() => void>
   public resize: ResizeHandlerCallback['resize']
   constructor(private _el: HTMLElement, { resize }: ResizeHandlerCallback) {
