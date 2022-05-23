@@ -1,5 +1,5 @@
 import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
-import { useSvgDrawing } from '@svg-drawing/react'
+import { useSvgDrawing } from '@ranklab-gaming/svg-drawing-react'
 import { useEffect, useCallback, useState } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../components/Layout'

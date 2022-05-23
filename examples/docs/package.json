@@ -1,7 +1,7 @@
 {
   "name": "@svg-drawing-example/docs",
   "private": true,
-  "version": "4.2.10",
+  "version": "4.3.0",
   "scripts": {
     "clear": "rimraf .next out",
     "start": "next start",
@@ -12,10 +12,10 @@
     "prepare": "build"
   },
   "dependencies": {
-    "@ranklab-gaming/svg-drawing-animation": "^4.2.10",
-    "@ranklab-gaming/svg-drawing-core": "^4.2.10",
-    "@ranklab-gaming/svg-drawing-img-trace": "^4.2.10",
-    "@ranklab-gaming/svg-drawing-react": "^4.2.10",
+    "@ranklab-gaming/svg-drawing-animation": "^4.3.0",
+    "@ranklab-gaming/svg-drawing-core": "^4.3.0",
+    "@ranklab-gaming/svg-drawing-img-trace": "^4.3.0",
+    "@ranklab-gaming/svg-drawing-react": "^4.3.0",
     "@rebass/forms": "4.0.6",
     "@styled-icons/octicons": "10.6.0",
     "next": "12.1.0",

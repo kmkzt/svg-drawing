@@ -1,6 +1,6 @@
 {
   "name": "@ranklab-gaming/svg-drawing-animation",
-  "version": "4.2.10",
+  "version": "4.3.0",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": "kmkzt<info.pscreator@gmail.com>",
@@ -35,7 +35,7 @@
     "prepare": "yarn build"
   },
   "optionalDependencies": {
-    "@ranklab-gaming/svg-drawing-core": "^4.2.10"
+    "@ranklab-gaming/svg-drawing-core": "^4.3.0"
   },
   "publishConfig": {
     "access": "public"
