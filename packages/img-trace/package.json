@@ -1,13 +1,17 @@
 {
   "name": "@svg-drawing/img-trace",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": {
     "name": "Kazuto Kamei",
     "email": "kmkzt0927@gmail.com"
   },
-  "repository": "github:kmkzt/svg-drawing",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kmkzt/svg-drawing.git",
+    "directory": "packages/img-trace"
+  },
   "homepage": "https://github.com/kmkzt/svg-drawing/tree/master/packages/img-trace#readme",
   "bugs": {
     "url": "https://github.com/kmkzt/svg-drawing/issues"
@@ -38,8 +42,8 @@
     "prepare": "yarn build"
   },
   "optionalDependencies": {
-    "@svg-drawing/animation": "4.2.2",
-    "@svg-drawing/core": "4.2.2"
+    "@svg-drawing/animation": "4.2.3",
+    "@svg-drawing/core": "4.2.3"
   },
   "publishConfig": {
     "access": "public"
