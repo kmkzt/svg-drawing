@@ -18,8 +18,8 @@
     "lint-fix": "eslint . --ext ts,tsx,js,jsx --fix",
     "typecheck": "turbo run typecheck",
     "versionup": "lerna version --no-push --no-git-tag-version --exact",
-    "release": "lerna publish from-package",
-    "release:debug": "yarn release --npm-tag=debug --no-push"
+    "release": "yarn build; lerna publish from-package",
+    "release:dryrun": "yarn build; lerna publish from-package --no-push --registry=http://localhost:4873/"
   },
   "devDependencies": {
     "@babel/core": "7.16.12",
@@ -63,7 +63,8 @@
     "rollup-plugin-sourcemaps": "0.6.3",
     "rollup-plugin-terser": "7.0.2",
     "turbo": "1.2.9",
-    "typescript": "4.5.5"
+    "typescript": "4.5.5",
+    "verdaccio": "5.10.2"
   },
   "resolutions": {
     "@typescript-eslint/typescript-estree/glob-parent": "5.1.2"
