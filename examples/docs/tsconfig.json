@@ -1,6 +1,11 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["next-env.d.ts", "modules.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "modules.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
   "compilerOptions": {
     "allowJs": true,
     "noEmit": true,
@@ -11,7 +16,10 @@
       "dom",
       "dom.iterable",
       "esnext"
-    ]
+    ],
+    "incremental": true
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
