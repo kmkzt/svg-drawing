@@ -19,7 +19,7 @@
     "typecheck": "turbo run typecheck",
     "versionup": "lerna version --no-push --no-git-tag-version --exact",
     "release": "yarn build; lerna publish from-package",
-    "release:dryrun": "yarn release --no-push --registry=http://localhost:4873/"
+    "release:dryrun": "yarn build; lerna publish from-package --no-push --registry=http://localhost:4873/"
   },
   "devDependencies": {
     "@babel/core": "7.16.12",
