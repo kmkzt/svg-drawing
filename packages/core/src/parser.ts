@@ -1,4 +1,6 @@
-import { Path, Svg, createCommand } from './svg'
+import { createCommand } from './svg/command'
+import { Path } from './svg/path'
+import { Svg } from './svg/svg'
 import { kebab2camel } from './utils'
 import type { PathClass, CommandClass, CommandType, SvgClass } from './types'
 

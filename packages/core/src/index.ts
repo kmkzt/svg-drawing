@@ -6,7 +6,32 @@ export {
   BezierCurve,
   closeCommands,
 } from './drawing/convert'
-export * from './svg'
+export { Svg } from './svg/svg'
+export { Path } from './svg/path'
+export {
+  Line,
+  Move,
+  OtherCommand,
+  RelativeCurve,
+  RelativeLine,
+  RelativeMove,
+  RelativeQuadraticCurve,
+  RelativeShortcutCurve,
+  QuadraticCurve,
+  Close,
+  Curve,
+  isAbsoluteCommand,
+  isCurveCommand,
+  isOtherCommand,
+  isRelativeCommand,
+  toAbsoluteCommand,
+  toRelativeCommand,
+  toAbsoluteCommands,
+  toRelativeCommands,
+  createCommand,
+} from './svg/command'
+export { Point } from './svg/point'
+export { Vector } from './svg/vector'
 export {
   BaseHandler,
   PenHandler,

@@ -1,5 +1,5 @@
 import { BezierCurve, closeCommands, createLineCommands } from './convert'
-import { Path } from '../svg'
+import { Path } from '../svg/path'
 import type {
   CreateCommand,
   DrawFactory,

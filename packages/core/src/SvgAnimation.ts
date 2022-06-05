@@ -5,7 +5,7 @@ import {
   createSvgElement,
   pathObjectToElement,
 } from './renderer'
-import { Svg } from './svg'
+import { Svg } from './svg/svg'
 import type {
   AnimationOption,
   RendererOption,

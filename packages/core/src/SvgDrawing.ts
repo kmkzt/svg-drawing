@@ -2,7 +2,7 @@ import { Drawing } from './drawing/drawing'
 import { BasicDrawFactory } from './drawing/factory'
 import { PencilHandler } from './eventHandler/drawEventHandler'
 import { Renderer } from './renderer'
-import { Svg } from './svg'
+import { Svg } from './svg/svg'
 import { isAlmostSameNumber } from './utils'
 import type {
   DrawingOption,

@@ -1,4 +1,6 @@
-import { Point, Move, Line, Curve, Close, Vector } from '../svg'
+import { Move, Line, Curve, Close } from '../svg/command'
+import { Point } from '../svg/point'
+import { Vector } from '../svg/vector'
 import type {
   EventPoint,
   CommandClass,
