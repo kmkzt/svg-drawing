@@ -1,6 +1,6 @@
 import { Drawing } from './drawing/drawing'
+import { PencilHandler } from './drawing/eventHandler'
 import { BasicDrawFactory } from './drawing/factory'
-import { PencilHandler } from './eventHandler/drawEventHandler'
 import { Renderer } from './renderer'
 import { Svg } from './svg/svg'
 import { isAlmostSameNumber } from './utils'

@@ -1,4 +1,5 @@
 export * from './types'
+
 export { Drawing } from './drawing/drawing'
 export { BasicDrawFactory } from './drawing/factory'
 export {
@@ -6,6 +7,7 @@ export {
   BezierCurve,
   closeCommands,
 } from './drawing/convert'
+export { BaseHandler, PenHandler, PencilHandler } from './drawing/eventHandler'
 export { Svg } from './svg/svg'
 export { Path } from './svg/path'
 export {
@@ -32,17 +34,12 @@ export {
 } from './svg/command'
 export { Point } from './svg/point'
 export { Vector } from './svg/vector'
-export {
-  BaseHandler,
-  PenHandler,
-  PencilHandler,
-} from './eventHandler/drawEventHandler'
-export { ResizePathHandler } from './eventHandler/ResizePathHandler'
-export { TranslatePathHandler } from './eventHandler/TranslatePathHandler'
 export { EditSvg } from './edit/editSvg'
 export { EditPath } from './edit/editPath'
 export { Editing } from './edit/editing'
 export { segmentPoint } from './edit/segment'
+export { ResizePathHandler } from './edit/resizePathHandler'
+export { TranslatePathHandler } from './edit/translatePathHandler'
 export {
   Renderer,
   createSvgChildElement,

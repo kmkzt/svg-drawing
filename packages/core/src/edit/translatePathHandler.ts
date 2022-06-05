@@ -1,5 +1,5 @@
 import { getEventPoint } from '../event'
-import type { Editing } from '../edit/editing' /** @todo Replace interface */
+import type { Editing } from './editing' /** @todo Replace interface */
 
 export class TranslatePathHandler {
   constructor(public editing: Editing) {
