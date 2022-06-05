@@ -1,5 +1,7 @@
 import { BoundingBox } from './boundingBox'
-import { Curve, Move, Path, Point } from '../svg'
+import { Curve, Move } from '../svg/command'
+import { Path } from '../svg/path'
+import { Point } from '../svg/point'
 
 const exampleData = new Path()
   .addCommand(new Move(new Point(0, 0)))

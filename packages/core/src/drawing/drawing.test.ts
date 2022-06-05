@@ -1,6 +1,7 @@
 import { createLineCommands } from './convert'
 import { Drawing } from './drawing'
-import { Path, Svg } from '../svg'
+import { Path } from '../svg/path'
+import { Svg } from '../svg/svg'
 import type { DrawFactory } from '../types'
 
 const drawMockFactory: DrawFactory = {

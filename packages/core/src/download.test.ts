@@ -1,6 +1,10 @@
 import { Download } from './download'
 import { svgObjectToElement } from './renderer'
-import { Svg, Path, Move, Point, Curve, Line, Close } from './svg'
+import { Move, Curve, Line, Close } from './svg/command'
+import { Path } from './svg/path'
+import { Point } from './svg/point'
+import { Svg } from './svg/svg'
+
 describe('download.ts', () => {
   const svg = new Svg({ width: 4, height: 4 })
     .addPath(

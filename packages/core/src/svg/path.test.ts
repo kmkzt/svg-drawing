@@ -1,4 +1,4 @@
-import { Line, Move } from '.'
+import { Line, Move } from './command'
 import { Path } from './path'
 import { Point } from './point'
 import { pathObjectToElement } from '../renderer'

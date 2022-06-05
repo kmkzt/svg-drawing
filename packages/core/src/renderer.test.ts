@@ -1,5 +1,8 @@
 import { svgObjectToElement } from './renderer'
-import { Svg, Path, Move, Point, Curve, Line, Close } from './svg'
+import { Move, Curve, Line, Close } from './svg/command'
+import { Path } from './svg/path'
+import { Point } from './svg/point'
+import { Svg } from './svg/svg'
 
 describe('renderer.ts', () => {
   const svg = new Svg({ width: 500, height: 500 })
