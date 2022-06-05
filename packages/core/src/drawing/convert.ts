@@ -7,14 +7,14 @@ import type {
   CreateCommand,
 } from '../types'
 
-export interface GenerateCommandsConverter {
-  create: CreateCommand
-}
-
 export const createLineCommands: CreateCommand = (points) =>
   points.map((p, i) =>
     i === 0 ? new Move(new Point(p.x, p.y)) : new Line(new Point(p.x, p.y))
   )
+
+interface GenerateCommandsConverter {
+  create: CreateCommand
+}
 
 export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number

@@ -1,10 +1,11 @@
-import { Drawing } from './drawing'
+import { Drawing } from './drawing/drawing'
 import { BasicDrawFactory } from './drawing/factory'
 import { PencilHandler } from './eventHandler/drawEventHandler'
 import { Renderer } from './renderer'
 import { Svg } from './svg'
 import { isAlmostSameNumber } from './utils'
 import type {
+  DrawingOption,
   DrawEventHandler,
   SvgClass,
   DrawingClass,
@@ -12,8 +13,7 @@ import type {
   ResizeCallback,
   SvgObject,
   EventPoint,
-} from '.'
-import type { DrawingOption } from './types'
+} from './types'
 
 /**
  * @example

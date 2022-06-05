@@ -1,5 +1,11 @@
 export * from './types'
-export * from './drawing'
+export { Drawing } from './drawing/drawing'
+export { BasicDrawFactory } from './drawing/factory'
+export {
+  createLineCommands,
+  BezierCurve,
+  closeCommands,
+} from './drawing/convert'
 export * from './svg'
 export {
   BaseHandler,
