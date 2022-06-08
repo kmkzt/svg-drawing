@@ -1,4 +1,3 @@
-import { Input } from '@rebass/forms/styled-components'
 import { Renderer, Download, svgObjectToElement } from '@svg-drawing/core'
 import {
   ImgTrace,
@@ -250,7 +249,7 @@ const ImageTrace = () => {
       <Box as="fieldset">
         <Heading>Select Image</Heading>
         <Box>
-          <Input
+          <input
             type="text"
             placeholder="input image url"
             value={inputUrl}

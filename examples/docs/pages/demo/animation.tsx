@@ -1,4 +1,3 @@
-import { Slider, Input, Label } from '@rebass/forms/styled-components'
 import { DrawFrame, AttributeFrame, ShakeFrame } from '@svg-drawing/animation'
 import {
   SvgAnimation,
@@ -149,20 +148,18 @@ const Animation: NextPage<Props> = ({ isSp }) => {
     <Layout>
       <Box as="fieldset">
         <Flex justifyContent="start" mb={2}>
-          <Label width={3 / 10} style={{ whiteSpace: 'nowrap' }}>
+          <label style={{ whiteSpace: 'nowrap' }}>
             ANIMATION MS:
-          </Label>
-          <Slider
-            width={6 / 10}
-            type="range"
-            min="0"
-            max="500"
-            step="5"
-            value={animMs}
-            onChange={handleChangeAnimMs}
-          />
-          <Input
-            width="auto"
+            <input
+              type="range"
+              min="0"
+              max="500"
+              step="5"
+              value={animMs}
+              onChange={handleChangeAnimMs}
+            />
+          </label>
+          <input
             type="number"
             min="0"
             max="500"
@@ -210,7 +207,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
         </Flex>
         <Box>
           <Text>Svg exported by this library can be read.</Text>
-          <Input type="file" onChange={handleFiles} multiple accept="image/*" />
+          <input type="file" onChange={handleFiles} multiple accept="image/*" />
         </Box>
       </Box>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>

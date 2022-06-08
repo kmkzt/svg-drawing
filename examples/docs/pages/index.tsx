@@ -1,4 +1,3 @@
-import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import { DrawFrame } from '@svg-drawing/animation'
 import { Download, svgObjectToElement } from '@svg-drawing/core'
 import {
@@ -314,7 +313,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   return (
     <Layout>
       <Box as="fieldset">
-        <Label htmlFor="mode">
+        <label htmlFor="mode">
           <Text fontSize={0}>Mode</Text>
           <select
             id="mode"
@@ -325,26 +324,28 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             <option value="draw">draw</option>
             <option value="edit">edit</option>
           </select>
-        </Label>
+        </label>
         {mode === 'draw' && (
           <Flex pt={3} justifyContent="start">
-            <Label htmlFor="curve">
-              <Checkbox
+            <label htmlFor="curve">
+              <input
+                type="checkbox"
                 id="curve"
                 checked={curve}
                 onChange={handleChangeCurve}
               />
               Curve
-            </Label>
-            <Label htmlFor="close">
-              <Checkbox
+            </label>
+            <label htmlFor="close">
+              <input
+                type="checkbox"
                 id="close"
                 checked={close}
                 onChange={handleChangeClose}
               />
               Close
-            </Label>
-            <Label htmlFor="type">
+            </label>
+            <label htmlFor="type">
               <select
                 id="type"
                 value={type}
@@ -354,7 +355,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 <option value="pen">Pen</option>
                 <option value="pencil">Pencil</option>
               </select>
-            </Label>
+            </label>
             <Button mr={1} mb={1} onClick={undo}>
               Undo
             </Button>
@@ -386,18 +387,15 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         <Flex flexWrap="wrap">
           <Box width={[1, 1 / 2, 1 / 2]} pr={3}>
             <Flex alignItems="center">
-              <Label fontSize={[2, 1, 1]} width={3 / 10} htmlFor="strokeWidth">
-                STROKE WIDTH:
-              </Label>
-              <Slider
-                width={5 / 10}
+              <label htmlFor="strokeWidth">STROKE WIDTH:</label>
+              <input
                 min="1"
                 max="20"
                 step="1"
                 value={pathOptions.strokeWidth}
                 onChange={handlePenWidth}
               />
-              <Input
+              <input
                 width="auto"
                 id="strokeWidth"
                 type="number"
@@ -410,18 +408,16 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             </Flex>
           </Box>
           <Box width={[1, 1 / 2, 1 / 2]}>
-            <Label fontSize={0} htmlFor="fill">
+            <label htmlFor="fill">
               FILL:
-              <Input
-                p={1}
-                fontSize={0}
+              <input
                 id="fill"
                 type="text"
                 placeholder="#000 or black or rgba(0,0,0,1)"
                 value={pathOptions.fill}
                 onChange={handleChangeFill}
               />
-            </Label>
+            </label>
             <Flex flexWrap="wrap">
               {colorList.map((col: string) => (
                 <Box
@@ -440,22 +436,16 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 />
               ))}
             </Flex>
-            <Label
-              fontSize={0}
-              htmlFor="penColor"
-              style={{ whiteSpace: 'nowrap' }}
-            >
+            <label htmlFor="penColor" style={{ whiteSpace: 'nowrap' }}>
               PEN COLOR:
-              <Input
-                fontSize={0}
-                p={1}
+              <input
                 id="penColor"
                 type="text"
                 placeholder="#000 or black or rgba(0,0,0,1)"
                 value={pathOptions.stroke}
                 onChange={handleChangePenColor}
               />
-            </Label>
+            </label>
             <Flex flexWrap="wrap">
               {colorList.map((col: string) => (
                 <Box
@@ -507,15 +497,15 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
           </Box>
         </Flex>
         {!isSp && (
-          <Label width="auto">
+          <label>
             <Text fontSize={0}>Svg exported by this library can be read.</Text>
-            <Input
+            <input
               type="file"
               onChange={handleFiles}
               multiple
               accept="image/*"
             />
-          </Label>
+          </label>
         )}
       </Box>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>

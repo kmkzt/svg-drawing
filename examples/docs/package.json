@@ -12,15 +12,14 @@
     "prepare": "build"
   },
   "dependencies": {
-    "@rebass/forms": "4.0.6",
     "@styled-icons/octicons": "10.6.0",
     "@svg-drawing/animation": "4.2.3",
     "@svg-drawing/core": "4.2.3",
     "@svg-drawing/img-trace": "4.2.3",
     "@svg-drawing/react": "4.2.3",
-    "next": "12.1.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "next": "12.1.6",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
     "rebass": "4.0.7",
     "regenerator-runtime": "0.13.9",
     "styled-components": "5.1.1",
@@ -28,7 +27,6 @@
   },
   "devDependencies": {
     "@types/rebass": "4.0.6",
-    "@types/rebass__forms": "4.0.2",
     "@types/styled-components": "5.1.1",
     "@types/styled-system": "5.1.1",
     "babel-plugin-styled-components": "1.10.7",

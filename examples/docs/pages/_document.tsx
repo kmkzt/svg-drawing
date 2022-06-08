@@ -2,10 +2,12 @@ import 'regenerator-runtime/runtime.js'
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 import { GA_TRACKING_ID } from '../lib/gtag'
-import type { DocumentContext } from 'next/document'
+import type { DocumentContext, DocumentInitialProps } from 'next/document'
 
 export default class MyDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
+  static async getInitialProps(
+    ctx: DocumentContext
+  ): Promise<DocumentInitialProps> {
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
 
@@ -18,13 +20,21 @@ export default class MyDocument extends Document {
 
       const initialProps = await Document.getInitialProps(ctx)
       return {
-        ...initialProps,
+        html: initialProps.html,
+        head: initialProps.head,
+        // @ts-expect-error
         styles: (
           <>
             {initialProps.styles}
             {sheet.getStyleElement()}
           </>
         ),
+      }
+    } catch {
+      return {
+        styles: undefined,
+        html: '',
+        head: undefined,
       }
     } finally {
       sheet.seal()

@@ -61,14 +61,19 @@ const GlobalHeader = () => (
   </Box>
 )
 
-const Layout: React.SFC<{
+const Layout = ({
+  children,
+  title = '',
+}: {
   title?: string
-}> = ({ children, title = '' }) => {
+  children: React.ReactNode
+}) => {
   return (
     <Fragment>
       <Head>
         <title>{`svg-drawing ${title}`}</title>
       </Head>
+      {/** @ts-expect-error */}
       <GlobalStyle />
       <GlobalHeader />
       <Box py="12px" px={['2vw', '2vw', '5vw']}>
