@@ -87,7 +87,8 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
  *   usePencilHandler(ref, draw, active)
  */
 export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
-  const setup = useCallback((draw) => new PencilHandler(draw), [])
+  const setup = useCallback((draw: DrawingClass) => new PencilHandler(draw), [])
+
   const handler = useSetupHandler(setup, drawing)
 
   useDrawEventHandler({ ref, handler: handler, active })
@@ -112,7 +113,8 @@ export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
  *   usePenHandler(ref, draw, active)
  */
 export const usePenHandler: UseDrawEventHandler = (ref, drawing, active) => {
-  const setup = useCallback((draw) => new PenHandler(draw), [])
+  const setup = useCallback((draw: DrawingClass) => new PenHandler(draw), [])
+
   const handler = useSetupHandler(setup, drawing)
 
   useDrawEventHandler({ ref, handler: handler, active })
