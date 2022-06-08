@@ -392,6 +392,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 min="1"
                 max="20"
                 step="1"
+                type="range"
                 value={pathOptions.strokeWidth}
                 onChange={handlePenWidth}
               />
