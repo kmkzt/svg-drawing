@@ -2513,13 +2513,6 @@
   dependencies:
     "@octokit/openapi-types" "^11.2.0"
 
-"@rebass/forms@4.0.6":
-  version "4.0.6"
-  resolved "https://registry.npmjs.org/@rebass/forms/-/forms-4.0.6.tgz#19a3af64f855baa65dec65aecadda5cd95a09dd7"
-  integrity sha512-20dHAlb5V0Na2HxCr73Jjoc4hD1ElimmlBpQtclXMoXUsjJ7ORdCNL1S9R54MX5f7iU2VrLGHU42eL7+nONNPQ==
-  dependencies:
-    reflexbox "^4.0.6"
-
 "@rollup/plugin-commonjs@21.1.0":
   version "21.1.0"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-21.1.0.tgz#45576d7b47609af2db87f55a6d4b46e44fc3a553"
@@ -2957,7 +2950,7 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/rebass@*", "@types/rebass@4.0.6":
+"@types/rebass@4.0.6":
   version "4.0.6"
   resolved "https://registry.npmjs.org/@types/rebass/-/rebass-4.0.6.tgz#c33d133baca8a440b22ca4b3038014d0b0e8ce59"
   integrity sha512-geU6Hh5/YM91c6yoT3/DsVsDRpbqoRFFnNmRQLT/V16aEL5zZ3Oa+2A+T2hvuNz6oSDA9tIj9SoEZVFivRe2Dg==
@@ -2966,15 +2959,6 @@
     "@types/styled-components" "*"
     "@types/styled-system" "*"
     "@types/styled-system__css" "*"
-
-"@types/rebass__forms@4.0.2":
-  version "4.0.2"
-  resolved "https://registry.npmjs.org/@types/rebass__forms/-/rebass__forms-4.0.2.tgz#69a2c50753583180bbe092dd147de8af2965d209"
-  integrity sha512-cop3eRQOh84O5RfKFo3pTcOdgJa8sFpa314fvFfH/msr43Ao1wW1xJzCUHVDx1D6lZSaqndS7QCJlkNrOpZnXA==
-  dependencies:
-    "@types/react" "*"
-    "@types/rebass" "*"
-    "@types/styled-system" "*"
 
 "@types/resolve@1.17.1":
   version "1.17.1"
