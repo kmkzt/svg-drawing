@@ -1,4 +1,3 @@
-import { Input } from '@rebass/forms/styled-components'
 import { Renderer, download } from '@ranklab-gaming/svg-drawing-core'
 import {
   ImgTrace,
@@ -249,7 +248,7 @@ export default () => {
       <Box as="fieldset">
         <Heading>Select Image</Heading>
         <Box>
-          <Input
+          <input
             type="text"
             placeholder="input image url"
             value={inputUrl}

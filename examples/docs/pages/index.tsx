@@ -1,10 +1,9 @@
-import { Input, Checkbox, Label, Slider } from '@rebass/forms/styled-components'
 import { useSvgDrawing } from '@ranklab-gaming/svg-drawing-react'
 import { useEffect, useCallback, useState } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../components/Layout'
 import type { NextPage } from 'next'
-import type { ChangeEvent } from 'react'
+import type { ChangeEvent, ChangeEventHandler } from 'react'
 
 const size = 30
 const colorList = [
@@ -79,7 +78,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     [draw]
   )
 
-  const handleChangeRainbowPen = useCallback(
+  const handleChangeRainbowPen = useCallback<
+    ChangeEventHandler<HTMLInputElement>
+  >(
     (e) => {
       draw.changeFill('none')
       draw.changeClose(false)
@@ -218,18 +219,15 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         <Flex flexWrap="wrap">
           <Box width={[1, 1 / 2, 1 / 2]} pr={3}>
             <Flex alignItems="center">
-              <Label fontSize={[2, 1, 1]} width={3 / 10} htmlFor="strokeWidth">
-                STROKE WIDTH:
-              </Label>
-              <Slider
-                width={5 / 10}
+              <label htmlFor="strokeWidth">STROKE WIDTH:</label>
+              <input
                 min="1"
                 max="20"
                 step="1"
                 value={penWidth}
                 onChange={handlePenWidth}
               />
-              <Input
+              <input
                 width="auto"
                 id="strokeWidth"
                 type="number"
@@ -241,15 +239,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
               />
             </Flex>
             <Flex alignItems="center">
-              <Label
-                width={3 / 10}
-                fontSize={[2, 1, 1]}
-                htmlFor="throttleDelay"
-              >
-                THROTTLE DELAY:
-              </Label>
-              <Slider
-                width={5 / 10}
+              <label htmlFor="throttleDelay">THROTTLE DELAY:</label>
+              <input
                 type="range"
                 min="0"
                 max="300"
@@ -257,8 +248,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 value={delay}
                 onChange={handleChangeDelay}
               />
-              <Input
-                width="auto"
+              <input
                 id="throttleDelay"
                 type="number"
                 min="0"
@@ -269,48 +259,49 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
               />
             </Flex>
             <Flex pt={3} justifyContent="start">
-              <Label htmlFor="curve">
-                <Checkbox
+              <label htmlFor="curve">
+                <input
+                  type="checkbox"
                   id="curve"
                   checked={curve}
                   onChange={handleChangeCiruler}
                 />
                 Curve
-              </Label>
+              </label>
               {!rainbowPen && (
-                <Label htmlFor="close">
-                  <Checkbox
+                <label htmlFor="close">
+                  <input
+                    type="checkbox"
                     id="close"
                     checked={close}
                     onChange={handleChangeClose}
                   />
                   Close
-                </Label>
+                </label>
               )}
-              <Label htmlFor="rainbow">
-                <Checkbox
+              <label htmlFor="rainbow">
+                <input
+                  type="checkbox"
                   id="rainbow"
                   checked={rainbowPen}
                   onChange={handleChangeRainbowPen}
                 />
                 Rainbow pen
-              </Label>
+              </label>
             </Flex>
           </Box>
           {!rainbowPen && (
             <Box width={[1, 1 / 2, 1 / 2]}>
-              <Label fontSize={0} htmlFor="fill">
+              <label htmlFor="fill">
                 FILL:
-                <Input
-                  p={1}
-                  fontSize={0}
+                <input
                   id="fill"
                   type="text"
                   placeholder="#000 or black or rgba(0,0,0,1)"
                   value={fill}
                   onChange={handleChangeFill}
                 />
-              </Label>
+              </label>
               <Flex flexWrap="wrap">
                 {colorList.map((col: string) => (
                   <Box
@@ -327,22 +318,16 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                   />
                 ))}
               </Flex>
-              <Label
-                fontSize={0}
-                htmlFor="penColor"
-                style={{ whiteSpace: 'nowrap' }}
-              >
+              <label htmlFor="penColor" style={{ whiteSpace: 'nowrap' }}>
                 PEN COLOR:
-                <Input
-                  fontSize={0}
-                  p={1}
+                <input
                   id="penColor"
                   type="text"
                   placeholder="#000 or black or rgba(0,0,0,1)"
                   value={penColor}
                   onChange={handleChangePenColor}
                 />
-              </Label>
+              </label>
               <Flex flexWrap="wrap">
                 {colorList.map((col: string) => (
                   <Box
@@ -402,7 +387,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
               <Text fontSize={0}>
                 Svg exported by this library can be read.
               </Text>
-              <Input
+              <input
                 type="file"
                 onChange={handleFiles}
                 multiple

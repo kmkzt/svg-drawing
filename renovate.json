@@ -1,7 +1,8 @@
 {
-  "extends": ["@ranklab"],
+  "extends": [
+    "@ranklab"
+  ],
   "packageRules": [
-    // For monorepo config
     {
       "matchPaths": [
         "examples/**/package.json",

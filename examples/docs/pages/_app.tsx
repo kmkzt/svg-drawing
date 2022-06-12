@@ -8,6 +8,7 @@ export default class MyApp extends App {
 
     return (
       <StrictMode>
+        {/** @ts-expect-error */}
         <ThemeProvider theme={theme}>
           <Component {...pageProps} />
         </ThemeProvider>
