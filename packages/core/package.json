@@ -18,6 +18,7 @@
   "files": [
     "lib/**/*"
   ],
+  "typedocMain": "src/index.ts" ,
   "repository": {
     "type": "git",
     "url": "https://github.com/kmkzt/svg-drawing.git",
