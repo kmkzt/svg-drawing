@@ -25,7 +25,7 @@ export class SvgAnimation {
   public svg: Svg
   public renderer: Renderer
   public resizeHandler: ResizeHandler
-  /** Relation animate element TODO: add easing option */
+  /** Relation animate element */
   private _repeatCount: string
   constructor(
     el: HTMLElement,
@@ -228,7 +228,7 @@ export class SvgAnimation {
     )
   }
 
-  /** @param filename TODO: Support gif and apng */
+  /** @param filename */
   public download(filename?: string): void {
     downloadBlob({
       data: svg2base64(this.toElement().outerHTML),

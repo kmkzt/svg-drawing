@@ -1,4 +1,4 @@
-/** Svg Path JSON TODO: improve key types */
+/** Svg Path JSON */
 export type PathObject = {
   [camelCase: string]: string | undefined
 }
