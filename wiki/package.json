@@ -1,9 +1,9 @@
 {
-  "name": "@svg-drawing-example/docs",
+  "name": "svg-drawing-documents",
   "private": true,
   "version": "4.2.3",
   "scripts": {
-    "build": "typedoc --entryPointStrategy packages ../../ --out ./out"
+    "build": "typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs --hideInPageTOC --entryPointStrategy packages ../ --out ./docs"
   },
   "dependencies": {
     "@svg-drawing/animation": "4.2.3",
@@ -12,6 +12,7 @@
     "@svg-drawing/react": "4.2.3"
   },
   "devDependencies": {
-    "typedoc": "0.22.17"
+    "typedoc": "0.22.17",
+    "typedoc-plugin-markdown": "3.12.1"
   }
 }
