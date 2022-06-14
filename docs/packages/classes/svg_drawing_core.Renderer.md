@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[core/src/renderer.ts:74](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/renderer.ts#L74)
+[core/src/renderer.ts:74](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/renderer.ts#L74)
 
 ## Properties
 
@@ -33,8 +33,6 @@
 
 ▸ **update**(`svgObj`): `void`
 
-Render TODO: XSS test TODO: Partially renderable
-
 #### Parameters
 
 | Name | Type |
@@ -47,4 +45,4 @@ Render TODO: XSS test TODO: Partially renderable
 
 #### Defined in
 
-[core/src/renderer.ts:80](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/renderer.ts#L80)
+[core/src/renderer.ts:80](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/renderer.ts#L80)

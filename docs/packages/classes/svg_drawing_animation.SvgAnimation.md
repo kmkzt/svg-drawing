@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[animation/src/animation.ts:30](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L30)
+[animation/src/animation.ts:30](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L30)
 
 ## Properties
 
@@ -29,7 +29,7 @@
 
 #### Defined in
 
-[animation/src/animation.ts:21](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L21)
+[animation/src/animation.ts:21](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L21)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:23](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L23)
+[animation/src/animation.ts:23](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L23)
 
 ___
 
@@ -47,11 +47,11 @@ ___
 
 • `Private` **\_repeatCount**: `string`
 
-Relation animate element TODO: add easing option
+Relation animate element
 
 #### Defined in
 
-[animation/src/animation.ts:29](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L29)
+[animation/src/animation.ts:29](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L29)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:22](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L22)
+[animation/src/animation.ts:22](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L22)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:20](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L20)
+[animation/src/animation.ts:20](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L20)
 
 ___
 
@@ -83,7 +83,7 @@ Private prorperty
 
 #### Defined in
 
-[animation/src/animation.ts:19](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L19)
+[animation/src/animation.ts:19](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L19)
 
 ___
 
@@ -95,7 +95,7 @@ Options
 
 #### Defined in
 
-[animation/src/animation.ts:17](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L17)
+[animation/src/animation.ts:17](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L17)
 
 ___
 
@@ -105,7 +105,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:26](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L26)
+[animation/src/animation.ts:26](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L26)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:27](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L27)
+[animation/src/animation.ts:27](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L27)
 
 ___
 
@@ -127,7 +127,7 @@ Modules
 
 #### Defined in
 
-[animation/src/animation.ts:25](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L25)
+[animation/src/animation.ts:25](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L25)
 
 ## Methods
 
@@ -143,7 +143,7 @@ Default value is total of commands length.
 
 #### Defined in
 
-[animation/src/animation.ts:241](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L241)
+[animation/src/animation.ts:241](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L241)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:247](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L247)
+[animation/src/animation.ts:247](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L247)
 
 ___
 
@@ -177,7 +177,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:254](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L254)
+[animation/src/animation.ts:254](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L254)
 
 ___
 
@@ -191,7 +191,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:102](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L102)
+[animation/src/animation.ts:102](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L102)
 
 ___
 
@@ -201,9 +201,9 @@ ___
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `filename?` | `string` | TODO: Support gif and apng |
+| Name | Type |
+| :------ | :------ |
+| `filename?` | `string` |
 
 #### Returns
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:232](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L232)
+[animation/src/animation.ts:232](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L232)
 
 ___
 
@@ -231,7 +231,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:87](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L87)
+[animation/src/animation.ts:87](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L87)
 
 ___
 
@@ -245,7 +245,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:82](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L82)
+[animation/src/animation.ts:82](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L82)
 
 ___
 
@@ -269,7 +269,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:59](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L59)
+[animation/src/animation.ts:59](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L59)
 
 ___
 
@@ -283,7 +283,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:95](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L95)
+[animation/src/animation.ts:95](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L95)
 
 ___
 
@@ -297,7 +297,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:73](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L73)
+[animation/src/animation.ts:73](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L73)
 
 ___
 
@@ -311,7 +311,7 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:132](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L132)
+[animation/src/animation.ts:132](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L132)
 
 ___
 
@@ -325,4 +325,4 @@ ___
 
 #### Defined in
 
-[animation/src/animation.ts:128](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/animation.ts#L128)
+[animation/src/animation.ts:128](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/animation/src/animation.ts#L128)
