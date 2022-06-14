@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[animation/src/types.ts:2](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/animation/src/types.ts#L2)
+[animation/src/types.ts:2](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/types.ts#L2)
 
 ___
 
@@ -39,4 +39,4 @@ ___
 
 #### Defined in
 
-[animation/src/types.ts:5](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/animation/src/types.ts#L5)
+[animation/src/types.ts:5](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/animation/src/types.ts#L5)

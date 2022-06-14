@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[core/src/svg.ts:62](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L62)
+[core/src/svg.ts:62](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L62)
 
 ## Properties
 
@@ -29,7 +29,7 @@
 
 #### Defined in
 
-[core/src/svg.ts:59](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L59)
+[core/src/svg.ts:59](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L59)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:60](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L60)
+[core/src/svg.ts:60](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L60)
 
 ## Accessors
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:90](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L90)
+[core/src/svg.ts:90](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L90)
 
 • `set` **cl**(`po`): `void`
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:82](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L82)
+[core/src/svg.ts:82](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L82)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:75](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L75)
+[core/src/svg.ts:75](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L75)
 
 • `set` **cr**(`po`): `void`
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:67](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L67)
+[core/src/svg.ts:67](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L67)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:103](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L103)
+[core/src/svg.ts:103](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L103)
 
 • `set` **point**(`po`): `void`
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:98](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L98)
+[core/src/svg.ts:98](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L98)
 
 ## Methods
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:121](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L121)
+[core/src/svg.ts:121](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L121)
 
 ___
 
@@ -163,7 +163,7 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:113](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L113)
+[core/src/svg.ts:113](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L113)
 
 ___
 
@@ -177,4 +177,4 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:108](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/svg.ts#L108)
+[core/src/svg.ts:108](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/svg.ts#L108)

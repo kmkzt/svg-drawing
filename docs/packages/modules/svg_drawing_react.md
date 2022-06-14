@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[react/src/types.ts:7](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/react/src/types.ts#L7)
+[react/src/types.ts:7](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/react/src/types.ts#L7)
 
 ## Functions
 
@@ -46,4 +46,4 @@
 
 #### Defined in
 
-[react/src/useDrawing.ts:8](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/react/src/useDrawing.ts#L8)
+[react/src/useDrawing.ts:8](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/react/src/useDrawing.ts#L8)

@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[core/src/handler.ts:183](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/handler.ts#L183)
+[core/src/handler.ts:183](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/handler.ts#L183)
 
 ## Properties
 
@@ -31,7 +31,7 @@ Remove EventList
 
 #### Defined in
 
-[core/src/handler.ts:181](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/handler.ts#L181)
+[core/src/handler.ts:181](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/handler.ts#L181)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:182](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/handler.ts#L182)
+[core/src/handler.ts:182](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/handler.ts#L182)
 
 ## Methods
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:197](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/handler.ts#L197)
+[core/src/handler.ts:197](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/handler.ts#L197)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:188](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/handler.ts#L188)
+[core/src/handler.ts:188](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/handler.ts#L188)
 
 ___
 
@@ -97,4 +97,4 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:192](https://github.com/kmkzt/svg-drawing/blob/ed5bdad/packages/core/src/handler.ts#L192)
+[core/src/handler.ts:192](https://github.com/kmkzt/svg-drawing/blob/6dacb53/packages/core/src/handler.ts#L192)
