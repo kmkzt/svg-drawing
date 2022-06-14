@@ -4,7 +4,7 @@
   "workspaces": [
     "packages/*",
     "examples/*",
-    "wiki"
+    "generate-docs"
   ],
   "scripts": {
     "build": "turbo run build",

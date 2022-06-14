@@ -1,9 +1,9 @@
 {
-  "name": "svg-drawing-documents",
+  "name": "svg-drawing-generate-docs",
   "private": true,
   "version": "4.2.3",
   "scripts": {
-    "build": "typedoc --plugin typedoc-plugin-markdown --hideInPageTOC --entryPointStrategy packages ../ --out ./docs"
+    "build": "typedoc --plugin typedoc-plugin-markdown --hideInPageTOC --entryPointStrategy packages ../ --out ../docs/packages"
   },
   "dependencies": {
     "@svg-drawing/animation": "4.2.3",
