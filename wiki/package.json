@@ -3,7 +3,7 @@
   "private": true,
   "version": "4.2.3",
   "scripts": {
-    "build": "typedoc --plugin typedoc-plugin-markdown --hideBreadcrumbs --hideInPageTOC --entryPointStrategy packages ../ --out ./docs"
+    "build": "typedoc --plugin typedoc-plugin-markdown --hideInPageTOC --entryPointStrategy packages ../ --out ./docs"
   },
   "dependencies": {
     "@svg-drawing/animation": "4.2.3",
