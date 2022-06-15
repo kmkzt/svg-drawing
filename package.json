@@ -7,10 +7,10 @@
     "generate-docs"
   ],
   "scripts": {
-    "build": "yarn clear; turbo run build --filter=@svg-drawing",
-    "build:docs": "turbo run build",
+    "build": "yarn clear; turbo run build --filter=@svg-drawing*",
     "build:gh-page": "export BASE_PATH=\"/svg-drawing\"; yarn build",
-    "clear": "turbo run clear",
+    "clear": "turbo run clear --filter=@svg-drawing*",
+    "generate:docs": "yarn build; turbo run build --filter=svg-drawing-generate-docs",
     "dev": "concurrently yarn:dev:{main,tsc}",
     "dev:main": "turbo run dev --parallel --no-cache",
     "dev:tsc": "turbo run dev:tsc --parallel --no-cache",
