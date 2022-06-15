@@ -15,6 +15,7 @@
   "files": [
     "lib/**/*"
   ],
+  "typedocMain": "src/index.ts",
   "publishConfig": {
     "access": "public"
   },

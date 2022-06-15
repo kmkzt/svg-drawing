@@ -84,17 +84,7 @@ export class Renderer {
 
     this.update = this.update.bind(this)
   }
-  /**
-   * Update render.
-   *
-   * @todo XSS test.
-   *
-   * @todo Animation Svg renderer.
-   *
-   * @todo Edit layer renderer.
-   *
-   * @todo Partially render.
-   */
+  /** Update render */
   public update({ svg }: { svg: SvgObject }): void {
     this.el.replaceChild(svgObjectToElement(svg), this.el.childNodes[0])
   }
