@@ -124,7 +124,6 @@ describe('svg.ts', () => {
         path.parseCommandString(testData)
         expect(path.getCommandString()).toBe(testData)
       })
-      // TODO: Validate command
       it.skip('failed pattern', () => {
         path.parseCommandString('M a b')
         expect(path.getCommandString()).toBe('')
@@ -173,7 +172,6 @@ describe('svg.ts', () => {
     let svg: Svg
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
-        // TODO: rewrite bezier curve test
         .addPath(
           new Path()
             .addCommand(new Command(COMMAND_TYPE.MOVE, [0, 0]))
@@ -228,7 +226,6 @@ describe('svg.ts', () => {
         new Svg({ width: 400, height: 400 }).parseSVGElement(svgEl)
       ).toMatchSnapshot()
     })
-    // TODO: Fix width, height
     it('toJson', () => {
       expect(svg.toJson()).toMatchSnapshot()
     })

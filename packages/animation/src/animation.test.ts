@@ -23,7 +23,7 @@ describe('animation.ts', () => {
       })
       expect(svg.generateFrame().length).toBe(1)
     })
-    // TODO: Improve test pattern
+    // TODO Improve test pattern
     it('toAnimationElement', () => {
       const svg = generateAniamtion()
       const testAnimation: FrameAnimation = (paths, count) => {

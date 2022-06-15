@@ -31,8 +31,5 @@
     "@types/styled-system": "5.1.1",
     "babel-plugin-styled-components": "1.10.7",
     "raw-loader": "4.0.1"
-  },
-  "resolutions": {
-    "next/glob-parent": "5.1.2"
   }
 }

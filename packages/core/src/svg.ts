@@ -143,8 +143,8 @@ export class Vector {
 }
 
 /**
- * TODO: refactor command. The following commands are not supported. Cannot
- * support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
+ * Cannot support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1
+ * 1 L 2 2 Z`
  */
 export class Path {
   public attrs: PathObject
@@ -254,7 +254,7 @@ export class Svg {
     this.background = background
   }
 
-  /** @todo Check height */
+  // TODO: Resize from height
   public resize({ width, height }: { width: number; height: number }) {
     this.scalePath(width / this.width)
     this.width = width

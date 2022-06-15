@@ -28,6 +28,7 @@
   "files": [
     "lib/**/*"
   ],
+  "typedocMain": "src/index.ts",
   "scripts": {
     "dev": "NODE_ENV=development rollup -w -c",
     "dev:tsc": "NODE_ENV=development tsc -w",

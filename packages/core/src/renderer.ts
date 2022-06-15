@@ -76,7 +76,7 @@ export class Renderer {
     const { width, height } = el.getBoundingClientRect()
     el.appendChild(svgObjectToElement({ background, width, height, paths: [] }))
   }
-  /** Render TODO: XSS test TODO: Partially renderable */
+
   public update(svgObj: SvgObject): void {
     this.el.replaceChild(svgObjectToElement(svgObj), this.el.childNodes[0])
   }
