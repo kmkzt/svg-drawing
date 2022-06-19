@@ -26,10 +26,6 @@ import type {
  *   ### Set draw options
  *
  *   ```typescript
- *   import { SvgDrawing } from '@svg-drawing/core';
- *
- *   const el = document.getElementById('draw-area')
- *
  *   // It is default value
  *   const options = {
  *   penColor: '#000',
@@ -40,7 +36,6 @@ import type {
  *   fill: 'none',
  *   background: undefined,
  *   }
- *
  *   new SvgDrawing(el, options)
  *   ```
  */
