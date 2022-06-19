@@ -10,41 +10,44 @@ import { useRenderInterval } from './useRenderInterval'
 import type { UseEdit, EditSvgAction, EditProps } from '../types'
 
 /**
- * @example
- *   import { useEdit, Svg, EditPaths } from '@svg-drawing/react'
- *   import type { EditSvgObject } from '@svg-drawing/core'
+ * ### Basic usage.
  *
- *   const EditExample = ({ sharedSvg }) => {
- *     const [{ paths, ...svgProps }, onChangeSvg] = useState(
- *       sharedSvg.toJson()
- *     )
- *     const [editSvgObject, onChangeEdit] = useState<EditSvgObject | null>(
- *       null
- *     )
+ * ```ts
+ * import { useEdit, Svg, EditPaths } from '@svg-drawing/react'
+ * import type { EditSvgObject } from '@svg-drawing/core'
  *
- *     const { editProps, cancelSelect } = useEdit({
- *       svg: sharedSvg,
- *       editSvgObject,
- *       onChangeEdit,
- *       onChangeSvg,
- *     })
+ * const EditExample = ({ sharedSvg }) => {
+ *   const [{ paths, ...svgProps }, onChangeSvg] = useState(
+ *     sharedSvg.toJson()
+ *   )
+ *   const [editSvgObject, onChangeEdit] = useState<EditSvgObject | null>(
+ *     null
+ *   )
  *
- *     return (
- *       <div
- *         style={{
- *           border: '1px solid #333',
- *           width: 500,
- *           height: 500,
- *           touchAction: 'none',
- *           boxSizing: 'border-box',
- *         }}
- *       >
- *         <Svg {...svgProps} onSelectSvg={cancelSelect}>
- *           <EditPaths paths={paths} {...editProps} />
- *         </Svg>
- *       </div>
- *     )
- *   }
+ *   const { editProps, cancelSelect } = useEdit({
+ *     svg: sharedSvg,
+ *     editSvgObject,
+ *     onChangeEdit,
+ *     onChangeSvg,
+ *   })
+ *
+ *   return (
+ *     <div
+ *       style={{
+ *         border: '1px solid #333',
+ *         width: 500,
+ *         height: 500,
+ *         touchAction: 'none',
+ *         boxSizing: 'border-box',
+ *       }}
+ *     >
+ *       <Svg {...svgProps} onSelectSvg={cancelSelect}>
+ *         <EditPaths paths={paths} {...editProps} />
+ *       </Svg>
+ *     </div>
+ *   )
+ * }
+ * ```
  */
 export const useEdit: UseEdit = ({
   multipleSelectBindKey = 'Shift',

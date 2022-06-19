@@ -5,22 +5,25 @@ import type { DrawEventHandler, DrawingClass } from '@svg-drawing/core'
 import type { RefObject } from 'react'
 
 /**
- * @example <caption>switch handler</caption>
- *   const type = useState<'pen' | 'pencil'>('pen')
- *   const setup = useCallback(
- *     (draw) => {
- *       switch (type) {
- *         case 'pen':
- *           return new PenHandler(draw)
- *         case 'pencil':
- *         default:
- *           return new PencilHandler(draw)
- *       }
- *     },
- *     [type]
- *   )
+ * ### Switch pen or pencil.
  *
- *   const handler = useSetupHandler(setup, drawing)
+ * ```ts
+ * const type = useState<'pen' | 'pencil'>('pen')
+ * const setup = useCallback(
+ *   (draw) => {
+ *     switch (type) {
+ *       case 'pen':
+ *         return new PenHandler(draw)
+ *       case 'pencil':
+ *       default:
+ *         return new PencilHandler(draw)
+ *     }
+ *   },
+ *   [type]
+ * )
+ *
+ * const handler = useSetupHandler(setup, drawing)
+ * ```
  */
 export const useSetupHandler = (
   setup: (draw: DrawingClass) => DrawEventHandler,
@@ -36,11 +39,10 @@ export const useSetupHandler = (
 }
 
 /**
- * @example <caption>useDrawEventHandler</caption>
- *   const ref = useRef(null)
- *   const handler = useSetupHandler(setup, drawing)
+ * @example <caption>useDrawEventHandler</caption> const ref = useRef(null)
+ * const handler = useSetupHandler(setup, drawing)
  *
- *   useDrawEventHandler({ ref, handler })
+ * UseDrawEventHandler({ ref, handler })
  */
 export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
   ref,
@@ -69,22 +71,19 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
 }
 
 /**
- * @example
- *   import { usePencilHandler } from '@svg-drawing/react'
+ * @example Import { usePencilHandler } from '@svg-drawing/react'
  *
- *   const draw = useDraw({...})
- *   const ref = uesRef<HTMLElement>(null)
+ * Const draw = useDraw({...}) const ref = uesRef<HTMLElement>(null)
  *
- *   usePencilHandler(ref, draw)
+ * UsePencilHandler(ref, draw)
  *
- * @example <caption>Switch active status</caption>
- *   import { usePencilHandler } from '@svg-drawing/react'
+ * @example <caption>Switch active status</caption> import { usePencilHandler }
+ * from '@svg-drawing/react'
  *
- *   const draw = useDraw(opts)
- *   const ref = uesRef<HTMLElement>(null)
- *   const [active, setActive] = useState(true)
+ * Const draw = useDraw(opts) const ref = uesRef<HTMLElement>(null) const
+ * [active, setActive] = useState(true)
  *
- *   usePencilHandler(ref, draw, active)
+ * UsePencilHandler(ref, draw, active)
  */
 export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
   const setup = useCallback((draw: DrawingClass) => new PencilHandler(draw), [])
@@ -95,22 +94,19 @@ export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
 }
 
 /**
- * @example
- *   import { usePenHandler } from '@svg-drawing/react'
+ * @example Import { usePenHandler } from '@svg-drawing/react'
  *
- *   const draw = useDraw({...})
- *   const ref = uesRef<HTMLElement>(null)
+ * Const draw = useDraw({...}) const ref = uesRef<HTMLElement>(null)
  *
- *   usePenHandler(ref, draw)
+ * UsePenHandler(ref, draw)
  *
- * @example <caption>Switch active status</caption>
- *   import { usePenHandler } from '@svg-drawing/react'
+ * @example <caption>Switch active status</caption> import { usePenHandler }
+ * from '@svg-drawing/react'
  *
- *   const draw = useDraw(opts)
- *   const ref = useRef(null)
- *   const [active, setActive] = useState(true)
+ * Const draw = useDraw(opts) const ref = useRef(null) const [active, setActive]
+ * = useState(true)
  *
- *   usePenHandler(ref, draw, active)
+ * UsePenHandler(ref, draw, active)
  */
 export const usePenHandler: UseDrawEventHandler = (ref, drawing, active) => {
   const setup = useCallback((draw: DrawingClass) => new PenHandler(draw), [])

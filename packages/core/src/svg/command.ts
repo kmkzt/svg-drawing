@@ -53,7 +53,6 @@ export class OtherCommand<T extends OtherCommandType>
     a: 'a',
   } as const
 
-  // TODO: Convert data format to number array.
   constructor(public type: T, public values: number[] = []) {}
 
   public set points(p: PointClass[]) {
@@ -779,7 +778,6 @@ export const isOtherCommand = (
 ): command is CommandClass<OtherCommandType> =>
   ['h', 'H', 'v', 'V', 'a', 'A', 'z', 'Z'].includes(command.type)
 
-/** @todo Move to CommandClass method */
 export const toRelativeCommand = (
   command: CommandClass<AbsoluteCommandType>,
   basePoint: PointObject
@@ -810,7 +808,6 @@ export const toRelativeCommand = (
   }
 }
 
-/** @todo Move to CommandClass method */
 export const toAbsoluteCommand = (
   command: CommandClass<RelativeCommandType>,
   basePoint: PointObject
@@ -841,7 +838,6 @@ export const toAbsoluteCommand = (
   }
 }
 
-/** @todo Move pathClass method */
 export const toRelativeCommands = (
   commands: CommandClass[]
 ): CommandClass[] => {
@@ -870,7 +866,6 @@ export const toRelativeCommands = (
   return upd
 }
 
-/** @todo Move pathClass method */
 export const toAbsoluteCommands = (
   commands: CommandClass[]
 ): CommandClass[] => {

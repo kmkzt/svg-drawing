@@ -114,7 +114,6 @@ export class SvgAnimation {
     this.start()
   }
 
-  /** @todo Improve resize handler */
   public static init(
     el: HTMLElement,
     { ms, background }: AnimationOption & RendererOption = { ms: 60 }

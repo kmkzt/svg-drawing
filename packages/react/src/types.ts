@@ -50,7 +50,6 @@ export type UseEdit = (opts: {
   onChangeSvg: (obj: SvgObject) => void
 }) => EditSvgAction
 
-/** @todo Added return props for EditSvg */
 export type EditSvgAction = {
   edit: Editing
   keyboardMap: KeyboardMap

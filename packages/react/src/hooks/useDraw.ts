@@ -4,38 +4,41 @@ import { useRenderInterval } from './useRenderInterval'
 import type { UseDraw } from '../types'
 
 /**
- * @example
- *   import { PencilHandler } from '@svg-drawing/core'
- *   import {
- *     Svg,
- *     useDrawFactory,
- *     useDrawEventHandler,
- *   } from '@svg-drawing/react'
+ * ### Basic usage.
  *
- *   const DrawArea = () => {
- *     const svg = useSvg({ width: 500, height: 500 })
- *     const [svgObject, setSvgObject] = useState(svg.toJson())
+ * ```ts
+ * import { PencilHandler } from '@svg-drawing/core'
+ * import {
+ *   Svg,
+ *   useDrawFactory,
+ *   useDrawEventHandler,
+ * } from '@svg-drawing/react'
  *
- *     const factory = useDrawFactory(
- *       { stroke: '#000', fill: 'none' },
- *       { curve: true, close: false }
- *     )
+ * const DrawArea = () => {
+ *   const svg = useSvg({ width: 500, height: 500 })
+ *   const [svgObject, setSvgObject] = useState(svg.toJson())
  *
- *     const draw = useDraw({
- *       svg,
- *       factory,
- *       onChangeSvg: setSvgObject,
- *     })
+ *   const factory = useDrawFactory(
+ *     { stroke: '#000', fill: 'none' },
+ *     { curve: true, close: false }
+ *   )
  *
- *     const ref = useRef(null)
- *     const handler = usePencilHandler(ref, draw, true)
+ *   const draw = useDraw({
+ *     svg,
+ *     factory,
+ *     onChangeSvg: setSvgObject,
+ *   })
  *
- *     return (
- *       <div ref={ref}>
- *         <Svg {...svgObject} />
- *       </div>
- *     )
- *   }
+ *   const ref = useRef(null)
+ *   const handler = usePencilHandler(ref, draw, true)
+ *
+ *   return (
+ *     <div ref={ref}>
+ *       <Svg {...svgObject} />
+ *     </div>
+ *   )
+ * }
+ * ```
  */
 export const useDraw: UseDraw = ({ factory, svg, onChangeSvg }) => {
   const render = useRenderInterval()

@@ -68,11 +68,7 @@ export interface CommandClass<T = CommandType> {
   translate: (po: PointObject) => CommandClass<T>
 }
 
-/**
- * Object for SVGPathElement attributes.
- *
- * @todo Improve key types
- */
+/** Object for SVGPathElement attributes. */
 export type PathAttributes = {
   [camelCase: string]: string | undefined
 }

@@ -90,7 +90,11 @@ export class PathSelector {
     this.selecting = convertSelectingFromIndex(index)
   }
 
-  /** @todo Currently only path index is supported. Changed to merge deeply. */
+  /**
+   * Currently, only path indexes are supported.
+   *
+   * @todo Implement so that multiple commands and points can be selected.
+   */
   selectMerge(index: SelectIndex) {
     this.selecting = {
       ...this.selecting,

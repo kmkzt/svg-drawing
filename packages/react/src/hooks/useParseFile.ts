@@ -4,9 +4,24 @@ import { useCallback } from 'react'
 import type { UseParseFile } from '../types'
 
 /**
- * @todo Added cancel event handler.
+ * ### Load svg from uploaded file.
  *
- * @todo Fix to return Svg
+ * ```ts
+ * import { useSvg, useParseFile } from '@svg-drawing/react'
+ *
+ * const svg = useSvg({ width: 500, height: 500 })
+ * const parseFile = useParseFile({ svg })
+ *
+ * const onChangeFile = useCallback<ChangeEventHandler<HTMLInputElement>>(
+ *   async (e) => {
+ *     if (!e.target?.files) return
+ *     await parseFile(e.target.files[0])
+ *   },
+ *   []
+ * )
+ *
+ * return <input type="file" onChange={onChangeFile} />
+ * ```
  */
 export const useParseFile: UseParseFile = ({ svg }) =>
   useCallback(

@@ -26,7 +26,6 @@ export class BasicDrawFactory implements DrawFactory {
     })
   }
 
-  /** @todo Refactor */
   get createCommand(): CreateCommand {
     const createCommand = this.opts.curve
       ? new BezierCurve().create

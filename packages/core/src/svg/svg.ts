@@ -13,7 +13,7 @@ export class Svg implements SvgClass {
     this.background = background
   }
 
-  /** @todo Check height */
+  /** @todo Implement to be resized according to height */
   public resize({ width, height }: { width: number; height: number }) {
     this.scale(width / this.width)
     this.width = width
@@ -71,9 +71,7 @@ export class Svg implements SvgClass {
   /**
    * Copy resized paths.
    *
-   * @example
-   *   const drawSvg = new Svg()
-   *   const animateSvg = new Svg().copy(drawSvg)
+   * @example Const drawSvg = new Svg() const animateSvg = new Svg().copy(drawSvg)
    */
   public copy(svg: SvgClass) {
     this.paths = svg.clonePaths()

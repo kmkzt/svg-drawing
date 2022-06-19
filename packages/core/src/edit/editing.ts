@@ -6,7 +6,6 @@ import type {
 } from '../types'
 import type { EditSvg } from './editSvg'
 
-/** @todo Separate Event handler */
 export class Editing {
   private translateBasePoint: PointObject | null = null
   private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null

@@ -1,5 +1,5 @@
 import { getEventPoint } from '../event'
-import type { Editing } from './editing' /** @todo Replace interface */
+import type { Editing } from './editing' // TODO: Replace interface
 
 export class ResizePathHandler {
   constructor(public editing: Editing) {

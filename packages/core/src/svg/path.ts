@@ -8,9 +8,9 @@ import type {
 } from '../types'
 
 /**
- * @todo: refactor command. The following commands are not supported.
+ * Cannot support commands that use `M` or` z` more than once.
  *
- * Cannot support commands that use `M` or` z` more than once `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`
+ * Not support example: `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`.
  */
 export class Path implements PathClass {
   private static index = 0

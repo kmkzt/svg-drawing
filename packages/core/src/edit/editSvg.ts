@@ -81,7 +81,7 @@ export class EditSvg {
     })
   }
 
-  /** @todo Delete points */
+  /** @todo Implements to delete points. */
   delete() {
     this.pathSelector.pathsIndex.forEach((pathKey) => {
       const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)

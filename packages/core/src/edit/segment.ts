@@ -33,7 +33,7 @@ type BezierCurvePoint = [PointObject, PointObject, PointObject, PointObject]
  *
  * A(y) = y3 - y0 - cy - by
  *
- * @link https://www.moshplant.com/direct-or/bezier/math.html
+ * {@link https://www.moshplant.com/direct-or/bezier/math.html}
  */
 export const calculateCoefficient = ([p0, p1, p2, p3]: BezierCurvePoint): {
   a: PointObject

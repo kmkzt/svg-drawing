@@ -1,7 +1,7 @@
 import { BezierCurve } from './convert'
 
 describe('BezierCurve', () => {
-  /** @todo Improve test case. */
+  // TODO: Improve test case.
   it('genCommand', () => {
     const bezierCurve = new BezierCurve()
     expect(

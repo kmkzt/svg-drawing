@@ -109,7 +109,6 @@ describe('SvgDrawing', () => {
     `)
   })
 
-  /** TODO: Fix NaN */
   it('undo()', () => {
     const draw = new SvgDrawing(document.createElement('div'))
     draw.drawStart()
