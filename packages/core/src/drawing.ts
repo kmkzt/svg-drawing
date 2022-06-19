@@ -12,21 +12,50 @@ import type {
   ResizeHandlerCallback,
 } from './types'
 
+/**
+ * ### Setup SvgDrawing
+ *
+ * ```ts
+ * import { SvgDrawing } from '@svg-drawing/core'
+ *
+ * const el = document.getElementById('draw-area')
+ * new SvgDrawing(el)
+ * ```
+ *
+ * ### Set draw options.
+ *
+ * ```ts
+ * // It is default value
+ * const options = {
+ *   penColor: '#000',
+ *   penWidth: 1,
+ *   curve: true,
+ *   close: false,
+ *   delay: 0,
+ *   fill: 'none',
+ *   background: undefined,
+ * }
+ *
+ * new SvgDrawing(el, options)
+ * ```
+ */
 export class SvgDrawing {
-  /** Draw Option */
+  // Draw Option
   public penColor: string
   public penWidth: number
   public fill: string
   public curve: boolean
   public close: boolean
   public delay: number
-  /** Module */
+
+  // Module
   public svg: Svg
   public convert: Convert
   public renderer: Renderer
   public drawHandler: DrawHandler
   public resizeHandler: ResizeHandler
-  /** Private property */
+
+  // Private property
   private _drawPath: Path | null
   private _drawPoints: PointObject[]
   private _drawMoveThrottle: this['drawMove']
@@ -42,29 +71,33 @@ export class SvgDrawing {
       background,
     }: DrawingOption = {}
   ) {
-    /** Setup Config */
+    // Setup Config
     this.penColor = penColor ?? '#000'
     this.penWidth = penWidth ?? 1
     this.curve = curve ?? true
     this.close = close ?? false
     this.delay = delay ?? 0
     this.fill = fill ?? 'none'
-    /** Setup property */
+
+    // Setup property
     const { width, height } = el.getBoundingClientRect()
     this._drawPath = null
     this._drawPoints = []
-    /** Setup Svg */
+    // Setup Svg
+
     this.svg = new Svg({ width, height, background })
-    /** Setup Renderer */
+    // Setup Renderer
+
     this.renderer = new Renderer(el, { background })
-    /** Setup BezierCurve */
+    // Setup BezierCurve
     this.convert = new Convert()
-    /** Setup ResizeHandler */
+
+    // Setup ResizeHandler
     this._resize = this._resize.bind(this)
     this.resizeHandler = new ResizeHandler(el, {
       resize: this._resize,
     })
-    /** Setup EventDrawHandler */
+    // Setup EventDrawHandler
     this.drawStart = this.drawStart.bind(this)
     this.drawMove = this.drawMove.bind(this)
     this._drawMoveThrottle = throttle(this.drawMove, this.delay)
@@ -74,13 +107,15 @@ export class SvgDrawing {
       move: this._drawMoveThrottle,
       end: this.drawEnd,
     })
-    /** Start exec */
+
+    // Start exec
     this.on()
   }
 
   public update() {
     this.renderer.update(this.svg.toJson())
   }
+
   public clear(): Path[] {
     const paths = this.svg.paths
     this.svg.paths = []
