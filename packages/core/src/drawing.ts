@@ -13,31 +13,33 @@ import type {
 } from './types'
 
 /**
- * @example
- *   ### Setup draw listener.
+ * @example <caption>Usage</caption>
  *
- *   ```typescript
- *   import { SvgDrawing } from '@svg-drawing/core';
+ * ### Setup SvgDrawing
  *
- *   const el = document.getElementById('draw-area')
- *   new SvgDrawing(el);
- *   ```
+ * ```ts
+ * import { SvgDrawing } from '@svg-drawing/core'
  *
- *   ### Set draw options
+ * const el = document.getElementById('draw-area')
+ * new SvgDrawing(el)
+ * ```
  *
- *   ```typescript
- *   // It is default value
- *   const options = {
+ * ### Set draw options.
+ *
+ * ```ts
+ * // It is default value
+ * const options = {
  *   penColor: '#000',
- *   penWidth: 2,
+ *   penWidth: 1,
  *   curve: true,
  *   close: false,
  *   delay: 0,
  *   fill: 'none',
  *   background: undefined,
- *   }
- *   new SvgDrawing(el, options)
- *   ```
+ * }
+ *
+ * new SvgDrawing(el, options)
+ * ```
  */
 export class SvgDrawing {
   // Draw Option
