@@ -13,8 +13,6 @@ import type {
 } from './types'
 
 /**
- * @example <caption>Usage</caption>
- *
  * ### Setup SvgDrawing
  *
  * ```ts
