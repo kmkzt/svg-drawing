@@ -1,16 +1,17 @@
-import { downloadBlob, svg2base64 } from '@svg-drawing/core/lib/download'
-import { ResizeHandler } from '@svg-drawing/core/lib/handler'
 import {
+  downloadBlob,
+  svg2base64,
+  ResizeHandler,
   Renderer,
   createSvgElement,
   createSvgChildElement,
   pathObjectToElement,
-} from '@svg-drawing/core/lib/renderer'
-import { Svg } from '@svg-drawing/core/lib/svg'
-import { camel2kebab, roundUp } from '@svg-drawing/core/lib/utils'
+  Svg,
+  camel2kebab,
+  roundUp,
+} from '@svg-drawing/core'
 import type { AnimationOption, FrameAnimation } from './types'
-import type { Path } from '@svg-drawing/core/lib/svg'
-import type { ResizeHandlerCallback } from '@svg-drawing/core/lib/types'
+import type { Path, ResizeHandlerCallback } from '@svg-drawing/core'
 
 export class SvgAnimation {
   /** Options */
