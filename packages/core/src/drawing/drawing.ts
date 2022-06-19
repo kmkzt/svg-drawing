@@ -2,24 +2,27 @@ import type { DrawingClass } from '..'
 import type { EventPoint, DrawFactory, PathClass, SvgClass } from '../types'
 
 /**
- * @example
- *   import {
- *     Svg,
- *     Drawing,
- *     PenHandler,
- *     Renderer,
- *     BasicDrawFactory,
- *   } from '@svg-drawing/core'
+ * ### Basic Drawing usage.
  *
- *   const el = document.getElementById('draw')
- *   const { width, height } = el.getBoundingClientRect()
+ * ```ts
+ * import {
+ *   Svg,
+ *   Drawing,
+ *   PenHandler,
+ *   Renderer,
+ *   BasicDrawFactory,
+ * } from '@svg-drawing/core'
  *
- *   new Drawing(
- *     new Svg({ width, height }),
- *     new BasicDrawFactory({ stroke: '#000' }),
- *     new PenHandler(el),
- *     new Renderer(el).update
- *   )
+ * const el = document.getElementById('draw')
+ * const { width, height } = el.getBoundingClientRect()
+ *
+ * new Drawing(
+ *   new Svg({ width, height }),
+ *   new BasicDrawFactory({ stroke: '#000' }),
+ *   new PenHandler(el),
+ *   new Renderer(el).update
+ * )
+ * ```
  */
 export class Drawing implements DrawingClass {
   private _drawPath: PathClass | null

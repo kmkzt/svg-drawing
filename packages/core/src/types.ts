@@ -145,10 +145,12 @@ export interface SvgClass {
   /**
    * Copy resized paths.
    *
-   * @example
-   *   class Svg implements SvgClass { ... }
-   *   const drawSvg = new Svg()
-   *   const animateSvg = new Svg().copy(drawSvg)
+   * ```ts
+   * class Svg implements SvgClass {}
+   *
+   * const drawSvg = new Svg()
+   * const animateSvg = new Svg().copy(drawSvg)
+   * ```
    */
   copy: (svg: SvgClass) => this
   /** Return cloned class object. */
@@ -189,15 +191,9 @@ export interface ResizeEventHandler {
   active: boolean
   on: () => void
   off: () => void
-  /**
-   * @example
-   *   resize.setElement(document.getElementById('draw-area'))
-   */
+  /** @example Resize.setElement(document.getElementById('draw-area')) */
   setElement: (el: HTMLElement) => void
-  /**
-   * @example
-   *   resize.setHandler(({ width, height }) => console.log(width, height))
-   */
+  /** @example Resize.setHandler(({ width, height }) => console.log(width, height)) */
   setHandler: (callback: ResizeCallback) => void
 }
 

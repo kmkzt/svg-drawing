@@ -27,12 +27,12 @@ export abstract class BaseHandler implements DrawEventHandler {
   protected el: HTMLElement | undefined
 
   constructor(protected drawing: DrawingClass, el?: HTMLElement) {
-    /** Bind method */
+    // Bind method
     this.on = this.on.bind(this)
     this.off = this.off.bind(this)
     this.setDrawing = this.setDrawing.bind(this)
 
-    /** Set offset coordinates */
+    // Set offset coordinates
     const { left, top } = el ? el.getBoundingClientRect() : { left: 0, top: 0 }
     this.el = el ?? undefined
     this._offset = { left, top }
@@ -42,7 +42,7 @@ export abstract class BaseHandler implements DrawEventHandler {
   public get isActive(): boolean {
     return this._clearEventList.length > 0
   }
-  /** Exec removeEventListener */
+
   public off() {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []
@@ -108,13 +108,12 @@ export class PencilHandler extends BaseHandler {
   private listenerOption: { passive: boolean } | false
   constructor(drawing: DrawingClass, el?: HTMLElement) {
     super(drawing, el)
-    /** Bind methods */
-    this.setDrawing = this.setDrawing.bind(this)
 
+    // Bind methods
+    this.setDrawing = this.setDrawing.bind(this)
     this._handleStart = this._handleStart.bind(this)
     this._handleMove = this._handleMove.bind(this)
     this._handleEnd = this._handleEnd.bind(this)
-
     this._drawMoveThrottle = throttle(this.drawing.dot, this.delay).bind(this)
 
     this.listenerOption = SUPPORT_EVENT_LISTENER_PASSIVE_OPTION

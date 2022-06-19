@@ -60,11 +60,14 @@ export class Point implements PointClass {
   }
 
   /**
-   * @example
-   *   const point = Point.fromVector({ value: 1, 0 })
+   * ### Calculate coordinate from vector.
    *
-   *   console.log(point.x) // 0
-   *   console.log(point.y) // 1
+   * ```ts
+   * const point = Point.fromVector({ value: 1, 0 })
+   *
+   * console.log(point.x) // 0
+   * console.log(point.y) // 1
+   * ```
    */
   public static fromVector({ value, angle }: VectorObject): Point {
     const theta = (angle * Math.PI) / 180

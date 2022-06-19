@@ -1,11 +1,12 @@
 /**
- * @example
- *   const handleMouseMove = throttle(
- *     (ev) => console.log(ev.target.clientX, ev.target.clientY),
- *     50
- *   )
+ * ```ts
+ * const handleMouseMove = throttle(
+ *   (ev) => console.log(ev.target.clientX, ev.target.clientY),
+ *   50
+ * )
  *
- *   window.addEventListener('onmousemove', handleMouseMove)
+ * window.addEventListener('onmousemove', handleMouseMove)
+ * ```
  */
 export function throttle<T extends (...args: any) => any>(
   func: T,

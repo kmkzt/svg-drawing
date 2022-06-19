@@ -19,11 +19,14 @@ export class Vector implements VectorClass {
   }
 
   /**
-   * @example
-   *   const vector = Vector.fromPoint({ x: 1, y: 1 })
+   * ### Calculate angle and absolute value from origin of coordinates
    *
-   *   console.log(vector.angle) // 45
-   *   console.log(vector.value) // 1.4142135623730951
+   * ```ts
+   * const vector = Vector.fromPoint({ x: 1, y: 1 })
+   *
+   * console.log(vector.angle) // 45
+   * console.log(vector.value) // 1.4142135623730951
+   * ```
    */
   public static fromPoint({ x, y }: PointObject): Vector {
     return new Vector(
