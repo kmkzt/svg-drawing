@@ -14,14 +14,34 @@ import type {
 
 /**
  * @example
- *   #Basic usage
- *
- *   Setup listener for draw.
+ *   ### Setup draw listener.
  *
  *   ```typescript
- *   import { SvgDrawing } from '@svg-drawing/core'
+ *   import { SvgDrawing } from '@svg-drawing/core';
  *
- *   new SvgDrawing(document.getElementById('draw-area'))
+ *   const el = document.getElementById('draw-area')
+ *   new SvgDrawing(el);
+ *   ```
+ *
+ *   ### Set draw options
+ *
+ *   ```typescript
+ *   import { SvgDrawing } from '@svg-drawing/core';
+ *
+ *   const el = document.getElementById('draw-area')
+ *
+ *   // It is default value
+ *   const options = {
+ *   penColor: '#000',
+ *   penWidth: 2,
+ *   curve: true,
+ *   close: false,
+ *   delay: 0,
+ *   fill: 'none',
+ *   background: undefined,
+ *   }
+ *
+ *   new SvgDrawing(el, options)
  *   ```
  */
 export class SvgDrawing {
