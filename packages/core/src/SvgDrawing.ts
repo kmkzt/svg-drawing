@@ -16,22 +16,31 @@ import type {
 } from './types'
 
 /**
- * @example
- *   import { SvgDrawing } from '@svg-drawing/core'
+ * ### Setup SvgDrawing
  *
- *   const el = document.getElementById('draw')
+ * ```ts
+ * import { SvgDrawing } from '@svg-drawing/core'
  *
- *   new SvgDrawing(el)
+ * const el = document.getElementById('draw-area')
+ * new SvgDrawing(el)
+ * ```
  *
- *   // Options
- *   new SvgDrawing(el, {
- *     curve: true,
- *     close: false,
- *     penColor: '#00f',
- *     penWidth: 10,
- *     fill: '#F00',
- *     background: '#ff0',
- *   })
+ * ### Set draw options.
+ *
+ * ```ts
+ * // It is default value
+ * const options = {
+ *   penColor: '#000',
+ *   penWidth: 1,
+ *   curve: true,
+ *   close: false,
+ *   delay: 0,
+ *   fill: 'none',
+ *   background: undefined,
+ * }
+ *
+ * new SvgDrawing(el, options)
+ * ```
  */
 export class SvgDrawing {
   private svg: SvgClass
