@@ -69,28 +69,11 @@ export default ({ getBabelOptions, globals: injectGlobal }) =>
           ...optimizePlugin({ mode: 'production' }),
         ],
       },
-      // umd(development)
-      {
-        input,
-        output: {
-          file: pkg.browser,
-          format: 'umd',
-          name: pkg.name,
-          globals,
-          exports: 'named',
-          sourcemap: true,
-        },
-        external: Object.keys(globals),
-        plugins: [
-          ...buildPlugins({ esm: false }),
-          ...optimizePlugin({ mode: 'production' }),
-        ],
-      },
       // cjs
       {
         input,
         output: {
-          file: pkg.main,
+          file: pkg.exports.require,
           format: 'cjs',
           exports: 'named',
           sourcemap: true,
@@ -105,11 +88,31 @@ export default ({ getBabelOptions, globals: injectGlobal }) =>
       // esm
       {
         input,
-        output: { file: pkg.module, format: 'esm', sourcemap: true, banner },
+        output: {
+          file: pkg.exports.import,
+          format: 'esm',
+          sourcemap: true,
+          banner,
+        },
         external,
         plugins: [
           ...buildPlugins({ esm: true }),
           ...optimizePlugin('production'),
+        ],
+      },
+      // esm(development)
+      {
+        input,
+        output: {
+          file: pkg.exports.development,
+          format: 'esm',
+          sourcemap: true,
+          banner,
+        },
+        external,
+        plugins: [
+          ...buildPlugins({ esm: true }),
+          ...optimizePlugin('development'),
         ],
       },
     ]

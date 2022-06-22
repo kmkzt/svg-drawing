@@ -11,10 +11,15 @@
     "svg",
     "drawing"
   ],
-  "types": "lib/index.d.ts",
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.esm.js",
-  "browser": "lib/index.umd.js",
+  "type":"module",
+  "types": "./lib/index.d.ts",
+  "main": "./lib/index.js",
+  "browser": "./lib/index.umd.js",
+  "exports": {
+    "import": "./lib/index.js",
+    "require": "./lib/index.cjs",
+    "development": "./lib/index.dev.js"
+  },
   "files": [
     "lib/**/*"
   ],
