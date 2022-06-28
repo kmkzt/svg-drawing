@@ -29,8 +29,29 @@ export default ({ getBabelOptions, globals: injectGlobal }) =>
       author: pkg.author.name,
     })
 
+    const buildPlugins = (opts) => [
+      commonjs(),
+      babel(
+        getBabelOptions({
+          esm: opts.esm,
+          extensions,
+          ...(opts.esm ? { targets } : undefined),
+        })
+      ),
+      nodeResolve({ extensions }),
+      sourceMaps(),
+    ]
+
+    const optimizePlugin = (opts) => [
+      replace({
+        'process.env.NODE_ENV': JSON.stringify(opts.mode),
+        preventAssignment: true,
+      }),
+      terser({ output: { comments: /Copyright/i } }),
+    ]
+
     return [
-      /** Umd */
+      // umd
       {
         input,
         output: {
@@ -39,47 +60,20 @@ export default ({ getBabelOptions, globals: injectGlobal }) =>
           name: pkg.name,
           globals,
           exports: 'named',
-          sourcemap: false,
+          sourcemap: true,
           banner,
         },
         external,
         plugins: [
-          commonjs(),
-          babel(getBabelOptions({ esm: false, extensions })),
-          nodeResolve({ extensions }),
-          sourceMaps(),
-          replace({
-            'process.env.NODE_ENV': JSON.stringify('production'),
-            preventAssignment: true,
-          }),
-          terser({ output: { comments: /Copyright/i } }),
+          ...buildPlugins({ esm: false }),
+          ...optimizePlugin({ mode: 'production' }),
         ],
       },
-      /** Umd(development) */
-      // {
-      //   input,
-      //   output: {
-      //     file: pkg.browser,
-      //     format: 'umd',
-      //     name: pkg.name,
-      //     globals,
-      //     exports: 'named',
-      //     sourcemap: false
-      //   },
-      //   external: Object.keys(globals),
-      //   plugins: [
-      //     babel(getBabelOptions({ useESModules: true })),
-      //     nodeResolve({ extensions }),
-      //     commonjs(),
-      //     replace({ 'process.env.NODE_ENV': JSON.stringify('development'), preventAssignment: true }),
-      //     terser()
-      //   ]
-      // },
-      /** Cjs */
+      // cjs
       {
         input,
         output: {
-          file: pkg.main,
+          file: pkg.exports.require,
           format: 'cjs',
           exports: 'named',
           sourcemap: true,
@@ -87,22 +81,38 @@ export default ({ getBabelOptions, globals: injectGlobal }) =>
         },
         external,
         plugins: [
-          sourceMaps(),
-          commonjs(),
-          babel(getBabelOptions({ esm: false, extensions })),
-          nodeResolve({ extensions }),
+          ...buildPlugins({ esm: false }),
+          ...optimizePlugin('production'),
         ],
       },
-      /** Esm */
+      // esm
       {
         input,
-        output: { file: pkg.module, format: 'esm', sourcemap: true, banner },
+        output: {
+          file: pkg.exports.import,
+          format: 'esm',
+          sourcemap: true,
+          banner,
+        },
         external,
         plugins: [
-          sourceMaps(),
-          commonjs(),
-          babel(getBabelOptions({ esm: true, extensions, targets })),
-          nodeResolve({ extensions }),
+          ...buildPlugins({ esm: true }),
+          ...optimizePlugin('production'),
+        ],
+      },
+      // esm(development)
+      {
+        input,
+        output: {
+          file: pkg.exports.development,
+          format: 'esm',
+          sourcemap: true,
+          banner,
+        },
+        external,
+        plugins: [
+          ...buildPlugins({ esm: true }),
+          ...optimizePlugin('development'),
         ],
       },
     ]

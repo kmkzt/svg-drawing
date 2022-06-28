@@ -8,24 +8,23 @@ const defaultTestData = `<svg width="200" height="200">
 
 describe('animation.ts', () => {
   describe('SvgAnimation', () => {
-    const generateAniamtion = (svgStr = defaultTestData) => {
+    const generateAnimation = (svgStr = defaultTestData) => {
       const anim = new SvgAnimation(document.createElement('div'))
       anim.svg.parseSVGString(svgStr)
       return anim
     }
-    it('init', () => {
-      expect(generateAniamtion()).toMatchSnapshot()
-    })
+
     it('generateFrame', () => {
-      const svg = generateAniamtion()
+      const svg = generateAnimation()
       svg.setAnimation((paths) => {
         return [paths[0]]
       })
       expect(svg.generateFrame().length).toBe(1)
     })
+
     // TODO Improve test pattern
     it('toAnimationElement', () => {
-      const svg = generateAniamtion()
+      const svg = generateAnimation()
       const testAnimation: FrameAnimation = (paths, count) => {
         const update = []
         for (let i = 0; i < paths.length; i += 1) {
@@ -51,7 +50,7 @@ describe('animation.ts', () => {
     })
 
     it('setAnimation, start, stop', async () => {
-      const svg = generateAniamtion()
+      const svg = generateAnimation()
       let loop = 0
       svg.setAnimation(
         (_paths, fid) => {

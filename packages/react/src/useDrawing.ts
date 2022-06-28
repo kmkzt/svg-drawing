@@ -1,8 +1,7 @@
-import { SvgDrawing } from '@svg-drawing/core/lib/drawing'
-import { svgObjectToElement } from '@svg-drawing/core/lib/renderer'
-import React, { useRef, useEffect, useCallback } from 'react'
+import { SvgDrawing, svgObjectToElement } from '@svg-drawing/core'
+import { useRef, useEffect, useCallback } from 'react'
 import type { UseSvgDrawing } from './types'
-import type { DrawingOption } from '@svg-drawing/core/lib/types'
+import type { DrawingOption } from '@svg-drawing/core'
 import type { MutableRefObject } from 'react'
 
 export const useSvgDrawing = (
