@@ -2467,10 +2467,10 @@
   dependencies:
     "@octokit/openapi-types" "^11.2.0"
 
-"@rollup/plugin-commonjs@22.0.0":
-  version "22.0.0"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-22.0.0.tgz#f4d87016e2fbf187a593ab9f46626fe05b59e8bd"
-  integrity sha512-Ktvf2j+bAO+30awhbYoCaXpBcyPmJbaEUYClQns/+6SNCYFURbvBiNbWgHITEsIgDDWCDUclWRKEuf8cwZCFoQ==
+"@rollup/plugin-commonjs@22.0.1":
+  version "22.0.1"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-22.0.1.tgz#f7cb777d20de3eeeaf994f39080115c336bef810"
+  integrity sha512-dGfEZvdjDHObBiP5IvwTKMVeq/tBZGMBHZFMdIV1ClMM/YoWS34xrHFGfag9SN2ZtMgNZRFruqvxZQEa70O6nQ==
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     commondir "^1.0.1"
@@ -3110,15 +3110,15 @@
   dependencies:
     lockfile "1.0.4"
 
-"@verdaccio/local-storage@10.3.0":
-  version "10.3.0"
-  resolved "https://registry.yarnpkg.com/@verdaccio/local-storage/-/local-storage-10.3.0.tgz#37ad9c200d7672c698de9872a0ff7a7c43c83f30"
-  integrity sha512-qpzYVqJ4NN9gYGkpuQ8N2IRRg6m8+dTvSZ69H/41rHEfeeC0LW3cZjQV7hZ8RfNNvY7hLtf1E+n6DKCGx/bSLg==
+"@verdaccio/local-storage@10.3.1":
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/@verdaccio/local-storage/-/local-storage-10.3.1.tgz#8cbdc6390a0eb532577ae217729cb0a4e062f299"
+  integrity sha512-f3oArjXPOAwUAA2dsBhfL/rSouqJ2sfml8k97RtnBPKOzisb28bgyAQW0mqwQvN4MTK5S/2xudmobFpvJAIatg==
   dependencies:
     "@verdaccio/commons-api" "10.2.0"
     "@verdaccio/file-locking" "10.3.0"
     "@verdaccio/streams" "10.2.0"
-    async "3.2.3"
+    async "3.2.4"
     debug "4.3.4"
     lodash "4.17.21"
     lowdb "1.0.0"
@@ -3475,11 +3475,6 @@ ast-types-flow@^0.0.7:
   version "0.0.7"
   resolved "https://registry.npmjs.org/ast-types-flow/-/ast-types-flow-0.0.7.tgz#f70b735c6bca1a5c9c22d982c3e39e7feba3bdad"
   integrity sha1-9wtzXGvKGlycItmCw+Oef+ujva0=
-
-async@3.2.3:
-  version "3.2.3"
-  resolved "https://registry.npmjs.org/async/-/async-3.2.3.tgz#ac53dafd3f4720ee9e8a160628f18ea91df196c9"
-  integrity sha512-spZRyzKL5l5BZQrr/6m/SqFdBN0q3OCI0f9rjfBzCMBIP4p75P620rR3gTmaksNOhmzgdxcaxdNfMy6anrbM0g==
 
 async@3.2.4, async@^3.2.4:
   version "3.2.4"
@@ -9326,10 +9321,10 @@ rollup-pluginutils@^2.8.1:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@2.75.6:
-  version "2.75.6"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.75.6.tgz#ac4dc8600f95942a0180f61c7c9d6200e374b439"
-  integrity sha512-OEf0TgpC9vU6WGROJIk1JA3LR5vk/yvqlzxqdrE2CzzXnqKXNzbAwlWUXis8RS3ZPe7LAq+YUxsRa0l3r27MLA==
+rollup@2.75.7:
+  version "2.75.7"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.75.7.tgz#221ff11887ae271e37dcc649ba32ce1590aaa0b9"
+  integrity sha512-VSE1iy0eaAYNCxEXaleThdFXqZJ42qDBatAwrfnPlENEZ8erQ+0LYX4JXOLPceWfZpV1VtZwZ3dFCuOZiSyFtQ==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -10650,10 +10645,10 @@ verdaccio-audit@10.2.2:
     https-proxy-agent "5.0.1"
     node-fetch "2.6.7"
 
-verdaccio-htpasswd@10.4.0:
-  version "10.4.0"
-  resolved "https://registry.yarnpkg.com/verdaccio-htpasswd/-/verdaccio-htpasswd-10.4.0.tgz#f2da48b393e4aff5dd4668e2386a3a7351b44b2b"
-  integrity sha512-Q5b8nVxoUDBXgzc7yIclnIcrGoBRYno+SVcv8+ZLz3H1KfTqSfn4+UBbb2mHEix7KNvk1W3KhHBG6n1dYRpC7A==
+verdaccio-htpasswd@10.5.0:
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/verdaccio-htpasswd/-/verdaccio-htpasswd-10.5.0.tgz#de9ea2967856af765178b08485dc8e83f544a12c"
+  integrity sha512-olBsT3uy1TT2ZqmMCJUsMHrztJzoEpa8pxxvYrDZdWnEksl6mHV10lTeLbH9BUwbEheOeKkkdsERqUOs+if0jg==
   dependencies:
     "@verdaccio/file-locking" "10.3.0"
     apache-md5 "1.1.7"
@@ -10661,13 +10656,13 @@ verdaccio-htpasswd@10.4.0:
     http-errors "2.0.0"
     unix-crypt-td-js "1.1.4"
 
-verdaccio@5.13.0:
-  version "5.13.0"
-  resolved "https://registry.yarnpkg.com/verdaccio/-/verdaccio-5.13.0.tgz#555205b36b44654e606433b218b17916272ca219"
-  integrity sha512-0IVlOfpltlYusmUb/y3oK6kY4QfSHdGzgc3HB6NUhVe7nrCKa6qznLdW+eG3fk167xVpu/3OV5ipxUk/G5teGw==
+verdaccio@5.13.1:
+  version "5.13.1"
+  resolved "https://registry.yarnpkg.com/verdaccio/-/verdaccio-5.13.1.tgz#37a0494bd6c15dfd5897927aeb18ebf5514abae3"
+  integrity sha512-UyLn/picuRovYgLrbCYwYaVNMrReB0VNhsTtmWtS4D19hNIOqbDuVWcGE0djr9Cnhkm/pLrjcF5dE4tAbO3gUQ==
   dependencies:
     "@verdaccio/commons-api" "10.2.0"
-    "@verdaccio/local-storage" "10.3.0"
+    "@verdaccio/local-storage" "10.3.1"
     "@verdaccio/readme" "10.3.4"
     "@verdaccio/streams" "10.2.0"
     "@verdaccio/ui-theme" "6.0.0-6-next.24"
@@ -10707,7 +10702,7 @@ verdaccio@5.13.0:
     semver "7.3.7"
     validator "13.7.0"
     verdaccio-audit "10.2.2"
-    verdaccio-htpasswd "10.4.0"
+    verdaccio-htpasswd "10.5.0"
 
 verror@1.10.0:
   version "1.10.0"
