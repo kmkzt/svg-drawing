@@ -12,7 +12,7 @@
     "@svg-drawing/react": "4.2.3"
   },
   "devDependencies": {
-    "typedoc": "0.23.2",
-    "typedoc-plugin-markdown": "3.13.1"
+    "typedoc": "0.22.17",
+    "typedoc-plugin-markdown": "3.12.1"
   }
 }
