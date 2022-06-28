@@ -1,7 +1,7 @@
 {
   "name": "@svg-drawing-example/react",
   "private": true,
-  "version": "4.2.4",
+  "version": "4.2.5",
   "scripts": {
     "clear": "rimraf .next out",
     "start": "next start",
@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@styled-icons/octicons": "10.6.0",
-    "@svg-drawing/animation": "4.2.4",
-    "@svg-drawing/core": "4.2.4",
-    "@svg-drawing/img-trace": "4.2.4",
-    "@svg-drawing/react": "4.2.4",
+    "@svg-drawing/animation": "4.2.5",
+    "@svg-drawing/core": "4.2.5",
+    "@svg-drawing/img-trace": "4.2.5",
+    "@svg-drawing/react": "4.2.5",
     "next": "12.1.6",
     "react": "18.1.0",
     "react-dom": "18.1.0",
