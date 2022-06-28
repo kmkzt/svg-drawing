@@ -4,7 +4,7 @@
   "pipeline": {
     "clear": {
       "dependsOn": ["^clear"],
-      "outputs": []
+      "outputs": ["lib/**"]
     },
     "build": {
       "dependsOn": ["^clear", "^build"],
