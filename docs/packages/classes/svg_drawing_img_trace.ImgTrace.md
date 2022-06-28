@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[img-trace/src/trace.ts:200](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L200)
+[img-trace/src/trace.ts:200](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L200)
 
 ## Properties
 
@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[img-trace/src/trace.ts:193](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L193)
+[img-trace/src/trace.ts:193](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L193)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:188](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L188)
+[img-trace/src/trace.ts:188](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L188)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:197](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L197)
+[img-trace/src/trace.ts:197](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L197)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:195](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L195)
+[img-trace/src/trace.ts:195](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L195)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:192](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L192)
+[img-trace/src/trace.ts:192](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L192)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:189](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L189)
+[img-trace/src/trace.ts:189](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L189)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:190](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L190)
+[img-trace/src/trace.ts:190](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L190)
 
 ## Methods
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:416](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L416)
+[img-trace/src/trace.ts:416](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L416)
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:235](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L235)
+[img-trace/src/trace.ts:235](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L235)
 
 ___
 
@@ -150,7 +150,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:721](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L721)
+[img-trace/src/trace.ts:721](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L721)
 
 ___
 
@@ -170,7 +170,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:730](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L730)
+[img-trace/src/trace.ts:730](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L730)
 
 ___
 
@@ -191,7 +191,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:281](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L281)
+[img-trace/src/trace.ts:281](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L281)
 
 ___
 
@@ -213,7 +213,7 @@ Find similar color from palette and return ID
 
 #### Defined in
 
-[img-trace/src/trace.ts:265](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L265)
+[img-trace/src/trace.ts:265](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L265)
 
 ___
 
@@ -236,7 +236,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:607](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L607)
+[img-trace/src/trace.ts:607](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L607)
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:519](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L519)
+[img-trace/src/trace.ts:519](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L519)
 
 ___
 
@@ -279,7 +279,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:427](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L427)
+[img-trace/src/trace.ts:427](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L427)
 
 ___
 
@@ -299,7 +299,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:318](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L318)
+[img-trace/src/trace.ts:318](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L318)
 
 ___
 
@@ -320,7 +320,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:302](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L302)
+[img-trace/src/trace.ts:302](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L302)
 
 ___
 
@@ -345,7 +345,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:499](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L499)
+[img-trace/src/trace.ts:499](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L499)
 
 ___
 
@@ -365,7 +365,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:553](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L553)
+[img-trace/src/trace.ts:553](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L553)
 
 ___
 
@@ -385,4 +385,4 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:217](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/trace.ts#L217)
+[img-trace/src/trace.ts:217](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/trace.ts#L217)

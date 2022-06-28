@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[core/src/renderer.ts:74](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/renderer.ts#L74)
+[core/src/renderer.ts:74](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/renderer.ts#L74)
 
 ## Properties
 
@@ -45,4 +45,4 @@
 
 #### Defined in
 
-[core/src/renderer.ts:80](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/renderer.ts#L80)
+[core/src/renderer.ts:80](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/renderer.ts#L80)
