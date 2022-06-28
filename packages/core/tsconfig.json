@@ -5,7 +5,6 @@
     "outDir": "./lib",
     "declaration": true,
     "declarationDir": "./lib",
-    "emitDeclarationOnly": true,
   },
   "include": ["src/**/*"]
 }
