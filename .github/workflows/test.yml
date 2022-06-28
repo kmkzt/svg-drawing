@@ -30,7 +30,7 @@ jobs:
           key: nodeModules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             nodeModules-
-      - name: install, build, lint, typecheck, test
+      - name: install, build, lint, typecheck, test, docs
         run: |
           yarn install --frozen-lockfile
           yarn build
@@ -38,6 +38,7 @@ jobs:
           yarn lint
           yarn typecheck
           yarn test
+          yarn generate:docs
         env:
           CI: true
 
