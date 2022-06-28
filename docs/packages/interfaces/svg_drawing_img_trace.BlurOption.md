@@ -12,7 +12,7 @@
 
 #### Defined in
 
-[img-trace/src/blur.ts:20](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/blur.ts#L20)
+[img-trace/src/blur.ts:20](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/blur.ts#L20)
 
 ___
 
@@ -22,4 +22,4 @@ ___
 
 #### Defined in
 
-[img-trace/src/blur.ts:19](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/img-trace/src/blur.ts#L19)
+[img-trace/src/blur.ts:19](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/img-trace/src/blur.ts#L19)

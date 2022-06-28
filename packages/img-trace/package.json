@@ -1,6 +1,6 @@
 {
   "name": "@svg-drawing/img-trace",
-  "version": "4.2.3",
+  "version": "4.2.4",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": {
@@ -22,7 +22,7 @@
     "png",
     "tracer"
   ],
-  "type":"module",
+  "type": "module",
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
   "browser": "./lib/index.umd.js",
@@ -48,8 +48,8 @@
     "prepare": "yarn build"
   },
   "optionalDependencies": {
-    "@svg-drawing/animation": "4.2.3",
-    "@svg-drawing/core": "4.2.3"
+    "@svg-drawing/animation": "4.2.4",
+    "@svg-drawing/core": "4.2.4"
   },
   "publishConfig": {
     "access": "public"

@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[core/src/convert.ts:6](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/convert.ts#L6)
+[core/src/convert.ts:6](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/convert.ts#L6)
 
 ## Properties
 
@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[core/src/convert.ts:5](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/convert.ts#L5)
+[core/src/convert.ts:5](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/convert.ts#L5)
 
 ## Methods
 
@@ -50,7 +50,7 @@
 
 #### Defined in
 
-[core/src/convert.ts:9](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/convert.ts#L9)
+[core/src/convert.ts:9](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/convert.ts#L9)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[core/src/convert.ts:22](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/convert.ts#L22)
+[core/src/convert.ts:22](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/convert.ts#L22)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[core/src/convert.ts:44](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/convert.ts#L44)
+[core/src/convert.ts:44](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/convert.ts#L44)
 
 ___
 
@@ -113,4 +113,4 @@ ___
 
 #### Defined in
 
-[core/src/convert.ts:37](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/convert.ts#L37)
+[core/src/convert.ts:37](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/convert.ts#L37)

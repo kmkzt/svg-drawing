@@ -1,6 +1,6 @@
 {
   "name": "@svg-drawing/core",
-  "version": "4.2.3",
+  "version": "4.2.4",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": {
@@ -11,7 +11,7 @@
     "svg",
     "drawing"
   ],
-  "type":"module",
+  "type": "module",
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
   "browser": "./lib/index.umd.js",
@@ -23,7 +23,7 @@
   "files": [
     "lib/**/*"
   ],
-  "typedocMain": "src/index.ts" ,
+  "typedocMain": "src/index.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/kmkzt/svg-drawing.git",
