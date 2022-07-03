@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[core/src/handler.ts:54](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L54)
+[core/src/handler.ts:54](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L54)
 
 ## Properties
 
@@ -31,7 +31,7 @@ Remove EventList
 
 #### Defined in
 
-[core/src/handler.ts:44](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L44)
+[core/src/handler.ts:44](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L44)
 
 ___
 
@@ -43,7 +43,7 @@ Offset coordinates
 
 #### Defined in
 
-[core/src/handler.ts:48](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L48)
+[core/src/handler.ts:48](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L48)
 
 ___
 
@@ -55,7 +55,7 @@ AddEventListener Options
 
 #### Defined in
 
-[core/src/handler.ts:46](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L46)
+[core/src/handler.ts:46](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L46)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:49](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L49)
+[core/src/handler.ts:49](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L49)
 
 ___
 
@@ -85,7 +85,7 @@ EventHandler
 
 #### Defined in
 
-[core/src/handler.ts:51](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L51)
+[core/src/handler.ts:51](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L51)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:53](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L53)
+[core/src/handler.ts:53](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L53)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:52](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L52)
+[core/src/handler.ts:52](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L52)
 
 ## Methods
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:104](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L104)
+[core/src/handler.ts:104](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L104)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:109](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L109)
+[core/src/handler.ts:109](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L109)
 
 ___
 
@@ -187,7 +187,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:99](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L99)
+[core/src/handler.ts:99](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L99)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:164](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L164)
+[core/src/handler.ts:164](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L164)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:138](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L138)
+[core/src/handler.ts:138](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L138)
 
 ___
 
@@ -237,7 +237,7 @@ Exec removeEventListener
 
 #### Defined in
 
-[core/src/handler.ts:76](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L76)
+[core/src/handler.ts:76](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L76)
 
 ___
 
@@ -253,4 +253,4 @@ Exec addEventListener
 
 #### Defined in
 
-[core/src/handler.ts:82](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/handler.ts#L82)
+[core/src/handler.ts:82](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L82)

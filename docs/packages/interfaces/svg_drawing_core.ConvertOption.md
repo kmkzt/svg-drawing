@@ -14,4 +14,4 @@ Convert options
 
 #### Defined in
 
-[core/src/types.ts:49](https://github.com/kmkzt/svg-drawing/blob/0c17b9c/packages/core/src/types.ts#L49)
+[core/src/types.ts:49](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L49)
