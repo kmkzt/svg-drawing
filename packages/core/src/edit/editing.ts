@@ -11,6 +11,7 @@ export class Editing {
   private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(
     public editSvg: EditSvg,
+    /** Callback function that refreshes the screen. */
     public updater: (eSvg: EditSvg) => void = () => void 0
   ) {
     this.translate = this.translate.bind(this)
@@ -20,25 +21,30 @@ export class Editing {
     this.resizePreview = this.resizePreview.bind(this)
   }
 
+  /** Set the callback function to update the screen */
   setupUpdater(upd: (eSvg: EditSvg) => void) {
     this.updater = upd
   }
 
+  /** Clear selected status and update screen. */
   cancel() {
     this.editSvg.cancel()
     this.updater(this.editSvg)
   }
 
+  /** Select edit path and update screen. */
   select(index: SelectIndex, multipleSelect?: boolean) {
     this.editSvg.select(index, multipleSelect)
     this.updater(this.editSvg)
   }
 
+  /** Delete path and update screen. */
   deletePaths() {
     this.editSvg.delete()
     this.updater(this.editSvg)
   }
 
+  /** Change attributes and update screen. */
   changeAttributes(attrs: PathAttributes) {
     this.editSvg.changeAttributes(attrs)
     this.updater(this.editSvg)
