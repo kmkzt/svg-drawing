@@ -17,10 +17,12 @@ export class EditSvg {
   private pathSelector = new PathSelector()
   constructor(public svg: SvgClass) {}
 
+  /** Return true when some path selected. */
   get selected() {
     return this.pathSelector.selected
   }
 
+  /** Select path index. */
   select(index: SelectIndex, multipleSelect?: boolean) {
     if (multipleSelect) {
       this.pathSelector.selectMerge(index)
@@ -29,14 +31,17 @@ export class EditSvg {
     this.pathSelector.select(index)
   }
 
+  /** Clear selected status. */
   cancel() {
     this.pathSelector.clear()
   }
 
+  /** Change attributes of selected path. */
   changeAttributes(attrs: PathAttributes) {
     this.exec((path) => path.updateAttributes(attrs))
   }
 
+  /** Translate position of selected path. */
   translate(move: PointObject) {
     this.exec(
       (path) => path.translate(move),
@@ -45,6 +50,7 @@ export class EditSvg {
     )
   }
 
+  /** Scale the selected path. */
   scale(r: number) {
     this.exec(
       (path) => path.scale(r),
@@ -53,6 +59,7 @@ export class EditSvg {
     )
   }
 
+  /** Scale the selected path horizontally. */
   scaleX(r: number) {
     this.exec(
       (path) => path.scaleX(r),
@@ -61,6 +68,7 @@ export class EditSvg {
     )
   }
 
+  /** Scale the selected path vertically. */
   scaleY(r: number) {
     this.exec(
       (path) => path.scaleY(r),
@@ -69,6 +77,7 @@ export class EditSvg {
     )
   }
 
+  /** Resize based on the bounding box vertices */
   resizeBoundingBox(type: FixedType, po: PointObject) {
     const { move, scale } = new BoundingBox(this.paths).resizeParams(type, po)
 
@@ -81,7 +90,11 @@ export class EditSvg {
     })
   }
 
-  /** @todo Implements to delete points. */
+  /**
+   * Delete the selected path.
+   *
+   * @todo Implements to delete points.
+   */
   delete() {
     this.pathSelector.pathsIndex.forEach((pathKey) => {
       const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
@@ -102,20 +115,14 @@ export class EditSvg {
     })
   }
 
+  /** Clone an EditSvg class object for preview. */
   preview(): EditSvg {
     const preview = new EditSvg(this.svg.clone())
     preview.pathSelector = this.pathSelector
     return preview
   }
 
-  private get paths(): PathClass[] {
-    return this.pathSelector.pathsIndex.flatMap((pathKey) => {
-      const path = this.svg.paths.find((path) => path.key === pathKey)
-
-      return path ? path.clone() : []
-    })
-  }
-
+  /** Return data in json format. */
   toJson(): EditSvgObject | null {
     if (!this.pathSelector.selected) return null
 
@@ -154,6 +161,14 @@ export class EditSvg {
         selected: this.pathSelector.selectedPathsOnly,
       },
     }
+  }
+
+  private get paths(): PathClass[] {
+    return this.pathSelector.pathsIndex.flatMap((pathKey) => {
+      const path = this.svg.paths.find((path) => path.key === pathKey)
+
+      return path ? path.clone() : []
+    })
   }
 
   private exec(
