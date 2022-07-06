@@ -8,7 +8,12 @@ const defaultTestData = `<svg width="200" height="200">
 
 describe('Animation', () => {
   const init = (svgStr = defaultTestData) =>
-    new Animation().initialize(parseSVGString(svgStr).paths)
+    new Animation().initialize(
+      parseSVGString(svgStr).paths.map((p, i) => {
+        p.key = `p${i}`
+        return p
+      })
+    )
   it('new Animation()', () => {
     expect(init()).toMatchInlineSnapshot(`
       Animation {
@@ -63,7 +68,7 @@ describe('Animation', () => {
                 "type": "z",
               },
             ],
-            "key": "p1",
+            "key": "p0",
           },
           Path {
             "attrs": Object {
@@ -112,7 +117,7 @@ describe('Animation', () => {
                 "type": "z",
               },
             ],
-            "key": "p2",
+            "key": "p1",
           },
         ],
       }
@@ -163,7 +168,7 @@ describe('Animation', () => {
 
     expect(anim.toJson()).toMatchInlineSnapshot(`
       Object {
-        "p5": Array [
+        "p0": Array [
           Object {
             "attributes": Object {
               "attributeName": "d",
@@ -195,7 +200,7 @@ describe('Animation', () => {
             "type": "animate",
           },
         ],
-        "p6": Array [
+        "p1": Array [
           Object {
             "attributes": Object {
               "attributeName": "d",
