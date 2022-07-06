@@ -11,6 +11,7 @@ import type {
   SvgOption,
   PathClass,
   AnimationObject,
+  PointObject,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
@@ -66,7 +67,7 @@ export type EditProps = {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
   onResizeStart: Editing['startResize']
-  onTranslateStart: Editing['startTranslate']
+  onTranslateStart: (po: PointObject) => void
   onSelectPaths: (sel: SelectIndex) => void
 }
 

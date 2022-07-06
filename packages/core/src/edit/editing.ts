@@ -7,7 +7,6 @@ import type {
 import type { EditSvg } from './editSvg'
 
 export class Editing {
-  private translateBasePoint: PointObject | null = null
   private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(
     public editSvg: EditSvg,
@@ -50,24 +49,16 @@ export class Editing {
     this.updater(this.editSvg)
   }
 
-  startTranslate(po: PointObject) {
-    this.translateBasePoint = po
-  }
-
   translatePreview(po: PointObject) {
     this.translateEditSvg(this.editSvg.preview(), po)
   }
 
   translate(po: PointObject) {
     this.translateEditSvg(this.editSvg, po)
-    this.translateBasePoint = null
   }
 
   private translateEditSvg(editSvg: EditSvg, po: PointObject) {
-    editSvg.translate({
-      x: po.x - (this.translateBasePoint?.x ?? 0),
-      y: po.y - (this.translateBasePoint?.y ?? 0),
-    })
+    editSvg.translate(po)
     this.updater(editSvg)
   }
 

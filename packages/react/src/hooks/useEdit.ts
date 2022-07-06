@@ -118,10 +118,9 @@ export const useEdit: UseEdit = ({
 
   const onTranslateStart = useCallback<EditProps['onTranslateStart']>(
     (po) => {
-      edit.startTranslate(po)
-      translatePathHandler.start()
+      translatePathHandler.start(po)
     },
-    [edit, translatePathHandler]
+    [translatePathHandler]
   )
 
   const onResizeStart = useCallback<EditProps['onResizeStart']>(
