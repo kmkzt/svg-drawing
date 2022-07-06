@@ -14,28 +14,59 @@ import type {
   DrawEventName,
 } from '../types'
 
+class OffsetPosition {
+  left: number
+  top: number
+  constructor(private el?: HTMLElement) {
+    const { left, top } = el ? el.getBoundingClientRect() : { left: 0, top: 0 }
+
+    this.left = left
+    this.top = top
+  }
+
+  setElement(el: HTMLElement) {
+    this.el = el
+  }
+
+  setup(): Array<ClearListener> {
+    const el = this.el
+    if (!el) return []
+
+    const setOffsetPosition = () => {
+      const { left, top } = el.getBoundingClientRect()
+      this.left = left
+      this.top = top
+    }
+
+    setOffsetPosition()
+    addEventListener('scroll', setOffsetPosition)
+    el.addEventListener('resize', setOffsetPosition)
+    return [
+      () => {
+        removeEventListener('scroll', setOffsetPosition)
+        el.removeEventListener('resize', setOffsetPosition)
+      },
+    ]
+  }
+}
+
 export abstract class BaseHandler implements DrawEventHandler {
   /** Remove EventList */
   private _clearEventList: Array<ClearListener>
   /** Offset coordinates */
-  private _offset: {
-    left: number
-    top: number
-  }
+  private _offsetPosition: OffsetPosition
 
-  /** EventHandler */
-  protected el: HTMLElement | undefined
-
-  constructor(protected drawing: DrawingClass, el?: HTMLElement) {
+  constructor(
+    protected drawing: DrawingClass,
+    protected el?: HTMLElement | undefined
+  ) {
     // Bind method
     this.on = this.on.bind(this)
     this.off = this.off.bind(this)
     this.setDrawing = this.setDrawing.bind(this)
 
     // Set offset coordinates
-    const { left, top } = el ? el.getBoundingClientRect() : { left: 0, top: 0 }
-    this.el = el ?? undefined
-    this._offset = { left, top }
+    this._offsetPosition = new OffsetPosition(el)
     this._clearEventList = []
   }
 
@@ -50,14 +81,17 @@ export abstract class BaseHandler implements DrawEventHandler {
 
   public on() {
     this.off()
+
     this._clearEventList = [
-      ...this._setupCoordinatesListener(),
+      ...this._offsetPosition.setup(),
       ...this.setupListener(),
     ]
   }
 
   public setElement(el: HTMLElement) {
     this.el = el
+    this._offsetPosition.setElement(el)
+
     if (this.isActive) this.on()
   }
 
@@ -72,30 +106,10 @@ export abstract class BaseHandler implements DrawEventHandler {
     const { x, y, pressure } = getEventPoint(ev)
 
     return {
-      x: x - this._offset.left,
-      y: y - this._offset.top,
+      x: x - this._offsetPosition.left,
+      y: y - this._offsetPosition.top,
       pressure,
     }
-  }
-
-  /** Set left, top property when scroll or resize event */
-  private _setupCoordinatesListener(): Array<ClearListener> {
-    const el = this.el
-    if (!el) return []
-    const setOffsetPosition = () => {
-      const { left, top } = el.getBoundingClientRect()
-      this._offset.left = left
-      this._offset.top = top
-    }
-    setOffsetPosition()
-    addEventListener('scroll', setOffsetPosition)
-    el.addEventListener('resize', setOffsetPosition)
-    return [
-      () => {
-        removeEventListener('scroll', setOffsetPosition)
-        el.removeEventListener('resize', setOffsetPosition)
-      },
-    ]
   }
 
   protected abstract setupListener(): Array<ClearListener>
