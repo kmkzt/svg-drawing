@@ -33,13 +33,13 @@ el.setAttribute(
   `
 )
 document.body.appendChid(el)
-SvgDrawing.init(el)
+new SvgDrawing(el)
 ```
 
 SvgDrawing methods.
 
 ```javascript
-const draw = SvgDrawing.init(el)
+const draw = new SvgDrawing(el)
 
 // change parameter.　There are other changeable parameters like fill, close, curve, etc.
 draw.penColor = '#00b'

@@ -30,7 +30,7 @@
       // Render Drawing area
       // Drawing area will be resized to fit the rendering area
       const drawEl = document.getElementById('draw')
-      const draw = SvgDrawing.init(drawEl)
+      const draw = new SvgDrawing(drawEl)
 
       const clear = document.getElementById('clear')
       clear.onclick = () => draw.clear()
@@ -41,12 +41,12 @@
       // Render Animation Area
       // It is resized to fit the rendering area as well as the SvgDrawing area.
       const animEl = document.getElementById('anim')
-      const anim = SvgAnimation.init(animEl)
+      const anim = new SvgAnimation(animEl)
 
       const start = document.getElementById('start')
       start.onclick = () => {
         // Sets the animation callback function
-        anim.setup(
+        anim.setAnimation(
           // Example drawing animation.
           // Since the Path Object before animation is passed as an argument, it is converted and returned.
           (paths, fid) => {
@@ -63,7 +63,7 @@
             }
             return update
           },
-          // setup options. `repeatCount` is related to downloadAnimation methods.
+          // setAnimation options. `repeatCount` is related to downloadAnimation methods.
           {
             repeatCount: 1,
             ms: 20,
