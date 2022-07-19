@@ -13,6 +13,69 @@ describe('Svg', () => {
     expect(svg.background).toBe(attributes.background)
   })
 
+  describe('resize', () => {
+    it('Update the values of the width and height properties.', () => {
+      const attributes = { width: 100, height: 100 }
+      const svg = new Svg(attributes)
+
+      const resizeArgs = { width: 200, height: 300 }
+      svg.resize(resizeArgs)
+
+      expect(svg.width).toBe(resizeArgs.width)
+      expect(svg.height).toBe(resizeArgs.height)
+    })
+
+    it('Resize the path to fit the resized width.', () => {
+      const svg = new Svg({ width: 100, height: 100 })
+
+      const testPath = new Path(undefined, 'p1')
+        .addCommand(new Move(new Point(0, 0)))
+        .addCommand(
+          new Curve([new Point(0.2, 0.2), new Point(0.6, 0.8), new Point(1, 1)])
+        )
+        .addCommand(
+          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
+        )
+        .addCommand(
+          new Curve([new Point(2.4, 0.8), new Point(2.8, 0.2), new Point(3, 0)])
+        )
+      svg.addPath(testPath)
+
+      const resizeArgs = { width: 200, height: 300 }
+      svg.resize(resizeArgs)
+
+      expect(testPath.scale(resizeArgs.width / svg.width).toJson()).toEqual(
+        svg.paths[0].toJson()
+      )
+    })
+  })
+
+  describe('copy', () => {
+    it('Resize path of copied object.', () => {
+      const svg = new Svg({ width: 100, height: 100 })
+
+      const testPath = new Path(undefined, 'p1')
+        .addCommand(new Move(new Point(0, 0)))
+        .addCommand(
+          new Curve([new Point(0.2, 0.2), new Point(0.6, 0.8), new Point(1, 1)])
+        )
+        .addCommand(
+          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
+        )
+        .addCommand(
+          new Curve([new Point(2.4, 0.8), new Point(2.8, 0.2), new Point(3, 0)])
+        )
+      const copiedSvg = new Svg({ width: 200, height: 200 })
+      copiedSvg.addPath(testPath)
+
+      svg.copy(copiedSvg)
+
+      expect(svg.paths[0].toJson()).toEqual(
+        copiedSvg.paths[0].scale(svg.width / copiedSvg.width).toJson()
+      )
+    })
+  })
+
   describe('addPath', () => {
     it('Add an array of paths', () => {
       const svg = new Svg({ width: 500, height: 500 }).addPath([

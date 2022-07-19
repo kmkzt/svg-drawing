@@ -13,7 +13,6 @@ export class Svg implements SvgClass {
     this.background = background
   }
 
-  /** @todo Implement to be resized according to height */
   public resize({ width, height }: { width: number; height: number }) {
     this.scale(width / this.width)
     this.width = width
@@ -21,7 +20,7 @@ export class Svg implements SvgClass {
   }
 
   private scale(r: number) {
-    if (r !== 1) {
+    if (r !== 1 && isFinite(r) && r !== 0) {
       for (let i = 0; i < this.paths.length; i += 1) {
         this.paths[i].scale(r)
       }
@@ -71,7 +70,12 @@ export class Svg implements SvgClass {
   /**
    * Copy resized paths.
    *
-   * @example Const drawSvg = new Svg() const animateSvg = new Svg().copy(drawSvg)
+   * @example
+   *
+   * ```ts
+   * const drawSvg = new Svg()
+   * const animateSvg = new Svg().copy(drawSvg)
+   * ```
    */
   public copy(svg: SvgClass) {
     this.paths = svg.clonePaths()
