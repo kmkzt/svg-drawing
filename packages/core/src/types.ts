@@ -186,9 +186,7 @@ export interface ResizeEventHandler {
   active: boolean
   on: () => void
   off: () => void
-  /** @example Resize.setElement(document.getElementById('draw-area')) */
   setElement: (el: HTMLElement) => void
-  /** @example Resize.setHandler(({ width, height }) => console.log(width, height)) */
   setHandler: (callback: ResizeCallback) => void
 }
 
