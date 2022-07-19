@@ -12,7 +12,6 @@ export interface PointClass {
   scaleY: (r: number) => PointClass
   add: (p: PointObject) => PointClass
   sub: (p: PointObject) => PointClass
-  eql: (p: PointObject) => boolean
   clone: () => PointClass
   toJson: () => PointObject
 }

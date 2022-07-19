@@ -44,10 +44,6 @@ export class Point implements PointClass {
     return new Point(this._x - p.x, this._y - p.y)
   }
 
-  public eql(p: PointObject) {
-    return this._x === p.x && this._y === p.y
-  }
-
   public clone() {
     return new Point(this._x, this._y)
   }
