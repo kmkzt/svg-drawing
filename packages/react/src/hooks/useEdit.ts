@@ -125,10 +125,9 @@ export const useEdit: UseEdit = ({
 
   const onResizeStart = useCallback<EditProps['onResizeStart']>(
     (base) => {
-      edit.startResize(base)
-      resizePathHandler.start()
+      resizePathHandler.start(base)
     },
-    [edit, resizePathHandler]
+    [resizePathHandler]
   )
 
   const keyboardMap = useMemo<EditSvgAction['keyboardMap']>(

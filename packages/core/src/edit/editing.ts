@@ -1,13 +1,12 @@
 import type {
   PointObject,
   PathAttributes,
-  ResizeBoundingBoxBase,
   SelectIndex,
+  FixedType,
 } from '../types'
 import type { EditSvg } from './editSvg'
 
 export class Editing {
-  private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
   constructor(
     public editSvg: EditSvg,
     /** Callback function that refreshes the screen. */
@@ -62,26 +61,20 @@ export class Editing {
     this.updater(editSvg)
   }
 
-  startResize(base: ResizeBoundingBoxBase) {
-    this.resizeBoundingBoxBase = base
+  resize(fixedType: FixedType, po: PointObject) {
+    this.resizeEditSvg(this.editSvg, fixedType, po)
   }
 
-  resize(po: PointObject) {
-    this.resizeEditSvg(this.editSvg, po)
-    this.resizeBoundingBoxBase = null
+  resizePreview(fixedType: FixedType, po: PointObject) {
+    this.resizeEditSvg(this.editSvg.preview(), fixedType, po)
   }
 
-  resizePreview(po: PointObject) {
-    this.resizeEditSvg(this.editSvg.preview(), po)
-  }
-
-  private resizeEditSvg(editSvg: EditSvg, po: PointObject) {
-    if (!this.resizeBoundingBoxBase) return
-
-    editSvg.resizeBoundingBox(this.resizeBoundingBoxBase.fixedType, {
-      x: po.x - (this.resizeBoundingBoxBase?.point.x ?? 0),
-      y: po.y - (this.resizeBoundingBoxBase?.point.y ?? 0),
-    })
+  private resizeEditSvg(
+    editSvg: EditSvg,
+    fixedType: FixedType,
+    point: PointObject
+  ) {
+    editSvg.resizeBoundingBox(fixedType, point)
     this.updater(editSvg)
   }
 }
