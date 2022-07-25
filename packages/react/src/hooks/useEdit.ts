@@ -85,7 +85,7 @@ export const useEdit: UseEdit = ({
   useEffect(() => () => translatePathHandler.end(), [translatePathHandler])
 
   const resizePathHandler = useMemo(() => new ResizePathHandler(edit), [edit])
-  useEffect(() => () => translatePathHandler.end(), [translatePathHandler])
+  useEffect(() => () => resizePathHandler.end(), [resizePathHandler])
 
   const multipleSelect = usePressedKey(multipleSelectBindKey)
 
