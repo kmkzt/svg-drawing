@@ -81,13 +81,7 @@ export class EditSvg {
   resizeBoundingBox(type: FixedType, po: PointObject) {
     const { move, scale } = new BoundingBox(this.paths).resizeParams(type, po)
 
-    this.exec((path) => {
-      path.scaleX(scale.x)
-      path.scaleY(scale.y)
-      path.translate(move)
-
-      return path
-    })
+    this.exec((path) => path.scaleX(scale.x).scaleY(scale.y).translate(move))
   }
 
   /**
@@ -178,10 +172,9 @@ export class EditSvg {
   ): void {
     this.pathSelector.pathsIndex.forEach((pathKey) => {
       const path = this.svg.getPath(pathKey)
-      const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
-
       if (!path) return
 
+      const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
       if (!commandsIndex || !commandExec) {
         this.svg.updatePath(pathExec(path))
         return
