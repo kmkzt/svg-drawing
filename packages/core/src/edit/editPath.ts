@@ -13,7 +13,7 @@ const genOutline = (points: PointObject[]) =>
   )
 
 export class EditPath {
-  constructor(private path: PathClass, private selector?: PathSelector) {}
+  constructor(private path: PathClass, private selector: PathSelector) {}
 
   public toJson(): EditPathObject {
     return {
