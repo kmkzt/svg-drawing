@@ -1,15 +1,47 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["@kmkzt"],
-  "packageRules": [
-    {
-      "matchPaths": [
-        "examples/**/package.json",
-        "packages/**/package.json"
-      ],
-      "extends": [
-        "@kmkzt"
-      ]
-    }
-  ]
+  "extends": [
+    "config:base"
+  ],
+  "labels": [
+    "renovate",
+    "dependencies"
+  ],
+  "major": {
+    "groupName": "all major dependencies"
+  },
+  "minor": {
+    "groupName": "all minor dependencies"
+  },
+  "patch": {
+    "automerge": true,
+    "groupName": "all patch dependencies"
+  },
+  "npm": {
+    "packageRules": [
+      {
+        "groupName": "TypeScript",
+        "packageNames": ["typescript"],
+        "matchPaths": ["package.json"]
+      },
+      {
+        "groupName": "ESLint and Prettier",
+        "packageNames": [
+          "eslint",
+          "prettier"
+        ],
+        "packagePatterns": [
+          "^eslint-config-",
+          "^eslint-plugin-"
+        ],
+        "matchPaths": ["package.json"]
+      },
+      {
+        "groupName": "Typedoc",
+        "packageNames": ["typedoc"],
+        "packagePatterns": ["^typedoc-plugin-"],
+        "matchPaths": ["package.json"]
+      }
+    ]
+  }
 }
