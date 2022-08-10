@@ -1,6 +1,6 @@
 {
   "name": "@svg-drawing/img-trace",
-  "version": "4.2.5",
+  "version": "5.0.0-beta.1",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": {
@@ -48,8 +48,8 @@
     "prepare": "yarn build"
   },
   "optionalDependencies": {
-    "@svg-drawing/animation": "4.2.5",
-    "@svg-drawing/core": "4.2.5"
+    "@svg-drawing/animation": "5.0.0-beta.1",
+    "@svg-drawing/core": "5.0.0-beta.1"
   },
   "publishConfig": {
     "access": "public"

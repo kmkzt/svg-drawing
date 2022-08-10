@@ -1,15 +1,15 @@
 {
   "name": "svg-drawing-generate-docs",
   "private": true,
-  "version": "4.2.5",
+  "version": "5.0.0-beta.1",
   "scripts": {
     "build": "typedoc  --entryPointStrategy packages ../ --out ../docs/packages --excludePrivate --plugin typedoc-plugin-markdown --hideInPageTOC --hideBreadcrumbs --filenameSeparator \"/\""
   },
   "dependencies": {
-    "@svg-drawing/animation": "4.2.5",
-    "@svg-drawing/core": "4.2.5",
-    "@svg-drawing/img-trace": "4.2.5",
-    "@svg-drawing/react": "4.2.5"
+    "@svg-drawing/animation": "5.0.0-beta.1",
+    "@svg-drawing/core": "5.0.0-beta.1",
+    "@svg-drawing/img-trace": "5.0.0-beta.1",
+    "@svg-drawing/react": "5.0.0-beta.1"
   },
   "devDependencies": {
     "typedoc": "0.22.17",
