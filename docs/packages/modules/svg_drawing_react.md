@@ -1,5 +1,3 @@
-[Documentation](../README.md) / [Exports](../modules.md) / @svg-drawing/react
-
 # Module: @svg-drawing/react
 
 ## Type Aliases
@@ -26,7 +24,7 @@
 
 #### Defined in
 
-[react/src/types.ts:4](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/react/src/types.ts#L4)
+[react/src/types.ts:4](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/react/src/types.ts#L4)
 
 ## Functions
 
@@ -46,4 +44,4 @@
 
 #### Defined in
 
-[react/src/useDrawing.ts:7](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/react/src/useDrawing.ts#L7)
+[react/src/useDrawing.ts:7](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/react/src/useDrawing.ts#L7)
