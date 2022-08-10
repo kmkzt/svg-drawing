@@ -1,23 +1,21 @@
-[Documentation](../README.md) / [Exports](../modules.md) / @svg-drawing/core
-
 # Module: @svg-drawing/core
 
 ## Classes
 
-- [Command](../classes/svg_drawing_core.Command.md)
-- [Convert](../classes/svg_drawing_core.Convert.md)
-- [DrawHandler](../classes/svg_drawing_core.DrawHandler.md)
-- [Path](../classes/svg_drawing_core.Path.md)
-- [Point](../classes/svg_drawing_core.Point.md)
-- [Renderer](../classes/svg_drawing_core.Renderer.md)
-- [ResizeHandler](../classes/svg_drawing_core.ResizeHandler.md)
-- [Svg](../classes/svg_drawing_core.Svg.md)
-- [SvgDrawing](../classes/svg_drawing_core.SvgDrawing.md)
-- [Vector](../classes/svg_drawing_core.Vector.md)
+- [Command](../classes/svg_drawing_core/Command.md)
+- [Convert](../classes/svg_drawing_core/Convert.md)
+- [DrawHandler](../classes/svg_drawing_core/DrawHandler.md)
+- [Path](../classes/svg_drawing_core/Path.md)
+- [Point](../classes/svg_drawing_core/Point.md)
+- [Renderer](../classes/svg_drawing_core/Renderer.md)
+- [ResizeHandler](../classes/svg_drawing_core/ResizeHandler.md)
+- [Svg](../classes/svg_drawing_core/Svg.md)
+- [SvgDrawing](../classes/svg_drawing_core/SvgDrawing.md)
+- [Vector](../classes/svg_drawing_core/Vector.md)
 
 ## Interfaces
 
-- [ConvertOption](../interfaces/svg_drawing_core.ConvertOption.md)
+- [ConvertOption](../interfaces/svg_drawing_core/ConvertOption.md)
 
 ## Type Aliases
 
@@ -34,7 +32,7 @@
 
 #### Defined in
 
-[core/src/types.ts:37](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L37)
+[core/src/types.ts:37](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L37)
 
 ___
 
@@ -46,7 +44,7 @@ Command Object
 
 #### Defined in
 
-[core/src/types.ts:21](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L21)
+[core/src/types.ts:21](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L21)
 
 ___
 
@@ -65,7 +63,7 @@ Download options
 
 #### Defined in
 
-[core/src/types.ts:64](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L64)
+[core/src/types.ts:64](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L64)
 
 ___
 
@@ -75,7 +73,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:82](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L82)
+[core/src/types.ts:82](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L82)
 
 ___
 
@@ -95,7 +93,7 @@ DrawHandler callback
 
 #### Defined in
 
-[core/src/types.ts:69](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L69)
+[core/src/types.ts:69](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L69)
 
 ___
 
@@ -105,7 +103,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:80](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L80)
+[core/src/types.ts:80](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L80)
 
 ___
 
@@ -117,7 +115,7 @@ SvgDrawing options
 
 #### Defined in
 
-[core/src/types.ts:55](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L55)
+[core/src/types.ts:55](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L55)
 
 ___
 
@@ -127,7 +125,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:99](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L99)
+[core/src/types.ts:99](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L99)
 
 ___
 
@@ -143,7 +141,7 @@ Svg Path JSON
 
 #### Defined in
 
-[core/src/types.ts:2](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L2)
+[core/src/types.ts:2](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L2)
 
 ___
 
@@ -163,7 +161,7 @@ Path Object
 
 #### Defined in
 
-[core/src/types.ts:14](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L14)
+[core/src/types.ts:14](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L14)
 
 ___
 
@@ -175,7 +173,7 @@ Renderer options
 
 #### Defined in
 
-[core/src/types.ts:52](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L52)
+[core/src/types.ts:52](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L52)
 
 ___
 
@@ -193,7 +191,7 @@ ResizeHandler callback
 
 #### Defined in
 
-[core/src/types.ts:75](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L75)
+[core/src/types.ts:75](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L75)
 
 ___
 
@@ -214,7 +212,7 @@ Svg JSON
 
 #### Defined in
 
-[core/src/types.ts:6](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L6)
+[core/src/types.ts:6](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L6)
 
 ___
 
@@ -234,7 +232,7 @@ Svg options
 
 #### Defined in
 
-[core/src/types.ts:42](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/types.ts#L42)
+[core/src/types.ts:42](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L42)
 
 ## Variables
 
@@ -248,7 +246,7 @@ Svg options
 
 #### Defined in
 
-[core/src/svg.ts:39](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/svg.ts#L39)
+[core/src/svg.ts:39](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L39)
 
 ___
 
@@ -258,7 +256,7 @@ ___
 
 #### Defined in
 
-[core/src/download.ts:12](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/download.ts#L12)
+[core/src/download.ts:12](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L12)
 
 ## Functions
 
@@ -278,7 +276,7 @@ ___
 
 #### Defined in
 
-[core/src/utils.ts:1](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/utils.ts#L1)
+[core/src/utils.ts:1](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L1)
 
 ___
 
@@ -299,7 +297,7 @@ ___
 
 #### Defined in
 
-[core/src/renderer.ts:29](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/renderer.ts#L29)
+[core/src/renderer.ts:29](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L29)
 
 ___
 
@@ -320,7 +318,7 @@ ___
 
 #### Defined in
 
-[core/src/renderer.ts:10](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/renderer.ts#L10)
+[core/src/renderer.ts:10](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L10)
 
 ___
 
@@ -332,7 +330,7 @@ ___
 
 | Name | Type | Default value |
 | :------ | :------ | :------ |
-| `svg` | [`Svg`](../classes/svg_drawing_core.Svg.md) | `undefined` |
+| `svg` | [`Svg`](../classes/svg_drawing_core/Svg.md) | `undefined` |
 | `opt` | [`DownloadOption`](svg_drawing_core.md#downloadoption) | `defaultOpts` |
 | `dlb` | (`__namedParameters`: { `data`: `string` ; `extension`: ``"svg"`` \| ``"png"`` \| ``"jpg"`` ; `filename?`: `string`  }) => `void` | `downloadBlob` |
 
@@ -342,7 +340,7 @@ ___
 
 #### Defined in
 
-[core/src/download.ts:57](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/download.ts#L57)
+[core/src/download.ts:57](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L57)
 
 ___
 
@@ -365,7 +363,7 @@ ___
 
 #### Defined in
 
-[core/src/download.ts:18](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/download.ts#L18)
+[core/src/download.ts:18](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L18)
 
 ___
 
@@ -385,7 +383,7 @@ ___
 
 #### Defined in
 
-[core/src/handler.ts:8](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/handler.ts#L8)
+[core/src/handler.ts:8](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/handler.ts#L8)
 
 ___
 
@@ -406,7 +404,7 @@ ___
 
 #### Defined in
 
-[core/src/utils.ts:9](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/utils.ts#L9)
+[core/src/utils.ts:9](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L9)
 
 ___
 
@@ -426,7 +424,7 @@ ___
 
 #### Defined in
 
-[core/src/utils.ts:12](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/utils.ts#L12)
+[core/src/utils.ts:12](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L12)
 
 ___
 
@@ -446,7 +444,7 @@ ___
 
 #### Defined in
 
-[core/src/utils.ts:6](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/utils.ts#L6)
+[core/src/utils.ts:6](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L6)
 
 ___
 
@@ -466,7 +464,7 @@ ___
 
 #### Defined in
 
-[core/src/renderer.ts:42](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/renderer.ts#L42)
+[core/src/renderer.ts:42](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L42)
 
 ___
 
@@ -487,7 +485,7 @@ ___
 
 #### Defined in
 
-[core/src/utils.ts:4](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/utils.ts#L4)
+[core/src/utils.ts:4](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L4)
 
 ___
 
@@ -507,7 +505,7 @@ ___
 
 #### Defined in
 
-[core/src/download.ts:9](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/download.ts#L9)
+[core/src/download.ts:9](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L9)
 
 ___
 
@@ -527,7 +525,7 @@ ___
 
 #### Defined in
 
-[core/src/renderer.ts:56](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/renderer.ts#L56)
+[core/src/renderer.ts:56](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L56)
 
 ___
 
@@ -567,7 +565,7 @@ ___
 
 #### Defined in
 
-[core/src/throttle.ts:6](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/throttle.ts#L6)
+[core/src/throttle.ts:6](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/throttle.ts#L6)
 
 ___
 
@@ -587,4 +585,4 @@ ___
 
 #### Defined in
 
-[core/src/download.ts:5](https://github.com/kmkzt/svg-drawing/blob/aa15570/packages/core/src/download.ts#L5)
+[core/src/download.ts:5](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L5)

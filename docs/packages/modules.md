@@ -1,5 +1,3 @@
-[Documentation](README.md) / Exports
-
 # Documentation
 
 ## Modules
