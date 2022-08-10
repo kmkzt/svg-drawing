@@ -7,7 +7,6 @@ export { BackgroundRect } from './components/BackgroundRect'
 export { useDraw } from './hooks/useDraw'
 export {
   useDrawEventHandler,
-  useSetupHandler,
   usePenHandler,
   usePencilHandler,
 } from './hooks/useDrawEventHandler'

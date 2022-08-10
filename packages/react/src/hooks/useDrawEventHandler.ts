@@ -5,40 +5,6 @@ import type { DrawEventHandler, DrawingClass } from '@svg-drawing/core'
 import type { RefObject } from 'react'
 
 /**
- * ### Switch pen or pencil.
- *
- * ```ts
- * const type = useState<'pen' | 'pencil'>('pen')
- * const setup = useCallback(
- *   (draw) => {
- *     switch (type) {
- *       case 'pen':
- *         return new PenHandler(draw)
- *       case 'pencil':
- *       default:
- *         return new PencilHandler(draw)
- *     }
- *   },
- *   [type]
- * )
- *
- * const handler = useSetupHandler(setup, drawing)
- * ```
- */
-export const useSetupHandler = (
-  setup: (draw: DrawingClass) => DrawEventHandler,
-  draw: DrawingClass
-): DrawEventHandler => {
-  const handler = useMemo(() => setup(draw), [setup]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    handler.setDrawing(draw)
-  }, [draw, handler])
-
-  return handler
-}
-
-/**
  * @example <caption>useDrawEventHandler</caption>
  *
  * ```ts
@@ -97,11 +63,9 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
  * ```
  */
 export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
-  const setup = useCallback((draw: DrawingClass) => new PencilHandler(draw), [])
+  const handler = useMemo(() => new PencilHandler(drawing), []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handler = useSetupHandler(setup, drawing)
-
-  useDrawEventHandler({ ref, handler: handler, active })
+  useDrawEventHandler({ ref, handler, active })
 }
 
 /**
@@ -128,9 +92,7 @@ export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
  * ```
  */
 export const usePenHandler: UseDrawEventHandler = (ref, drawing, active) => {
-  const setup = useCallback((draw: DrawingClass) => new PenHandler(draw), [])
-
-  const handler = useSetupHandler(setup, drawing)
+  const handler = useMemo(() => new PenHandler(drawing), []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useDrawEventHandler({ ref, handler: handler, active })
 }
