@@ -1,7 +1,7 @@
 import { PencilHandler, PenHandler } from '@svg-drawing/core'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import type { UseDrawEventHandler } from '../types'
-import type { DrawEventHandler, DrawingClass } from '@svg-drawing/core'
+import type { DrawEventHandler } from '@svg-drawing/core'
 import type { RefObject } from 'react'
 
 /**
@@ -24,18 +24,14 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
   active?: boolean
 }) => {
   useEffect(() => {
-    const cleanup = () => handler.off()
-
-    // Fallback
-    if (!ref.current) {
-      return cleanup
-    }
+    if (!ref.current) return
 
     // Setup
     const el = ref.current
     handler.setElement(el)
     if (active) handler.on()
 
+    const cleanup = () => handler.off()
     return cleanup
   }, [active, handler, ref])
 }
@@ -63,7 +59,7 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
  * ```
  */
 export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
-  const handler = useMemo(() => new PencilHandler(drawing), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const handler = useMemo(() => new PencilHandler(drawing), [drawing])
 
   useDrawEventHandler({ ref, handler, active })
 }
@@ -92,7 +88,7 @@ export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
  * ```
  */
 export const usePenHandler: UseDrawEventHandler = (ref, drawing, active) => {
-  const handler = useMemo(() => new PenHandler(drawing), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const handler = useMemo(() => new PenHandler(drawing), [drawing])
 
   useDrawEventHandler({ ref, handler: handler, active })
 }
