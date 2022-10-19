@@ -1,4 +1,3 @@
-/** Point Object */
 export type PointObject = Readonly<{
   x: number
   y: number
@@ -29,10 +28,9 @@ export interface VectorClass {
   toJson: () => VectorObject
 }
 
-/** Command Object */
 export type RelativeCommandType = 'm' | 'l' | 'c' | 'q' | 's'
 
-export type AbsoluteCommandType = Uppercase<RelativeCommandType>
+export type AbsoluteCommandType = 'M' | 'L' | 'C' | 'Q' | 'S'
 
 export type OtherCommandType = 'h' | 'v' | 'a' | 'H' | 'V' | 'A' | 'Z' | 'z'
 
@@ -67,7 +65,6 @@ export interface CommandClass<T = CommandType> {
   translate: (po: PointObject) => CommandClass<T>
 }
 
-/** Object for SVGPathElement attributes. */
 export type PathAttributes = {
   [camelCase: string]: string | undefined
 }
@@ -82,7 +79,6 @@ export interface PathClass {
   /** Identification key. Use for update, delete. Return same key when PathClass cloned. */
   key: string
   attrs: PathAttributes
-  /** Path data. */
   absoluteCommands: CommandClass[]
   relativeCommands: CommandClass[]
   scale: (r: number) => this
@@ -103,7 +99,6 @@ export interface PathClass {
   toJson: () => PathObject
 }
 
-/** Svg JSON */
 export type SvgObject = {
   width: number
   height: number
@@ -111,7 +106,6 @@ export type SvgObject = {
   paths: PathObject[]
 }
 
-/** Svg options */
 export type SvgOption = {
   width: number
   height: number
@@ -119,7 +113,7 @@ export type SvgOption = {
 }
 
 export interface SvgClass {
-  /** Path of children. */
+  /** Svg child element */
   paths: PathClass[]
   width: number
   height: number
@@ -158,14 +152,12 @@ export type EventPoint = {
   pressure?: number
 }
 
-/** Convert options */
-export interface ConvertOption {
+export interface BezierCurveOption {
   ratio?: number
 }
-/** Renderer options */
+
 export type RendererOption = Pick<SvgOption, 'background'>
 
-/** SvgDrawing options */
 export type DrawingOption = RendererOption & {
   penColor?: string
   penWidth?: number
@@ -174,7 +166,7 @@ export type DrawingOption = RendererOption & {
   delay?: number
   fill?: string
 }
-/** Download options */
+
 export type DownloadOption = {
   extension: 'svg' | 'png' | 'jpg'
   filename?: string
@@ -192,8 +184,7 @@ export interface ResizeEventHandler {
 
 export type DrawListenerType = 'pointer' | 'touch' | 'mouse'
 
-export type DrawEventName = Extract<
-  keyof GlobalEventHandlersEventMap,
+export type DrawEventName =
   | 'pointerdown'
   | 'pointermove'
   | 'pointerleave'
@@ -208,14 +199,11 @@ export type DrawEventName = Extract<
   | 'mouseleave'
   | 'mouseout'
   | 'mouseup'
->
 
 export type ClearListener = () => void
 
 export interface DrawFactory {
-  /** Generate draw path. */
   createPath: () => PathClass
-  /** Generate command from point */
   createCommand: CreateCommand
 }
 
@@ -224,9 +212,10 @@ export interface DrawingClass {
   dot: (po: EventPoint) => void
   end: () => void
 }
+
 export interface DrawEventHandler {
-  /** Return active event listener status. */
-  isActive: boolean
+  /** Returns true when draw event listener is active. */
+  active: boolean
   on: () => void
   off: () => void
   setDrawing: (drawing: DrawingClass) => void
@@ -256,7 +245,6 @@ export type SelectIndex =
   | SelectCommandIndex
   | SelectPointIndex
 
-/** Control Point */
 export type EditVertex = {
   points: {
     index: SelectPointIndex
@@ -266,7 +254,6 @@ export type EditVertex = {
   d: string
 }
 
-/** BoundingBox */
 export type BoundingBoxObject = {
   x: number
   y: number
@@ -306,12 +293,11 @@ export interface FrameAnimation {
 }
 
 export type AnimateAttribute = {
-  [key in
-    | 'attributeName'
-    | 'repeatCount'
-    | 'dur'
-    | 'keyTimes'
-    | 'values']: string
+  attributeName: string
+  repeatCount: string
+  dur: string
+  keyTimes: string
+  values: string
 }
 
 export type AnimateObject = {

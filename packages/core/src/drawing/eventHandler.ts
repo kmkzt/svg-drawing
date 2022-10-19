@@ -70,7 +70,7 @@ export abstract class BaseHandler implements DrawEventHandler {
     this._clearEventList = []
   }
 
-  public get isActive(): boolean {
+  public get active(): boolean {
     return this._clearEventList.length > 0
   }
 
@@ -92,12 +92,12 @@ export abstract class BaseHandler implements DrawEventHandler {
     this.el = el
     this._offsetPosition.setElement(el)
 
-    if (this.isActive) this.on()
+    if (this.active) this.on()
   }
 
   public setDrawing(drawing: DrawingClass) {
     this.drawing = drawing
-    if (this.isActive) this.on()
+    if (this.active) this.on()
   }
 
   public getPointObjectFromDrawEvent(
@@ -139,14 +139,14 @@ export class PencilHandler extends BaseHandler {
     this.delay = delay
     this._drawMoveThrottle = throttle(this.drawing.dot, this.delay)
 
-    if (this.isActive) this.on()
+    if (this.active) this.on()
   }
 
   public setDrawing(drawing: DrawingClass) {
     this.drawing = drawing
     this._drawMoveThrottle = throttle(this.drawing.dot, this.delay)
 
-    if (this.isActive) this.on()
+    if (this.active) this.on()
   }
 
   protected setupListener(): Array<ClearListener> {

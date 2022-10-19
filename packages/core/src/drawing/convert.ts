@@ -5,7 +5,7 @@ import type {
   EventPoint,
   CommandClass,
   PointObject,
-  ConvertOption,
+  BezierCurveOption,
   CreateCommand,
 } from '../types'
 
@@ -20,7 +20,7 @@ interface GenerateCommandsConverter {
 
 export class BezierCurve implements GenerateCommandsConverter {
   public ratio: number
-  constructor({ ratio }: ConvertOption = {}) {
+  constructor({ ratio }: BezierCurveOption = {}) {
     this.ratio = ratio ?? 0.4
     this.create = this.create.bind(this)
   }

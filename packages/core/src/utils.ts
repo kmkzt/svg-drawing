@@ -8,5 +8,3 @@ export const kebab2camel = (str: string): string =>
 
 export const isAlmostSameNumber = (a: number, b: number) =>
   Math.trunc(a) === Math.trunc(b)
-
-export const isNaN = (num: number) => num !== num
