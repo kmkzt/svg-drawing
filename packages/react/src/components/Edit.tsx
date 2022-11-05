@@ -10,19 +10,6 @@ export const EditPaths = ({
   onResizeStart,
   onSelectPaths,
 }: EditPathsProps) => {
-  const handleMoveStartPoint = useCallback(
-    (selectIndex: Required<SelectIndex>) =>
-      (
-        ev:
-          | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-          | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-      ) => {
-        onSelectPaths(selectIndex)
-        onTranslateStart(getPointFromEvent(ev))
-      },
-    [onSelectPaths, onTranslateStart]
-  )
-
   const handleMoveStartPath = useCallback(
     (path: string) =>
       (
@@ -73,18 +60,13 @@ export const EditPaths = ({
                   fill={EDIT_CONFIG.fill.default}
                 />
                 {points.map((po, k) => (
-                  <circle
+                  <EditPoint
                     key={k}
-                    cx={po.value.x}
-                    cy={po.value.y}
-                    onMouseDown={handleMoveStartPoint(po.index)}
-                    onTouchStart={handleMoveStartPoint(po.index)}
-                    r={EDIT_CONFIG.point}
-                    style={{
-                      fill: po.selected
-                        ? EDIT_CONFIG.color.selected
-                        : EDIT_CONFIG.color.sub,
-                    }}
+                    point={po.value}
+                    selectIndex={po.index}
+                    selected={po.selected}
+                    onSelectPaths={onSelectPaths}
+                    onTranslateStart={onTranslateStart}
                   />
                 ))}
               </g>
@@ -92,6 +74,47 @@ export const EditPaths = ({
           </g>
         ))}
     </>
+  )
+}
+
+type EditPointProps = {
+  point: PointObject
+  selectIndex: SelectIndex
+  selected?: boolean
+  onSelectPaths: (selectIndex: SelectIndex) => void
+  onTranslateStart: (point: PointObject) => void
+}
+
+export const EditPoint = ({
+  point,
+  selectIndex,
+  selected,
+  onSelectPaths,
+  onTranslateStart,
+}: EditPointProps) => {
+  const handleMoveStartPoint = useCallback(
+    (
+      ev:
+        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+    ) => {
+      onSelectPaths(selectIndex)
+      onTranslateStart(getPointFromEvent(ev))
+    },
+    [onSelectPaths, onTranslateStart, selectIndex]
+  )
+
+  return (
+    <circle
+      cx={point.x}
+      cy={point.y}
+      onMouseDown={handleMoveStartPoint}
+      onTouchStart={handleMoveStartPoint}
+      r={EDIT_CONFIG.point}
+      style={{
+        fill: selected ? EDIT_CONFIG.color.selected : EDIT_CONFIG.color.sub,
+      }}
+    />
   )
 }
 
