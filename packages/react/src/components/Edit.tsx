@@ -1,6 +1,11 @@
 import React, { useCallback } from 'react'
 import type { EditPathsProps, EditBoundingBoxProps } from '../types'
-import type { PointObject, FixedType, SelectIndex } from '@svg-drawing/core'
+import type {
+  PointObject,
+  FixedType,
+  SelectIndex,
+  PathObject,
+} from '@svg-drawing/core'
 
 export const EditPaths = ({
   paths,
@@ -10,27 +15,14 @@ export const EditPaths = ({
   onResizeStart,
   onSelectPaths,
 }: EditPathsProps) => {
-  const handleMoveStartPath = useCallback(
-    (path: string) =>
-      (
-        ev:
-          | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-          | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-      ) => {
-        onSelectPaths({ path })
-        onTranslateStart(getPointFromEvent(ev))
-      },
-    [onSelectPaths, onTranslateStart]
-  )
-
   return (
     <>
-      {paths.map(({ key, attributes }) => (
-        <path
-          key={key}
-          {...attributes}
-          onMouseDown={handleMoveStartPath(key)}
-          onTouchStart={handleMoveStartPath(key)}
+      {paths.map((pathObject) => (
+        <EditPath
+          key={pathObject.key}
+          path={pathObject}
+          onSelectPaths={onSelectPaths}
+          onTranslateStart={onTranslateStart}
         />
       ))}
       {boundingBox && (
@@ -43,13 +35,19 @@ export const EditPaths = ({
       {editPaths &&
         Object.entries(editPaths).map(([, { key, vertex, d }]) => (
           <g key={key}>
-            <path
-              d={d}
-              strokeWidth={EDIT_CONFIG.line}
-              stroke={EDIT_CONFIG.color.main}
-              fill={EDIT_CONFIG.fill.boundingBox}
-              onMouseDown={handleMoveStartPath(key)}
-              onTouchStart={handleMoveStartPath(key)}
+            <EditPath
+              path={{
+                type: 'path',
+                key,
+                attributes: {
+                  d,
+                  strokeWidth: `${EDIT_CONFIG.line}`,
+                  stroke: EDIT_CONFIG.color.main,
+                  fill: EDIT_CONFIG.fill.boundingBox,
+                },
+              }}
+              onSelectPaths={onSelectPaths}
+              onTranslateStart={onTranslateStart}
             />
             {vertex.map(({ points, d }, commandIndex) => (
               <g key={commandIndex}>
@@ -77,6 +75,37 @@ export const EditPaths = ({
   )
 }
 
+type EditPathProps = {
+  path: PathObject
+  onSelectPaths: (selectIndex: SelectIndex) => void
+  onTranslateStart: (point: PointObject) => void
+}
+
+const EditPath = ({
+  path: { key, attributes },
+  onSelectPaths,
+  onTranslateStart,
+}: EditPathProps) => {
+  const handleMoveStartPath = useCallback(
+    (
+      ev:
+        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+    ) => {
+      onSelectPaths({ path: key })
+      onTranslateStart(getPointFromEvent(ev))
+    },
+    [key, onSelectPaths, onTranslateStart]
+  )
+  return (
+    <path
+      {...attributes}
+      onMouseDown={handleMoveStartPath}
+      onTouchStart={handleMoveStartPath}
+    />
+  )
+}
+
 type EditPointProps = {
   point: PointObject
   selectIndex: SelectIndex
@@ -85,7 +114,7 @@ type EditPointProps = {
   onTranslateStart: (point: PointObject) => void
 }
 
-export const EditPoint = ({
+const EditPoint = ({
   point,
   selectIndex,
   selected,
