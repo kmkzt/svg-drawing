@@ -22,6 +22,14 @@ export class EditSvg {
     return this.pathSelector.selected
   }
 
+  private get paths(): PathClass[] {
+    return this.pathSelector.pathsIndex.flatMap((pathKey) => {
+      const path = this.svg.getPath(pathKey)
+
+      return path ? path.clone() : []
+    })
+  }
+
   /** Select path index. */
   select(index: SelectIndex, multipleSelect?: boolean) {
     if (multipleSelect) {
@@ -120,21 +128,8 @@ export class EditSvg {
   toJson(): EditSvgObject | null {
     if (!this.pathSelector.selected) return null
 
-    const paths = this.pathSelector.pathsIndex.reduce(
-      (acc: EditSvgObject['paths'], pathKey) => {
-        const path = this.svg.paths.find((path) => path.key === pathKey)
-
-        return path
-          ? {
-              ...acc,
-              [path.key]: new EditPath(
-                path.clone(),
-                this.pathSelector
-              ).toJson(),
-            }
-          : acc
-      },
-      {}
+    const paths = this.paths.map((path) =>
+      new EditPath(path.clone(), this.pathSelector).toJson()
     )
 
     const {
@@ -155,14 +150,6 @@ export class EditSvg {
         selected: this.pathSelector.selectedPathsOnly,
       },
     }
-  }
-
-  private get paths(): PathClass[] {
-    return this.pathSelector.pathsIndex.flatMap((pathKey) => {
-      const path = this.svg.paths.find((path) => path.key === pathKey)
-
-      return path ? path.clone() : []
-    })
   }
 
   private exec(

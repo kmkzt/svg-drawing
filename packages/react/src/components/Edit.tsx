@@ -33,19 +33,10 @@ export const EditPaths = ({
         />
       )}
       {editPaths &&
-        Object.entries(editPaths).map(([, { key, vertex, d }]) => (
-          <g key={key}>
+        editPaths.map(({ path, vertex }) => (
+          <g key={path.key}>
             <EditPath
-              path={{
-                type: 'path',
-                key,
-                attributes: {
-                  d,
-                  strokeWidth: `${EDIT_CONFIG.line}`,
-                  stroke: EDIT_CONFIG.color.main,
-                  fill: EDIT_CONFIG.fill.boundingBox,
-                },
-              }}
+              path={path}
               onSelectPaths={onSelectPaths}
               onTranslateStart={onTranslateStart}
             />

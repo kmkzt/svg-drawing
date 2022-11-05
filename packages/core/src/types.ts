@@ -264,13 +264,12 @@ export type BoundingBoxObject = {
 }
 
 export type EditPathObject = {
-  key: PathObject['key']
-  d: string
+  path: PathObject
   vertex: EditVertex[]
 }
 
 export type EditSvgObject = {
-  paths: Record<PathObject['key'], EditPathObject>
+  paths: EditPathObject[]
   boundingBox: BoundingBoxObject
 }
 

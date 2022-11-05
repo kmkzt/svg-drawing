@@ -17,8 +17,7 @@ export class EditPath {
 
   public toJson(): EditPathObject {
     return {
-      key: this.path.key,
-      d: this.path.getCommandString(),
+      path: this.path.toJson(),
       vertex: this.vertex,
     }
   }
