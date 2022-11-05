@@ -2,6 +2,10 @@
 
 [@svg-drawing/core](../../modules/svg_drawing_core.md).Svg
 
+## Implements
+
+- [`SvgClass`](../../interfaces/svg_drawing_core/SvgClass.md)
+
 ## Constructors
 
 ### constructor
@@ -16,7 +20,7 @@
 
 #### Defined in
 
-[core/src/svg.ts:250](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L250)
+[core/src/svg/svg.ts:9](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L9)
 
 ## Properties
 
@@ -24,9 +28,13 @@
 
 • `Optional` **background**: `string`
 
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[background](../../interfaces/svg_drawing_core/SvgClass.md#background)
+
 #### Defined in
 
-[core/src/svg.ts:248](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L248)
+[core/src/svg/svg.ts:7](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L7)
 
 ___
 
@@ -34,19 +42,29 @@ ___
 
 • **height**: `number`
 
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[height](../../interfaces/svg_drawing_core/SvgClass.md#height)
+
 #### Defined in
 
-[core/src/svg.ts:247](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L247)
+[core/src/svg/svg.ts:6](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L6)
 
 ___
 
 ### paths
 
-• **paths**: [`Path`](Path.md)[]
+• **paths**: [`PathClass`](../../interfaces/svg_drawing_core/PathClass.md)[]
+
+Svg child element
+
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[paths](../../interfaces/svg_drawing_core/SvgClass.md#paths)
 
 #### Defined in
 
-[core/src/svg.ts:245](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L245)
+[core/src/svg/svg.ts:4](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L4)
 
 ___
 
@@ -54,9 +72,13 @@ ___
 
 • **width**: `number`
 
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[width](../../interfaces/svg_drawing_core/SvgClass.md#width)
+
 #### Defined in
 
-[core/src/svg.ts:246](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L246)
+[core/src/svg/svg.ts:5](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L5)
 
 ## Methods
 
@@ -64,33 +86,65 @@ ___
 
 ▸ **addPath**(`pa`): [`Svg`](Svg.md)
 
+Add multiple paths.
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `pa` | [`Path`](Path.md) \| [`Path`](Path.md)[] |
+| `pa` | [`PathClass`](../../interfaces/svg_drawing_core/PathClass.md) \| [`PathClass`](../../interfaces/svg_drawing_core/PathClass.md)[] |
 
 #### Returns
 
 [`Svg`](Svg.md)
 
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[addPath](../../interfaces/svg_drawing_core/SvgClass.md#addpath)
+
 #### Defined in
 
-[core/src/svg.ts:273](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L273)
+[core/src/svg/svg.ts:31](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L31)
+
+___
+
+### clone
+
+▸ **clone**(): [`Svg`](Svg.md)
+
+Return cloned class object.
+
+#### Returns
+
+[`Svg`](Svg.md)
+
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[clone](../../interfaces/svg_drawing_core/SvgClass.md#clone)
+
+#### Defined in
+
+[core/src/svg/svg.ts:88](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L88)
 
 ___
 
 ### clonePaths
 
-▸ **clonePaths**(): [`Path`](Path.md)[]
+▸ **clonePaths**(): [`PathClass`](../../interfaces/svg_drawing_core/PathClass.md)[]
+
+Return cloned paths.
 
 #### Returns
 
-[`Path`](Path.md)[]
+[`PathClass`](../../interfaces/svg_drawing_core/PathClass.md)[]
+
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[clonePaths](../../interfaces/svg_drawing_core/SvgClass.md#clonepaths)
 
 #### Defined in
 
-[core/src/svg.ts:282](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L282)
+[core/src/svg/svg.ts:57](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L57)
 
 ___
 
@@ -98,65 +152,92 @@ ___
 
 ▸ **copy**(`svg`): [`Svg`](Svg.md)
 
+Copy resized paths.
+
+**`example`**
+
+```ts
+const drawSvg = new Svg()
+const animateSvg = new Svg().copy(drawSvg)
+```
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `svg` | [`Svg`](Svg.md) |
+| `svg` | [`SvgClass`](../../interfaces/svg_drawing_core/SvgClass.md) |
 
 #### Returns
 
 [`Svg`](Svg.md)
 
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[copy](../../interfaces/svg_drawing_core/SvgClass.md#copy)
+
 #### Defined in
 
-[core/src/svg.ts:302](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L302)
+[core/src/svg/svg.ts:80](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L80)
 
 ___
 
-### parseSVGElement
+### deletePath
 
-▸ **parseSVGElement**(`svgEl`): [`Svg`](Svg.md)
+▸ **deletePath**(`deletePath`): [`Svg`](Svg.md)
+
+Delete paths
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `svgEl` | `SVGSVGElement` |
+| `deletePath` | [`PathClass`](../../interfaces/svg_drawing_core/PathClass.md) |
 
 #### Returns
 
 [`Svg`](Svg.md)
 
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[deletePath](../../interfaces/svg_drawing_core/SvgClass.md#deletepath)
+
 #### Defined in
 
-[core/src/svg.ts:321](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L321)
+[core/src/svg/svg.ts:52](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L52)
 
 ___
 
-### parseSVGString
+### getPath
 
-▸ **parseSVGString**(`svgStr`): [`Svg`](Svg.md)
+▸ **getPath**(`key`): `undefined` \| [`PathClass`](../../interfaces/svg_drawing_core/PathClass.md)
+
+Get path
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `svgStr` | `string` |
+| `key` | `string` |
 
 #### Returns
 
-[`Svg`](Svg.md)
+`undefined` \| [`PathClass`](../../interfaces/svg_drawing_core/PathClass.md)
+
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[getPath](../../interfaces/svg_drawing_core/SvgClass.md#getpath)
 
 #### Defined in
 
-[core/src/svg.ts:310](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L310)
+[core/src/svg/svg.ts:40](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L40)
 
 ___
 
 ### resize
 
 ▸ **resize**(`__namedParameters`): `void`
+
+Resize svg and path of children.
 
 #### Parameters
 
@@ -170,61 +251,61 @@ ___
 
 `void`
 
-#### Defined in
+#### Implementation of
 
-[core/src/svg.ts:258](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L258)
-
-___
-
-### scalePath
-
-▸ **scalePath**(`r`): [`Svg`](Svg.md)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `r` | `number` |
-
-#### Returns
-
-[`Svg`](Svg.md)
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[resize](../../interfaces/svg_drawing_core/SvgClass.md#resize)
 
 #### Defined in
 
-[core/src/svg.ts:264](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L264)
+[core/src/svg/svg.ts:16](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L16)
 
 ___
 
 ### toJson
 
-▸ **toJson**(): [`SvgObject`](../../modules/svg_drawing_core.md#svgobject)
+▸ **toJson**(): `Object`
 
 #### Returns
 
-[`SvgObject`](../../modules/svg_drawing_core.md#svgobject)
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `background` | `undefined` \| `string` |
+| `height` | `number` |
+| `paths` | [`PathObject`](../../modules/svg_drawing_core.md#pathobject)[] |
+| `width` | `number` |
+
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[toJson](../../interfaces/svg_drawing_core/SvgClass.md#tojson)
 
 #### Defined in
 
-[core/src/svg.ts:293](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L293)
+[core/src/svg/svg.ts:61](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L61)
 
 ___
 
 ### updatePath
 
-▸ **updatePath**(`pa`, `i?`): [`Svg`](Svg.md)
+▸ **updatePath**(`path`): [`Svg`](Svg.md)
+
+Update path
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `pa` | [`Path`](Path.md) |
-| `i?` | `number` |
+| `path` | [`PathClass`](../../interfaces/svg_drawing_core/PathClass.md) |
 
 #### Returns
 
 [`Svg`](Svg.md)
 
+#### Implementation of
+
+[SvgClass](../../interfaces/svg_drawing_core/SvgClass.md).[updatePath](../../interfaces/svg_drawing_core/SvgClass.md#updatepath)
+
 #### Defined in
 
-[core/src/svg.ts:286](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L286)
+[core/src/svg/svg.ts:44](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/svg.ts#L44)

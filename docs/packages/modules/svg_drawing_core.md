@@ -2,22 +2,168 @@
 
 ## Classes
 
-- [Command](../classes/svg_drawing_core/Command.md)
-- [Convert](../classes/svg_drawing_core/Convert.md)
-- [DrawHandler](../classes/svg_drawing_core/DrawHandler.md)
+- [Animation](../classes/svg_drawing_core/Animation.md)
+- [BaseHandler](../classes/svg_drawing_core/BaseHandler.md)
+- [BasicDrawFactory](../classes/svg_drawing_core/BasicDrawFactory.md)
+- [BezierCurve](../classes/svg_drawing_core/BezierCurve.md)
+- [Close](../classes/svg_drawing_core/Close.md)
+- [Curve](../classes/svg_drawing_core/Curve.md)
+- [Download](../classes/svg_drawing_core/Download.md)
+- [Drawing](../classes/svg_drawing_core/Drawing.md)
+- [EditPath](../classes/svg_drawing_core/EditPath.md)
+- [EditSvg](../classes/svg_drawing_core/EditSvg.md)
+- [Editing](../classes/svg_drawing_core/Editing.md)
+- [Line](../classes/svg_drawing_core/Line.md)
+- [Move](../classes/svg_drawing_core/Move.md)
+- [OtherCommand](../classes/svg_drawing_core/OtherCommand.md)
 - [Path](../classes/svg_drawing_core/Path.md)
+- [PenHandler](../classes/svg_drawing_core/PenHandler.md)
+- [PencilHandler](../classes/svg_drawing_core/PencilHandler.md)
 - [Point](../classes/svg_drawing_core/Point.md)
+- [QuadraticCurve](../classes/svg_drawing_core/QuadraticCurve.md)
+- [RelativeCurve](../classes/svg_drawing_core/RelativeCurve.md)
+- [RelativeLine](../classes/svg_drawing_core/RelativeLine.md)
+- [RelativeMove](../classes/svg_drawing_core/RelativeMove.md)
+- [RelativeQuadraticCurve](../classes/svg_drawing_core/RelativeQuadraticCurve.md)
+- [RelativeShortcutCurve](../classes/svg_drawing_core/RelativeShortcutCurve.md)
 - [Renderer](../classes/svg_drawing_core/Renderer.md)
 - [ResizeHandler](../classes/svg_drawing_core/ResizeHandler.md)
+- [ResizePathHandler](../classes/svg_drawing_core/ResizePathHandler.md)
 - [Svg](../classes/svg_drawing_core/Svg.md)
+- [SvgAnimation](../classes/svg_drawing_core/SvgAnimation.md)
 - [SvgDrawing](../classes/svg_drawing_core/SvgDrawing.md)
+- [TranslatePathHandler](../classes/svg_drawing_core/TranslatePathHandler.md)
 - [Vector](../classes/svg_drawing_core/Vector.md)
 
 ## Interfaces
 
-- [ConvertOption](../interfaces/svg_drawing_core/ConvertOption.md)
+- [BezierCurveOption](../interfaces/svg_drawing_core/BezierCurveOption.md)
+- [CommandClass](../interfaces/svg_drawing_core/CommandClass.md)
+- [DrawEventHandler](../interfaces/svg_drawing_core/DrawEventHandler.md)
+- [DrawFactory](../interfaces/svg_drawing_core/DrawFactory.md)
+- [DrawingClass](../interfaces/svg_drawing_core/DrawingClass.md)
+- [FrameAnimation](../interfaces/svg_drawing_core/FrameAnimation.md)
+- [PathClass](../interfaces/svg_drawing_core/PathClass.md)
+- [PointClass](../interfaces/svg_drawing_core/PointClass.md)
+- [ResizeEventHandler](../interfaces/svg_drawing_core/ResizeEventHandler.md)
+- [SvgClass](../interfaces/svg_drawing_core/SvgClass.md)
+- [VectorClass](../interfaces/svg_drawing_core/VectorClass.md)
 
 ## Type Aliases
+
+### AbsoluteCommandType
+
+Ƭ **AbsoluteCommandType**: ``"M"`` \| ``"L"`` \| ``"C"`` \| ``"Q"`` \| ``"S"``
+
+#### Defined in
+
+[core/src/types.ts:33](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L33)
+
+___
+
+### AnimateAttribute
+
+Ƭ **AnimateAttribute**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `attributeName` | `string` |
+| `dur` | `string` |
+| `keyTimes` | `string` |
+| `repeatCount` | `string` |
+| `values` | `string` |
+
+#### Defined in
+
+[core/src/types.ts:299](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L299)
+
+___
+
+### AnimateObject
+
+Ƭ **AnimateObject**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `attributes` | [`AnimateAttribute`](svg_drawing_core.md#animateattribute) |
+| `type` | ``"animate"`` |
+
+#### Defined in
+
+[core/src/types.ts:307](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L307)
+
+___
+
+### AnimationObject
+
+Ƭ **AnimationObject**: `Record`<`string`, [`AnimateObject`](svg_drawing_core.md#animateobject)[]\>
+
+#### Defined in
+
+[core/src/types.ts:312](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L312)
+
+___
+
+### AnimationOption
+
+Ƭ **AnimationOption**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `ms` | `number` |
+
+#### Defined in
+
+[core/src/types.ts:290](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L290)
+
+___
+
+### BoundingBoxObject
+
+Ƭ **BoundingBoxObject**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `pathKeys` | `string`[] |
+| `position` | { `x`: `number` ; `y`: `number`  } |
+| `position.x` | `number` |
+| `position.y` | `number` |
+| `size` | { `height`: `number` ; `width`: `number`  } |
+| `size.height` | `number` |
+| `size.width` | `number` |
+| `vertex` | `Record`<[`FixedType`](svg_drawing_core.md#fixedtype), [`PointObject`](svg_drawing_core.md#pointobject)\> |
+
+#### Defined in
+
+[core/src/types.ts:257](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L257)
+
+___
+
+### ClearListener
+
+Ƭ **ClearListener**: () => `void`
+
+#### Type declaration
+
+▸ (): `void`
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+[core/src/types.ts:203](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L203)
+
+___
 
 ### CommandObject
 
@@ -32,27 +178,47 @@
 
 #### Defined in
 
-[core/src/types.ts:37](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L37)
+[core/src/types.ts:50](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L50)
 
 ___
 
 ### CommandType
 
-Ƭ **CommandType**: ``"M"`` \| ``"m"`` \| ``"L"`` \| ``"l"`` \| ``"C"`` \| ``"c"`` \| ``"Z"`` \| ``"H"`` \| ``"h"`` \| ``"V"`` \| ``"v"`` \| ``"A"`` \| ``"a"`` \| ``"Q"`` \| ``"q"``
-
-Command Object
+Ƭ **CommandType**: [`RelativeCommandType`](svg_drawing_core.md#relativecommandtype) \| [`AbsoluteCommandType`](svg_drawing_core.md#absolutecommandtype) \| [`OtherCommandType`](svg_drawing_core.md#othercommandtype)
 
 #### Defined in
 
-[core/src/types.ts:21](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L21)
+[core/src/types.ts:37](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L37)
+
+___
+
+### CreateCommand
+
+Ƭ **CreateCommand**: (`points`: [`EventPoint`](svg_drawing_core.md#eventpoint)[]) => [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)[]
+
+#### Type declaration
+
+▸ (`points`): [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)[]
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `points` | [`EventPoint`](svg_drawing_core.md#eventpoint)[] |
+
+##### Returns
+
+[`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)[]
+
+#### Defined in
+
+[core/src/types.ts:288](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L288)
 
 ___
 
 ### DownloadOption
 
 Ƭ **DownloadOption**: `Object`
-
-Download options
 
 #### Type declaration
 
@@ -63,37 +229,17 @@ Download options
 
 #### Defined in
 
-[core/src/types.ts:64](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L64)
+[core/src/types.ts:170](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L170)
 
 ___
 
 ### DrawEventName
 
-Ƭ **DrawEventName**: `Extract`<keyof `GlobalEventHandlersEventMap`, ``"pointerdown"`` \| ``"pointermove"`` \| ``"pointerleave"`` \| ``"pointercancel"`` \| ``"pointerup"`` \| ``"touchstart"`` \| ``"touchmove"`` \| ``"touchend"`` \| ``"touchcancel"`` \| ``"mousedown"`` \| ``"mousemove"`` \| ``"mouseleave"`` \| ``"mouseout"`` \| ``"mouseup"``\>
+Ƭ **DrawEventName**: ``"pointerdown"`` \| ``"pointermove"`` \| ``"pointerleave"`` \| ``"pointercancel"`` \| ``"pointerup"`` \| ``"touchstart"`` \| ``"touchmove"`` \| ``"touchend"`` \| ``"touchcancel"`` \| ``"mousedown"`` \| ``"mousemove"`` \| ``"mouseleave"`` \| ``"mouseout"`` \| ``"mouseup"``
 
 #### Defined in
 
-[core/src/types.ts:82](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L82)
-
-___
-
-### DrawHandlerCallback
-
-Ƭ **DrawHandlerCallback**: `Object`
-
-DrawHandler callback
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `end` | () => `void` |
-| `move` | (`po`: [`PointObject`](svg_drawing_core.md#pointobject)) => `void` |
-| `start` | () => `void` |
-
-#### Defined in
-
-[core/src/types.ts:69](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L69)
+[core/src/types.ts:187](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L187)
 
 ___
 
@@ -103,7 +249,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:80](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L80)
+[core/src/types.ts:185](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L185)
 
 ___
 
@@ -111,45 +257,67 @@ ___
 
 Ƭ **DrawingOption**: [`RendererOption`](svg_drawing_core.md#rendereroption) & { `close?`: `boolean` ; `curve?`: `boolean` ; `delay?`: `number` ; `fill?`: `string` ; `penColor?`: `string` ; `penWidth?`: `number`  }
 
-SvgDrawing options
-
 #### Defined in
 
-[core/src/types.ts:55](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L55)
+[core/src/types.ts:161](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L161)
 
 ___
 
-### ListenerMaps
+### EditPathObject
 
-Ƭ **ListenerMaps**: `Record`<[`DrawListenerType`](svg_drawing_core.md#drawlistenertype), { `end`: [`DrawEventName`](svg_drawing_core.md#draweventname)[] ; `frameout`: [`DrawEventName`](svg_drawing_core.md#draweventname)[] ; `move`: [`DrawEventName`](svg_drawing_core.md#draweventname)[] ; `start`: [`DrawEventName`](svg_drawing_core.md#draweventname)[]  }\>
+Ƭ **EditPathObject**: `Object`
 
-#### Defined in
+#### Type declaration
 
-[core/src/types.ts:99](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L99)
-
-___
-
-### PathObject
-
-Ƭ **PathObject**: `Object`
-
-Svg Path JSON
-
-#### Index signature
-
-▪ [camelCase: `string`]: `string` \| `undefined`
+| Name | Type |
+| :------ | :------ |
+| `path` | [`PathObject`](svg_drawing_core.md#pathobject) |
+| `vertex` | [`EditVertex`](svg_drawing_core.md#editvertex)[] |
 
 #### Defined in
 
-[core/src/types.ts:2](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L2)
+[core/src/types.ts:270](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L270)
 
 ___
 
-### PointObject
+### EditSvgObject
 
-Ƭ **PointObject**: `Object`
+Ƭ **EditSvgObject**: `Object`
 
-Path Object
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `boundingBox` | [`BoundingBoxObject`](svg_drawing_core.md#boundingboxobject) |
+| `paths` | [`EditPathObject`](svg_drawing_core.md#editpathobject)[] |
+| `selectedOnlyPaths` | `boolean` |
+
+#### Defined in
+
+[core/src/types.ts:275](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L275)
+
+___
+
+### EditVertex
+
+Ƭ **EditVertex**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `d` | `string` |
+| `points` | { `index`: [`SelectPointIndex`](svg_drawing_core.md#selectpointindex) ; `selected`: `boolean` ; `value`: [`PointObject`](svg_drawing_core.md#pointobject)  }[] |
+
+#### Defined in
+
+[core/src/types.ts:248](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L248)
+
+___
+
+### EventPoint
+
+Ƭ **EventPoint**: `Object`
 
 #### Type declaration
 
@@ -161,7 +329,79 @@ Path Object
 
 #### Defined in
 
-[core/src/types.ts:14](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L14)
+[core/src/types.ts:149](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L149)
+
+___
+
+### FixedType
+
+Ƭ **FixedType**: ``"LeftTop"`` \| ``"RightTop"`` \| ``"RightBottom"`` \| ``"LeftBottom"``
+
+#### Defined in
+
+[core/src/types.ts:281](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L281)
+
+___
+
+### OtherCommandType
+
+Ƭ **OtherCommandType**: ``"h"`` \| ``"v"`` \| ``"a"`` \| ``"H"`` \| ``"V"`` \| ``"A"`` \| ``"Z"`` \| ``"z"``
+
+#### Defined in
+
+[core/src/types.ts:35](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L35)
+
+___
+
+### PathAttributes
+
+Ƭ **PathAttributes**: `Object`
+
+#### Index signature
+
+▪ [camelCase: `string`]: `string` \| `undefined`
+
+#### Defined in
+
+[core/src/types.ts:68](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L68)
+
+___
+
+### PathObject
+
+Ƭ **PathObject**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `attributes` | [`PathAttributes`](svg_drawing_core.md#pathattributes) |
+| `key` | `string` |
+| `type` | keyof `SVGElementTagNameMap` |
+
+#### Defined in
+
+[core/src/types.ts:72](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L72)
+
+___
+
+### PointObject
+
+Ƭ **PointObject**: `Readonly`<{ `x`: `number` ; `y`: `number`  }\>
+
+#### Defined in
+
+[core/src/types.ts:1](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L1)
+
+___
+
+### RelativeCommandType
+
+Ƭ **RelativeCommandType**: ``"m"`` \| ``"l"`` \| ``"c"`` \| ``"q"`` \| ``"s"``
+
+#### Defined in
+
+[core/src/types.ts:31](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L31)
 
 ___
 
@@ -169,37 +409,122 @@ ___
 
 Ƭ **RendererOption**: `Pick`<[`SvgOption`](svg_drawing_core.md#svgoption), ``"background"``\>
 
-Renderer options
-
 #### Defined in
 
-[core/src/types.ts:52](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L52)
+[core/src/types.ts:159](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L159)
 
 ___
 
-### ResizeHandlerCallback
+### ResizeBoundingBoxBase
 
-Ƭ **ResizeHandlerCallback**: `Object`
-
-ResizeHandler callback
+Ƭ **ResizeBoundingBoxBase**: `Object`
 
 #### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `resize` | (`rect`: `DOMRect` \| { `height`: `number` ; `left`: `number` ; `top`: `number` ; `width`: `number`  }) => `void` |
+| `fixedType` | [`FixedType`](svg_drawing_core.md#fixedtype) |
+| `point` | [`PointObject`](svg_drawing_core.md#pointobject) |
 
 #### Defined in
 
-[core/src/types.ts:75](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L75)
+[core/src/types.ts:283](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L283)
+
+___
+
+### ResizeCallback
+
+Ƭ **ResizeCallback**: (`arg`: { `height`: `number` ; `width`: `number`  }) => `void`
+
+#### Type declaration
+
+▸ (`arg`): `void`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `arg` | `Object` |
+| `arg.height` | `number` |
+| `arg.width` | `number` |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+[core/src/types.ts:175](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L175)
+
+___
+
+### SelectCommandIndex
+
+Ƭ **SelectCommandIndex**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `command` | `number` |
+| `path` | [`PathObject`](svg_drawing_core.md#pathobject)[``"key"``] |
+| `point?` | `undefined` |
+
+#### Defined in
+
+[core/src/types.ts:231](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L231)
+
+___
+
+### SelectIndex
+
+Ƭ **SelectIndex**: [`SelectPathIndex`](svg_drawing_core.md#selectpathindex) \| [`SelectCommandIndex`](svg_drawing_core.md#selectcommandindex) \| [`SelectPointIndex`](svg_drawing_core.md#selectpointindex)
+
+#### Defined in
+
+[core/src/types.ts:243](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L243)
+
+___
+
+### SelectPathIndex
+
+Ƭ **SelectPathIndex**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `command?` | `undefined` |
+| `path` | [`PathObject`](svg_drawing_core.md#pathobject)[``"key"``] |
+| `point?` | `undefined` |
+
+#### Defined in
+
+[core/src/types.ts:225](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L225)
+
+___
+
+### SelectPointIndex
+
+Ƭ **SelectPointIndex**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `command` | `number` |
+| `path` | [`PathObject`](svg_drawing_core.md#pathobject)[``"key"``] |
+| `point` | `number` |
+
+#### Defined in
+
+[core/src/types.ts:237](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L237)
 
 ___
 
 ### SvgObject
 
 Ƭ **SvgObject**: `Object`
-
-Svg JSON
 
 #### Type declaration
 
@@ -212,15 +537,13 @@ Svg JSON
 
 #### Defined in
 
-[core/src/types.ts:6](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L6)
+[core/src/types.ts:102](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L102)
 
 ___
 
 ### SvgOption
 
 Ƭ **SvgOption**: `Object`
-
-Svg options
 
 #### Type declaration
 
@@ -232,72 +555,105 @@ Svg options
 
 #### Defined in
 
-[core/src/types.ts:42](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/types.ts#L42)
-
-## Variables
-
-### COMMAND\_TYPE
-
-• `Const` **COMMAND\_TYPE**: `Object`
-
-#### Index signature
-
-▪ [name: `string`]: [`CommandType`](svg_drawing_core.md#commandtype)
-
-#### Defined in
-
-[core/src/svg.ts:39](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L39)
+[core/src/types.ts:109](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L109)
 
 ___
 
-### mimeTypeMap
+### VectorObject
 
-• `Const` **mimeTypeMap**: { [key in DownloadOption["extension"]]: string }
+Ƭ **VectorObject**: `Readonly`<{ `angle`: `number` ; `value`: `number`  }\>
 
 #### Defined in
 
-[core/src/download.ts:12](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L12)
+[core/src/types.ts:18](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L18)
 
 ## Functions
 
-### camel2kebab
+### closeCommands
 
-▸ **camel2kebab**(`str`): `string`
+▸ **closeCommands**(`commands`): [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `str` | `string` |
+| `commands` | [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[] |
 
 #### Returns
 
-`string`
+[`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
 
 #### Defined in
 
-[core/src/utils.ts:1](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L1)
+[core/src/drawing/convert.ts:77](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/convert.ts#L77)
+
+___
+
+### createCommand
+
+▸ **createCommand**(`type`, `values?`): [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `type` | [`CommandType`](svg_drawing_core.md#commandtype) | `undefined` |
+| `values` | `number`[] | `[]` |
+
+#### Returns
+
+[`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>
+
+#### Defined in
+
+[core/src/svg/command.ts:696](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/command.ts#L696)
+
+___
+
+### createLineCommands
+
+▸ **createLineCommands**(`points`): [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `points` | [`EventPoint`](svg_drawing_core.md#eventpoint)[] |
+
+#### Returns
+
+[`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
+
+#### Defined in
+
+[core/src/drawing/convert.ts:12](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/convert.ts#L12)
 
 ___
 
 ### createSvgChildElement
 
-▸ **createSvgChildElement**(`elname`, `attrs`): `SVGElement`
+▸ **createSvgChildElement**<`T`\>(`elName`, `attrs`): `SVGElementTagNameMap`[`T`]
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends keyof `SVGElementTagNameMap` = `any` |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `elname` | `string` |
+| `elName` | `T` |
 | `attrs` | `Attrs` |
 
 #### Returns
 
-`SVGElement`
+`SVGElementTagNameMap`[`T`]
 
 #### Defined in
 
-[core/src/renderer.ts:29](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L29)
+[core/src/renderer.ts:30](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/renderer.ts#L30)
 
 ___
 
@@ -318,194 +674,212 @@ ___
 
 #### Defined in
 
-[core/src/renderer.ts:10](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L10)
+[core/src/renderer.ts:11](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/renderer.ts#L11)
 
 ___
 
-### download
+### isAbsoluteCommand
 
-▸ **download**(`svg`, `opt?`, `dlb?`): `void`
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `svg` | [`Svg`](../classes/svg_drawing_core/Svg.md) | `undefined` |
-| `opt` | [`DownloadOption`](svg_drawing_core.md#downloadoption) | `defaultOpts` |
-| `dlb` | (`__namedParameters`: { `data`: `string` ; `extension`: ``"svg"`` \| ``"png"`` \| ``"jpg"`` ; `filename?`: `string`  }) => `void` | `downloadBlob` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[core/src/download.ts:57](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L57)
-
-___
-
-### downloadBlob
-
-▸ **downloadBlob**(`__namedParameters`): `void`
+▸ **isAbsoluteCommand**(`command`): command is CommandClass<AbsoluteCommandType\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | `Object` |
-| `__namedParameters.data` | `string` |
-| `__namedParameters.extension` | ``"svg"`` \| ``"png"`` \| ``"jpg"`` |
-| `__namedParameters.filename?` | `string` |
+| `command` | [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\> |
 
 #### Returns
 
-`void`
+command is CommandClass<AbsoluteCommandType\>
 
 #### Defined in
 
-[core/src/download.ts:18](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L18)
+[core/src/svg/command.ts:762](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/command.ts#L762)
 
 ___
 
-### getPassiveOptions
+### isCurveCommand
 
-▸ **getPassiveOptions**(`passive?`): `boolean` \| { `passive`: `boolean`  }
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `passive` | `boolean` | `true` |
-
-#### Returns
-
-`boolean` \| { `passive`: `boolean`  }
-
-#### Defined in
-
-[core/src/handler.ts:8](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/handler.ts#L8)
-
-___
-
-### isAlmostSameNumber
-
-▸ **isAlmostSameNumber**(`a`, `b`): `boolean`
+▸ **isCurveCommand**(`command`): command is CommandClass<"c" \| "C"\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `a` | `number` |
-| `b` | `number` |
+| `command` | [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\> |
 
 #### Returns
 
-`boolean`
+command is CommandClass<"c" \| "C"\>
 
 #### Defined in
 
-[core/src/utils.ts:9](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L9)
+[core/src/svg/command.ts:772](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/command.ts#L772)
 
 ___
 
-### isNaN
+### isOtherCommand
 
-▸ **isNaN**(`num`): `boolean`
+▸ **isOtherCommand**(`command`): command is CommandClass<OtherCommandType\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `num` | `number` |
+| `command` | [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\> |
 
 #### Returns
 
-`boolean`
+command is CommandClass<OtherCommandType\>
 
 #### Defined in
 
-[core/src/utils.ts:12](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L12)
+[core/src/svg/command.ts:776](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/command.ts#L776)
 
 ___
 
-### kebab2camel
+### isRelativeCommand
 
-▸ **kebab2camel**(`str`): `string`
+▸ **isRelativeCommand**(`command`): command is CommandClass<RelativeCommandType\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `str` | `string` |
+| `command` | [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\> |
 
 #### Returns
 
-`string`
+command is CommandClass<RelativeCommandType\>
 
 #### Defined in
 
-[core/src/utils.ts:6](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L6)
+[core/src/svg/command.ts:767](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/command.ts#L767)
+
+___
+
+### parseCommandString
+
+▸ **parseCommandString**(`d`): [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `d` | `string` |
+
+#### Returns
+
+[`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
+
+#### Defined in
+
+[core/src/parser.ts:45](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/parser.ts#L45)
+
+___
+
+### parsePathElement
+
+▸ **parsePathElement**(`pathEl`): [`PathClass`](../interfaces/svg_drawing_core/PathClass.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `pathEl` | `SVGPathElement` |
+
+#### Returns
+
+[`PathClass`](../interfaces/svg_drawing_core/PathClass.md)
+
+#### Defined in
+
+[core/src/parser.ts:27](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/parser.ts#L27)
+
+___
+
+### parseSVGElement
+
+▸ **parseSVGElement**(`svgEl`): [`SvgClass`](../interfaces/svg_drawing_core/SvgClass.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `svgEl` | `SVGSVGElement` |
+
+#### Returns
+
+[`SvgClass`](../interfaces/svg_drawing_core/SvgClass.md)
+
+#### Defined in
+
+[core/src/parser.ts:15](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/parser.ts#L15)
+
+___
+
+### parseSVGString
+
+▸ **parseSVGString**(`svgStr`): [`SvgClass`](../interfaces/svg_drawing_core/SvgClass.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `svgStr` | `string` |
+
+#### Returns
+
+[`SvgClass`](../interfaces/svg_drawing_core/SvgClass.md)
+
+#### Defined in
+
+[core/src/parser.ts:7](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/parser.ts#L7)
 
 ___
 
 ### pathObjectToElement
 
-▸ **pathObjectToElement**(`path`): `SVGElement`
+▸ **pathObjectToElement**(`path`): `SVGPathElement`
+
+**`deprecated`**
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `path` | [`PathObject`](svg_drawing_core.md#pathobject) |
+| `path` | [`PathAttributes`](svg_drawing_core.md#pathattributes) |
 
 #### Returns
 
-`SVGElement`
+`SVGPathElement`
 
 #### Defined in
 
-[core/src/renderer.ts:42](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L42)
+[core/src/renderer.ts:46](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/renderer.ts#L46)
 
 ___
 
-### roundUp
+### segmentPoint
 
-▸ **roundUp**(`num`, `digits?`): `number`
+▸ **segmentPoint**(`bezierCurve`, `range?`): `Readonly`<{ `x`: `number` ; `y`: `number`  }\>[]
+
+**`todo`** Compatible for Quadratic and shortcut curve.
 
 #### Parameters
 
 | Name | Type | Default value |
 | :------ | :------ | :------ |
-| `num` | `number` | `undefined` |
-| `digits` | `number` | `2` |
+| `bezierCurve` | `BezierCurvePoint` | `undefined` |
+| `range` | `number` | `10` |
 
 #### Returns
 
-`number`
+`Readonly`<{ `x`: `number` ; `y`: `number`  }\>[]
 
 #### Defined in
 
-[core/src/utils.ts:4](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/utils.ts#L4)
-
-___
-
-### svg2base64
-
-▸ **svg2base64**(`svg`): `string`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `svg` | `string` |
-
-#### Returns
-
-`string`
-
-#### Defined in
-
-[core/src/download.ts:9](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L9)
+[core/src/edit/segment.ts:64](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/segment.ts#L64)
 
 ___
 
@@ -525,64 +899,86 @@ ___
 
 #### Defined in
 
-[core/src/renderer.ts:56](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L56)
+[core/src/renderer.ts:60](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/renderer.ts#L60)
 
 ___
 
-### throttle
+### toAbsoluteCommand
 
-▸ **throttle**<`T`\>(`func`, `wait`, `options?`): (...`args`: `Parameters`<`T`\>) => `ReturnType`<`T`\> \| ``null``
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends (...`args`: `any`) => `any` |
+▸ **toAbsoluteCommand**(`command`, `basePoint`): [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`AbsoluteCommandType`](svg_drawing_core.md#absolutecommandtype)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `func` | `T` |
-| `wait` | `number` |
-| `options` | `Options` |
+| `command` | [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`RelativeCommandType`](svg_drawing_core.md#relativecommandtype)\> |
+| `basePoint` | `Readonly`<{ `x`: `number` ; `y`: `number`  }\> |
 
 #### Returns
 
-`fn`
-
-▸ (...`args`): `ReturnType`<`T`\> \| ``null``
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `...args` | `Parameters`<`T`\> |
-
-##### Returns
-
-`ReturnType`<`T`\> \| ``null``
+[`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`AbsoluteCommandType`](svg_drawing_core.md#absolutecommandtype)\>
 
 #### Defined in
 
-[core/src/throttle.ts:6](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/throttle.ts#L6)
+[core/src/svg/command.ts:811](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/command.ts#L811)
 
 ___
 
-### toBase64
+### toAbsoluteCommands
 
-▸ **toBase64**(`svgObj`): `string`
+▸ **toAbsoluteCommands**(`commands`): [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `svgObj` | [`SvgObject`](svg_drawing_core.md#svgobject) |
+| `commands` | [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[] |
 
 #### Returns
 
-`string`
+[`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
 
 #### Defined in
 
-[core/src/download.ts:5](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/download.ts#L5)
+[core/src/svg/command.ts:869](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/command.ts#L869)
+
+___
+
+### toRelativeCommand
+
+▸ **toRelativeCommand**(`command`, `basePoint`): [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`RelativeCommandType`](svg_drawing_core.md#relativecommandtype)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `command` | [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`AbsoluteCommandType`](svg_drawing_core.md#absolutecommandtype)\> |
+| `basePoint` | `Readonly`<{ `x`: `number` ; `y`: `number`  }\> |
+
+#### Returns
+
+[`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`RelativeCommandType`](svg_drawing_core.md#relativecommandtype)\>
+
+#### Defined in
+
+[core/src/svg/command.ts:781](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/command.ts#L781)
+
+___
+
+### toRelativeCommands
+
+▸ **toRelativeCommands**(`commands`): [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `commands` | [`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[] |
+
+#### Returns
+
+[`CommandClass`](../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](svg_drawing_core.md#commandtype)\>[]
+
+#### Defined in
+
+[core/src/svg/command.ts:841](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/command.ts#L841)

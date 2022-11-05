@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[core/src/renderer.ts:74](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L74)
+[core/src/renderer.ts:78](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/renderer.ts#L78)
 
 ## Properties
 
@@ -29,13 +29,16 @@
 
 ### update
 
-▸ **update**(`svgObj`): `void`
+▸ **update**(`__namedParameters`): `void`
+
+Update render
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `svgObj` | [`SvgObject`](../../modules/svg_drawing_core.md#svgobject) |
+| `__namedParameters` | `Object` |
+| `__namedParameters.svg` | [`SvgObject`](../../modules/svg_drawing_core.md#svgobject) |
 
 #### Returns
 
@@ -43,4 +46,4 @@
 
 #### Defined in
 
-[core/src/renderer.ts:80](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/renderer.ts#L80)
+[core/src/renderer.ts:88](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/renderer.ts#L88)

@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[img-trace/src/palette.ts:152](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/palette.ts#L152)
+[img-trace/src/palette.ts:152](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/palette.ts#L152)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/palette.ts:17](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/palette.ts#L17)
+[img-trace/src/palette.ts:17](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/palette.ts#L17)
 
 ___
 
@@ -67,4 +67,4 @@ ___
 
 #### Defined in
 
-[img-trace/src/palette.ts:116](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/palette.ts#L116)
+[img-trace/src/palette.ts:116](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/palette.ts#L116)
