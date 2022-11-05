@@ -59,7 +59,7 @@ export type EditSvgAction = {
   deletePaths: () => void
   translate: Editing['translate']
   changeAttributes: Editing['changeAttributes']
-  selectPaths: (sel: SelectIndex) => void
+  selectPaths: (sel: SelectIndex | SelectIndex[]) => void
   cancelSelect: () => void
   editProps: EditProps
 }
@@ -70,13 +70,15 @@ export type EditProps = {
   selectedOnlyPaths: boolean
   onResizeStart: (base: ResizeBoundingBoxBase) => void
   onTranslateStart: (po: PointObject) => void
-  onSelectPaths: (sel: SelectIndex) => void
+  onSelectPaths: (sel: SelectIndex | SelectIndex[]) => void
 }
 
 export type EditPathsProps = PathsProps & EditProps
-export type EditBoundingBoxProps = Pick<
+export type BoundingBoxProps = {
+  boundingBox: EditSvgObject['boundingBox']
+} & Pick<
   EditProps,
-  'boundingBox' | 'selectedOnlyPaths' | 'onResizeStart' | 'onTranslateStart'
+  'selectedOnlyPaths' | 'onSelectPaths' | 'onResizeStart' | 'onTranslateStart'
 >
 
 /** UseAnimation */

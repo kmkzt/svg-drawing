@@ -255,6 +255,7 @@ export type EditVertex = {
 }
 
 export type BoundingBoxObject = {
+  pathKeys: string[]
   position: {
     x: number
     y: number

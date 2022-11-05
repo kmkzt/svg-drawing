@@ -31,12 +31,9 @@ export class EditSvg {
   }
 
   /** Select path index. */
-  select(index: SelectIndex, multipleSelect?: boolean) {
-    if (multipleSelect) {
-      this.pathSelector.selectMerge(index)
-      return
-    }
-    this.pathSelector.select(index)
+  select(index: SelectIndex | SelectIndex[], combined?: boolean) {
+    this.pathSelector.select(index, combined)
+    return
   }
 
   /** Clear selected status. */

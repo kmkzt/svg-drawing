@@ -8,12 +8,12 @@ describe('PathSelector', () => {
   })
   describe('Return selected paths only status.', () => {
     it('Return false when paths is not selected', () => {
-      expect(pathSelector.selectedPathsOnly).toBe(false)
+      expect(pathSelector.selectedOnlyPaths).toBe(false)
     })
     it('Return true when paths is selected.', () => {
       pathSelector.select({ path: 'path_id' })
 
-      expect(pathSelector.selectedPathsOnly).toBe(true)
+      expect(pathSelector.selectedOnlyPaths).toBe(true)
     })
 
     it('Return false when command is selected.', () => {
@@ -25,14 +25,14 @@ describe('PathSelector', () => {
     it('Return false when point is selected.', () => {
       pathSelector.select({ path: 'path_id', command: 0, point: 0 })
 
-      expect(pathSelector.selectedPathsOnly).toBe(false)
+      expect(pathSelector.selectedOnlyPaths).toBe(false)
     })
   })
   describe('Return select index information', () => {
     it('Return paths index array of selected.', () => {
       pathSelector.select({ path: 'path_id' })
 
-      expect(pathSelector.selectedPathsOnly).toBe(true)
+      expect(pathSelector.selectedOnlyPaths).toBe(true)
       expect(pathSelector.pathsIndex).toEqual(['path_id'])
     })
 
@@ -83,11 +83,11 @@ describe('PathSelector', () => {
   })
 
   it('To select multiple paths by selectMerge method.', () => {
-    pathSelector.selectMerge({ path: 'path_id_1' })
-    pathSelector.selectMerge({ path: 'path_id_2', command: 0 })
-    pathSelector.selectMerge({ path: 'path_id_3', command: 0, point: 0 })
+    pathSelector.select({ path: 'path_id_1' }, true)
+    pathSelector.select({ path: 'path_id_2', command: 0 }, true)
+    pathSelector.select({ path: 'path_id_3', command: 0, point: 0 }, true)
 
-    expect(pathSelector.selectedPathsOnly).toBe(false)
+    expect(pathSelector.selectedOnlyPaths).toBe(false)
     expect(pathSelector.selected).toBe(true)
 
     expect(pathSelector.pathsIndex).toEqual([
@@ -105,9 +105,9 @@ describe('PathSelector', () => {
 
   describe('To unselect selected status', () => {
     const setupSelected = (selector: PathSelector) => {
-      selector.selectMerge({ path: 'path_id_1' })
-      selector.selectMerge({ path: 'path_id_2', command: 0 })
-      selector.selectMerge({ path: 'path_id_3', command: 0, point: 0 })
+      selector.select({ path: 'path_id_1' }, true)
+      selector.select({ path: 'path_id_2', command: 0 }, true)
+      selector.select({ path: 'path_id_3', command: 0, point: 0 }, true)
     }
 
     it('unselect path', () => {

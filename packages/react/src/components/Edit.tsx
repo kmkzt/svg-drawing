@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import type { EditPathsProps, EditBoundingBoxProps } from '../types'
+import type { EditPathsProps, BoundingBoxProps } from '../types'
 import type {
   PointObject,
   FixedType,
@@ -27,9 +27,10 @@ export const EditPaths = ({
         />
       ))}
       {boundingBox && (
-        <EditBoundingBox
+        <BoundingBox
           selectedOnlyPaths={selectedOnlyPaths}
           boundingBox={boundingBox}
+          onSelectPaths={onSelectPaths}
           onTranslateStart={onTranslateStart}
           onResizeStart={onResizeStart}
         />
@@ -140,36 +141,23 @@ const EditPoint = ({
   )
 }
 
-const EditBoundingBox = ({
-  boundingBox: { position, size, vertex },
+const BoundingBox = ({
+  boundingBox: { pathKeys, position, size, vertex },
   selectedOnlyPaths,
+  onSelectPaths,
   onTranslateStart,
   onResizeStart,
-}: EditBoundingBoxProps) => {
+}: BoundingBoxProps) => {
   const handleMovePathsStart = useCallback(
     (
       ev:
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
+      onSelectPaths(pathKeys.map((key) => ({ path: key })))
       onTranslateStart(getPointFromEvent(ev))
     },
-    [onTranslateStart]
-  )
-
-  const handleResizeStart = useCallback(
-    (fixedType: FixedType) =>
-      (
-        ev:
-          | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-          | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-      ) => {
-        onResizeStart({
-          fixedType,
-          point: getPointFromEvent(ev),
-        })
-      },
-    [onResizeStart]
+    [onSelectPaths, onTranslateStart, pathKeys]
   )
 
   return (
@@ -188,23 +176,66 @@ const EditBoundingBox = ({
         onMouseDown={handleMovePathsStart}
         onTouchStart={handleMovePathsStart}
       />
-      {Object.entries(vertex).map(([key, point]) => (
-        <circle
-          key={key}
-          cx={point.x}
-          cy={point.y}
-          r={EDIT_CONFIG.point}
-          stroke={EDIT_CONFIG.color.main}
-          fill={
-            selectedOnlyPaths
-              ? EDIT_CONFIG.fill.selected
-              : EDIT_CONFIG.fill.boundingBox
-          }
-          onMouseDown={handleResizeStart(key as FixedType)}
-          onTouchStart={handleResizeStart(key as FixedType)}
+      {entries(vertex).map(([fixedType, point]) => (
+        <BoundingBoxVertex
+          key={fixedType}
+          fixedType={fixedType}
+          point={point}
+          selectedOnlyPaths={selectedOnlyPaths}
+          onResizeStart={onResizeStart}
         />
       ))}
     </>
+  )
+}
+
+type Entries<T> = {
+  [K in keyof T]: [K, T[K]]
+}[keyof T][]
+
+const entries = <T extends object>(obj: T) => Object.entries(obj) as Entries<T>
+
+type BoundingBoxVertexProps = {
+  fixedType: FixedType
+  point: PointObject
+  selectedOnlyPaths: boolean
+  onResizeStart: EditPathsProps['onResizeStart']
+}
+
+const BoundingBoxVertex = ({
+  fixedType,
+  point,
+  selectedOnlyPaths,
+  onResizeStart,
+}: BoundingBoxVertexProps) => {
+  const handleResizeStart = useCallback(
+    (
+      ev:
+        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+    ) => {
+      onResizeStart({
+        fixedType,
+        point: getPointFromEvent(ev),
+      })
+    },
+    [fixedType, onResizeStart]
+  )
+  return (
+    <circle
+      key={fixedType}
+      cx={point.x}
+      cy={point.y}
+      r={EDIT_CONFIG.point}
+      stroke={EDIT_CONFIG.color.main}
+      fill={
+        selectedOnlyPaths
+          ? EDIT_CONFIG.fill.selected
+          : EDIT_CONFIG.fill.boundingBox
+      }
+      onMouseDown={handleResizeStart}
+      onTouchStart={handleResizeStart}
+    />
   )
 }
 

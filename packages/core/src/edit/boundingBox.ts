@@ -13,6 +13,7 @@ export class BoundingBox {
 
   public toJson(): BoundingBoxObject {
     return {
+      pathKeys: this.paths.map((p) => p.key),
       position: this.position,
       size: this.size,
       vertex: this.vertex,

@@ -86,20 +86,19 @@ export class PathSelector {
     this.selecting = {}
   }
 
-  select(index: SelectIndex) {
-    this.selecting = convertSelectingFromIndex(index)
-  }
-
   /**
-   * Currently, only path indexes are supported.
+   * Currently only path indices can be combined.
    *
    * @todo Implement so that multiple commands and points can be selected.
    */
-  selectMerge(index: SelectIndex) {
-    this.selecting = {
-      ...this.selecting,
-      ...convertSelectingFromIndex(index),
-    }
+  select(selectIndexes: SelectIndex | SelectIndex[], combined?: boolean) {
+    this.selecting = [selectIndexes].flat().reduce(
+      (acc, index) => ({
+        ...acc,
+        ...convertSelectingFromIndex(index),
+      }),
+      combined ? this.selecting : {}
+    )
   }
 
   unselect(index: SelectIndex) {

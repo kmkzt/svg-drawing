@@ -2,8 +2,9 @@ import { BoundingBox } from './boundingBox'
 import { Curve, Move } from '../svg/command'
 import { Path } from '../svg/path'
 import { Point } from '../svg/point'
+import type { BoundingBoxObject } from '../types'
 
-const exampleData = new Path()
+const exampleData = new Path({}, 'path_key')
   .addCommand(new Move(new Point(0, 0)))
   .addCommand(
     new Curve([new Point(20, 20), new Point(60, 80), new Point(100, 100)])
@@ -19,7 +20,8 @@ describe('BoundingBox', () => {
   describe('BoundingBox of Curve Path', () => {
     const boundingBox = new BoundingBox([exampleData])
 
-    const testData = {
+    const testData: BoundingBoxObject = {
+      pathKeys: ['path_key'],
       position: {
         x: 0,
         y: 0,
