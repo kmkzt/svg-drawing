@@ -67,14 +67,17 @@ export type EditSvgAction = {
 export type EditProps = {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
+  selectedOnlyPaths: boolean
   onResizeStart: (base: ResizeBoundingBoxBase) => void
   onTranslateStart: (po: PointObject) => void
   onSelectPaths: (sel: SelectIndex) => void
 }
 
 export type EditPathsProps = PathsProps & EditProps
-export type EditBoundingBoxProps = EditSvgObject['boundingBox'] &
-  Pick<EditProps, 'onResizeStart' | 'onTranslateStart'>
+export type EditBoundingBoxProps = Pick<
+  EditProps,
+  'boundingBox' | 'selectedOnlyPaths' | 'onResizeStart' | 'onTranslateStart'
+>
 
 /** UseAnimation */
 export type UseAnimation = (arg: {

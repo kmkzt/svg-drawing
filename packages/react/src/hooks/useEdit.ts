@@ -142,10 +142,11 @@ export const useEdit: UseEdit = ({
     [cancelSelect, deletePaths, translate]
   )
 
-  const { editPaths, boundingBox } = useMemo(
+  const { editPaths, boundingBox, selectedOnlyPaths } = useMemo(
     () => ({
       editPaths: editSvgObject?.paths ?? null,
       boundingBox: editSvgObject?.boundingBox ?? null,
+      selectedOnlyPaths: editSvgObject?.selectedOnlyPaths ?? false,
     }),
     [editSvgObject]
   )
@@ -162,6 +163,7 @@ export const useEdit: UseEdit = ({
     editProps: {
       editPaths,
       boundingBox,
+      selectedOnlyPaths,
       onTranslateStart,
       onResizeStart,
       onSelectPaths: selectPaths,

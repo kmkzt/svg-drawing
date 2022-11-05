@@ -11,6 +11,7 @@ export const EditPaths = ({
   paths,
   editPaths,
   boundingBox,
+  selectedOnlyPaths,
   onTranslateStart,
   onResizeStart,
   onSelectPaths,
@@ -27,7 +28,8 @@ export const EditPaths = ({
       ))}
       {boundingBox && (
         <EditBoundingBox
-          {...boundingBox}
+          selectedOnlyPaths={selectedOnlyPaths}
+          boundingBox={boundingBox}
           onTranslateStart={onTranslateStart}
           onResizeStart={onResizeStart}
         />
@@ -138,13 +140,9 @@ const EditPoint = ({
   )
 }
 
-export const EditBoundingBox = ({
-  x,
-  y,
-  width,
-  height,
-  vertex,
-  selected,
+const EditBoundingBox = ({
+  boundingBox: { position, size, vertex },
+  selectedOnlyPaths,
   onTranslateStart,
   onResizeStart,
 }: EditBoundingBoxProps) => {
@@ -177,13 +175,15 @@ export const EditBoundingBox = ({
   return (
     <>
       <rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
+        x={position.x}
+        y={position.y}
+        width={size.width}
+        height={size.height}
         stroke={EDIT_CONFIG.color.main}
         fill={
-          selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
+          selectedOnlyPaths
+            ? EDIT_CONFIG.fill.selected
+            : EDIT_CONFIG.fill.boundingBox
         }
         onMouseDown={handleMovePathsStart}
         onTouchStart={handleMovePathsStart}
@@ -196,7 +196,9 @@ export const EditBoundingBox = ({
           r={EDIT_CONFIG.point}
           stroke={EDIT_CONFIG.color.main}
           fill={
-            selected ? EDIT_CONFIG.fill.selected : EDIT_CONFIG.fill.boundingBox
+            selectedOnlyPaths
+              ? EDIT_CONFIG.fill.selected
+              : EDIT_CONFIG.fill.boundingBox
           }
           onMouseDown={handleResizeStart(key as FixedType)}
           onTouchStart={handleResizeStart(key as FixedType)}

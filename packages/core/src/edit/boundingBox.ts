@@ -1,67 +1,21 @@
 import { segmentPointsFromCommand } from './segment'
-import type { PointObject, FixedType, PathClass } from '../types'
+import type {
+  PointObject,
+  FixedType,
+  PathClass,
+  BoundingBoxObject,
+} from '../types'
 
 const fallbackPointObject: PointObject = { x: 0, y: 0 }
 
 export class BoundingBox {
   constructor(private paths: PathClass[]) {}
 
-  private get points(): PointObject[] {
-    return this.paths.flatMap((path) => {
-      let prev: PointObject | undefined = undefined
-
-      return path.absoluteCommands.flatMap((command) => {
-        const pts: PointObject[] = segmentPointsFromCommand(command, {
-          base: prev,
-        })
-
-        prev = command.point ? command.point.toJson() : undefined
-
-        return pts
-      })
-    })
-  }
-
-  private get pointsX(): number[] {
-    return this.points.map((point) => point.x)
-  }
-
-  private get pointsY(): number[] {
-    return this.points.map((point) => point.y)
-  }
-
-  get min(): PointObject {
-    if (this.points.length === 0) return fallbackPointObject
-
+  public toJson(): BoundingBoxObject {
     return {
-      x: Math.min(...this.pointsX),
-      y: Math.min(...this.pointsY),
-    }
-  }
-
-  get max(): PointObject {
-    if (this.points.length === 0) return fallbackPointObject
-
-    return {
-      x: Math.max(...this.pointsX),
-      y: Math.max(...this.pointsY),
-    }
-  }
-
-  get width(): number {
-    return this.max.x - this.min.x
-  }
-
-  get height(): number {
-    return this.max.y - this.min.y
-  }
-
-  get vertex(): Record<FixedType, PointObject> {
-    return {
-      ['LeftTop']: { x: this.min.x, y: this.min.y },
-      ['RightTop']: { x: this.max.x, y: this.min.y },
-      ['RightBottom']: { x: this.max.x, y: this.max.y },
-      ['LeftBottom']: { x: this.min.x, y: this.max.y },
+      position: this.position,
+      size: this.size,
+      vertex: this.vertex,
     }
   }
 
@@ -69,8 +23,7 @@ export class BoundingBox {
     fixedType: FixedType,
     movePoint: PointObject
   ): { scale: PointObject; move: PointObject } {
-    const width = this.width
-    const height = this.height
+    const { width, height } = this.size
 
     switch (fixedType) {
       case 'LeftTop': {
@@ -124,6 +77,71 @@ export class BoundingBox {
           },
         }
       }
+    }
+  }
+
+  private get max(): PointObject {
+    if (this.points.length === 0) return fallbackPointObject
+
+    return {
+      x: Math.max(...this.pointsX),
+      y: Math.max(...this.pointsY),
+    }
+  }
+
+  private get position(): { x: number; y: number } {
+    return {
+      x: this.min.x,
+      y: this.min.y,
+    }
+  }
+
+  private get size(): { width: number; height: number } {
+    return {
+      width: this.max.x - this.min.x,
+      height: this.max.y - this.min.y,
+    }
+  }
+
+  private get vertex(): Record<FixedType, PointObject> {
+    return {
+      ['LeftTop']: { x: this.min.x, y: this.min.y },
+      ['RightTop']: { x: this.max.x, y: this.min.y },
+      ['RightBottom']: { x: this.max.x, y: this.max.y },
+      ['LeftBottom']: { x: this.min.x, y: this.max.y },
+    }
+  }
+
+  private get points(): PointObject[] {
+    return this.paths.flatMap((path) => {
+      let prev: PointObject | undefined = undefined
+
+      return path.absoluteCommands.flatMap((command) => {
+        const pts: PointObject[] = segmentPointsFromCommand(command, {
+          base: prev,
+        })
+
+        prev = command.point ? command.point.toJson() : undefined
+
+        return pts
+      })
+    })
+  }
+
+  private get pointsX(): number[] {
+    return this.points.map((point) => point.x)
+  }
+
+  private get pointsY(): number[] {
+    return this.points.map((point) => point.y)
+  }
+
+  private get min(): PointObject {
+    if (this.points.length === 0) return fallbackPointObject
+
+    return {
+      x: Math.min(...this.pointsX),
+      y: Math.min(...this.pointsY),
     }
   }
 }

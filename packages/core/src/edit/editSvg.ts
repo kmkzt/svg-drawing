@@ -128,27 +128,12 @@ export class EditSvg {
   toJson(): EditSvgObject | null {
     if (!this.pathSelector.selected) return null
 
-    const paths = this.paths.map((path) =>
-      new EditPath(path.clone(), this.pathSelector).toJson()
-    )
-
-    const {
-      min: { x, y },
-      width,
-      height,
-      vertex,
-    } = new BoundingBox(this.paths)
-
     return {
-      paths,
-      boundingBox: {
-        x,
-        y,
-        width,
-        height,
-        vertex,
-        selected: this.pathSelector.selectedPathsOnly,
-      },
+      paths: this.paths.map((path) =>
+        new EditPath(path.clone(), this.pathSelector).toJson()
+      ),
+      boundingBox: new BoundingBox(this.paths).toJson(),
+      selectedOnlyPaths: this.pathSelector.selectedOnlyPaths,
     }
   }
 

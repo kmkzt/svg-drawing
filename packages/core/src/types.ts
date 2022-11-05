@@ -255,12 +255,15 @@ export type EditVertex = {
 }
 
 export type BoundingBoxObject = {
-  x: number
-  y: number
-  width: number
-  height: number
+  position: {
+    x: number
+    y: number
+  }
+  size: {
+    width: number
+    height: number
+  }
   vertex: Record<FixedType, PointObject>
-  selected: boolean
 }
 
 export type EditPathObject = {
@@ -271,6 +274,7 @@ export type EditPathObject = {
 export type EditSvgObject = {
   paths: EditPathObject[]
   boundingBox: BoundingBoxObject
+  selectedOnlyPaths: boolean
 }
 
 export type FixedType = 'LeftTop' | 'RightTop' | 'RightBottom' | 'LeftBottom'

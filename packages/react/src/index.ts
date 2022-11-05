@@ -1,6 +1,6 @@
 export { Svg } from './components/Svg'
 export { Paths } from './components/Paths'
-export { EditPaths, EditBoundingBox } from './components/Edit'
+export { EditPaths } from './components/Edit'
 export { AnimatePaths } from './components/Animate'
 export { BackgroundRect } from './components/BackgroundRect'
 

@@ -18,116 +18,99 @@ const exampleData = new Path()
 describe('BoundingBox', () => {
   describe('BoundingBox of Curve Path', () => {
     const boundingBox = new BoundingBox([exampleData])
-    it('boundingBox property', () => {
-      expect(boundingBox.min).toMatchInlineSnapshot(`
-        Object {
-          "x": 0,
-          "y": 0,
-        }
-      `)
-      expect(boundingBox.max).toMatchInlineSnapshot(`
-        Object {
-          "x": 300,
-          "y": 115,
-        }
-      `)
 
-      expect(boundingBox.width).toMatchInlineSnapshot(`300`)
-      expect(boundingBox.height).toMatchInlineSnapshot(`115`)
-      expect(boundingBox.vertex).toMatchInlineSnapshot(`
-        Object {
-          "LeftBottom": Object {
-            "x": 0,
-            "y": 115,
-          },
-          "LeftTop": Object {
-            "x": 0,
-            "y": 0,
-          },
-          "RightBottom": Object {
-            "x": 300,
-            "y": 115,
-          },
-          "RightTop": Object {
-            "x": 300,
-            "y": 0,
-          },
-        }
-      `)
+    const testData = {
+      position: {
+        x: 0,
+        y: 0,
+      },
+      size: {
+        height: 115,
+        width: 300,
+      },
+      vertex: {
+        LeftBottom: {
+          x: 0,
+          y: 115,
+        },
+        LeftTop: {
+          x: 0,
+          y: 0,
+        },
+        RightBottom: {
+          x: 300,
+          y: 115,
+        },
+        RightTop: {
+          x: 300,
+          y: 0,
+        },
+      },
+    }
+
+    it('boundingBox.toJson()', () => {
+      expect(boundingBox.toJson()).toStrictEqual(testData)
     })
 
-    it('boundingBox.resizeParams', () => {
-      expect(
-        boundingBox.resizeParams('LeftTop', {
-          x: -boundingBox.width,
-          y: -boundingBox.height,
-        })
-      ).toMatchInlineSnapshot(`
-        Object {
-          "move": Object {
-            "x": -300,
-            "y": -115,
-          },
-          "scale": Object {
-            "x": 2,
-            "y": 2,
-          },
+    describe('boundingBox.resizeParams', () => {
+      it('Move the vertex and scale double', () => {
+        const scale = {
+          x: 2,
+          y: 2,
         }
-      `)
 
-      expect(
-        boundingBox.resizeParams('RightTop', {
-          x: boundingBox.width,
-          y: -boundingBox.height,
+        expect(
+          boundingBox.resizeParams('LeftTop', {
+            x: -testData.size.width,
+            y: -testData.size.height,
+          })
+        ).toEqual({
+          move: {
+            x: -testData.size.width,
+            y: -testData.size.height,
+          },
+          scale,
         })
-      ).toMatchInlineSnapshot(`
-        Object {
-          "move": Object {
-            "x": -0,
-            "y": -115,
-          },
-          "scale": Object {
-            "x": 2,
-            "y": 2,
-          },
-        }
-      `)
 
-      expect(
-        boundingBox.resizeParams('RightBottom', {
-          x: boundingBox.width,
-          y: boundingBox.height,
+        expect(
+          boundingBox.resizeParams('RightTop', {
+            x: testData.size.width,
+            y: -testData.size.height,
+          })
+        ).toEqual({
+          move: {
+            x: -0,
+            y: -testData.size.height,
+          },
+          scale,
         })
-      ).toMatchInlineSnapshot(`
-        Object {
-          "move": Object {
-            "x": -0,
-            "y": -0,
-          },
-          "scale": Object {
-            "x": 2,
-            "y": 2,
-          },
-        }
-      `)
 
-      expect(
-        boundingBox.resizeParams('LeftBottom', {
-          x: -boundingBox.width,
-          y: boundingBox.height,
+        expect(
+          boundingBox.resizeParams('RightBottom', {
+            x: testData.size.width,
+            y: testData.size.height,
+          })
+        ).toEqual({
+          move: {
+            x: -0,
+            y: -0,
+          },
+          scale,
         })
-      ).toMatchInlineSnapshot(`
-        Object {
-          "move": Object {
-            "x": -300,
-            "y": -0,
+
+        expect(
+          boundingBox.resizeParams('LeftBottom', {
+            x: -testData.size.width,
+            y: testData.size.height,
+          })
+        ).toEqual({
+          move: {
+            x: -testData.size.width,
+            y: -0,
           },
-          "scale": Object {
-            "x": 2,
-            "y": 2,
-          },
-        }
-      `)
+          scale,
+        })
+      })
     })
   })
 })
