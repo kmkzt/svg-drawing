@@ -8,10 +8,10 @@ import type {
   PointClass,
   AbsoluteCommandType,
   RelativeCommandType,
+  CommandObject,
 } from '../types'
 
-/** @deprecated */
-export class OtherCommand<T extends OtherCommandType>
+class OtherCommand<T extends OtherCommandType>
   implements CommandClass<OtherCommandType>
 {
   static Types = {
@@ -124,7 +124,7 @@ export class OtherCommand<T extends OtherCommandType>
  *
  * `m 0 0`
  */
-export class RelativeMove implements CommandClass<'m'> {
+class RelativeMove implements CommandClass<'m'> {
   public readonly type = 'm'
   public readonly relative = false
   public points: [PointClass]
@@ -170,7 +170,7 @@ export class RelativeMove implements CommandClass<'m'> {
  *
  * `M 0 0`
  */
-export class Move implements CommandClass<'M'> {
+class Move implements CommandClass<'M'> {
   public readonly type = 'M'
   public points: [PointClass]
   constructor(point: PointClass) {
@@ -215,7 +215,7 @@ export class Move implements CommandClass<'M'> {
  *
  * `l 0 0`
  */
-export class RelativeLine implements CommandClass<'l'> {
+class RelativeLine implements CommandClass<'l'> {
   public readonly type = 'l'
   public points: [PointClass]
   constructor(point: PointClass) {
@@ -260,7 +260,7 @@ export class RelativeLine implements CommandClass<'l'> {
  *
  * `L 0 0`
  */
-export class Line implements CommandClass<'L'> {
+class Line implements CommandClass<'L'> {
   public readonly type = 'L'
   public points: [PointClass]
   constructor(point: PointClass) {
@@ -305,7 +305,7 @@ export class Line implements CommandClass<'L'> {
  *
  * `c 1 1 2 2 3 3`
  */
-export class RelativeCurve implements CommandClass<'c'> {
+class RelativeCurve implements CommandClass<'c'> {
   public readonly type = 'c'
   constructor(public points: [PointClass, PointClass, PointClass]) {}
 
@@ -369,7 +369,7 @@ export class RelativeCurve implements CommandClass<'c'> {
  *
  * `C 1 1 2 2 3 3`
  */
-export class Curve implements CommandClass<'C'> {
+class Curve implements CommandClass<'C'> {
   public readonly type = 'C'
   constructor(public points: [PointClass, PointClass, PointClass]) {}
 
@@ -432,7 +432,7 @@ export class Curve implements CommandClass<'C'> {
  *
  * `S 10 60 10 30`
  */
-export class ShortcutCurve implements CommandClass<'S'> {
+class ShortcutCurve implements CommandClass<'S'> {
   public readonly type = 'S'
   constructor(public points: [PointClass, PointClass]) {}
 
@@ -487,7 +487,7 @@ export class ShortcutCurve implements CommandClass<'S'> {
  *
  * `s 10 60 10 30`
  */
-export class RelativeShortcutCurve implements CommandClass<'s'> {
+class RelativeShortcutCurve implements CommandClass<'s'> {
   public readonly type = 's'
   constructor(public points: [PointClass, PointClass]) {}
 
@@ -543,7 +543,7 @@ export class RelativeShortcutCurve implements CommandClass<'s'> {
  * Q 10 60 10 30
  */
 
-export class QuadraticCurve implements CommandClass<'Q'> {
+class QuadraticCurve implements CommandClass<'Q'> {
   public readonly type = 'Q'
   constructor(public points: [PointClass, PointClass]) {}
 
@@ -598,7 +598,7 @@ export class QuadraticCurve implements CommandClass<'Q'> {
  *
  * `q 10 60 10 30`
  */
-export class RelativeQuadraticCurve implements CommandClass<'q'> {
+class RelativeQuadraticCurve implements CommandClass<'q'> {
   public readonly type = 'q'
   constructor(public points: [PointClass, PointClass]) {}
 
@@ -653,7 +653,7 @@ export class RelativeQuadraticCurve implements CommandClass<'q'> {
  *
  * 'z'
  */
-export class Close implements CommandClass<'z'> {
+class Close implements CommandClass<'z'> {
   public readonly type = 'z'
 
   public get values(): [] {
@@ -693,71 +693,105 @@ export class Close implements CommandClass<'z'> {
   }
 }
 
-export const createCommand = (
-  type: CommandType,
-  values: number[] = []
-): CommandClass => {
-  switch (type) {
-    case 'M': {
-      return new Move(new Point(values[0], values[1]))
-    }
-    case 'm': {
-      return new RelativeMove(new Point(values[0], values[1]))
-    }
-    case 'L': {
-      return new Line(new Point(values[0], values[1]))
-    }
-    case 'l': {
-      return new RelativeLine(new Point(values[0], values[1]))
-    }
-    case 'C': {
-      return new Curve([
-        new Point(values[0], values[1]),
-        new Point(values[2], values[3]),
-        new Point(values[4], values[5]),
-      ])
-    }
-    case 'c': {
-      return new RelativeCurve([
-        new Point(values[0], values[1]),
-        new Point(values[2], values[3]),
-        new Point(values[4], values[5]),
-      ])
-    }
-    case 'Q': {
-      return new QuadraticCurve([
-        new Point(values[0], values[1]),
-        new Point(values[2], values[3]),
-      ])
-    }
-    case 'q': {
-      return new RelativeQuadraticCurve([
-        new Point(values[0], values[1]),
-        new Point(values[2], values[3]),
-      ])
-    }
-    case 'S': {
-      return new ShortcutCurve([
-        new Point(values[0], values[1]),
-        new Point(values[2], values[3]),
-      ])
-    }
-    case 's': {
-      return new RelativeShortcutCurve([
-        new Point(values[0], values[1]),
-        new Point(values[2], values[3]),
-      ])
-    }
-    case 'Z':
-    case 'z': {
-      return new Close()
-    }
+type CreateCommand<T extends CommandType> = () => CommandClass<T>
 
-    default: {
-      return new OtherCommand(type, values)
-    }
+export class CreateCommandError extends Error {
+  constructor(type: CommandType) {
+    super(`Error: invalid values.length for create '${type}' command`)
   }
 }
+
+export const createCommand = <T extends CommandType>({
+  type,
+  values,
+}: {
+  type: T
+  values?: T extends 'z' | 'Z' ? undefined : CommandObject<T>['values']
+}): CommandClass<T> =>
+  (() => {
+    switch (type) {
+      case 'M': {
+        if (values?.length !== 2) throw new CreateCommandError(type)
+
+        return new Move(new Point(values[0], values[1]))
+      }
+      case 'm': {
+        if (values?.length !== 2) throw new CreateCommandError(type)
+
+        return new RelativeMove(new Point(values[0], values[1]))
+      }
+      case 'L': {
+        if (values?.length !== 2) throw new CreateCommandError(type)
+
+        return new Line(new Point(values[0], values[1]))
+      }
+      case 'l': {
+        if (values?.length !== 2) throw new CreateCommandError(type)
+
+        return new RelativeLine(new Point(values[0], values[1]))
+      }
+      case 'C': {
+        if (values?.length !== 6) throw new CreateCommandError(type)
+
+        return new Curve([
+          new Point(values[0], values[1]),
+          new Point(values[2], values[3]),
+          new Point(values[4], values[5]),
+        ])
+      }
+      case 'c': {
+        if (values?.length !== 6) throw new CreateCommandError(type)
+
+        return new RelativeCurve([
+          new Point(values[0], values[1]),
+          new Point(values[2], values[3]),
+          new Point(values[4], values[5]),
+        ])
+      }
+      case 'Q': {
+        if (values?.length !== 4) throw new CreateCommandError(type)
+
+        return new QuadraticCurve([
+          new Point(values[0], values[1]),
+          new Point(values[2], values[3]),
+        ])
+      }
+      case 'q': {
+        if (values?.length !== 4) throw new CreateCommandError(type)
+
+        return new RelativeQuadraticCurve([
+          new Point(values[0], values[1]),
+          new Point(values[2], values[3]),
+        ])
+      }
+      case 'S': {
+        if (values?.length !== 4) throw new CreateCommandError(type)
+
+        return new ShortcutCurve([
+          new Point(values[0], values[1]),
+          new Point(values[2], values[3]),
+        ])
+      }
+      case 's': {
+        if (values?.length !== 4) throw new CreateCommandError(type)
+
+        return new RelativeShortcutCurve([
+          new Point(values[0], values[1]),
+          new Point(values[2], values[3]),
+        ])
+      }
+      case 'Z':
+      case 'z': {
+        if (values) throw new CreateCommandError(type)
+
+        return new Close()
+      }
+
+      default: {
+        return new OtherCommand(type, values)
+      }
+    }
+  })() as CommandClass<typeof type>
 
 export const isAbsoluteCommand = (
   command: CommandClass

@@ -11,17 +11,6 @@ export { BaseHandler, PenHandler, PencilHandler } from './drawing/eventHandler'
 export { Svg } from './svg/svg'
 export { Path } from './svg/path'
 export {
-  Line,
-  Move,
-  OtherCommand,
-  RelativeCurve,
-  RelativeLine,
-  RelativeMove,
-  RelativeQuadraticCurve,
-  RelativeShortcutCurve,
-  QuadraticCurve,
-  Close,
-  Curve,
   isAbsoluteCommand,
   isCurveCommand,
   isOtherCommand,

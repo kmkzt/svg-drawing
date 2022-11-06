@@ -24,6 +24,10 @@ export class Point implements PointClass {
     return this._y
   }
 
+  public get values(): [number, number] {
+    return [this._x, this.y]
+  }
+
   public scale(r: number) {
     return new Point(this._x * r, this._y * r)
   }

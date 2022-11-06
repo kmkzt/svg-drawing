@@ -1,4 +1,4 @@
-import { Move, Line, Curve, Close } from '../svg/command'
+import { createCommand } from '../svg/command'
 import { Point } from '../svg/point'
 import { Vector } from '../svg/vector'
 import type {
@@ -11,7 +11,9 @@ import type {
 
 export const createLineCommands: CreateCommand = (points) =>
   points.map((p, i) =>
-    i === 0 ? new Move(new Point(p.x, p.y)) : new Line(new Point(p.x, p.y))
+    i === 0
+      ? createCommand({ type: 'M', values: [p.x, p.y] })
+      : createCommand({ type: 'L', values: [p.x, p.y] })
   )
 
 interface GenerateCommandsConverter {
@@ -40,6 +42,7 @@ export class BezierCurve implements GenerateCommandsConverter {
         .angle,
       value,
     })
+
     const vNext = Point.fromVector({
       angle: Vector.fromPoint(new Point(p2.x, p2.y).sub(new Point(p4.x, p4.y)))
         .angle,
@@ -48,7 +51,11 @@ export class BezierCurve implements GenerateCommandsConverter {
 
     const cPrev = new Point(p2.x, p2.y).add(vPrev)
     const cNext = new Point(p3.x, p3.y).add(vNext)
-    return new Curve([cPrev, cNext, new Point(p3.x, p3.y)])
+
+    return createCommand({
+      type: 'C',
+      values: [...cPrev.values, ...cNext.values, p3.x, p3.y],
+    })
   }
 
   public create(p: EventPoint[]): CommandClass[] {
@@ -58,7 +65,7 @@ export class BezierCurve implements GenerateCommandsConverter {
     }
     for (let i = 0; i < p.length; i += 1) {
       if (i === 0) {
-        commands.push(new Move(new Point(p[i].x, p[i].y)))
+        commands.push(createCommand({ type: 'M', values: [p[i].x, p[i].y] }))
         continue
       }
       commands.push(
@@ -76,5 +83,5 @@ export class BezierCurve implements GenerateCommandsConverter {
 
 export const closeCommands = (commands: CommandClass[]): CommandClass[] => [
   ...commands,
-  new Close(),
+  createCommand({ type: 'Z' }),
 ]

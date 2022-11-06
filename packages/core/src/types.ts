@@ -6,6 +6,7 @@ export type PointObject = Readonly<{
 export interface PointClass {
   readonly x: number
   readonly y: number
+  readonly values: [number, number]
   scale: (r: number) => PointClass
   scaleX: (r: number) => PointClass
   scaleY: (r: number) => PointClass
@@ -39,24 +40,38 @@ export type CommandType =
   | AbsoluteCommandType
   | OtherCommandType
 
-type PointsLengthMap<T = CommandType> = T extends OtherCommandType
-  ? PointClass[]
+/** @todo Implements for h,v,a,H,V,A */
+type PointsLengthMap<T = CommandType> = T extends 'Z' | 'z'
+  ? []
   : T extends 'm' | 'M' | 'l' | 'L'
   ? [PointClass]
   : T extends 'C' | 'c'
   ? [PointClass, PointClass, PointClass]
-  : [PointClass, PointClass]
+  : T extends 'Q' | 'q' | 'S' | 's'
+  ? [PointClass, PointClass]
+  : PointClass[]
 
-export type CommandObject = {
-  type: CommandType
-  value: number[]
+/** @todo Implements for h,v,a,H,V,A */
+type ValueLengthMap<T extends CommandType> = T extends 'Z' | 'z'
+  ? []
+  : T extends 'm' | 'M' | 'l' | 'L'
+  ? [number, number]
+  : T extends 'C' | 'c'
+  ? [number, number, number, number, number, number]
+  : T extends 'Q' | 'q' | 'S' | 's'
+  ? [number, number, number, number]
+  : number[]
+
+export type CommandObject<T extends CommandType> = {
+  type: T
+  values: ValueLengthMap<T>
 }
 
 export interface CommandClass<T = CommandType> {
-  type: T
-  values: number[]
+  readonly type: T
+  readonly values: number[]
+  readonly point: T extends OtherCommandType ? undefined : PointClass
   points: PointsLengthMap<T>
-  point: T extends OtherCommandType ? undefined : PointClass
   toString: () => string
   clone: () => CommandClass<T>
   scale: (r: number) => CommandClass<T>
