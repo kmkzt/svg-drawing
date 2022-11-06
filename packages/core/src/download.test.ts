@@ -1,6 +1,5 @@
 import { Download } from './download'
 import { svgObjectToElement } from './renderer'
-import { Move, Curve, Line, Close } from './svg/command'
 import { Path } from './svg/path'
 import { Point } from './svg/point'
 import { Svg } from './svg/svg'
@@ -9,36 +8,27 @@ describe('download.ts', () => {
   const svg = new Svg({ width: 4, height: 4 })
     .addPath(
       new Path()
-        .addCommand(new Move(new Point(0, 0)))
-        .addCommand(
-          new Curve([new Point(0.2, 0.2), new Point(0.6, 0.8), new Point(1, 1)])
-        )
-        .addCommand(
-          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
-        )
-        .addCommand(
-          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
-        )
-        .addCommand(
-          new Curve([new Point(2.4, 0.8), new Point(2.8, 0.2), new Point(3, 0)])
-        )
+        .addCommand({ type: 'M', values: [0, 0] })
+        .addCommand({ type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] })
+        .addCommand({ type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] })
+        .addCommand({ type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] })
     )
     .addPath(
       new Path({
         strokeLinecap: 'square',
         strokeLinejoin: 'mitter',
       })
-        .addCommand(new Move(new Point(4, 4)))
-        .addCommand(new Line(new Point(9, 4)))
-        .addCommand(new Line(new Point(9, 8)))
-        .addCommand(new Line(new Point(3, 0)))
-        .addCommand(new Close())
+        .addCommand({ type: 'M', values: [4, 4] })
+        .addCommand({ type: 'L', values: [9, 4] })
+        .addCommand({ type: 'L', values: [9, 8] })
+        .addCommand({ type: 'L', values: [3, 0] })
+        .addCommand({ type: 'Z', values: [] })
     )
   const svgElement = svgObjectToElement(svg.toJson())
 
   it('toBase64', () => {
     expect(new Download(svgElement).toBase64()).toMatchInlineSnapshot(
-      `"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0wIDAgYzAuMiAwLjIgMC42IDAuOCAxIDEgYzAuNCAwLjIgMC42IDAuMiAxIDAgYy0wLjYgMC4yIC0wLjQgMC4yIDAgMCBjMC40IC0wLjIgMC44IC0wLjggMSAtMSI+PC9wYXRoPjxwYXRoIGQ9Ik00IDQgbDUgMCBsMCA0IGwtNiAtOCB6IiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbGluZWpvaW49Im1pdHRlciI+PC9wYXRoPjwvc3ZnPg=="`
+      `"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0wIDAgYzAuMiAwLjIgMC42IDAuOCAxIDEgYzAuNCAwLjIgMC42IDAuMiAxIDAgYzAuNCAtMC4yIDAuOCAtMC44IDEgLTEiPjwvcGF0aD48cGF0aCBkPSJNNCA0IGw1IDAgbDAgNCBsLTYgLTggeiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXR0ZXIiPjwvcGF0aD48L3N2Zz4="`
     )
   })
 
@@ -47,7 +37,7 @@ describe('download.ts', () => {
     const testDownload = (param: any): void => {
       expect(param).toMatchInlineSnapshot(`
         Object {
-          "data": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0wIDAgYzAuMiAwLjIgMC42IDAuOCAxIDEgYzAuNCAwLjIgMC42IDAuMiAxIDAgYy0wLjYgMC4yIC0wLjQgMC4yIDAgMCBjMC40IC0wLjIgMC44IC0wLjggMSAtMSI+PC9wYXRoPjxwYXRoIGQ9Ik00IDQgbDUgMCBsMCA0IGwtNiAtOCB6IiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbGluZWpvaW49Im1pdHRlciI+PC9wYXRoPjwvc3ZnPg==",
+          "data": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0wIDAgYzAuMiAwLjIgMC42IDAuOCAxIDEgYzAuNCAwLjIgMC42IDAuMiAxIDAgYzAuNCAtMC4yIDAuOCAtMC44IDEgLTEiPjwvcGF0aD48cGF0aCBkPSJNNCA0IGw1IDAgbDAgNCBsLTYgLTggeiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXR0ZXIiPjwvcGF0aD48L3N2Zz4=",
           "extension": "svg",
           "filename": "download.svg",
         }
