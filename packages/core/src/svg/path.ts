@@ -1,6 +1,11 @@
-import { toAbsoluteCommands, toRelativeCommands } from './command'
+import {
+  createCommand,
+  toAbsoluteCommands,
+  toRelativeCommands,
+} from './command'
 import type {
   PathClass,
+  CommandObject,
   CommandClass,
   PathAttributes,
   PointObject,
@@ -29,29 +34,18 @@ export class Path implements PathClass {
     return toRelativeCommands(this.commands)
   }
 
-  updateCommands(commands: CommandClass[]) {
-    this.commands = toRelativeCommands(commands)
+  setCommands(commands: ReadonlyArray<CommandClass> | Readonly<CommandClass>) {
+    this.commands = toRelativeCommands([commands].flat())
 
     return this
   }
 
-  scale(r: number) {
-    this.updateCommands(this.commands.map((c: CommandClass) => c.scale(r)))
-    return this
-  }
+  addCommand(param: ReadonlyArray<CommandObject> | Readonly<CommandObject>) {
+    this.setCommands([
+      ...this.commands,
+      ...[param].flat().map((obj) => createCommand(obj)),
+    ])
 
-  scaleX(r: number) {
-    this.updateCommands(this.commands.map((c: CommandClass) => c.scaleX(r)))
-    return this
-  }
-
-  scaleY(r: number) {
-    this.updateCommands(this.commands.map((c: CommandClass) => c.scaleY(r)))
-    return this
-  }
-
-  addCommand(param: CommandClass | CommandClass[]) {
-    this.updateCommands([...this.commands, param].flat())
     return this
   }
 
@@ -62,12 +56,27 @@ export class Path implements PathClass {
     const commands = this.absoluteCommands
     commands[i] = update(commands[i])
 
-    this.updateCommands(commands)
+    this.setCommands(commands)
     return this
   }
 
   deleteCommand(i: number) {
-    this.updateCommands(this.absoluteCommands.filter((_, index) => index !== i))
+    this.setCommands(this.absoluteCommands.filter((_, index) => index !== i))
+    return this
+  }
+
+  scale(r: number) {
+    this.setCommands(this.commands.map((c: CommandClass) => c.scale(r)))
+    return this
+  }
+
+  scaleX(r: number) {
+    this.setCommands(this.commands.map((c: CommandClass) => c.scaleX(r)))
+    return this
+  }
+
+  scaleY(r: number) {
+    this.setCommands(this.commands.map((c: CommandClass) => c.scaleY(r)))
     return this
   }
 
@@ -107,7 +116,7 @@ export class Path implements PathClass {
   }
 
   translate(po: PointObject) {
-    this.updateCommands(this.absoluteCommands.map((com) => com.translate(po)))
+    this.setCommands(this.absoluteCommands.map((com) => com.translate(po)))
 
     return this
   }

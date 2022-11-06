@@ -56,7 +56,7 @@ export const parseCommandString = (d: string): CommandClass[] => {
             (acc: number[], str) => (str === '' ? acc : [...acc, +str]),
             []
           ) || []
-      return [...acc, createCommand(match[1] as CommandType, values)]
+      return [...acc, createCommand({ type: match[1] as CommandType, values })]
     },
     []
   )

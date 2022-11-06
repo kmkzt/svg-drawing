@@ -52,9 +52,7 @@ export class Drawing implements DrawingClass {
     if (!this._drawPath) return
 
     this._drawPoints.push(po)
-    this._drawPath.updateCommands(
-      this.pathFactory.createCommand(this._drawPoints)
-    )
+    this._drawPath.setCommands(this.pathFactory.createCommand(this._drawPoints))
 
     this.update(this.svg)
   }

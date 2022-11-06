@@ -693,8 +693,6 @@ class Close implements CommandClass<'z'> {
   }
 }
 
-type CreateCommand<T extends CommandType> = () => CommandClass<T>
-
 export class CreateCommandError extends Error {
   constructor(type: CommandType) {
     super(`Error: invalid values.length for create '${type}' command`)
@@ -782,7 +780,7 @@ export const createCommand = <T extends CommandType>({
       }
       case 'Z':
       case 'z': {
-        if (values) throw new CreateCommandError(type)
+        if (values && values.length !== 0) throw new CreateCommandError(type)
 
         return new Close()
       }
@@ -873,7 +871,7 @@ export const toAbsoluteCommand = (
 }
 
 export const toRelativeCommands = (
-  commands: CommandClass[]
+  commands: ReadonlyArray<CommandClass>
 ): CommandClass[] => {
   if (commands.length === 0) return []
 
@@ -901,7 +899,7 @@ export const toRelativeCommands = (
 }
 
 export const toAbsoluteCommands = (
-  commands: CommandClass[]
+  commands: ReadonlyArray<CommandClass>
 ): CommandClass[] => {
   if (commands.length === 0) return []
 

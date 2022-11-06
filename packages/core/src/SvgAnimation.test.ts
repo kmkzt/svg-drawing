@@ -1,5 +1,6 @@
 import { parseSVGString } from './parser'
 import { SvgAnimation } from './SvgAnimation'
+import type { PathClass } from './types'
 
 const defaultTestData = `<svg width="200" height="200">
   <path fill="#f00" stroke-linecap="round" stroke="#00f" stroke-width="4" d="M 1 1 L 2 2 C 3 3 5 3 7 3 Z"></path>
@@ -138,7 +139,7 @@ describe('SvgAnimation.ts', () => {
       svg.animation.setup({
         animation: (paths, key) => {
           let count = key
-          const update = []
+          const update: PathClass[] = []
           for (let i = 0; i < paths.length; i += 1) {
             const path = paths[i]
             const vertexLength = path.absoluteCommands.length
@@ -156,7 +157,7 @@ describe('SvgAnimation.ts', () => {
             }
 
             // Test commands
-            path.updateCommands(path.absoluteCommands.slice(0, count))
+            path.setCommands(path.absoluteCommands.slice(0, count))
 
             update.push(path)
 

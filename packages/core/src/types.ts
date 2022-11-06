@@ -62,12 +62,12 @@ type ValueLengthMap<T extends CommandType> = T extends 'Z' | 'z'
   ? [number, number, number, number]
   : number[]
 
-export type CommandObject<T extends CommandType> = {
+export type CommandObject<T extends CommandType = CommandType> = {
   type: T
   values: ValueLengthMap<T>
 }
 
-export interface CommandClass<T = CommandType> {
+export interface CommandClass<T extends CommandType = CommandType> {
   readonly type: T
   readonly values: number[]
   readonly point: T extends OtherCommandType ? undefined : PointClass
@@ -92,19 +92,23 @@ export type PathObject = {
 
 export interface PathClass {
   /** Identification key. Use for update, delete. Return same key when PathClass cloned. */
-  key: string
-  attrs: PathAttributes
-  absoluteCommands: CommandClass[]
-  relativeCommands: CommandClass[]
+  readonly key: string
+  readonly attrs: PathAttributes
+  readonly absoluteCommands: CommandClass[]
+  readonly relativeCommands: CommandClass[]
   scale: (r: number) => this
   scaleX: (r: number) => this
   scaleY: (r: number) => this
-  addCommand: (params: CommandClass | CommandClass[]) => this
+  setCommands: (
+    commands: ReadonlyArray<CommandClass> | Readonly<CommandClass>
+  ) => this
   updateCommand: (
     i: number,
     update: (absoluteCommand: CommandClass) => CommandClass
   ) => this
-  updateCommands: (commands: CommandClass[]) => this
+  addCommand: (
+    params: ReadonlyArray<CommandObject> | Readonly<CommandObject>
+  ) => this
   deleteCommand: (i: number) => this
   translate: (p: PointObject) => this
   setAttributes: (attr: PathAttributes) => this

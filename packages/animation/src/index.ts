@@ -17,7 +17,7 @@ export class ShakeFrame implements FrameAnimation {
 
   public animation(paths: PathClass[]) {
     for (let i = 0; i < paths.length; i += 1) {
-      paths[i].updateCommands(
+      paths[i].setCommands(
         paths[i].absoluteCommands.map((c) => {
           const update = c.clone()
 
@@ -68,7 +68,7 @@ export class DrawFrame implements FrameAnimation {
       const path = paths[i]
       const vertexLength = path.absoluteCommands.length
 
-      path.updateCommands(path.absoluteCommands.slice(0, count))
+      path.setCommands(path.absoluteCommands.slice(0, count))
       update.push(path)
 
       count -= vertexLength
