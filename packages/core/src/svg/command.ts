@@ -702,10 +702,7 @@ export class CreateCommandError extends Error {
 export const createCommand = <T extends CommandType>({
   type,
   values,
-}: {
-  type: T
-  values?: T extends 'z' | 'Z' ? undefined : CommandObject<T>['values']
-}): CommandClass<T> =>
+}: CommandObject<T>): CommandClass<T> =>
   (() => {
     switch (type) {
       case 'M': {
@@ -780,7 +777,7 @@ export const createCommand = <T extends CommandType>({
       }
       case 'Z':
       case 'z': {
-        if (values && values.length !== 0) throw new CreateCommandError(type)
+        if (values.length !== 0) throw new CreateCommandError(type)
 
         return new Close()
       }

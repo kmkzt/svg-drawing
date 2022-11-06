@@ -1,7 +1,5 @@
 import { svgObjectToElement } from './renderer'
-import { Move, Curve, Line, Close } from './svg/command'
 import { Path } from './svg/path'
-import { Point } from './svg/point'
 import { Svg } from './svg/svg'
 
 describe('renderer.ts', () => {
@@ -9,27 +7,21 @@ describe('renderer.ts', () => {
     // TODO: rewrite bezier curve test
     .addPath(
       new Path()
-        .addCommand(new Move(new Point(0, 0)))
-        .addCommand(
-          new Curve([new Point(0.2, 0.2), new Point(0.6, 0.8), new Point(1, 1)])
-        )
-        .addCommand(
-          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
-        )
-        .addCommand(
-          new Curve([new Point(2.4, 0.8), new Point(2.8, 0.2), new Point(3, 0)])
-        )
+        .addCommand({ type: 'M', values: [0, 0] })
+        .addCommand({ type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] })
+        .addCommand({ type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] })
+        .addCommand({ type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] })
     )
     .addPath(
       new Path({
         strokeLinecap: 'square',
         strokeLinejoin: 'mitter',
       })
-        .addCommand(new Move(new Point(4, 4)))
-        .addCommand(new Line(new Point(9, 4)))
-        .addCommand(new Line(new Point(9, 8)))
-        .addCommand(new Line(new Point(3, 0)))
-        .addCommand(new Close())
+        .addCommand({ type: 'M', values: [4, 4] })
+        .addCommand({ type: 'L', values: [9, 4] })
+        .addCommand({ type: 'L', values: [9, 8] })
+        .addCommand({ type: 'L', values: [3, 0] })
+        .addCommand({ type: 'Z', values: [] })
     )
 
   it('svgObjectToElement', () => {

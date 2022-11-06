@@ -1,35 +1,42 @@
-import { Line, Move } from './command'
 import { Path } from './path'
 import { Point } from './point'
 import { pathObjectToElement } from '../renderer'
+import type { PointClass } from '../types'
 
 describe('Path', () => {
   let path: Path
   beforeEach(() => {
-    path = new Path({ strokeWidth: '1' })
-      .addCommand(new Move(new Point(1, 1)))
-      .addCommand(new Line(new Point(2, 2)))
+    path = new Path({ strokeWidth: '1' }).addCommand([
+      { type: 'M', values: [1, 1] },
+      { type: 'L', values: [2, 2] },
+    ])
   })
-  it('addCommand', () => {
-    expect(path.absoluteCommands.length).toBe(2)
-    expect(path.absoluteCommands[0].type).toBe('M')
-    expect(path.absoluteCommands[0].point.x).toBe(1)
-    expect(path.absoluteCommands[0].point.y).toBe(1)
+
+  describe('getCommandString', () => {
+    it('Return relative path commands.', () => {
+      expect(path.absoluteCommands.length).toBe(2)
+      expect(path.absoluteCommands[0].toString()).toBe('M1 1')
+      expect(path.absoluteCommands[1].toString()).toBe('L2 2')
+      expect(path.getCommandString()).toBe('M1 1 l1 1')
+    })
   })
-  it('scale', () => {
-    path.scale(2)
-    expect(path.absoluteCommands[0].type).toBe('M')
-    expect(path.absoluteCommands[0].point.x).toBe(2)
-    expect(path.absoluteCommands[0].point.y).toBe(2)
+  describe('scale', () => {
+    it('scale up double', () => {
+      path.scale(2)
+      expect(path.absoluteCommands[0].type).toBe('M')
+      expect(path.absoluteCommands[0].toString()).toBe('M2 2')
+      expect(path.absoluteCommands[1].toString()).toBe('L4 4')
+    })
   })
   it('clone', () => {
-    const origin = new Path({ strokeWidth: '1' }).addCommand(
-      new Move(new Point(1, 1))
-    )
-    const clone = origin.clone().addCommand(new Line(new Point(2, 2)))
+    const origin = new Path({ strokeWidth: '1' }).addCommand({
+      type: 'M',
+      values: [1, 1],
+    })
+    const clone = origin.clone().addCommand({ type: 'L', values: [2, 2] })
     clone.absoluteCommands[0].points[0] = new Point(
       3,
-      clone.absoluteCommands[0].point.y
+      (clone.absoluteCommands[0].point as PointClass).y
     )
     expect(origin.getCommandString()).toMatchInlineSnapshot(`"M1 1"`)
     expect(clone.getCommandString()).toMatchInlineSnapshot(`"M3 1 l1 1"`)
@@ -47,11 +54,12 @@ describe('Path', () => {
   })
 
   describe('toJson and toElement', () => {
-    const path = new Path()
-      .addCommand(new Move(new Point(0, 0)))
-      .addCommand(new Line(new Point(1, 1)))
-      .addCommand(new Line(new Point(2, 1)))
-      .addCommand(new Line(new Point(3, 0)))
+    const path = new Path().addCommand([
+      { type: 'M', values: [0, 0] },
+      { type: 'L', values: [1, 1] },
+      { type: 'L', values: [2, 1] },
+      { type: 'L', values: [3, 0] },
+    ])
     it('toJson', () => {
       expect(path.toJson()).toMatchInlineSnapshot(`
         Object {
@@ -73,10 +81,12 @@ describe('Path', () => {
     })
   })
   describe('commands parameter and getCommandString', () => {
-    const path = new Path()
-      .addCommand(new Move(new Point(0, 0)))
-      .addCommand(new Line(new Point(1, 1)))
-      .addCommand(new Line(new Point(-1, -1)))
+    const path = new Path().addCommand([
+      { type: 'M', values: [0, 0] },
+      { type: 'L', values: [1, 1] },
+      { type: 'L', values: [-1, -1] },
+    ])
+
     it('Normal', () => {
       expect(path.absoluteCommands).toMatchInlineSnapshot(`
         Array [

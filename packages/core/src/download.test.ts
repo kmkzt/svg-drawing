@@ -7,22 +7,24 @@ import { Svg } from './svg/svg'
 describe('download.ts', () => {
   const svg = new Svg({ width: 4, height: 4 })
     .addPath(
-      new Path()
-        .addCommand({ type: 'M', values: [0, 0] })
-        .addCommand({ type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] })
-        .addCommand({ type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] })
-        .addCommand({ type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] })
+      new Path().addCommand([
+        { type: 'M', values: [0, 0] },
+        { type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] },
+        { type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] },
+        { type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] },
+      ])
     )
     .addPath(
       new Path({
         strokeLinecap: 'square',
         strokeLinejoin: 'mitter',
-      })
-        .addCommand({ type: 'M', values: [4, 4] })
-        .addCommand({ type: 'L', values: [9, 4] })
-        .addCommand({ type: 'L', values: [9, 8] })
-        .addCommand({ type: 'L', values: [3, 0] })
-        .addCommand({ type: 'Z', values: [] })
+      }).addCommand([
+        { type: 'M', values: [4, 4] },
+        { type: 'L', values: [9, 4] },
+        { type: 'L', values: [9, 8] },
+        { type: 'L', values: [3, 0] },
+        { type: 'Z', values: [] },
+      ])
     )
   const svgElement = svgObjectToElement(svg.toJson())
 

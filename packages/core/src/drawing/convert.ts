@@ -83,5 +83,5 @@ export class BezierCurve implements GenerateCommandsConverter {
 
 export const closeCommands = (commands: CommandClass[]): CommandClass[] => [
   ...commands,
-  createCommand({ type: 'Z' }),
+  createCommand({ type: 'Z', values: [] }),
 ]
