@@ -10,7 +10,7 @@
 
 #### Defined in
 
-[img-trace/src/trace.ts:78](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/trace.ts#L78)
+[img-trace/src/trace.ts:75](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L75)
 
 ___
 
@@ -20,7 +20,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:73](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/trace.ts#L73)
+[img-trace/src/trace.ts:70](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L70)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:81](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/trace.ts#L81)
+[img-trace/src/trace.ts:78](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L78)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:80](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/trace.ts#L80)
+[img-trace/src/trace.ts:77](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L77)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:77](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/trace.ts#L77)
+[img-trace/src/trace.ts:74](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L74)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:74](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/trace.ts#L74)
+[img-trace/src/trace.ts:71](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L71)
 
 ___
 
@@ -70,4 +70,4 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:75](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/trace.ts#L75)
+[img-trace/src/trace.ts:72](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L72)

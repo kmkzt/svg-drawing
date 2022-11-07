@@ -25,7 +25,7 @@ Not support example: `M 0 0 L 1 1 Z M 1 1 L 2 2 Z`.
 
 #### Defined in
 
-[core/src/svg/path.ts:20](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L20)
+[core/src/svg/path.ts:25](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L25)
 
 ## Properties
 
@@ -51,7 +51,7 @@ Identification key. Use for update, delete. Return same key when PathClass clone
 
 #### Defined in
 
-[core/src/svg/path.ts:19](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L19)
+[core/src/svg/path.ts:24](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L24)
 
 ## Accessors
 
@@ -69,7 +69,7 @@ Identification key. Use for update, delete. Return same key when PathClass clone
 
 #### Defined in
 
-[core/src/svg/path.ts:24](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L24)
+[core/src/svg/path.ts:29](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L29)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:28](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L28)
+[core/src/svg/path.ts:33](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L33)
 
 ## Methods
 
@@ -99,7 +99,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `param` | [`CommandClass`](../../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](../../modules/svg_drawing_core.md#commandtype)\> \| [`CommandClass`](../../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](../../modules/svg_drawing_core.md#commandtype)\>[] |
+| `param` | readonly [`CommandObject`](../../modules/svg_drawing_core.md#commandobject)<[`CommandType`](../../modules/svg_drawing_core.md#commandtype)\>[] \| `Readonly`<[`CommandObject`](../../modules/svg_drawing_core.md#commandobject)<[`CommandType`](../../modules/svg_drawing_core.md#commandtype)\>\> |
 
 #### Returns
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:53](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L53)
+[core/src/svg/path.ts:43](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L43)
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:115](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L115)
+[core/src/svg/path.ts:124](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L124)
 
 ___
 
@@ -153,7 +153,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:69](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L69)
+[core/src/svg/path.ts:63](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L63)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:74](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L74)
+[core/src/svg/path.ts:83](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L83)
 
 ___
 
@@ -195,7 +195,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:38](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L38)
+[core/src/svg/path.ts:68](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L68)
 
 ___
 
@@ -219,7 +219,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:43](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L43)
+[core/src/svg/path.ts:73](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L73)
 
 ___
 
@@ -243,7 +243,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:48](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L48)
+[core/src/svg/path.ts:78](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L78)
 
 ___
 
@@ -267,7 +267,31 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:94](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L94)
+[core/src/svg/path.ts:103](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L103)
+
+___
+
+### setCommands
+
+▸ **setCommands**(`commands`): [`Path`](Path.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `commands` | readonly [`CommandClass`](../../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](../../modules/svg_drawing_core.md#commandtype)\>[] \| `Readonly`<[`CommandClass`](../../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](../../modules/svg_drawing_core.md#commandtype)\>\> |
+
+#### Returns
+
+[`Path`](Path.md)
+
+#### Implementation of
+
+[PathClass](../../interfaces/svg_drawing_core/PathClass.md).[setCommands](../../interfaces/svg_drawing_core/PathClass.md#setcommands)
+
+#### Defined in
+
+[core/src/svg/path.ts:37](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L37)
 
 ___
 
@@ -285,7 +309,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:83](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L83)
+[core/src/svg/path.ts:92](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L92)
 
 ___
 
@@ -309,7 +333,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:109](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L109)
+[core/src/svg/path.ts:118](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L118)
 
 ___
 
@@ -333,7 +357,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:100](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L100)
+[core/src/svg/path.ts:109](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L109)
 
 ___
 
@@ -358,28 +382,4 @@ ___
 
 #### Defined in
 
-[core/src/svg/path.ts:58](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L58)
-
-___
-
-### updateCommands
-
-▸ **updateCommands**(`commands`): [`Path`](Path.md)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `commands` | [`CommandClass`](../../interfaces/svg_drawing_core/CommandClass.md)<[`CommandType`](../../modules/svg_drawing_core.md#commandtype)\>[] |
-
-#### Returns
-
-[`Path`](Path.md)
-
-#### Implementation of
-
-[PathClass](../../interfaces/svg_drawing_core/PathClass.md).[updateCommands](../../interfaces/svg_drawing_core/PathClass.md#updatecommands)
-
-#### Defined in
-
-[core/src/svg/path.ts:32](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/path.ts#L32)
+[core/src/svg/path.ts:52](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/path.ts#L52)

@@ -16,7 +16,7 @@
 
 #### Defined in
 
-[core/src/edit/translatePathHandler.ts:8](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/translatePathHandler.ts#L8)
+[core/src/edit/translatePathHandler.ts:8](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/translatePathHandler.ts#L8)
 
 ## Properties
 
@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[core/src/edit/translatePathHandler.ts:45](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/translatePathHandler.ts#L45)
+[core/src/edit/translatePathHandler.ts:45](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/translatePathHandler.ts#L45)
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 #### Defined in
 
-[core/src/edit/translatePathHandler.ts:35](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/translatePathHandler.ts#L35)
+[core/src/edit/translatePathHandler.ts:35](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/translatePathHandler.ts#L35)

@@ -16,7 +16,7 @@ Returns true when draw event listener is active.
 
 #### Defined in
 
-[core/src/types.ts:218](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L218)
+[core/src/types.ts:237](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L237)
 
 ## Methods
 
@@ -30,7 +30,7 @@ Returns true when draw event listener is active.
 
 #### Defined in
 
-[core/src/types.ts:220](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L220)
+[core/src/types.ts:239](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L239)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:219](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L219)
+[core/src/types.ts:238](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L238)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:221](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L221)
+[core/src/types.ts:240](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L240)
 
 ___
 
@@ -84,4 +84,4 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:222](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L222)
+[core/src/types.ts:241](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L241)

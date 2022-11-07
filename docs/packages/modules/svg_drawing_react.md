@@ -8,7 +8,7 @@
 
 #### Defined in
 
-[react/src/types.ts:94](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L94)
+[react/src/types.ts:94](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L94)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:77](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L77)
+[react/src/types.ts:77](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L77)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:39](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L39)
+[react/src/types.ts:39](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L39)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:76](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L76)
+[react/src/types.ts:76](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L76)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:67](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L67)
+[react/src/types.ts:67](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L67)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:55](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L55)
+[react/src/types.ts:55](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L55)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:111](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L111)
+[react/src/types.ts:111](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L111)
 
 ___
 
@@ -122,7 +122,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:27](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L27)
+[react/src/types.ts:27](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L27)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:21](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L21)
+[react/src/types.ts:21](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L21)
 
 ___
 
@@ -166,7 +166,7 @@ UseAnimation
 
 #### Defined in
 
-[react/src/types.ts:85](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L85)
+[react/src/types.ts:85](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L85)
 
 ___
 
@@ -192,7 +192,7 @@ UseDraw
 
 #### Defined in
 
-[react/src/types.ts:32](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L32)
+[react/src/types.ts:32](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L32)
 
 ___
 
@@ -226,7 +226,7 @@ UseDrawEventHandler
 
 #### Defined in
 
-[react/src/types.ts:98](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L98)
+[react/src/types.ts:98](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L98)
 
 ___
 
@@ -244,7 +244,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:34](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L34)
+[react/src/types.ts:34](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L34)
 
 ___
 
@@ -275,7 +275,7 @@ UseEdit
 
 #### Defined in
 
-[react/src/types.ts:47](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L47)
+[react/src/types.ts:47](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L47)
 
 ___
 
@@ -312,7 +312,7 @@ ___
 
 #### Defined in
 
-[react/src/types.ts:115](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L115)
+[react/src/types.ts:115](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L115)
 
 ___
 
@@ -346,7 +346,7 @@ UseResize
 
 #### Defined in
 
-[react/src/types.ts:105](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L105)
+[react/src/types.ts:105](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L105)
 
 ___
 
@@ -372,7 +372,7 @@ UseSvg
 
 #### Defined in
 
-[react/src/types.ts:20](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/types.ts#L20)
+[react/src/types.ts:20](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/types.ts#L20)
 
 ## Functions
 
@@ -392,7 +392,7 @@ UseSvg
 
 #### Defined in
 
-[react/src/components/Animate.tsx:4](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/components/Animate.tsx#L4)
+[react/src/components/Animate.tsx:4](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/components/Animate.tsx#L4)
 
 ___
 
@@ -413,7 +413,7 @@ ___
 
 #### Defined in
 
-[react/src/components/BackgroundRect.tsx:4](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/components/BackgroundRect.tsx#L4)
+[react/src/components/BackgroundRect.tsx:4](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/components/BackgroundRect.tsx#L4)
 
 ___
 
@@ -433,7 +433,7 @@ ___
 
 #### Defined in
 
-[react/src/components/Edit.tsx:10](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/components/Edit.tsx#L10)
+[react/src/components/Edit.tsx:10](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/components/Edit.tsx#L10)
 
 ___
 
@@ -453,7 +453,7 @@ ___
 
 #### Defined in
 
-[react/src/components/Paths.tsx:4](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/components/Paths.tsx#L4)
+[react/src/components/Paths.tsx:4](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/components/Paths.tsx#L4)
 
 ___
 
@@ -473,7 +473,7 @@ ___
 
 #### Defined in
 
-[react/src/components/Svg.tsx:5](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/components/Svg.tsx#L5)
+[react/src/components/Svg.tsx:5](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/components/Svg.tsx#L5)
 
 ___
 
@@ -501,7 +501,7 @@ ___
 
 #### Defined in
 
-[react/src/hooks/useAnimation.ts:5](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useAnimation.ts#L5)
+[react/src/hooks/useAnimation.ts:5](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useAnimation.ts#L5)
 
 ___
 
@@ -557,7 +557,7 @@ const DrawArea = () => {
 
 #### Defined in
 
-[react/src/hooks/useDraw.ts:43](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useDraw.ts#L43)
+[react/src/hooks/useDraw.ts:43](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useDraw.ts#L43)
 
 ___
 
@@ -595,7 +595,7 @@ UseDrawEventHandler({ ref, handler })
 
 #### Defined in
 
-[react/src/hooks/useDrawEventHandler.ts:17](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useDrawEventHandler.ts#L17)
+[react/src/hooks/useDrawEventHandler.ts:17](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useDrawEventHandler.ts#L17)
 
 ___
 
@@ -618,7 +618,7 @@ ___
 
 #### Defined in
 
-[react/src/hooks/useDrawFactory.ts:5](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useDrawFactory.ts#L5)
+[react/src/hooks/useDrawFactory.ts:5](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useDrawFactory.ts#L5)
 
 ___
 
@@ -682,7 +682,7 @@ const EditExample = ({ sharedSvg }) => {
 
 #### Defined in
 
-[react/src/hooks/useEdit.ts:52](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useEdit.ts#L52)
+[react/src/hooks/useEdit.ts:52](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useEdit.ts#L52)
 
 ___
 
@@ -702,7 +702,7 @@ ___
 
 #### Defined in
 
-[react/src/hooks/useKeyboardBind.ts:4](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useKeyboardBind.ts#L4)
+[react/src/hooks/useKeyboardBind.ts:4](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useKeyboardBind.ts#L4)
 
 ___
 
@@ -754,7 +754,7 @@ return <input type="file" onChange={onChangeFile} />
 
 #### Defined in
 
-[react/src/hooks/useParseFile.ts:26](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useParseFile.ts#L26)
+[react/src/hooks/useParseFile.ts:26](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useParseFile.ts#L26)
 
 ___
 
@@ -798,7 +798,7 @@ usePenHandler(ref, draw, active)
 
 #### Defined in
 
-[react/src/hooks/useDrawEventHandler.ts:90](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useDrawEventHandler.ts#L90)
+[react/src/hooks/useDrawEventHandler.ts:90](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useDrawEventHandler.ts#L90)
 
 ___
 
@@ -841,7 +841,7 @@ usePencilHandler(ref, draw, active)
 
 #### Defined in
 
-[react/src/hooks/useDrawEventHandler.ts:61](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useDrawEventHandler.ts#L61)
+[react/src/hooks/useDrawEventHandler.ts:61](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useDrawEventHandler.ts#L61)
 
 ___
 
@@ -861,7 +861,7 @@ ___
 
 #### Defined in
 
-[react/src/hooks/usePressedKey.ts:4](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/usePressedKey.ts#L4)
+[react/src/hooks/usePressedKey.ts:4](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/usePressedKey.ts#L4)
 
 ___
 
@@ -893,7 +893,7 @@ ___
 
 #### Defined in
 
-[react/src/hooks/useRenderInterval.ts:7](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useRenderInterval.ts#L7)
+[react/src/hooks/useRenderInterval.ts:7](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useRenderInterval.ts#L7)
 
 ___
 
@@ -915,7 +915,7 @@ ___
 
 #### Defined in
 
-[react/src/hooks/useResize.ts:5](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useResize.ts#L5)
+[react/src/hooks/useResize.ts:5](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useResize.ts#L5)
 
 ___
 
@@ -935,4 +935,4 @@ ___
 
 #### Defined in
 
-[react/src/hooks/useSvg.ts:5](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/react/src/hooks/useSvg.ts#L5)
+[react/src/hooks/useSvg.ts:5](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/react/src/hooks/useSvg.ts#L5)

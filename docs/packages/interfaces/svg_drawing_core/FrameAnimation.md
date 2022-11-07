@@ -10,7 +10,7 @@
 
 #### Defined in
 
-[core/src/types.ts:295](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L295)
+[core/src/types.ts:314](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L314)
 
 ## Methods
 
@@ -31,4 +31,4 @@
 
 #### Defined in
 
-[core/src/types.ts:296](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L296)
+[core/src/types.ts:315](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L315)

@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[core/src/drawing/convert.ts:23](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/convert.ts#L23)
+[core/src/drawing/convert.ts:25](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/convert.ts#L25)
 
 ## Properties
 
@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[core/src/drawing/convert.ts:22](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/convert.ts#L22)
+[core/src/drawing/convert.ts:24](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/convert.ts#L24)
 
 ## Methods
 
@@ -54,7 +54,7 @@ GenerateCommandsConverter.create
 
 #### Defined in
 
-[core/src/drawing/convert.ts:54](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/convert.ts#L54)
+[core/src/drawing/convert.ts:61](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/convert.ts#L61)
 
 ___
 
@@ -77,4 +77,4 @@ ___
 
 #### Defined in
 
-[core/src/drawing/convert.ts:28](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/convert.ts#L28)
+[core/src/drawing/convert.ts:30](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/convert.ts#L30)

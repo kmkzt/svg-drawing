@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[core/src/drawing/factory.ts:11](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/factory.ts#L11)
+[core/src/drawing/factory.ts:11](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/factory.ts#L11)
 
 ## Accessors
 
@@ -41,7 +41,7 @@
 
 #### Defined in
 
-[core/src/drawing/factory.ts:29](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/factory.ts#L29)
+[core/src/drawing/factory.ts:29](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/factory.ts#L29)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/factory.ts:63](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/factory.ts#L63)
+[core/src/drawing/factory.ts:63](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/factory.ts#L63)
 
 ## Methods
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/factory.ts:56](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/factory.ts#L56)
+[core/src/drawing/factory.ts:56](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/factory.ts#L56)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/factory.ts:49](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/factory.ts#L49)
+[core/src/drawing/factory.ts:49](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/factory.ts#L49)
 
 ___
 
@@ -118,7 +118,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/factory.ts:22](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/factory.ts#L22)
+[core/src/drawing/factory.ts:22](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/factory.ts#L22)
 
 ___
 
@@ -138,7 +138,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/factory.ts:38](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/factory.ts#L38)
+[core/src/drawing/factory.ts:38](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/factory.ts#L38)
 
 ___
 
@@ -158,4 +158,4 @@ ___
 
 #### Defined in
 
-[core/src/drawing/factory.ts:42](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/factory.ts#L42)
+[core/src/drawing/factory.ts:42](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/factory.ts#L42)

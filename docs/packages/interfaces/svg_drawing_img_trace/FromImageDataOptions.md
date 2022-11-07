@@ -10,7 +10,7 @@
 
 #### Defined in
 
-[img-trace/src/palette.ts:13](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/palette.ts#L13)
+[img-trace/src/palette.ts:13](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/palette.ts#L13)
 
 ___
 
@@ -20,4 +20,4 @@ ___
 
 #### Defined in
 
-[img-trace/src/palette.ts:12](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/img-trace/src/palette.ts#L12)
+[img-trace/src/palette.ts:12](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/palette.ts#L12)

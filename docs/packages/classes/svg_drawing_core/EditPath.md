@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[core/src/edit/editPath.ts:16](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editPath.ts#L16)
+[core/src/edit/editPath.ts:16](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editPath.ts#L16)
 
 ## Methods
 
@@ -31,4 +31,4 @@
 
 #### Defined in
 
-[core/src/edit/editPath.ts:18](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editPath.ts#L18)
+[core/src/edit/editPath.ts:18](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editPath.ts#L18)

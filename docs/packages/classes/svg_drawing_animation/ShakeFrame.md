@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[animation/src/index.ts:10](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/animation/src/index.ts#L10)
+[animation/src/index.ts:10](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/animation/src/index.ts#L10)
 
 ## Properties
 
@@ -34,7 +34,7 @@ FrameAnimation.loops
 
 #### Defined in
 
-[animation/src/index.ts:9](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/animation/src/index.ts#L9)
+[animation/src/index.ts:9](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/animation/src/index.ts#L9)
 
 ## Methods
 
@@ -58,4 +58,4 @@ FrameAnimation.animation
 
 #### Defined in
 
-[animation/src/index.ts:18](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/animation/src/index.ts#L18)
+[animation/src/index.ts:18](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/animation/src/index.ts#L18)

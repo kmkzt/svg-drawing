@@ -21,9 +21,27 @@
 
 #### Defined in
 
-[core/src/svg/point.ts:14](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L14)
+[core/src/svg/point.ts:14](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L14)
 
 ## Accessors
+
+### values
+
+• `get` **values**(): [`number`, `number`]
+
+#### Returns
+
+[`number`, `number`]
+
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[values](../../interfaces/svg_drawing_core/PointClass.md#values)
+
+#### Defined in
+
+[core/src/svg/point.ts:27](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L27)
+
+___
 
 ### x
 
@@ -39,7 +57,7 @@
 
 #### Defined in
 
-[core/src/svg/point.ts:19](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L19)
+[core/src/svg/point.ts:19](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L19)
 
 ___
 
@@ -57,7 +75,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/point.ts:23](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L23)
+[core/src/svg/point.ts:23](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L23)
 
 ## Methods
 
@@ -81,7 +99,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/point.ts:39](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L39)
+[core/src/svg/point.ts:43](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L43)
 
 ___
 
@@ -99,7 +117,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/point.ts:47](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L47)
+[core/src/svg/point.ts:51](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L51)
 
 ___
 
@@ -123,7 +141,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/point.ts:27](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L27)
+[core/src/svg/point.ts:31](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L31)
 
 ___
 
@@ -147,7 +165,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/point.ts:31](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L31)
+[core/src/svg/point.ts:35](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L35)
 
 ___
 
@@ -171,7 +189,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/point.ts:35](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L35)
+[core/src/svg/point.ts:39](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L39)
 
 ___
 
@@ -195,7 +213,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/point.ts:43](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L43)
+[core/src/svg/point.ts:47](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L47)
 
 ___
 
@@ -218,7 +236,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/point.ts:51](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L51)
+[core/src/svg/point.ts:55](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L55)
 
 ___
 
@@ -247,4 +265,4 @@ console.log(point.y) // 1
 
 #### Defined in
 
-[core/src/svg/point.ts:68](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/point.ts#L68)
+[core/src/svg/point.ts:72](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L72)

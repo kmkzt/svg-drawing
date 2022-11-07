@@ -34,7 +34,7 @@ resizeHandler.on()
 
 #### Defined in
 
-[core/src/resize.ts:27](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/resize.ts#L27)
+[core/src/resize.ts:27](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L27)
 
 ## Accessors
 
@@ -52,7 +52,7 @@ resizeHandler.on()
 
 #### Defined in
 
-[core/src/resize.ts:33](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/resize.ts#L33)
+[core/src/resize.ts:33](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L33)
 
 ## Methods
 
@@ -70,7 +70,7 @@ resizeHandler.on()
 
 #### Defined in
 
-[core/src/resize.ts:37](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/resize.ts#L37)
+[core/src/resize.ts:37](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L37)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[core/src/resize.ts:42](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/resize.ts#L42)
+[core/src/resize.ts:42](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L42)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[core/src/resize.ts:47](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/resize.ts#L47)
+[core/src/resize.ts:47](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L47)
 
 ___
 
@@ -136,4 +136,4 @@ ___
 
 #### Defined in
 
-[core/src/resize.ts:53](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/resize.ts#L53)
+[core/src/resize.ts:53](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L53)

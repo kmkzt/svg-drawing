@@ -10,4 +10,4 @@
 
 #### Defined in
 
-[core/src/types.ts:156](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L156)
+[core/src/types.ts:175](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L175)

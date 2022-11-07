@@ -44,7 +44,7 @@ new Drawing(
 
 #### Defined in
 
-[core/src/drawing/drawing.ts:30](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/drawing.ts#L30)
+[core/src/drawing/drawing.ts:30](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/drawing.ts#L30)
 
 ## Properties
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/drawing.ts:51](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/drawing.ts#L51)
+[core/src/drawing/drawing.ts:51](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/drawing.ts#L51)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/drawing.ts:62](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/drawing.ts#L62)
+[core/src/drawing/drawing.ts:60](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/drawing.ts#L60)
 
 ___
 
@@ -116,4 +116,4 @@ ___
 
 #### Defined in
 
-[core/src/drawing/drawing.ts:45](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/drawing.ts#L45)
+[core/src/drawing/drawing.ts:45](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/drawing.ts#L45)

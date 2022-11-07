@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[core/src/download.ts:56](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/download.ts#L56)
+[core/src/download.ts:56](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/download.ts#L56)
 
 ## Methods
 
@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[core/src/download.ts:75](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/download.ts#L75)
+[core/src/download.ts:75](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/download.ts#L75)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[core/src/download.ts:68](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/download.ts#L68)
+[core/src/download.ts:68](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/download.ts#L68)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[core/src/download.ts:60](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/download.ts#L60)
+[core/src/download.ts:60](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/download.ts#L60)
 
 ___
 
@@ -91,4 +91,4 @@ ___
 
 #### Defined in
 
-[core/src/download.ts:82](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/download.ts#L82)
+[core/src/download.ts:82](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/download.ts#L82)

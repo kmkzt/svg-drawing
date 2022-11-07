@@ -16,7 +16,7 @@
 
 #### Defined in
 
-[core/src/animation/animation.ts:31](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/animation/animation.ts#L31)
+[core/src/animation/animation.ts:31](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/animation/animation.ts#L31)
 
 ## Properties
 
@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[core/src/animation/animation.ts:28](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/animation/animation.ts#L28)
+[core/src/animation/animation.ts:28](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/animation/animation.ts#L28)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-[core/src/animation/animation.ts:26](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/animation/animation.ts#L26)
+[core/src/animation/animation.ts:26](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/animation/animation.ts#L26)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[core/src/animation/animation.ts:27](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/animation/animation.ts#L27)
+[core/src/animation/animation.ts:27](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/animation/animation.ts#L27)
 
 ## Methods
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[core/src/animation/animation.ts:55](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/animation/animation.ts#L55)
+[core/src/animation/animation.ts:55](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/animation/animation.ts#L55)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[core/src/animation/animation.ts:84](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/animation/animation.ts#L84)
+[core/src/animation/animation.ts:84](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/animation/animation.ts#L84)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[core/src/animation/animation.ts:63](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/animation/animation.ts#L63)
+[core/src/animation/animation.ts:63](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/animation/animation.ts#L63)
 
 ___
 
@@ -126,7 +126,7 @@ repeatCount of animate element attribute.
 
 #### Defined in
 
-[core/src/animation/animation.ts:43](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/animation/animation.ts#L43)
+[core/src/animation/animation.ts:43](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/animation/animation.ts#L43)
 
 ___
 
@@ -140,4 +140,4 @@ ___
 
 #### Defined in
 
-[core/src/animation/animation.ts:90](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/animation/animation.ts#L90)
+[core/src/animation/animation.ts:90](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/animation/animation.ts#L90)

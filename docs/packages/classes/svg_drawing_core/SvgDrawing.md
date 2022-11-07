@@ -43,7 +43,7 @@ new SvgDrawing(el, options)
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:51](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L51)
+[core/src/SvgDrawing.ts:51](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L51)
 
 ## Methods
 
@@ -63,7 +63,7 @@ new SvgDrawing(el, options)
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:108](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L108)
+[core/src/SvgDrawing.ts:108](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L108)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:104](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L104)
+[core/src/SvgDrawing.ts:104](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L104)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:112](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L112)
+[core/src/SvgDrawing.ts:112](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L112)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:96](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L96)
+[core/src/SvgDrawing.ts:96](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L96)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:92](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L92)
+[core/src/SvgDrawing.ts:92](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L92)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:88](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L88)
+[core/src/SvgDrawing.ts:88](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L88)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:129](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L129)
+[core/src/SvgDrawing.ts:129](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L129)
 
 ___
 
@@ -181,7 +181,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:100](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L100)
+[core/src/SvgDrawing.ts:100](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L100)
 
 ___
 
@@ -195,4 +195,4 @@ ___
 
 #### Defined in
 
-[core/src/SvgDrawing.ts:119](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgDrawing.ts#L119)
+[core/src/SvgDrawing.ts:119](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgDrawing.ts#L119)

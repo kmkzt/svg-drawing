@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[core/src/svg/vector.ts:4](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/vector.ts#L4)
+[core/src/svg/vector.ts:4](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L4)
 
 ## Properties
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/vector.ts:10](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/vector.ts#L10)
+[core/src/svg/vector.ts:10](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L10)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/vector.ts:6](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/vector.ts#L6)
+[core/src/svg/vector.ts:6](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L6)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[core/src/svg/vector.ts:14](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/vector.ts#L14)
+[core/src/svg/vector.ts:14](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L14)
 
 ___
 
@@ -141,4 +141,4 @@ console.log(vector.value) // 1.4142135623730951
 
 #### Defined in
 
-[core/src/svg/vector.ts:31](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/svg/vector.ts#L31)
+[core/src/svg/vector.ts:31](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L31)

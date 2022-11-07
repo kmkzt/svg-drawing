@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[core/src/types.ts:120](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L120)
+[core/src/types.ts:139](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L139)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:119](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L119)
+[core/src/types.ts:138](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L138)
 
 ___
 
@@ -36,7 +36,7 @@ Svg child element
 
 #### Defined in
 
-[core/src/types.ts:117](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L117)
+[core/src/types.ts:136](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L136)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:118](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L118)
+[core/src/types.ts:137](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L137)
 
 ## Methods
 
@@ -68,7 +68,7 @@ Add multiple paths.
 
 #### Defined in
 
-[core/src/types.ts:124](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L124)
+[core/src/types.ts:143](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L143)
 
 ___
 
@@ -84,7 +84,7 @@ Return cloned class object.
 
 #### Defined in
 
-[core/src/types.ts:146](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L146)
+[core/src/types.ts:165](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L165)
 
 ___
 
@@ -100,7 +100,7 @@ Return cloned paths.
 
 #### Defined in
 
-[core/src/types.ts:132](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L132)
+[core/src/types.ts:151](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L151)
 
 ___
 
@@ -129,7 +129,7 @@ const animateSvg = new Svg().copy(drawSvg)
 
 #### Defined in
 
-[core/src/types.ts:144](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L144)
+[core/src/types.ts:163](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L163)
 
 ___
 
@@ -151,7 +151,7 @@ Delete paths
 
 #### Defined in
 
-[core/src/types.ts:130](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L130)
+[core/src/types.ts:149](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L149)
 
 ___
 
@@ -173,7 +173,7 @@ Get path
 
 #### Defined in
 
-[core/src/types.ts:126](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L126)
+[core/src/types.ts:145](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L145)
 
 ___
 
@@ -197,7 +197,7 @@ Resize svg and path of children.
 
 #### Defined in
 
-[core/src/types.ts:122](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L122)
+[core/src/types.ts:141](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L141)
 
 ___
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:133](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L133)
+[core/src/types.ts:152](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L152)
 
 ___
 
@@ -233,4 +233,4 @@ Update path
 
 #### Defined in
 
-[core/src/types.ts:128](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L128)
+[core/src/types.ts:147](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L147)

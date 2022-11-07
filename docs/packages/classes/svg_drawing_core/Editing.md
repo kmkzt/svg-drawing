@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[core/src/edit/editing.ts:10](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L10)
+[core/src/edit/editing.ts:10](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L10)
 
 ## Properties
 
@@ -61,7 +61,7 @@ Clear selected status and update screen.
 
 #### Defined in
 
-[core/src/edit/editing.ts:28](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L28)
+[core/src/edit/editing.ts:28](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L28)
 
 ___
 
@@ -83,7 +83,7 @@ Change attributes and update screen.
 
 #### Defined in
 
-[core/src/edit/editing.ts:46](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L46)
+[core/src/edit/editing.ts:46](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L46)
 
 ___
 
@@ -99,7 +99,7 @@ Delete path and update screen.
 
 #### Defined in
 
-[core/src/edit/editing.ts:40](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L40)
+[core/src/edit/editing.ts:40](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L40)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[core/src/edit/editing.ts:64](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L64)
+[core/src/edit/editing.ts:64](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L64)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[core/src/edit/editing.ts:68](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L68)
+[core/src/edit/editing.ts:68](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L68)
 
 ___
 
@@ -164,7 +164,7 @@ Select edit path and update screen.
 
 #### Defined in
 
-[core/src/edit/editing.ts:34](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L34)
+[core/src/edit/editing.ts:34](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L34)
 
 ___
 
@@ -186,7 +186,7 @@ Set the callback function to update the screen
 
 #### Defined in
 
-[core/src/edit/editing.ts:23](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L23)
+[core/src/edit/editing.ts:23](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L23)
 
 ___
 
@@ -206,7 +206,7 @@ ___
 
 #### Defined in
 
-[core/src/edit/editing.ts:55](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L55)
+[core/src/edit/editing.ts:55](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L55)
 
 ___
 
@@ -226,4 +226,4 @@ ___
 
 #### Defined in
 
-[core/src/edit/editing.ts:51](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editing.ts#L51)
+[core/src/edit/editing.ts:51](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editing.ts#L51)

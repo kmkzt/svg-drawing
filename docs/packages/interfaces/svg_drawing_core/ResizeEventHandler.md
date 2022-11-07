@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[core/src/types.ts:178](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L178)
+[core/src/types.ts:197](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L197)
 
 ## Methods
 
@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[core/src/types.ts:180](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L180)
+[core/src/types.ts:199](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L199)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:179](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L179)
+[core/src/types.ts:198](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L198)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:181](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L181)
+[core/src/types.ts:200](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L200)
 
 ___
 
@@ -82,4 +82,4 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:182](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L182)
+[core/src/types.ts:201](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L201)

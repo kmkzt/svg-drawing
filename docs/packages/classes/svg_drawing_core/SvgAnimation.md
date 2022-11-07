@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[core/src/SvgAnimation.ts:18](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgAnimation.ts#L18)
+[core/src/SvgAnimation.ts:18](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgAnimation.ts#L18)
 
 ## Properties
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgAnimation.ts:110](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgAnimation.ts#L110)
+[core/src/SvgAnimation.ts:110](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgAnimation.ts#L110)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgAnimation.ts:33](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgAnimation.ts#L33)
+[core/src/SvgAnimation.ts:33](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgAnimation.ts#L33)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgAnimation.ts:38](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgAnimation.ts#L38)
+[core/src/SvgAnimation.ts:38](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgAnimation.ts#L38)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgAnimation.ts:26](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgAnimation.ts#L26)
+[core/src/SvgAnimation.ts:26](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgAnimation.ts#L26)
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-[core/src/SvgAnimation.ts:78](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgAnimation.ts#L78)
+[core/src/SvgAnimation.ts:78](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgAnimation.ts#L78)
 
 ___
 
@@ -129,4 +129,4 @@ ___
 
 #### Defined in
 
-[core/src/SvgAnimation.ts:117](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/SvgAnimation.ts#L117)
+[core/src/SvgAnimation.ts:117](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/SvgAnimation.ts#L117)

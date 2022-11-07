@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[core/src/types.ts:212](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L212)
+[core/src/types.ts:231](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L231)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:213](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L213)
+[core/src/types.ts:232](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L232)
 
 ___
 
@@ -52,4 +52,4 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:211](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L211)
+[core/src/types.ts:230](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L230)

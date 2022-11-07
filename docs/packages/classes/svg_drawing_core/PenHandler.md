@@ -27,7 +27,7 @@
 
 #### Defined in
 
-[core/src/drawing/eventHandler.ts:236](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/eventHandler.ts#L236)
+[core/src/drawing/eventHandler.ts:236](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/eventHandler.ts#L236)
 
 ## Properties
 
@@ -65,7 +65,7 @@ BaseHandler.active
 
 #### Defined in
 
-[core/src/drawing/eventHandler.ts:73](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/eventHandler.ts#L73)
+[core/src/drawing/eventHandler.ts:73](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/eventHandler.ts#L73)
 
 ## Methods
 
@@ -89,7 +89,7 @@ BaseHandler.active
 
 #### Defined in
 
-[core/src/drawing/eventHandler.ts:103](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/eventHandler.ts#L103)
+[core/src/drawing/eventHandler.ts:103](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/eventHandler.ts#L103)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/eventHandler.ts:77](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/eventHandler.ts#L77)
+[core/src/drawing/eventHandler.ts:77](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/eventHandler.ts#L77)
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/eventHandler.ts:82](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/eventHandler.ts#L82)
+[core/src/drawing/eventHandler.ts:82](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/eventHandler.ts#L82)
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/eventHandler.ts:98](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/eventHandler.ts#L98)
+[core/src/drawing/eventHandler.ts:98](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/eventHandler.ts#L98)
 
 ___
 
@@ -173,7 +173,7 @@ ___
 
 #### Defined in
 
-[core/src/drawing/eventHandler.ts:91](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/eventHandler.ts#L91)
+[core/src/drawing/eventHandler.ts:91](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/eventHandler.ts#L91)
 
 ___
 
@@ -191,4 +191,4 @@ ___
 
 #### Defined in
 
-[core/src/drawing/eventHandler.ts:242](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/drawing/eventHandler.ts#L242)
+[core/src/drawing/eventHandler.ts:242](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/drawing/eventHandler.ts#L242)

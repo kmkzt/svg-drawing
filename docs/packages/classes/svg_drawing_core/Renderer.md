@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[core/src/renderer.ts:78](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/renderer.ts#L78)
+[core/src/renderer.ts:78](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/renderer.ts#L78)
 
 ## Properties
 
@@ -46,4 +46,4 @@ Update render
 
 #### Defined in
 
-[core/src/renderer.ts:88](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/renderer.ts#L88)
+[core/src/renderer.ts:88](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/renderer.ts#L88)

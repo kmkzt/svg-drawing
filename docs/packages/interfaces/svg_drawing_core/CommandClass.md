@@ -6,31 +6,17 @@
 
 | Name | Type |
 | :------ | :------ |
-| `T` | [`CommandType`](../../modules/svg_drawing_core.md#commandtype) |
-
-## Implemented by
-
-- [`Close`](../../classes/svg_drawing_core/Close.md)
-- [`Curve`](../../classes/svg_drawing_core/Curve.md)
-- [`Line`](../../classes/svg_drawing_core/Line.md)
-- [`Move`](../../classes/svg_drawing_core/Move.md)
-- [`OtherCommand`](../../classes/svg_drawing_core/OtherCommand.md)
-- [`QuadraticCurve`](../../classes/svg_drawing_core/QuadraticCurve.md)
-- [`RelativeCurve`](../../classes/svg_drawing_core/RelativeCurve.md)
-- [`RelativeLine`](../../classes/svg_drawing_core/RelativeLine.md)
-- [`RelativeMove`](../../classes/svg_drawing_core/RelativeMove.md)
-- [`RelativeQuadraticCurve`](../../classes/svg_drawing_core/RelativeQuadraticCurve.md)
-- [`RelativeShortcutCurve`](../../classes/svg_drawing_core/RelativeShortcutCurve.md)
+| `T` | extends [`CommandType`](../../modules/svg_drawing_core.md#commandtype) = [`CommandType`](../../modules/svg_drawing_core.md#commandtype) |
 
 ## Properties
 
 ### point
 
-• **point**: `T` extends [`OtherCommandType`](../../modules/svg_drawing_core.md#othercommandtype) ? `undefined` : [`PointClass`](PointClass.md)
+• `Readonly` **point**: `T` extends [`OtherCommandType`](../../modules/svg_drawing_core.md#othercommandtype) ? `undefined` : [`PointClass`](PointClass.md)
 
 #### Defined in
 
-[core/src/types.ts:59](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L59)
+[core/src/types.ts:73](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L73)
 
 ___
 
@@ -40,27 +26,27 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:58](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L58)
+[core/src/types.ts:74](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L74)
 
 ___
 
 ### type
 
-• **type**: `T`
+• `Readonly` **type**: `T`
 
 #### Defined in
 
-[core/src/types.ts:56](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L56)
+[core/src/types.ts:71](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L71)
 
 ___
 
 ### values
 
-• **values**: `number`[]
+• `Readonly` **values**: `number`[]
 
 #### Defined in
 
-[core/src/types.ts:57](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L57)
+[core/src/types.ts:72](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L72)
 
 ## Methods
 
@@ -74,7 +60,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:61](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L61)
+[core/src/types.ts:76](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L76)
 
 ___
 
@@ -94,7 +80,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:62](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L62)
+[core/src/types.ts:77](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L77)
 
 ___
 
@@ -114,7 +100,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:63](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L63)
+[core/src/types.ts:78](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L78)
 
 ___
 
@@ -134,7 +120,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:64](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L64)
+[core/src/types.ts:79](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L79)
 
 ___
 
@@ -148,7 +134,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:60](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L60)
+[core/src/types.ts:75](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L75)
 
 ___
 
@@ -168,4 +154,4 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:65](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L65)
+[core/src/types.ts:80](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L80)

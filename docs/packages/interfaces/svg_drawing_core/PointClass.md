@@ -8,13 +8,23 @@
 
 ## Properties
 
+### values
+
+• `Readonly` **values**: [`number`, `number`]
+
+#### Defined in
+
+[core/src/types.ts:9](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L9)
+
+___
+
 ### x
 
 • `Readonly` **x**: `number`
 
 #### Defined in
 
-[core/src/types.ts:7](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L7)
+[core/src/types.ts:7](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L7)
 
 ___
 
@@ -24,7 +34,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:8](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L8)
+[core/src/types.ts:8](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L8)
 
 ## Methods
 
@@ -44,7 +54,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:12](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L12)
+[core/src/types.ts:13](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L13)
 
 ___
 
@@ -58,7 +68,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:14](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L14)
+[core/src/types.ts:15](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L15)
 
 ___
 
@@ -78,7 +88,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:9](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L9)
+[core/src/types.ts:10](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L10)
 
 ___
 
@@ -98,7 +108,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:10](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L10)
+[core/src/types.ts:11](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L11)
 
 ___
 
@@ -118,7 +128,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:11](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L11)
+[core/src/types.ts:12](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L12)
 
 ___
 
@@ -138,7 +148,7 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:13](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L13)
+[core/src/types.ts:14](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L14)
 
 ___
 
@@ -152,4 +162,4 @@ ___
 
 #### Defined in
 
-[core/src/types.ts:15](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/types.ts#L15)
+[core/src/types.ts:16](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/types.ts#L16)

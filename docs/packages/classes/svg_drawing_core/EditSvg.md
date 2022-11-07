@@ -16,7 +16,7 @@
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:18](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L18)
+[core/src/edit/editSvg.ts:18](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L18)
 
 ## Properties
 
@@ -38,7 +38,7 @@ Return true when some path selected.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:21](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L21)
+[core/src/edit/editSvg.ts:21](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L21)
 
 ## Methods
 
@@ -54,7 +54,7 @@ Clear selected status.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:40](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L40)
+[core/src/edit/editSvg.ts:40](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L40)
 
 ___
 
@@ -76,7 +76,7 @@ Change attributes of selected path.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:45](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L45)
+[core/src/edit/editSvg.ts:45](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L45)
 
 ___
 
@@ -94,7 +94,7 @@ Delete the selected path.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:97](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L97)
+[core/src/edit/editSvg.ts:97](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L97)
 
 ___
 
@@ -110,7 +110,7 @@ Clone an EditSvg class object for preview.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:118](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L118)
+[core/src/edit/editSvg.ts:118](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L118)
 
 ___
 
@@ -133,7 +133,7 @@ Resize based on the bounding box vertices
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:86](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L86)
+[core/src/edit/editSvg.ts:86](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L86)
 
 ___
 
@@ -155,7 +155,7 @@ Scale the selected path.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:59](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L59)
+[core/src/edit/editSvg.ts:59](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L59)
 
 ___
 
@@ -177,7 +177,7 @@ Scale the selected path horizontally.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:68](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L68)
+[core/src/edit/editSvg.ts:68](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L68)
 
 ___
 
@@ -199,7 +199,7 @@ Scale the selected path vertically.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:77](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L77)
+[core/src/edit/editSvg.ts:77](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L77)
 
 ___
 
@@ -222,7 +222,7 @@ Select path index.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:34](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L34)
+[core/src/edit/editSvg.ts:34](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L34)
 
 ___
 
@@ -238,7 +238,7 @@ Return data in json format.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:125](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L125)
+[core/src/edit/editSvg.ts:125](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L125)
 
 ___
 
@@ -260,4 +260,4 @@ Translate position of selected path.
 
 #### Defined in
 
-[core/src/edit/editSvg.ts:50](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/editSvg.ts#L50)
+[core/src/edit/editSvg.ts:50](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/editSvg.ts#L50)

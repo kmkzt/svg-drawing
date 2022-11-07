@@ -16,7 +16,7 @@
 
 #### Defined in
 
-[core/src/edit/resizePathHandler.ts:7](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/resizePathHandler.ts#L7)
+[core/src/edit/resizePathHandler.ts:7](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/resizePathHandler.ts#L7)
 
 ## Properties
 
@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[core/src/edit/resizePathHandler.ts:51](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/resizePathHandler.ts#L51)
+[core/src/edit/resizePathHandler.ts:51](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/resizePathHandler.ts#L51)
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 #### Defined in
 
-[core/src/edit/resizePathHandler.ts:42](https://github.com/kmkzt/svg-drawing/blob/6e54c2f/packages/core/src/edit/resizePathHandler.ts#L42)
+[core/src/edit/resizePathHandler.ts:42](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/edit/resizePathHandler.ts#L42)
