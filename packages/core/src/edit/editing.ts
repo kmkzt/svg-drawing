@@ -8,20 +8,15 @@ import type { EditSvg } from './editSvg'
 
 export class Editing {
   constructor(
-    public editSvg: EditSvg,
+    private editSvg: EditSvg,
     /** Callback function that refreshes the screen. */
-    public updater: (eSvg: EditSvg) => void = () => void 0
+    private updater: (eSvg: EditSvg) => void = () => void 0
   ) {
     this.translate = this.translate.bind(this)
     this.translatePreview = this.translatePreview.bind(this)
 
     this.resize = this.resize.bind(this)
     this.resizePreview = this.resizePreview.bind(this)
-  }
-
-  /** Set the callback function to update the screen */
-  setupUpdater(upd: (eSvg: EditSvg) => void) {
-    this.updater = upd
   }
 
   /** Clear selected status and update screen. */
