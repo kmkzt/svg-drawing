@@ -127,6 +127,6 @@ export class Path implements PathClass {
         ...this.attrs,
       },
       this.key
-    ).addCommand(this.commands.map((c) => c.clone()))
+    ).setCommands(this.commands.map((c) => c.clone()))
   }
 }

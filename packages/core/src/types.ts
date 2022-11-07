@@ -92,7 +92,7 @@ export type PathObject = {
 
 export interface PathClass {
   /** Identification key. Use for update, delete. Return same key when PathClass cloned. */
-  readonly key: string
+  key: string
   readonly attrs: PathAttributes
   readonly absoluteCommands: CommandClass[]
   readonly relativeCommands: CommandClass[]

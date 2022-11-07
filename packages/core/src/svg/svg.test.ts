@@ -1,4 +1,4 @@
-import { Close, Curve, Line, Move } from './command'
+import { createCommand } from './command'
 import { Path } from './path'
 import { Point } from './point'
 import { Svg } from './svg'
@@ -28,17 +28,25 @@ describe('Svg', () => {
     it('Resize the path to fit the resized width.', () => {
       const svg = new Svg({ width: 100, height: 100 })
 
-      const testPath = new Path(undefined, 'p1')
-        .addCommand(new Move(new Point(0, 0)))
-        .addCommand(
-          new Curve([new Point(0.2, 0.2), new Point(0.6, 0.8), new Point(1, 1)])
-        )
-        .addCommand(
-          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
-        )
-        .addCommand(
-          new Curve([new Point(2.4, 0.8), new Point(2.8, 0.2), new Point(3, 0)])
-        )
+      const testPath = new Path(undefined, 'p1').addCommand([
+        {
+          type: 'M',
+          values: [0, 0],
+        },
+        {
+          type: 'C',
+          values: [0.2, 0.2, 0.6, 0.8, 1, 1],
+        },
+        {
+          type: 'C',
+          values: [1.4, 1.2, 1.6, 1.2, 2, 1],
+        },
+        {
+          type: 'C',
+          values: [2.4, 0.8, 2.8, 0.2, 3, 0],
+        },
+      ])
+
       svg.addPath(testPath)
 
       const resizeArgs = { width: 200, height: 300 }
@@ -54,17 +62,25 @@ describe('Svg', () => {
     it('Resize path of copied object.', () => {
       const svg = new Svg({ width: 100, height: 100 })
 
-      const testPath = new Path(undefined, 'p1')
-        .addCommand(new Move(new Point(0, 0)))
-        .addCommand(
-          new Curve([new Point(0.2, 0.2), new Point(0.6, 0.8), new Point(1, 1)])
-        )
-        .addCommand(
-          new Curve([new Point(1.4, 1.2), new Point(1.6, 1.2), new Point(2, 1)])
-        )
-        .addCommand(
-          new Curve([new Point(2.4, 0.8), new Point(2.8, 0.2), new Point(3, 0)])
-        )
+      const testPath = new Path(undefined, 'p1').addCommand([
+        {
+          type: 'M',
+          values: [0, 0],
+        },
+        {
+          type: 'C',
+          values: [0.2, 0.2, 0.6, 0.8, 1, 1],
+        },
+        {
+          type: 'C',
+          values: [1.4, 1.2, 1.6, 1.2, 2, 1],
+        },
+        {
+          type: 'C',
+          values: [2.4, 0.8, 2.8, 0.2, 3, 0],
+        },
+      ])
+
       const copiedSvg = new Svg({ width: 200, height: 200 })
       copiedSvg.addPath(testPath)
 
@@ -79,41 +95,52 @@ describe('Svg', () => {
   describe('addPath', () => {
     it('Add an array of paths', () => {
       const svg = new Svg({ width: 500, height: 500 }).addPath([
-        new Path(undefined, 'p1')
-          .addCommand(new Move(new Point(0, 0)))
-          .addCommand(
-            new Curve([
-              new Point(0.2, 0.2),
-              new Point(0.6, 0.8),
-              new Point(1, 1),
-            ])
-          )
-          .addCommand(
-            new Curve([
-              new Point(1.4, 1.2),
-              new Point(1.6, 1.2),
-              new Point(2, 1),
-            ])
-          )
-          .addCommand(
-            new Curve([
-              new Point(2.4, 0.8),
-              new Point(2.8, 0.2),
-              new Point(3, 0),
-            ])
-          ),
+        new Path(undefined, 'p1').addCommand([
+          {
+            type: 'M',
+            values: [0, 0],
+          },
+          {
+            type: 'C',
+            values: [0.2, 0.2, 0.6, 0.8, 1, 1],
+          },
+          {
+            type: 'C',
+            values: [1.4, 1.2, 1.6, 1.2, 2, 1],
+          },
+          {
+            type: 'C',
+            values: [2.4, 0.8, 2.8, 0.2, 3, 0],
+          },
+        ]),
         new Path(
           {
             strokeLinecap: 'square',
             strokeLinejoin: 'mitter',
           },
           'p2'
-        )
-          .addCommand(new Move(new Point(4, 4)))
-          .addCommand(new Line(new Point(9, 4)))
-          .addCommand(new Line(new Point(9, 8)))
-          .addCommand(new Line(new Point(3, 0)))
-          .addCommand(new Close()),
+        ).addCommand([
+          {
+            type: 'M',
+            values: [4, 4],
+          },
+          {
+            type: 'L',
+            values: [9, 4],
+          },
+          {
+            type: 'L',
+            values: [9, 8],
+          },
+          {
+            type: 'L',
+            values: [3, 0],
+          },
+          {
+            type: 'Z',
+            values: [],
+          },
+        ]),
       ])
 
       expect(svg.toJson()).toMatchInlineSnapshot(`
@@ -146,29 +173,24 @@ describe('Svg', () => {
     it('Add path', () => {
       const svg = new Svg({ width: 500, height: 500 })
         .addPath(
-          new Path(undefined, 'p1')
-            .addCommand(new Move(new Point(0, 0)))
-            .addCommand(
-              new Curve([
-                new Point(0.2, 0.2),
-                new Point(0.6, 0.8),
-                new Point(1, 1),
-              ])
-            )
-            .addCommand(
-              new Curve([
-                new Point(1.4, 1.2),
-                new Point(1.6, 1.2),
-                new Point(2, 1),
-              ])
-            )
-            .addCommand(
-              new Curve([
-                new Point(2.4, 0.8),
-                new Point(2.8, 0.2),
-                new Point(3, 0),
-              ])
-            )
+          new Path(undefined, 'p1').addCommand([
+            {
+              type: 'M',
+              values: [0, 0],
+            },
+            {
+              type: 'C',
+              values: [0.2, 0.2, 0.6, 0.8, 1, 1],
+            },
+            {
+              type: 'C',
+              values: [1.4, 1.2, 1.6, 1.2, 2, 1],
+            },
+            {
+              type: 'C',
+              values: [2.4, 0.8, 2.8, 0.2, 3, 0],
+            },
+          ])
         )
         .addPath(
           new Path(
@@ -177,12 +199,28 @@ describe('Svg', () => {
               strokeLinejoin: 'mitter',
             },
             'p2'
-          )
-            .addCommand(new Move(new Point(4, 4)))
-            .addCommand(new Line(new Point(9, 4)))
-            .addCommand(new Line(new Point(9, 8)))
-            .addCommand(new Line(new Point(3, 0)))
-            .addCommand(new Close())
+          ).addCommand([
+            {
+              type: 'M',
+              values: [4, 4],
+            },
+            {
+              type: 'L',
+              values: [9, 4],
+            },
+            {
+              type: 'L',
+              values: [9, 8],
+            },
+            {
+              type: 'L',
+              values: [3, 0],
+            },
+            {
+              type: 'Z',
+              values: [],
+            },
+          ])
         )
 
       expect(svg.toJson()).toMatchInlineSnapshot(`
@@ -218,29 +256,24 @@ describe('Svg', () => {
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
         .addPath(
-          new Path(undefined, 'p1')
-            .addCommand(new Move(new Point(0, 0)))
-            .addCommand(
-              new Curve([
-                new Point(0.2, 0.2),
-                new Point(0.6, 0.8),
-                new Point(1, 1),
-              ])
-            )
-            .addCommand(
-              new Curve([
-                new Point(1.4, 1.2),
-                new Point(1.6, 1.2),
-                new Point(2, 1),
-              ])
-            )
-            .addCommand(
-              new Curve([
-                new Point(2.4, 0.8),
-                new Point(2.8, 0.2),
-                new Point(3, 0),
-              ])
-            )
+          new Path(undefined, 'p1').addCommand([
+            {
+              type: 'M',
+              values: [0, 0],
+            },
+            {
+              type: 'C',
+              values: [0.2, 0.2, 0.6, 0.8, 1, 1],
+            },
+            {
+              type: 'C',
+              values: [1.4, 1.2, 1.6, 1.2, 2, 1],
+            },
+            {
+              type: 'C',
+              values: [2.4, 0.8, 2.8, 0.2, 3, 0],
+            },
+          ])
         )
         .addPath(
           new Path(
@@ -249,12 +282,28 @@ describe('Svg', () => {
               strokeLinejoin: 'mitter',
             },
             'p2'
-          )
-            .addCommand(new Move(new Point(4, 4)))
-            .addCommand(new Line(new Point(9, 4)))
-            .addCommand(new Line(new Point(9, 8)))
-            .addCommand(new Line(new Point(3, 0)))
-            .addCommand(new Close())
+          ).addCommand([
+            {
+              type: 'M',
+              values: [4, 4],
+            },
+            {
+              type: 'L',
+              values: [9, 4],
+            },
+            {
+              type: 'L',
+              values: [9, 8],
+            },
+            {
+              type: 'L',
+              values: [3, 0],
+            },
+            {
+              type: 'Z',
+              values: [],
+            },
+          ])
         )
     })
 

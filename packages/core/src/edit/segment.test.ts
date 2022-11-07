@@ -3,7 +3,7 @@ import {
   segmentPoint,
   segmentPointsFromCommand,
 } from './segment'
-import { Curve } from '../svg/command'
+import { createCommand } from '../svg/command'
 import { Point } from '../svg/point'
 
 describe('BezierCurve calculate point', () => {
@@ -105,11 +105,17 @@ describe('BezierCurve calculate point', () => {
     it('testData example', () => {
       expect(segmentPoint(testData)).toEqual(
         segmentPointsFromCommand(
-          new Curve([
-            new Point(testData[1].x, testData[1].y),
-            new Point(testData[2].x, testData[2].y),
-            new Point(testData[3].x, testData[3].y),
-          ]),
+          createCommand({
+            type: 'C',
+            values: [
+              testData[1].x,
+              testData[1].y,
+              testData[2].x,
+              testData[2].y,
+              testData[3].x,
+              testData[3].y,
+            ],
+          }),
           {
             base: new Point(testData[0].x, testData[0].y),
           }

@@ -1,15 +1,12 @@
-import {
-  Svg,
-  Path,
-  Move,
-  Close,
-  Point,
-  Line,
-  QuadraticCurve,
-} from '@svg-drawing/core'
+import { Svg, Path, createCommand } from '@svg-drawing/core'
 import { convertRGBAImage } from './utils/convertRGBAImage'
 import type { Rgba } from './palette'
-import type { CommandClass, PathClass, PathAttributes } from '@svg-drawing/core'
+import type {
+  CommandClass,
+  PathClass,
+  PathAttributes,
+  CommandObject,
+} from '@svg-drawing/core'
 
 type ColorQuantization = number[][]
 // Edge node types ( ▓: this layer or 1; ░: not this layer or 0 )
@@ -594,16 +591,22 @@ export class ImgTrace {
     }
 
     const commands = [
-      new Move(new Point(path.points[0].x, path.points[0].y)),
+      createCommand({
+        type: 'M',
+        values: [path.points[0].x, path.points[0].y],
+      } as CommandObject<'M'>),
       ...comms,
-      new Close(),
+      createCommand({ type: 'Z', values: [] }),
     ]
     holes.reverse()
     const value = holes[holes.length - 1].values.slice(0, 2)
     const holeCommands = [
-      new Move(new Point(value[0], value[1])),
+      createCommand<'M'>({
+        type: 'M',
+        values: [value[0], value[1]],
+      }),
       ...holes,
-      new Close(),
+      createCommand({ type: 'Z', values: [] }),
     ]
     return {
       commands,
@@ -660,11 +663,12 @@ export class ImgTrace {
 
     if (curvepass) {
       return [
-        new Line(
-          isHolePath
-            ? new Point(path.points[seqstart].x, path.points[seqstart].y)
-            : new Point(path.points[seqend].x, path.points[seqend].y)
-        ),
+        createCommand({
+          type: 'L',
+          values: isHolePath
+            ? [path.points[seqstart].x, path.points[seqstart].y]
+            : [path.points[seqend].x, path.points[seqend].y],
+        }),
       ]
     }
 
@@ -711,10 +715,10 @@ export class ImgTrace {
     }
     if (curvepass) {
       return [
-        new QuadraticCurve([
-          new Point(cpx, cpy),
-          new Point(path.points[seqend].x, path.points[seqend].y),
-        ]),
+        createCommand({
+          type: 'Q',
+          values: [cpx, cpy, path.points[seqend].x, path.points[seqend].y],
+        }),
       ]
     }
     const splitpoint = fitpoint
