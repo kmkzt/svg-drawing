@@ -1,9 +1,4 @@
-import type {
-  PointObject,
-  EditVertex,
-  EditPathObject,
-  PathClass,
-} from '../types'
+import type { PointObject, AnchorPoint, PathClass } from '../types'
 import type { PathSelector } from './pathSelector'
 
 const genOutline = (points: PointObject[]) =>
@@ -12,23 +7,18 @@ const genOutline = (points: PointObject[]) =>
     ''
   )
 
-export class EditPath {
+export class AnchorPoints {
   constructor(private path: PathClass, private selector: PathSelector) {}
 
-  public toJson(): EditPathObject {
-    return {
-      path: this.path.toJson(),
-      vertex: this.vertex,
-    }
-  }
-
-  private get vertex(): EditVertex[] {
-    const vertex: EditVertex[] = []
+  toJson(): AnchorPoint[] {
+    const vertex: AnchorPoint[] = []
     const commands = this.path.absoluteCommands
 
     for (let c = 0; c < commands.length; c += 1) {
       const curr = commands[c]
       const next = commands[c + 1]
+
+      if (!curr.points.length) continue
 
       const outlinePoints: PointObject[] = [
         curr.points[1]?.toJson(),

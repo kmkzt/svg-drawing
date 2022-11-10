@@ -222,7 +222,7 @@ describe('EditSvg', () => {
             key: 'path_key_0',
             type: 'path',
           },
-          vertex: [
+          anchorPoints: [
             {
               d: 'M 2 2',
               points: [
@@ -297,10 +297,6 @@ describe('EditSvg', () => {
                   },
                 },
               ],
-            },
-            {
-              d: '',
-              points: [],
             },
           ],
         },

@@ -264,7 +264,7 @@ export type SelectIndex =
   | SelectCommandIndex
   | SelectPointIndex
 
-export type EditVertex = {
+export type AnchorPoint = {
   points: {
     index: SelectPointIndex
     selected: boolean
@@ -297,7 +297,7 @@ export type Vertex = {
 
 export type EditPathObject = {
   path: PathObject
-  vertex: EditVertex[]
+  anchorPoints: AnchorPoint[]
 }
 
 export type EditSvgObject = {

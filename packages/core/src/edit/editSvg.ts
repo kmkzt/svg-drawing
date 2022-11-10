@@ -1,5 +1,5 @@
+import { AnchorPoints } from './anchorPoint'
 import { BoundingBox } from './boundingBox'
-import { EditPath } from './editPath'
 import { PathSelector } from './pathSelector'
 import type {
   SvgClass,
@@ -128,9 +128,13 @@ export class EditSvg {
     if (!this.pathSelector.selected) return null
 
     return {
-      paths: this.paths.map((path) =>
-        new EditPath(path.clone(), this.pathSelector).toJson()
-      ),
+      paths: this.paths.map((path) => ({
+        path: path.toJson(),
+        anchorPoints: new AnchorPoints(
+          path.clone(),
+          this.pathSelector
+        ).toJson(),
+      })),
       boundingBox: new BoundingBox(this.paths).toJson(),
       selectedOnlyPaths: this.pathSelector.selectedOnlyPaths,
     }

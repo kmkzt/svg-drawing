@@ -36,14 +36,14 @@ export const EditPaths = ({
         />
       )}
       {editPaths &&
-        editPaths.map(({ path, vertex }) => (
+        editPaths.map(({ path, anchorPoints }) => (
           <g key={path.key}>
             <EditPath
               path={path}
               onSelectPaths={onSelectPaths}
               onTranslateStart={onTranslateStart}
             />
-            {vertex.map(({ points, d }, commandIndex) => (
+            {anchorPoints.map(({ points, d }, commandIndex) => (
               <g key={commandIndex}>
                 <path
                   d={d}
@@ -52,7 +52,7 @@ export const EditPaths = ({
                   fill={EDIT_CONFIG.fill.default}
                 />
                 {points.map((po, k) => (
-                  <EditPoint
+                  <AnchorPoint
                     key={k}
                     point={po.value}
                     selectIndex={po.index}
@@ -100,7 +100,7 @@ const EditPath = ({
   )
 }
 
-type EditPointProps = {
+type AnchorPointProps = {
   point: PointObject
   selectIndex: SelectIndex
   selected?: boolean
@@ -108,13 +108,13 @@ type EditPointProps = {
   onTranslateStart: (point: PointObject) => void
 }
 
-const EditPoint = ({
+const AnchorPoint = ({
   point,
   selectIndex,
   selected,
   onSelectPaths,
   onTranslateStart,
-}: EditPointProps) => {
+}: AnchorPointProps) => {
   const handleMoveStartPoint = useCallback(
     (
       ev:
