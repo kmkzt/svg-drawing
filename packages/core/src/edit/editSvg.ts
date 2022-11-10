@@ -10,7 +10,7 @@ import type {
   CommandClass,
   PathClass,
   PointClass,
-  FixedType,
+  VertexType,
 } from '../types'
 
 export class EditSvg {
@@ -33,7 +33,6 @@ export class EditSvg {
   /** Select path index. */
   select(index: SelectIndex | SelectIndex[], combined?: boolean) {
     this.pathSelector.select(index, combined)
-    return
   }
 
   /** Clear selected status. */
@@ -83,8 +82,11 @@ export class EditSvg {
   }
 
   /** Resize based on the bounding box vertices */
-  resizeBoundingBox(type: FixedType, po: PointObject) {
-    const { move, scale } = new BoundingBox(this.paths).resizeParams(type, po)
+  resizeBoundingBox(type: VertexType, movePoint: PointObject) {
+    const { move, scale } = new BoundingBox(this.paths).resizeParams(
+      type,
+      movePoint
+    )
 
     this.exec((path) => path.scaleX(scale.x).scaleY(scale.y).translate(move))
   }

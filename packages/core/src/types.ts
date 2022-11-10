@@ -274,7 +274,9 @@ export type EditVertex = {
 }
 
 export type BoundingBoxObject = {
+  /** Key of paths included bounding box */
   pathKeys: string[]
+  /** LeftTop vertex is same position. */
   position: {
     x: number
     y: number
@@ -283,7 +285,14 @@ export type BoundingBoxObject = {
     width: number
     height: number
   }
-  vertex: Record<FixedType, PointObject>
+  vertexes: Vertex[]
+}
+
+export type VertexType = 'LeftTop' | 'RightTop' | 'RightBottom' | 'LeftBottom'
+
+export type Vertex = {
+  type: VertexType
+  point: PointObject
 }
 
 export type EditPathObject = {
@@ -295,13 +304,6 @@ export type EditSvgObject = {
   paths: EditPathObject[]
   boundingBox: BoundingBoxObject
   selectedOnlyPaths: boolean
-}
-
-export type FixedType = 'LeftTop' | 'RightTop' | 'RightBottom' | 'LeftBottom'
-
-export type ResizeBoundingBoxBase = {
-  fixedType: FixedType
-  point: PointObject
 }
 
 export type CreateCommand = (points: EventPoint[]) => CommandClass[]

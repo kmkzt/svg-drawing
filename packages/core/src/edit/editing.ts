@@ -2,7 +2,7 @@ import type {
   PointObject,
   PathAttributes,
   SelectIndex,
-  FixedType,
+  VertexType,
 } from '../types'
 import type { EditSvg } from './editSvg'
 
@@ -56,20 +56,20 @@ export class Editing {
     this.updater(editSvg)
   }
 
-  resize(fixedType: FixedType, po: PointObject) {
-    this.resizeEditSvg(this.editSvg, fixedType, po)
+  resize(vertexType: VertexType, movePoint: PointObject) {
+    this.resizeEditSvg(this.editSvg, vertexType, movePoint)
   }
 
-  resizePreview(fixedType: FixedType, po: PointObject) {
-    this.resizeEditSvg(this.editSvg.preview(), fixedType, po)
+  resizePreview(vertexType: VertexType, movePoint: PointObject) {
+    this.resizeEditSvg(this.editSvg.preview(), vertexType, movePoint)
   }
 
   private resizeEditSvg(
     editSvg: EditSvg,
-    fixedType: FixedType,
-    point: PointObject
+    vertexType: VertexType,
+    movePoint: PointObject
   ) {
-    editSvg.resizeBoundingBox(fixedType, point)
+    editSvg.resizeBoundingBox(vertexType, movePoint)
     this.updater(editSvg)
   }
 }

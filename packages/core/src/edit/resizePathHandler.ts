@@ -1,9 +1,9 @@
 import { getEventPoint } from '../event'
-import type { PointObject, ResizeBoundingBoxBase } from '../types'
+import type { PointObject, Vertex } from '../types'
 import type { Editing } from './editing' // TODO: Replace interface
 
 export class ResizePathHandler {
-  private resizeBoundingBoxBase: ResizeBoundingBoxBase | null = null
+  private selectedVertex: Vertex | null = null
   constructor(public editing: Editing) {
     this.handleResizePathEnd = this.handleResizePathEnd.bind(this)
     this.handleResizePathPreview = this.handleResizePathPreview.bind(this)
@@ -12,16 +12,16 @@ export class ResizePathHandler {
   private getResizeMovePoint(ev: MouseEvent | TouchEvent): PointObject {
     const po = getEventPoint(ev)
     return {
-      x: po.x - (this.resizeBoundingBoxBase?.point.x ?? 0),
-      y: po.y - (this.resizeBoundingBoxBase?.point.y ?? 0),
+      x: po.x - (this.selectedVertex?.point.x ?? 0),
+      y: po.y - (this.selectedVertex?.point.y ?? 0),
     }
   }
 
   private handleResizePathPreview(ev: MouseEvent | TouchEvent) {
-    if (!this.resizeBoundingBoxBase) return
+    if (!this.selectedVertex) return
 
     this.editing.resizePreview(
-      this.resizeBoundingBoxBase.fixedType,
+      this.selectedVertex.type,
       this.getResizeMovePoint(ev)
     )
   }
@@ -29,18 +29,15 @@ export class ResizePathHandler {
   private handleResizePathEnd(ev: MouseEvent | TouchEvent) {
     this.end()
 
-    if (!this.resizeBoundingBoxBase) return
+    if (!this.selectedVertex) return
 
-    this.editing.resize(
-      this.resizeBoundingBoxBase?.fixedType,
-      this.getResizeMovePoint(ev)
-    )
+    this.editing.resize(this.selectedVertex?.type, this.getResizeMovePoint(ev))
 
-    this.resizeBoundingBoxBase = null
+    this.selectedVertex = null
   }
 
-  start(base: ResizeBoundingBoxBase) {
-    this.resizeBoundingBoxBase = base
+  start(vertex: Vertex) {
+    this.selectedVertex = vertex
     addEventListener('mouseup', this.handleResizePathEnd)
     addEventListener('touchend', this.handleResizePathEnd)
 

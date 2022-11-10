@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import type { EditPathsProps, BoundingBoxProps } from '../types'
 import type {
   PointObject,
-  FixedType,
+  Vertex,
   SelectIndex,
   PathObject,
 } from '@svg-drawing/core'
@@ -142,7 +142,7 @@ const EditPoint = ({
 }
 
 const BoundingBox = ({
-  boundingBox: { pathKeys, position, size, vertex },
+  boundingBox: { pathKeys, position, size, vertexes },
   selectedOnlyPaths,
   onSelectPaths,
   onTranslateStart,
@@ -176,11 +176,10 @@ const BoundingBox = ({
         onMouseDown={handleMovePathsStart}
         onTouchStart={handleMovePathsStart}
       />
-      {entries(vertex).map(([fixedType, point]) => (
+      {vertexes.map((vertex) => (
         <BoundingBoxVertex
-          key={fixedType}
-          fixedType={fixedType}
-          point={point}
+          key={vertex.type}
+          vertex={vertex}
           selectedOnlyPaths={selectedOnlyPaths}
           onResizeStart={onResizeStart}
         />
@@ -189,22 +188,14 @@ const BoundingBox = ({
   )
 }
 
-type Entries<T> = {
-  [K in keyof T]: [K, T[K]]
-}[keyof T][]
-
-const entries = <T extends object>(obj: T) => Object.entries(obj) as Entries<T>
-
 type BoundingBoxVertexProps = {
-  fixedType: FixedType
-  point: PointObject
+  vertex: Vertex
   selectedOnlyPaths: boolean
   onResizeStart: EditPathsProps['onResizeStart']
 }
 
 const BoundingBoxVertex = ({
-  fixedType,
-  point,
+  vertex,
   selectedOnlyPaths,
   onResizeStart,
 }: BoundingBoxVertexProps) => {
@@ -215,17 +206,17 @@ const BoundingBoxVertex = ({
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
       onResizeStart({
-        fixedType,
+        type: vertex.type,
         point: getPointFromEvent(ev),
       })
     },
-    [fixedType, onResizeStart]
+    [vertex, onResizeStart]
   )
   return (
     <circle
-      key={fixedType}
-      cx={point.x}
-      cy={point.y}
+      key={vertex.type}
+      cx={vertex.point.x}
+      cy={vertex.point.y}
       r={EDIT_CONFIG.point}
       stroke={EDIT_CONFIG.color.main}
       fill={

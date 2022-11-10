@@ -1,9 +1,10 @@
 import { segmentPointsFromCommand } from './segment'
 import type {
   PointObject,
-  FixedType,
+  VertexType,
   PathClass,
   BoundingBoxObject,
+  Vertex,
 } from '../types'
 
 const fallbackPointObject: PointObject = { x: 0, y: 0 }
@@ -16,17 +17,17 @@ export class BoundingBox {
       pathKeys: this.paths.map((p) => p.key),
       position: this.position,
       size: this.size,
-      vertex: this.vertex,
+      vertexes: this.vertexes,
     }
   }
 
   public resizeParams(
-    fixedType: FixedType,
+    vertexType: VertexType,
     movePoint: PointObject
   ): { scale: PointObject; move: PointObject } {
     const { width, height } = this.size
 
-    switch (fixedType) {
+    switch (vertexType) {
       case 'LeftTop': {
         const scale = {
           x: (width - movePoint.x) / width,
@@ -104,13 +105,13 @@ export class BoundingBox {
     }
   }
 
-  private get vertex(): Record<FixedType, PointObject> {
-    return {
-      ['LeftTop']: { x: this.min.x, y: this.min.y },
-      ['RightTop']: { x: this.max.x, y: this.min.y },
-      ['RightBottom']: { x: this.max.x, y: this.max.y },
-      ['LeftBottom']: { x: this.min.x, y: this.max.y },
-    }
+  private get vertexes(): Vertex[] {
+    return [
+      { type: 'LeftTop', point: { x: this.min.x, y: this.min.y } },
+      { type: 'RightTop', point: { x: this.max.x, y: this.min.y } },
+      { type: 'RightBottom', point: { x: this.max.x, y: this.max.y } },
+      { type: 'LeftBottom', point: { x: this.min.x, y: this.max.y } },
+    ]
   }
 
   private get points(): PointObject[] {

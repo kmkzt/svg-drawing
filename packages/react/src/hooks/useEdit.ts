@@ -124,8 +124,8 @@ export const useEdit: UseEdit = ({
   )
 
   const onResizeStart = useCallback<EditProps['onResizeStart']>(
-    (base) => {
-      resizePathHandler.start(base)
+    (vertex) => {
+      resizePathHandler.start(vertex)
     },
     [resizePathHandler]
   )

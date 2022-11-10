@@ -12,7 +12,7 @@ import type {
   PathClass,
   AnimationObject,
   PointObject,
-  ResizeBoundingBoxBase,
+  Vertex,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
@@ -68,7 +68,7 @@ export type EditProps = {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
   selectedOnlyPaths: boolean
-  onResizeStart: (base: ResizeBoundingBoxBase) => void
+  onResizeStart: (vertex: Vertex) => void
   onTranslateStart: (po: PointObject) => void
   onSelectPaths: (sel: SelectIndex | SelectIndex[]) => void
 }

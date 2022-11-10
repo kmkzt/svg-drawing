@@ -1,5 +1,7 @@
 import { EditSvg } from './editSvg'
 import { parseSVGString } from '../parser'
+import { Svg } from '../svg/svg'
+import type { EditSvgObject } from '../types'
 
 /** 'd' attributes must to be relative. */
 const testSvgData =
@@ -12,7 +14,14 @@ const testSvgData =
 describe('EditSvg', () => {
   let edit: EditSvg
   beforeEach(() => {
-    edit = new EditSvg(parseSVGString(testSvgData))
+    const parsedSvg = parseSVGString(testSvgData)
+    const svg = new Svg({ width: parsedSvg.width, height: parsedSvg.height })
+    parsedSvg.paths.forEach((p, i) => {
+      p.key = `path_key_${i}`
+      svg.addPath(p)
+    })
+
+    edit = new EditSvg(svg)
   })
   describe('changeAttributes', () => {
     it('Change attributes of selected paths', () => {
@@ -154,5 +163,151 @@ describe('EditSvg', () => {
 
   it.todo('preview')
 
-  it.todo('toJson')
+  it('toJson', () => {
+    const editKey = edit.svg.paths[0].key
+    edit.select({ path: editKey })
+
+    const result: EditSvgObject = {
+      boundingBox: {
+        pathKeys: ['path_key_0'],
+        position: {
+          x: 1,
+          y: 1,
+        },
+        size: {
+          height: 3,
+          width: 7,
+        },
+        vertexes: [
+          {
+            type: 'LeftTop',
+            point: {
+              x: 1,
+              y: 1,
+            },
+          },
+          {
+            type: 'RightTop',
+            point: {
+              x: 8,
+              y: 1,
+            },
+          },
+          {
+            type: 'RightBottom',
+            point: {
+              x: 8,
+              y: 4,
+            },
+          },
+          {
+            type: 'LeftBottom',
+            point: {
+              x: 1,
+              y: 4,
+            },
+          },
+        ],
+      },
+      paths: [
+        {
+          path: {
+            attributes: {
+              d: 'M1 1 l1 1 c2 2 4 2 6 2 z',
+              fill: '#f00',
+              id: 'path_0',
+              stroke: '#00f',
+              strokeWidth: '4',
+            },
+            key: 'path_key_0',
+            type: 'path',
+          },
+          vertex: [
+            {
+              d: 'M 2 2',
+              points: [
+                {
+                  index: {
+                    command: 0,
+                    path: 'path_key_0',
+                    point: 0,
+                  },
+                  selected: false,
+                  value: {
+                    x: 1,
+                    y: 1,
+                  },
+                },
+              ],
+            },
+            {
+              d: 'M 4 4',
+              points: [
+                {
+                  index: {
+                    command: 1,
+                    path: 'path_key_0',
+                    point: 0,
+                  },
+                  selected: false,
+                  value: {
+                    x: 2,
+                    y: 2,
+                  },
+                },
+              ],
+            },
+            {
+              d: 'M 6 4L 8 4',
+              points: [
+                {
+                  index: {
+                    command: 2,
+                    path: 'path_key_0',
+                    point: 0,
+                  },
+                  selected: false,
+                  value: {
+                    x: 4,
+                    y: 4,
+                  },
+                },
+                {
+                  index: {
+                    command: 2,
+                    path: 'path_key_0',
+                    point: 1,
+                  },
+                  selected: false,
+                  value: {
+                    x: 6,
+                    y: 4,
+                  },
+                },
+                {
+                  index: {
+                    command: 2,
+                    path: 'path_key_0',
+                    point: 2,
+                  },
+                  selected: false,
+                  value: {
+                    x: 8,
+                    y: 4,
+                  },
+                },
+              ],
+            },
+            {
+              d: '',
+              points: [],
+            },
+          ],
+        },
+      ],
+      selectedOnlyPaths: true,
+    }
+
+    expect(edit.toJson()).toStrictEqual(result)
+  })
 })
