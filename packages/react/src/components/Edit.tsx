@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react'
+import { EDIT_PATH_STYLE } from '../config/editPathStyle'
 import type { EditPathsProps, BoundingBoxProps } from '../types'
 import type {
   PointObject,
   Vertex,
   SelectIndex,
   PathObject,
+  EditPathObject,
 } from '@svg-drawing/core'
 
 export const EditPaths = ({
@@ -19,7 +21,7 @@ export const EditPaths = ({
   return (
     <>
       {paths.map((pathObject) => (
-        <EditPath
+        <Path
           key={pathObject.key}
           path={pathObject}
           onSelectPaths={onSelectPaths}
@@ -36,50 +38,29 @@ export const EditPaths = ({
         />
       )}
       {editPaths &&
-        editPaths.map(({ path, anchorPoints }) => (
-          <g key={path.key}>
-            <EditPath
-              path={path}
-              onSelectPaths={onSelectPaths}
-              onTranslateStart={onTranslateStart}
-            />
-            {anchorPoints.map(({ points, d }, commandIndex) => (
-              <g key={commandIndex}>
-                <path
-                  d={d}
-                  strokeWidth={EDIT_CONFIG.line}
-                  stroke={EDIT_CONFIG.color.main}
-                  fill={EDIT_CONFIG.fill.default}
-                />
-                {points.map((po, k) => (
-                  <AnchorPoint
-                    key={k}
-                    point={po.value}
-                    selectIndex={po.index}
-                    selected={po.selected}
-                    onSelectPaths={onSelectPaths}
-                    onTranslateStart={onTranslateStart}
-                  />
-                ))}
-              </g>
-            ))}
-          </g>
+        editPaths.map((editPath, i) => (
+          <EditPath
+            key={i}
+            editPath={editPath}
+            onSelectPaths={onSelectPaths}
+            onTranslateStart={onTranslateStart}
+          />
         ))}
     </>
   )
 }
 
-type EditPathProps = {
+type PathProps = {
   path: PathObject
   onSelectPaths: (selectIndex: SelectIndex) => void
   onTranslateStart: (point: PointObject) => void
 }
 
-const EditPath = ({
+const Path = ({
   path: { key, attributes },
   onSelectPaths,
   onTranslateStart,
-}: EditPathProps) => {
+}: PathProps) => {
   const handleMoveStartPath = useCallback(
     (
       ev:
@@ -99,6 +80,46 @@ const EditPath = ({
     />
   )
 }
+
+type EditPathProps = {
+  editPath: EditPathObject
+  onSelectPaths: (selectIndex: SelectIndex) => void
+  onTranslateStart: (point: PointObject) => void
+}
+
+const EditPath = ({
+  editPath: { path, anchorPoints },
+  onSelectPaths,
+  onTranslateStart,
+}: EditPathProps) => (
+  <g key={path.key}>
+    <Path
+      path={path}
+      onSelectPaths={onSelectPaths}
+      onTranslateStart={onTranslateStart}
+    />
+    {anchorPoints.map(({ points, d }, commandIndex) => (
+      <g key={commandIndex}>
+        <path
+          d={d}
+          strokeWidth={EDIT_PATH_STYLE.line}
+          stroke={EDIT_PATH_STYLE.color.main}
+          fill={EDIT_PATH_STYLE.fill.default}
+        />
+        {points.map((po, k) => (
+          <AnchorPoint
+            key={k}
+            point={po.value}
+            selectIndex={po.index}
+            selected={po.selected}
+            onSelectPaths={onSelectPaths}
+            onTranslateStart={onTranslateStart}
+          />
+        ))}
+      </g>
+    ))}
+  </g>
+)
 
 type AnchorPointProps = {
   point: PointObject
@@ -133,9 +154,11 @@ const AnchorPoint = ({
       cy={point.y}
       onMouseDown={handleMoveStartPoint}
       onTouchStart={handleMoveStartPoint}
-      r={EDIT_CONFIG.point}
+      r={EDIT_PATH_STYLE.point}
       style={{
-        fill: selected ? EDIT_CONFIG.color.selected : EDIT_CONFIG.color.sub,
+        fill: selected
+          ? EDIT_PATH_STYLE.color.selected
+          : EDIT_PATH_STYLE.color.sub,
       }}
     />
   )
@@ -167,11 +190,11 @@ const BoundingBox = ({
         y={position.y}
         width={size.width}
         height={size.height}
-        stroke={EDIT_CONFIG.color.main}
+        stroke={EDIT_PATH_STYLE.color.main}
         fill={
           selectedOnlyPaths
-            ? EDIT_CONFIG.fill.selected
-            : EDIT_CONFIG.fill.boundingBox
+            ? EDIT_PATH_STYLE.fill.selected
+            : EDIT_PATH_STYLE.fill.boundingBox
         }
         onMouseDown={handleMovePathsStart}
         onTouchStart={handleMovePathsStart}
@@ -217,33 +240,18 @@ const BoundingBoxVertex = ({
       key={vertex.type}
       cx={vertex.point.x}
       cy={vertex.point.y}
-      r={EDIT_CONFIG.point}
-      stroke={EDIT_CONFIG.color.main}
+      r={EDIT_PATH_STYLE.point}
+      stroke={EDIT_PATH_STYLE.color.main}
       fill={
         selectedOnlyPaths
-          ? EDIT_CONFIG.fill.selected
-          : EDIT_CONFIG.fill.boundingBox
+          ? EDIT_PATH_STYLE.fill.selected
+          : EDIT_PATH_STYLE.fill.boundingBox
       }
       onMouseDown={handleResizeStart}
       onTouchStart={handleResizeStart}
     />
   )
 }
-
-const EDIT_CONFIG = {
-  line: 1,
-  point: 3,
-  color: {
-    main: '#09f',
-    sub: '#f90',
-    selected: '#f00',
-  },
-  fill: {
-    default: 'none',
-    boundingBox: 'rgba(0,0,0,0)',
-    selected: 'rgba(0,0,0,0.1)',
-  },
-} as const
 
 const getPointFromEvent = (
   ev: React.MouseEvent<any> | React.TouchEvent<any>
