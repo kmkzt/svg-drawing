@@ -4,7 +4,7 @@ import { useRenderInterval } from './useRenderInterval'
 import type { UseDraw } from '../types'
 
 /**
- * ### Basic usage.
+ * @example <caption>Basic usage</caption>
  *
  * ```ts
  * import { PencilHandler } from '@svg-drawing/core'
@@ -16,7 +16,9 @@ import type { UseDraw } from '../types'
  *
  * const DrawArea = () => {
  *   const svg = useSvg({ width: 500, height: 500 })
- *   const [svgObject, setSvgObject] = useState(svg.toJson())
+ *   const [{ width, height, background, paths }, setSvgObject] = useState(
+ *     svg.toJson()
+ *   )
  *
  *   const factory = useDrawFactory(
  *     { stroke: '#000', fill: 'none' },
@@ -34,7 +36,9 @@ import type { UseDraw } from '../types'
  *
  *   return (
  *     <div ref={ref}>
- *       <Svg {...svgObject} />
+ *       <Svg width={width} height={height} background={background}>
+ *         <Paths path={paths} />
+ *       </Svg>
  *     </div>
  *   )
  * }
