@@ -7,6 +7,7 @@ import type {
   SelectIndex,
   PathObject,
   EditPathObject,
+  SelectPointIndex,
 } from '@svg-drawing/core'
 
 export const EditPaths = ({
@@ -110,9 +111,9 @@ const EditPath = ({
           <AnchorPoint
             key={k}
             point={po.value}
-            selectIndex={po.index}
+            selectPointIndex={po.index}
             selected={po.selected}
-            onSelectPaths={onSelectPaths}
+            onSelectPoint={onSelectPaths}
             onTranslateStart={onTranslateStart}
           />
         ))}
@@ -123,17 +124,17 @@ const EditPath = ({
 
 type AnchorPointProps = {
   point: PointObject
-  selectIndex: SelectIndex
+  selectPointIndex: SelectPointIndex
   selected?: boolean
-  onSelectPaths: (selectIndex: SelectIndex) => void
+  onSelectPoint: (selectPointIndex: SelectPointIndex) => void
   onTranslateStart: (point: PointObject) => void
 }
 
 const AnchorPoint = ({
   point,
-  selectIndex,
+  selectPointIndex,
   selected,
-  onSelectPaths,
+  onSelectPoint: onSelectPoint,
   onTranslateStart,
 }: AnchorPointProps) => {
   const handleMoveStartPoint = useCallback(
@@ -142,10 +143,10 @@ const AnchorPoint = ({
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
-      onSelectPaths(selectIndex)
+      onSelectPoint(selectPointIndex)
       onTranslateStart(getPointFromEvent(ev))
     },
-    [onSelectPaths, onTranslateStart, selectIndex]
+    [onSelectPoint, onTranslateStart, selectPointIndex]
   )
 
   return (
