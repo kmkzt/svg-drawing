@@ -1,34 +1,31 @@
 import React, { useCallback } from 'react'
+import { Path } from './Path'
+import { useSvgContext } from './SvgContext'
 import { EDIT_PATH_STYLE } from '../config/editPathStyle'
-import type { EditPathsProps, BoundingBoxProps } from '../types'
+import type { BoundingBoxProps, EditProps } from '../types'
 import type {
   PointObject,
   Vertex,
-  SelectIndex,
-  PathObject,
   EditPathObject,
   SelectPointIndex,
 } from '@svg-drawing/core'
 
-export const EditPaths = ({
-  paths,
-  editPaths,
-  boundingBox,
-  selectedOnlyPaths,
-  onTranslateStart,
-  onResizeStart,
-  onSelectPaths,
-}: EditPathsProps) => {
+export const EditLayer = () => {
+  const { editProps } = useSvgContext()
+
+  if (!editProps) return null
+
+  const {
+    boundingBox,
+    selectedOnlyPaths,
+    editPaths,
+    onSelectPaths,
+    onTranslateStart,
+    onResizeStart,
+  } = editProps
+
   return (
     <>
-      {paths.map((pathObject) => (
-        <Path
-          key={pathObject.key}
-          path={pathObject}
-          onSelectPaths={onSelectPaths}
-          onTranslateStart={onTranslateStart}
-        />
-      ))}
       {boundingBox && (
         <BoundingBox
           selectedOnlyPaths={selectedOnlyPaths}
@@ -51,41 +48,10 @@ export const EditPaths = ({
   )
 }
 
-type PathProps = {
-  path: PathObject
-  onSelectPaths: (selectIndex: SelectIndex) => void
-  onTranslateStart: (point: PointObject) => void
-}
-
-const Path = ({
-  path: { key, attributes },
-  onSelectPaths,
-  onTranslateStart,
-}: PathProps) => {
-  const handleMoveStartPath = useCallback(
-    (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      onSelectPaths({ path: key })
-      onTranslateStart(getPointFromEvent(ev))
-    },
-    [key, onSelectPaths, onTranslateStart]
-  )
-  return (
-    <path
-      {...attributes}
-      onMouseDown={handleMoveStartPath}
-      onTouchStart={handleMoveStartPath}
-    />
-  )
-}
-
 type EditPathProps = {
   editPath: EditPathObject
-  onSelectPaths: (selectIndex: SelectIndex) => void
-  onTranslateStart: (point: PointObject) => void
+  onSelectPaths: EditProps['onSelectPaths']
+  onTranslateStart: EditProps['onTranslateStart']
 }
 
 const EditPath = ({
@@ -94,11 +60,7 @@ const EditPath = ({
   onTranslateStart,
 }: EditPathProps) => (
   <g key={path.key}>
-    <Path
-      path={path}
-      onSelectPaths={onSelectPaths}
-      onTranslateStart={onTranslateStart}
-    />
+    <Path path={path} />
     {anchorPoints.map(({ points, d }, commandIndex) => (
       <g key={commandIndex}>
         <path
@@ -126,8 +88,8 @@ type AnchorPointProps = {
   point: PointObject
   selectPointIndex: SelectPointIndex
   selected?: boolean
-  onSelectPoint: (selectPointIndex: SelectPointIndex) => void
-  onTranslateStart: (point: PointObject) => void
+  onSelectPoint: EditProps['onSelectPaths']
+  onTranslateStart: EditProps['onTranslateStart']
 }
 
 const AnchorPoint = ({
@@ -144,7 +106,7 @@ const AnchorPoint = ({
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
       onSelectPoint(selectPointIndex)
-      onTranslateStart(getPointFromEvent(ev))
+      onTranslateStart(ev)
     },
     [onSelectPoint, onTranslateStart, selectPointIndex]
   )
@@ -179,7 +141,7 @@ const BoundingBox = ({
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
       onSelectPaths(pathKeys.map((key) => ({ path: key })))
-      onTranslateStart(getPointFromEvent(ev))
+      onTranslateStart(ev)
     },
     [onSelectPaths, onTranslateStart, pathKeys]
   )
@@ -215,7 +177,7 @@ const BoundingBox = ({
 type BoundingBoxVertexProps = {
   vertex: Vertex
   selectedOnlyPaths: boolean
-  onResizeStart: EditPathsProps['onResizeStart']
+  onResizeStart: EditProps['onResizeStart']
 }
 
 const BoundingBoxVertex = ({
@@ -229,10 +191,7 @@ const BoundingBoxVertex = ({
         | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
         | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
     ) => {
-      onResizeStart({
-        type: vertex.type,
-        point: getPointFromEvent(ev),
-      })
+      onResizeStart(ev, vertex.type)
     },
     [vertex, onResizeStart]
   )
@@ -252,20 +211,4 @@ const BoundingBoxVertex = ({
       onTouchStart={handleResizeStart}
     />
   )
-}
-
-const getPointFromEvent = (
-  ev: React.MouseEvent<any> | React.TouchEvent<any>
-): PointObject => {
-  if ('touches' in ev) {
-    const touche = ev.touches[0]
-    return {
-      x: touche.clientX,
-      y: touche.clientY,
-    }
-  }
-  return {
-    x: ev.clientX,
-    y: ev.clientY,
-  }
 }

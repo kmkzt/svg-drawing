@@ -8,9 +8,12 @@ const BaseComponent = (props: ComponentProps<typeof Svg>) => <Svg {...props} />
 
 describe('Svg', () => {
   it('Render background', () => {
-    const { container } = render(<BaseComponent background="red" />, {
-      legacyRoot: true,
-    })
+    const { container } = render(
+      <BaseComponent width={500} height={500} background="red" paths={[]} />,
+      {
+        legacyRoot: true,
+      }
+    )
 
     expect(container.querySelector('rect')?.getAttribute('fill')).toBe('red')
   })

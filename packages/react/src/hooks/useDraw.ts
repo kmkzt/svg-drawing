@@ -16,7 +16,7 @@ import type { UseDraw } from '../types'
  *
  * const DrawArea = () => {
  *   const svg = useSvg({ width: 500, height: 500 })
- *   const [{ width, height, background, paths }, setSvgObject] = useState(
+ *   const [{ width, height, background, paths }, onChangeSvg] = useState(
  *     svg.toJson()
  *   )
  *
@@ -28,7 +28,7 @@ import type { UseDraw } from '../types'
  *   const draw = useDraw({
  *     svg,
  *     factory,
- *     onChangeSvg: setSvgObject,
+ *     onChangeSvg,
  *   })
  *
  *   const ref = useRef(null)
@@ -36,9 +36,12 @@ import type { UseDraw } from '../types'
  *
  *   return (
  *     <div ref={ref}>
- *       <Svg width={width} height={height} background={background}>
- *         <Paths path={paths} />
- *       </Svg>
+ *       <Svg
+ *         width={width}
+ *         height={height}
+ *         background={background}
+ *         paths={paths}
+ *       />
  *     </div>
  *   )
  * }

@@ -11,17 +11,19 @@ import type {
   SvgOption,
   PathClass,
   AnimationObject,
-  PointObject,
-  Vertex,
+  VertexType,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
 /** UseSvg */
 export type UseSvg = (opts: Partial<SvgOption>) => SvgClass
 export type SvgProps = HTMLAttributes<SVGSVGElement> & {
+  width: number
+  height: number
   background?: SvgObject['background']
   children?: React.ReactNode
-  onSelectSvg?: () => void
+  paths?: SvgObject['paths']
+  editProps?: EditProps
 }
 
 export type PathsProps = {
@@ -68,12 +70,21 @@ export type EditProps = {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
   selectedOnlyPaths: boolean
-  onResizeStart: (vertex: Vertex) => void
-  onTranslateStart: (po: PointObject) => void
+  onCancelSelect: () => void
+  onResizeStart: (
+    ev:
+      | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+      | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>,
+    type: VertexType
+  ) => void
+  onTranslateStart: (
+    ev:
+      | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+      | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+  ) => void
   onSelectPaths: (sel: SelectIndex | SelectIndex[]) => void
 }
 
-export type EditPathsProps = PathsProps & EditProps
 export type BoundingBoxProps = {
   boundingBox: EditSvgObject['boundingBox']
 } & Pick<

@@ -8,6 +8,7 @@ import { useCallback, useMemo, useEffect } from 'react'
 import { usePressedKey } from './usePressedKey'
 import { useRenderInterval } from './useRenderInterval'
 import type { UseEdit, EditSvgAction, EditProps } from '../types'
+import type { PointObject } from '@svg-drawing/core'
 
 /**
  * ### Basic usage.
@@ -17,14 +18,14 @@ import type { UseEdit, EditSvgAction, EditProps } from '../types'
  * import type { EditSvgObject } from '@svg-drawing/core'
  *
  * const EditExample = ({ sharedSvg }) => {
- *   const [{ paths, ...svgProps }, onChangeSvg] = useState(
+ *   const [{ width, height, background, paths }, onChangeSvg] = useState(
  *     sharedSvg.toJson()
  *   )
  *   const [editSvgObject, onChangeEdit] = useState<EditSvgObject | null>(
  *     null
  *   )
  *
- *   const { editProps, cancelSelect } = useEdit({
+ *   const { editProps } = useEdit({
  *     svg: sharedSvg,
  *     editSvgObject,
  *     onChangeEdit,
@@ -34,16 +35,20 @@ import type { UseEdit, EditSvgAction, EditProps } from '../types'
  *   return (
  *     <div
  *       style={{
+ *         width,
+ *         height,
  *         border: '1px solid #333',
- *         width: 500,
- *         height: 500,
  *         touchAction: 'none',
  *         boxSizing: 'border-box',
  *       }}
  *     >
- *       <Svg {...svgProps} onSelectSvg={cancelSelect}>
- *         <EditPaths paths={paths} {...editProps} />
- *       </Svg>
+ *       <Svg
+ *         width={width}
+ *         height={height}
+ *         background={background}
+ *         paths={paths}
+ *         editProps={editProps}
+ *       />
  *     </div>
  *   )
  * }
@@ -117,15 +122,15 @@ export const useEdit: UseEdit = ({
   )
 
   const onTranslateStart = useCallback<EditProps['onTranslateStart']>(
-    (po) => {
-      translatePathHandler.start(po)
+    (ev) => {
+      translatePathHandler.start(getPointFromEvent(ev))
     },
     [translatePathHandler]
   )
 
   const onResizeStart = useCallback<EditProps['onResizeStart']>(
-    (vertex) => {
-      resizePathHandler.start(vertex)
+    (ev, type) => {
+      resizePathHandler.start({ type, point: getPointFromEvent(ev) })
     },
     [resizePathHandler]
   )
@@ -164,9 +169,26 @@ export const useEdit: UseEdit = ({
       editPaths,
       boundingBox,
       selectedOnlyPaths,
+      onCancelSelect: cancelSelect,
       onTranslateStart,
       onResizeStart,
       onSelectPaths: selectPaths,
     },
+  }
+}
+
+const getPointFromEvent = (
+  ev: React.MouseEvent<any> | React.TouchEvent<any>
+): PointObject => {
+  if ('touches' in ev) {
+    const touche = ev.touches[0]
+    return {
+      x: touche.clientX,
+      y: touche.clientY,
+    }
+  }
+  return {
+    x: ev.clientX,
+    y: ev.clientY,
   }
 }

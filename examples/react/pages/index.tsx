@@ -5,8 +5,6 @@ import {
   useEdit,
   useSvg,
   Svg,
-  Paths,
-  EditPaths,
   AnimatePaths,
   useParseFile,
   useKeyboardBind,
@@ -97,7 +95,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
 
   /** Setup draw */
   const svg = useSvg({})
-  const [{ paths, ...svgProps }, onChangeSvg] = useState(svg.toJson())
+  const [{ paths, width, height, background }, onChangeSvg] = useState(
+    svg.toJson()
+  )
 
   const {
     update: updateDraw,
@@ -522,16 +522,16 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             boxSizing: 'border-box',
           }}
         >
-          <Svg {...svgProps} onSelectSvg={cancelSelect}>
-            {mode === 'draw' ? (
-              <Paths paths={paths} />
-            ) : (
-              <EditPaths paths={paths} {...editProps} />
-            )}
-          </Svg>
+          <Svg
+            width={width}
+            height={height}
+            background={background}
+            paths={paths}
+            editProps={editProps}
+          />
         </div>
       </Box>
-      <Svg {...svgProps}>
+      <Svg width={width} height={height} background={background}>
         <AnimatePaths paths={paths} animatePaths={animateObj ?? undefined} />
       </Svg>
       <div>{JSON.stringify(editProps?.boundingBox)}</div>
