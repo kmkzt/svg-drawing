@@ -60,7 +60,16 @@ const EditPath = ({
   onTranslateStart,
 }: EditPathProps) => (
   <g key={path.key}>
-    <Path path={path} />
+    <Path
+      path={{
+        ...path,
+        attributes: {
+          ...path.attributes,
+          stroke: path.attributes?.stroke ? 'transparent' : undefined,
+          fill: path.attributes?.fill ? 'transparent' : undefined,
+        },
+      }}
+    />
     {anchorPoints.map(({ points, d }, commandIndex) => (
       <g key={commandIndex}>
         <path
