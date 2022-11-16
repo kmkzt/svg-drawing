@@ -10,6 +10,7 @@ import type { UseDraw } from '../types'
  * import { PencilHandler } from '@svg-drawing/core'
  * import {
  *   Svg,
+ *   Path,
  *   useDrawFactory,
  *   useDrawEventHandler,
  * } from '@svg-drawing/react'
@@ -36,12 +37,11 @@ import type { UseDraw } from '../types'
  *
  *   return (
  *     <div ref={ref}>
- *       <Svg
- *         width={width}
- *         height={height}
- *         background={background}
- *         paths={paths}
- *       />
+ *       <Svg width={width} height={height} background={background}>
+ *         {paths.map((path) => (
+ *           <Path path={path} />
+ *         ))}
+ *       </Svg>
  *     </div>
  *   )
  * }

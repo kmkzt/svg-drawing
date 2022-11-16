@@ -1,7 +1,6 @@
 import React, { useRef, useCallback } from 'react'
 import { BackgroundRect } from './BackgroundRect'
 import { EditLayer } from './EditLayer'
-import { Paths } from './Paths'
 import { SvgProvider, useSvgContext } from './SvgContext'
 import type { SvgProps } from '../types'
 
@@ -11,7 +10,6 @@ export const Svg = ({
   width,
   height,
   background,
-  paths,
   ...rest
 }: SvgProps) => {
   return (
@@ -20,7 +18,6 @@ export const Svg = ({
         width={width}
         height={height}
         background={background}
-        paths={paths}
         {...rest}
       >
         {children}
@@ -32,7 +29,6 @@ export const Svg = ({
 const SvgElement = ({
   background,
   children,
-  paths,
   ...rest
 }: Omit<SvgProps, 'editProps'>) => {
   const svgRef = useRef<SVGSVGElement>(null)
@@ -53,7 +49,6 @@ const SvgElement = ({
   return (
     <svg ref={svgRef} onMouseDown={onSelect} onTouchStart={onSelect} {...rest}>
       {background && <BackgroundRect fill={background} />}
-      {paths && <Paths paths={paths} />}
       {children}
       <EditLayer />
     </svg>

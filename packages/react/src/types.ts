@@ -22,7 +22,6 @@ export type SvgProps = HTMLAttributes<SVGSVGElement> & {
   height: number
   background?: SvgObject['background']
   children?: React.ReactNode
-  paths?: SvgObject['paths']
   editProps?: EditProps
 }
 

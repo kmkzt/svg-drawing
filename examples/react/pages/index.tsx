@@ -5,6 +5,7 @@ import {
   useEdit,
   useSvg,
   Svg,
+  Path,
   AnimatePaths,
   useParseFile,
   useKeyboardBind,
@@ -526,12 +527,20 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             width={width}
             height={height}
             background={background}
-            paths={paths}
             editProps={editProps}
-          />
+          >
+            {paths.map((path) => (
+              <Path key={path.key} path={path} />
+            ))}
+          </Svg>
         </div>
       </Box>
-      <Svg width={width} height={height} background={background}>
+      <Svg
+        width={width}
+        height={height}
+        background={background}
+        editProps={editProps}
+      >
         <AnimatePaths paths={paths} animatePaths={animateObj ?? undefined} />
       </Svg>
       <div>{JSON.stringify(editProps?.boundingBox)}</div>

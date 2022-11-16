@@ -14,7 +14,7 @@ import type { PointObject } from '@svg-drawing/core'
  * ### Basic usage.
  *
  * ```ts
- * import { useEdit, Svg, EditPaths } from '@svg-drawing/react'
+ * import { useEdit, Svg, Path } from '@svg-drawing/react'
  * import type { EditSvgObject } from '@svg-drawing/core'
  *
  * const EditExample = ({ sharedSvg }) => {
@@ -46,9 +46,12 @@ import type { PointObject } from '@svg-drawing/core'
  *         width={width}
  *         height={height}
  *         background={background}
- *         paths={paths}
  *         editProps={editProps}
- *       />
+ *       >
+ *         {paths.map((path) => (
+ *           <Path path={path} />
+ *         ))}
+ *       </Svg>
  *     </div>
  *   )
  * }

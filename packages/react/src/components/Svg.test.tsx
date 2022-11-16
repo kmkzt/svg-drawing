@@ -1,5 +1,4 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render } from '@testing-library/react'
 import React from 'react'
 import { Svg } from './Svg'
 import type { ComponentProps } from 'react'
@@ -9,7 +8,7 @@ const BaseComponent = (props: ComponentProps<typeof Svg>) => <Svg {...props} />
 describe('Svg', () => {
   it('Render background', () => {
     const { container } = render(
-      <BaseComponent width={500} height={500} background="red" paths={[]} />,
+      <BaseComponent width={500} height={500} background="red" />,
       {
         legacyRoot: true,
       }
