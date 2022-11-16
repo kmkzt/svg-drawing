@@ -4,11 +4,21 @@ import type { PathObject } from '@svg-drawing/core'
 import type { ReactNode } from 'react'
 
 type PathProps = {
-  path: PathObject
+  pathKey: PathObject['key']
   children?: ReactNode
-}
+} & PathObject['attributes']
 
-export const Path = ({ path: { key, attributes }, children }: PathProps) => {
+export const Path = ({
+  pathKey,
+  children,
+  d,
+  fill,
+  stroke,
+  strokeWidth,
+  strokeLineCap,
+  strokeLinejoin,
+  ...attrs
+}: PathProps) => {
   const { editProps } = useSvgContext()
 
   const handleMoveStartPath = useCallback(
@@ -19,14 +29,20 @@ export const Path = ({ path: { key, attributes }, children }: PathProps) => {
     ) => {
       if (!editProps) return
 
-      editProps.onSelectPaths({ path: key })
+      editProps.onSelectPaths({ path: pathKey })
       editProps.onTranslateStart(ev)
     },
-    [editProps, key]
+    [editProps, pathKey]
   )
   return (
     <path
-      {...attributes}
+      d={d}
+      fill={fill}
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinejoin={strokeLinejoin as any}
+      strokeLinecap={strokeLineCap as any}
+      {...attrs}
       onMouseDown={handleMoveStartPath}
       onTouchStart={handleMoveStartPath}
     >

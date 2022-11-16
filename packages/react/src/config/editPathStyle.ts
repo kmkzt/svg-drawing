@@ -1,6 +1,6 @@
 export const EDIT_PATH_STYLE = {
-  line: 1,
-  point: 3,
+  line: '1',
+  point: '3',
   color: {
     main: '#09f',
     sub: '#f90',

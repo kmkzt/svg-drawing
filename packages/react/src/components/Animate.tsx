@@ -4,10 +4,10 @@ import type { AnimatePathsProps } from '../types'
 
 export const AnimatePaths = ({ paths, animatePaths }: AnimatePathsProps) => (
   <>
-    {paths.map((path) => {
-      const animates = animatePaths?.[path.key] ?? []
+    {paths.map(({ key, attributes }) => {
+      const animates = animatePaths?.[key] ?? []
       return (
-        <Path key={path.key} path={path}>
+        <Path key={key} pathKey={key} {...attributes}>
           {animates.map(({ type, attributes: animAttrs }, i) => (
             <animate key={i} {...animAttrs} />
           ))}

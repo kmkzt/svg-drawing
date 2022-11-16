@@ -38,8 +38,8 @@ import type { UseDraw } from '../types'
  *   return (
  *     <div ref={ref}>
  *       <Svg width={width} height={height} background={background}>
- *         {paths.map((path) => (
- *           <Path path={path} />
+ *         {paths.map(({ key, attributes }) => (
+ *           <Path key={key} pathKey={pathKey} {...attributes} />
  *         ))}
  *       </Svg>
  *     </div>

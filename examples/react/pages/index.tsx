@@ -529,8 +529,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             background={background}
             editProps={editProps}
           >
-            {paths.map((path) => (
-              <Path key={path.key} path={path} />
+            {paths.map(({ key, attributes }) => (
+              <Path key={key} pathKey={key} {...attributes} />
             ))}
           </Svg>
         </div>

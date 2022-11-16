@@ -48,8 +48,8 @@ import type { PointObject } from '@svg-drawing/core'
  *         background={background}
  *         editProps={editProps}
  *       >
- *         {paths.map((path) => (
- *           <Path path={path} />
+ *         {paths.map(({ key, attributes }) => (
+ *           <Path key={key} pathKey={key} {...attributes} />
  *         ))}
  *       </Svg>
  *     </div>

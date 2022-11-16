@@ -61,14 +61,11 @@ const EditPath = ({
 }: EditPathProps) => (
   <g key={path.key}>
     <Path
-      path={{
-        ...path,
-        attributes: {
-          ...path.attributes,
-          stroke: path.attributes?.stroke ? 'transparent' : undefined,
-          fill: path.attributes?.fill ? 'transparent' : undefined,
-        },
-      }}
+      pathKey={path.key}
+      {...path.attributes}
+      strokeWidth={EDIT_PATH_STYLE.line}
+      stroke={path.attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined}
+      fill={path.attributes?.fill ? 'transparent' : undefined}
     />
     {anchorPoints.map(({ points, d }, commandIndex) => (
       <g key={commandIndex}>
