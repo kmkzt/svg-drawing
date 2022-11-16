@@ -1,12 +1,14 @@
 import React, { useCallback } from 'react'
 import { useSvgContext } from './SvgContext'
 import type { PathObject } from '@svg-drawing/core'
+import type { ReactNode } from 'react'
 
 type PathProps = {
   path: PathObject
+  children?: ReactNode
 }
 
-export const Path = ({ path: { key, attributes } }: PathProps) => {
+export const Path = ({ path: { key, attributes }, children }: PathProps) => {
   const { editProps } = useSvgContext()
 
   const handleMoveStartPath = useCallback(
@@ -27,6 +29,8 @@ export const Path = ({ path: { key, attributes } }: PathProps) => {
       {...attributes}
       onMouseDown={handleMoveStartPath}
       onTouchStart={handleMoveStartPath}
-    />
+    >
+      {children}
+    </path>
   )
 }

@@ -1,5 +1,6 @@
 import React, { useRef, useCallback } from 'react'
 import { BackgroundRect } from './BackgroundRect'
+import { EditLayer } from './EditLayer'
 import { Paths } from './Paths'
 import { SvgProvider, useSvgContext } from './SvgContext'
 import type { SvgProps } from '../types'
@@ -54,6 +55,7 @@ const SvgElement = ({
       {background && <BackgroundRect fill={background} />}
       {paths && <Paths paths={paths} />}
       {children}
+      <EditLayer />
     </svg>
   )
 }
