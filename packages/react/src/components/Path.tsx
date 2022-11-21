@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import { Animates } from './Animates'
 import { useSvgContext } from './SvgContext'
 import type { PathObject } from '@svg-drawing/core'
 import type { ReactNode } from 'react'
@@ -46,7 +47,7 @@ export const Path = ({
       onMouseDown={handleMoveStartPath}
       onTouchStart={handleMoveStartPath}
     >
-      {children}
+      {children ?? <Animates pathKey={pathKey} />}
     </path>
   )
 }

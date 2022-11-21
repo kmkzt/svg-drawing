@@ -4,7 +4,7 @@ import type {
   AnimationOption,
   FrameAnimation,
   AnimateAttribute,
-  AnimationObject,
+  AnimateObject,
 } from '../types'
 
 const createAnimateAttributeValues = (
@@ -87,8 +87,8 @@ export class Animation {
     return this
   }
 
-  public toJson(): AnimationObject {
-    if (!this._frame) return {}
+  public toJson(): AnimateObject[] {
+    if (!this._frame) return []
 
     const loop = this._frame.loops
     const frameLoop = Array(this._frame.loops).fill(null)
@@ -106,7 +106,7 @@ export class Animation {
       ),
     }
 
-    return this.paths.reduce((acc: AnimationObject, basePath) => {
+    return this.paths.map((basePath) => {
       const { key, attributes } = basePath.toJson()
 
       const animPaths = animPathsList.map((ap) =>
@@ -114,7 +114,7 @@ export class Animation {
       )
 
       // TODO: Check attribute key and value.
-      const animateAttributesList: AnimateAttribute[] = Object.keys(attributes)
+      const animates: AnimateAttribute[] = Object.keys(attributes)
         .sort()
         .reduce((animateAttrs: AnimateAttribute[], attributeName: string) => {
           const defaultValue = attributes[attributeName]
@@ -141,12 +141,9 @@ export class Animation {
         }, [])
 
       return {
-        ...acc,
-        [key]: animateAttributesList.map((animateAttributes) => ({
-          type: 'animate',
-          attributes: animateAttributes,
-        })),
+        key,
+        animates,
       }
-    }, {})
+    })
   }
 }

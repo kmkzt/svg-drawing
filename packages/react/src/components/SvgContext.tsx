@@ -1,15 +1,19 @@
 import React, { createContext, useContext } from 'react'
-import type { EditProps } from '../types'
+import type { SvgContextProps } from '../types'
 import type { ReactNode } from 'react'
 
-const Context = createContext<{ editProps?: EditProps }>({})
+const Context = createContext<SvgContextProps>({})
 
 export const SvgProvider = ({
   editProps,
+  animationProps,
   children,
-}: {
-  editProps?: EditProps
+}: SvgContextProps & {
   children: ReactNode
-}) => <Context.Provider value={{ editProps }}>{children}</Context.Provider>
+}) => (
+  <Context.Provider value={{ editProps, animationProps }}>
+    {children}
+  </Context.Provider>
+)
 
 export const useSvgContext = () => useContext(Context)

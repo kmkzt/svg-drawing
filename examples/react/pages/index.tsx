@@ -6,7 +6,6 @@ import {
   useSvg,
   Svg,
   Path,
-  AnimatePaths,
   useParseFile,
   useKeyboardBind,
   useDrawFactory,
@@ -19,10 +18,10 @@ import { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../components/Layout'
 import type {
-  AnimationObject,
   PathAttributes,
   ResizeCallback,
   EditSvgObject,
+  AnimateObject,
 } from '@svg-drawing/core'
 import type { NextPage } from 'next'
 import type { ChangeEventHandler } from 'react'
@@ -161,8 +160,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   )
 
   /** Setup animation */
-  const [animateObj, setAnimateObj] = useState<AnimationObject | null>(null)
-  const animation = useAnimation({ onChangeAnimation: setAnimateObj })
+  const [animateObj, setAnimateObj] = useState<AnimateObject[]>([])
+  const animation = useAnimation({
+    animation: animateObj,
+    onChangeAnimation: setAnimateObj,
+  })
 
   const handleClickAnimation = useCallback(() => {
     const drawFrame = new DrawFrame(svg.paths)
@@ -540,8 +542,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         height={height}
         background={background}
         editProps={editProps}
+        animationProps={animation.animationProps}
       >
-        <AnimatePaths paths={paths} animatePaths={animateObj ?? undefined} />
+        {paths.map(({ key, attributes }) => (
+          <Path key={key} pathKey={key} {...attributes} />
+        ))}
       </Svg>
       <div>{JSON.stringify(editProps?.boundingBox)}</div>
       <div>{JSON.stringify(animateObj)}</div>

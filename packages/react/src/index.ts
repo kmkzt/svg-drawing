@@ -1,7 +1,5 @@
 export { Svg } from './components/Svg'
 export { Path } from './components/Path'
-export { AnimatePaths } from './components/Animate'
-export { BackgroundRect } from './components/BackgroundRect'
 export { useDraw } from './hooks/useDraw'
 export {
   useDrawEventHandler,

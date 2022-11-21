@@ -2,7 +2,10 @@ import { Animation } from '@svg-drawing/core'
 import { useCallback, useMemo } from 'react'
 import type { UseAnimation } from '../types'
 
-export const useAnimation: UseAnimation = ({ onChangeAnimation }) => {
+export const useAnimation: UseAnimation = ({
+  animation,
+  onChangeAnimation,
+}) => {
   const instance = useMemo<ReturnType<UseAnimation>['instance']>(
     () => new Animation(),
     []
@@ -24,13 +27,23 @@ export const useAnimation: UseAnimation = ({ onChangeAnimation }) => {
   )
 
   const clear = useCallback<ReturnType<UseAnimation>['clear']>(() => {
-    onChangeAnimation(null)
+    onChangeAnimation([])
   }, [onChangeAnimation])
+
+  const getAnimates = useCallback<
+    ReturnType<UseAnimation>['animationProps']['getAnimates']
+  >(
+    (key) => animation.find((animate) => animate.key === key)?.animates || [],
+    [animation]
+  )
 
   return {
     instance,
     setup,
     update,
     clear,
+    animationProps: {
+      getAnimates,
+    },
   }
 }

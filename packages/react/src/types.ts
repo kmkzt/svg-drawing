@@ -10,20 +10,27 @@ import type {
   SelectIndex,
   SvgOption,
   PathClass,
-  AnimationObject,
+  AnimateObject,
   VertexType,
+  PathObject,
+  AnimateAttribute,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
 /** UseSvg */
 export type UseSvg = (opts: Partial<SvgOption>) => SvgClass
-export type SvgProps = HTMLAttributes<SVGSVGElement> & {
-  width: number
-  height: number
-  background?: SvgObject['background']
-  children?: React.ReactNode
+export type SvgContextProps = {
   editProps?: EditProps
+  animationProps?: AnimationProps
 }
+
+export type SvgProps = HTMLAttributes<SVGSVGElement> &
+  SvgContextProps & {
+    width: number
+    height: number
+    background?: SvgObject['background']
+    children?: React.ReactNode
+  }
 
 export type PathsProps = {
   paths: SvgObject['paths']
@@ -91,19 +98,26 @@ export type BoundingBoxProps = {
   'selectedOnlyPaths' | 'onSelectPaths' | 'onResizeStart' | 'onTranslateStart'
 >
 
+export type AnimationProps = {
+  getAnimates: (pathKey: PathObject['key']) => AnimateAttribute[]
+}
+
+export type AnimatesProps = {
+  pathKey: PathObject['key']
+}
+
 /** UseAnimation */
 export type UseAnimation = (arg: {
-  onChangeAnimation: (obj: AnimationObject | null) => void
+  animation: AnimateObject[]
+  onChangeAnimation: (obj: AnimateObject[]) => void
 }) => {
   instance: Animation
   update: (paths: PathClass[]) => void
   clear: () => void
   setup: Animation['setup']
+  animationProps: AnimationProps
 }
 
-export type AnimatePathsProps = PathsProps & {
-  animatePaths?: AnimationObject
-}
 /** UseDrawEventHandler */
 export type UseDrawEventHandler<E extends HTMLElement = HTMLElement> = (
   ref: RefObject<E>,

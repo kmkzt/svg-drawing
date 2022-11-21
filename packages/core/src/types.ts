@@ -336,8 +336,6 @@ export type AnimateAttribute = {
 }
 
 export type AnimateObject = {
-  type: 'animate'
-  attributes: AnimateAttribute
+  key: PathObject['key']
+  animates: AnimateAttribute[]
 }
-
-export type AnimationObject = Record<string, AnimateObject[]>
