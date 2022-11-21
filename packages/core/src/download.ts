@@ -4,23 +4,7 @@ export const mimeTypeMap = {
   svg: 'image/svg+xml',
 } as const
 
-const base64ToBlob = (
-  data: string,
-  type: typeof mimeTypeMap[keyof typeof mimeTypeMap]
-) => {
-  const bin = Buffer.from(data.replace(/^.*,/, '')).toString()
-  const buffer = new Uint8Array(bin.length)
-
-  for (let i = 0; i < bin.length; i += 1) {
-    buffer[i] = bin.charCodeAt(i)
-  }
-
-  return new Blob([buffer.buffer], {
-    type,
-  })
-}
-
-export const downloadBlob = ({
+const download = ({
   data,
   extension,
   filename,
@@ -29,32 +13,18 @@ export const downloadBlob = ({
   extension: keyof typeof mimeTypeMap
   filename: string
 }): void => {
-  const blob = base64ToBlob(data, mimeTypeMap[extension])
-  // IE
-  if ((navigator as any).msSaveBlob) {
-    ;(navigator as any).msSaveBlob(blob, filename)
-    return
-  }
-
-  // Firefox, Chrome, Safari
-  if (URL?.createObjectURL) {
-    const a = document.createElement('a')
-    a.download = filename
-    a.href = URL.createObjectURL(blob)
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    return
-  }
-
-  // Other
-  open(data, '_blank')
+  const a = document.createElement('a')
+  a.download = filename
+  a.href = data
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
 }
 
 export class Download {
-  private download: typeof downloadBlob
-  constructor(private el: SVGSVGElement, _download?: typeof downloadBlob) {
-    this.download = _download || downloadBlob
+  private download: typeof download
+  constructor(private el: SVGSVGElement, _download?: typeof download) {
+    this.download = _download || download
   }
 
   public svg(filename: string) {
