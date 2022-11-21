@@ -167,73 +167,61 @@ describe('Animation', () => {
       loops: anim.paths.reduce((acc, p) => acc + p.absoluteCommands.length, 0),
     })
 
-    expect(anim.toJson()).toMatchInlineSnapshot(`
-      Object {
-        "p0": Array [
-          Object {
-            "attributes": Object {
-              "attributeName": "d",
-              "dur": "480ms",
-              "keyTimes": "0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1",
-              "repeatCount": "indefinite",
-              "values": "M1 1;M1 1;M1 1 l1 1;M1 1 l1 1 c2 2 4 2 6 2;M1 1 l1 1 c2 2 4 2 6 2 z;M1 1 l1 1 c2 2 4 2 6 2 z;M1 1 l1 1 c2 2 4 2 6 2 z;M1 1 l1 1 c2 2 4 2 6 2 z;M1 1 l1 1 c2 2 4 2 6 2 z",
-            },
-            "type": "animate",
+    expect(anim.toJson()).toStrictEqual([
+      {
+        key: 'p0',
+        animates: [
+          {
+            attributeName: 'd',
+            dur: '480ms',
+            keyTimes: '0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1',
+            repeatCount: 'indefinite',
+            values:
+              'M1 1;M1 1;M1 1 l1 1;M1 1 l1 1 c2 2 4 2 6 2;M1 1 l1 1 c2 2 4 2 6 2 z;M1 1 l1 1 c2 2 4 2 6 2 z;M1 1 l1 1 c2 2 4 2 6 2 z;M1 1 l1 1 c2 2 4 2 6 2 z;M1 1 l1 1 c2 2 4 2 6 2 z',
           },
-          Object {
-            "attributes": Object {
-              "attributeName": "stroke",
-              "dur": "480ms",
-              "keyTimes": "0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1",
-              "repeatCount": "indefinite",
-              "values": "#0ff;#00f;#0ff;#00f;#0ff;#00f;#0ff;#00f;#00f",
-            },
-            "type": "animate",
+          {
+            attributeName: 'stroke',
+            dur: '480ms',
+            keyTimes: '0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1',
+            repeatCount: 'indefinite',
+            values: '#0ff;#00f;#0ff;#00f;#0ff;#00f;#0ff;#00f;#00f',
           },
-          Object {
-            "attributes": Object {
-              "attributeName": "stroke-linecap",
-              "dur": "480ms",
-              "keyTimes": "0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1",
-              "repeatCount": "indefinite",
-              "values": "mitter;round;round;mitter;round;round;mitter;round;round",
-            },
-            "type": "animate",
+          {
+            attributeName: 'stroke-linecap',
+            dur: '480ms',
+            keyTimes: '0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1',
+            repeatCount: 'indefinite',
+            values: 'mitter;round;round;mitter;round;round;mitter;round;round',
           },
         ],
-        "p1": Array [
-          Object {
-            "attributes": Object {
-              "attributeName": "d",
-              "dur": "480ms",
-              "keyTimes": "0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1",
-              "repeatCount": "indefinite",
-              "values": "M2 2;M2 2;M2 2;M2 2;M2 2;M2 2;M2 2 l2 2;M2 2 l2 2 c0 0 4 0 8 0;M2 2 l2 2 c0 0 4 0 8 0 z",
-            },
-            "type": "animate",
+      },
+      {
+        key: 'p1',
+        animates: [
+          {
+            attributeName: 'd',
+            dur: '480ms',
+            keyTimes: '0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1',
+            repeatCount: 'indefinite',
+            values:
+              'M2 2;M2 2;M2 2;M2 2;M2 2;M2 2;M2 2 l2 2;M2 2 l2 2 c0 0 4 0 8 0;M2 2 l2 2 c0 0 4 0 8 0 z',
           },
-          Object {
-            "attributes": Object {
-              "attributeName": "stroke",
-              "dur": "480ms",
-              "keyTimes": "0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1",
-              "repeatCount": "indefinite",
-              "values": "#f0f;#f0f;#f0f;#f0f;#0ff;#f0f;#0ff;#f0f;#f0f",
-            },
-            "type": "animate",
+          {
+            attributeName: 'stroke',
+            dur: '480ms',
+            keyTimes: '0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1',
+            repeatCount: 'indefinite',
+            values: '#f0f;#f0f;#f0f;#f0f;#0ff;#f0f;#0ff;#f0f;#f0f',
           },
-          Object {
-            "attributes": Object {
-              "attributeName": "stroke-linecap",
-              "dur": "480ms",
-              "keyTimes": "0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1",
-              "repeatCount": "indefinite",
-              "values": "butt;butt;butt;butt;mitter;butt;butt;mitter;butt",
-            },
-            "type": "animate",
+          {
+            attributeName: 'stroke-linecap',
+            dur: '480ms',
+            keyTimes: '0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1',
+            repeatCount: 'indefinite',
+            values: 'butt;butt;butt;butt;mitter;butt;butt;mitter;butt',
           },
         ],
-      }
-    `)
+      },
+    ])
   })
 })
