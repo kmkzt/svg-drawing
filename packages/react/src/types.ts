@@ -79,24 +79,30 @@ export type EditProps = {
   onCancelSelect: () => void
   onResizeStart: (
     ev:
-      | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-      | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>,
+      | React.MouseEvent<
+          SVGSVGElement | SVGRectElement | SVGPathElement | SVGCircleElement
+        >
+      | React.TouchEvent<
+          SVGSVGElement | SVGRectElement | SVGPathElement | SVGCircleElement
+        >,
     type: VertexType
   ) => void
   onTranslateStart: (
     ev:
-      | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-      | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
+      | React.MouseEvent<
+          SVGSVGElement | SVGRectElement | SVGPathElement | SVGCircleElement
+        >
+      | React.TouchEvent<
+          SVGSVGElement | SVGRectElement | SVGPathElement | SVGCircleElement
+        >
   ) => void
   onSelectPaths: (sel: SelectIndex | SelectIndex[]) => void
 }
 
 export type BoundingBoxProps = {
   boundingBox: EditSvgObject['boundingBox']
-} & Pick<
-  EditProps,
-  'selectedOnlyPaths' | 'onSelectPaths' | 'onResizeStart' | 'onTranslateStart'
->
+  selectedOnlyPaths: boolean
+}
 
 export type AnimationProps = {
   getAnimates: (pathKey: PathObject['key']) => AnimateAttribute[]

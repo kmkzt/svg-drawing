@@ -80,19 +80,15 @@ export interface CommandClass<T extends CommandType = CommandType> {
   translate: (po: PointObject) => CommandClass<T>
 }
 
-type PathAttributeName =
-  | 'd'
-  | 'fill'
-  | 'stroke'
-  | 'strokeWidth'
-  | 'strokeLineCap'
-  | 'strokeLinejoin'
-
-export type PathAttributes =
-  | {
-      [name in PathAttributeName]?: string | undefined
-    }
-  | { [camelCase: string]: string | undefined }
+export type PathAttributes = {
+  d?: string
+  fill?: string
+  stroke?: string
+  strokeWidth?: string
+  strokeLinecap?: 'inherit' | 'butt' | 'round' | 'square'
+  strokeLinejoin?: 'round' | 'inherit' | 'miter' | 'bevel'
+  [camelCase: string]: string | undefined
+}
 
 export type PathObject = {
   key: string

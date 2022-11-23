@@ -1,53 +1,22 @@
-import React, { useCallback } from 'react'
+import { dataEditType, dataPathKey } from '@svg-drawing/core'
+import React from 'react'
 import { Animates } from './Animates'
-import { useSvgContext } from './SvgContext'
 import type { PathObject } from '@svg-drawing/core'
-import type { ReactNode } from 'react'
+import type { ReactNode, SVGProps } from 'react'
 
 type PathProps = {
   pathKey: PathObject['key']
   children?: ReactNode
-} & PathObject['attributes']
+} & SVGProps<SVGPathElement>
 
-export const Path = ({
-  pathKey,
-  children,
-  d,
-  fill,
-  stroke,
-  strokeWidth,
-  strokeLineCap,
-  strokeLinejoin,
-  ...attrs
-}: PathProps) => {
-  const { editProps } = useSvgContext()
-
-  const handleMoveStartPath = useCallback(
-    (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      if (!editProps) return
-
-      editProps.onSelectPaths({ path: pathKey })
-      editProps.onTranslateStart(ev)
-    },
-    [editProps, pathKey]
-  )
-  return (
-    <path
-      d={d}
-      fill={fill}
-      stroke={stroke}
-      strokeWidth={strokeWidth}
-      strokeLinejoin={strokeLinejoin as any}
-      strokeLinecap={strokeLineCap as any}
-      {...attrs}
-      onMouseDown={handleMoveStartPath}
-      onTouchStart={handleMoveStartPath}
-    >
-      {children ?? <Animates pathKey={pathKey} />}
-    </path>
-  )
-}
+export const Path = ({ pathKey, children, ...attrs }: PathProps) => (
+  <path
+    {...{
+      [dataEditType]: 'path',
+      [dataPathKey]: pathKey,
+    }}
+    {...attrs}
+  >
+    {children ?? <Animates pathKey={pathKey} />}
+  </path>
+)

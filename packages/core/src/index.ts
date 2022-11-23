@@ -1,5 +1,11 @@
 export * from './types'
-
+export {
+  dataEditType,
+  dataPathKey,
+  dataCommandIndex,
+  dataPointIndex,
+  dataVertexType,
+} from './dataAttributes'
 export { Drawing } from './drawing/drawing'
 export { BasicDrawFactory } from './drawing/factory'
 export {

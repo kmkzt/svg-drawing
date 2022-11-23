@@ -60,10 +60,10 @@ export class BasicDrawFactory implements DrawFactory {
     }
   }
 
-  get curveAttribute() {
+  get curveAttribute(): PathAttributes {
     return {
-      strokeLinecap: this.opts.curve ? 'round' : 'mitter',
-      strokeLinejoin: this.opts.curve ? 'round' : 'square',
+      strokeLinecap: this.opts.curve ? 'round' : 'square',
+      strokeLinejoin: this.opts.curve ? 'round' : 'miter',
     }
   }
 }

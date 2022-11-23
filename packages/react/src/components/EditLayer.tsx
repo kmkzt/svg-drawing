@@ -1,28 +1,23 @@
-import React, { useCallback } from 'react'
+import {
+  dataCommandIndex,
+  dataEditType,
+  dataPathKey,
+  dataPointIndex,
+  dataVertexType,
+} from '@svg-drawing/core'
+import React from 'react'
 import { Path } from './Path'
 import { useSvgContext } from './SvgContext'
 import { EDIT_PATH_STYLE } from '../config/editPathStyle'
 import type { BoundingBoxProps, EditProps } from '../types'
-import type {
-  PointObject,
-  Vertex,
-  EditPathObject,
-  SelectPointIndex,
-} from '@svg-drawing/core'
+import type { PointObject, Vertex, EditPathObject } from '@svg-drawing/core'
 
 export const EditLayer = () => {
   const { editProps } = useSvgContext()
 
   if (!editProps) return null
 
-  const {
-    boundingBox,
-    selectedOnlyPaths,
-    editPaths,
-    onSelectPaths,
-    onTranslateStart,
-    onResizeStart,
-  } = editProps
+  const { boundingBox, selectedOnlyPaths, editPaths } = editProps
 
   return (
     <>
@@ -30,19 +25,11 @@ export const EditLayer = () => {
         <BoundingBox
           selectedOnlyPaths={selectedOnlyPaths}
           boundingBox={boundingBox}
-          onSelectPaths={onSelectPaths}
-          onTranslateStart={onTranslateStart}
-          onResizeStart={onResizeStart}
         />
       )}
       {editPaths &&
         editPaths.map((editPath, i) => (
-          <EditPath
-            key={i}
-            editPath={editPath}
-            onSelectPaths={onSelectPaths}
-            onTranslateStart={onTranslateStart}
-          />
+          <EditPath key={i} editPath={editPath} />
         ))}
     </>
   )
@@ -50,22 +37,18 @@ export const EditLayer = () => {
 
 type EditPathProps = {
   editPath: EditPathObject
-  onSelectPaths: EditProps['onSelectPaths']
-  onTranslateStart: EditProps['onTranslateStart']
 }
 
-const EditPath = ({
-  editPath: { path, anchorPoints },
-  onSelectPaths,
-  onTranslateStart,
-}: EditPathProps) => (
+const EditPath = ({ editPath: { path, anchorPoints } }: EditPathProps) => (
   <g key={path.key}>
     <Path
-      pathKey={path.key}
       {...path.attributes}
+      pathKey={path.key}
       strokeWidth={EDIT_PATH_STYLE.line}
       stroke={path.attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined}
       fill={path.attributes?.fill ? 'transparent' : undefined}
+      strokeLinecap={path.attributes.strokeLinecap}
+      strokeLinejoin={path.attributes.strokeLinejoin}
     />
     {anchorPoints.map(({ points, d }, commandIndex) => (
       <g key={commandIndex}>
@@ -79,10 +62,10 @@ const EditPath = ({
           <AnchorPoint
             key={k}
             point={po.value}
-            selectPointIndex={po.index}
+            pathKey={po.index.path}
+            commandIndex={po.index.command}
+            pointIndex={po.index.point}
             selected={po.selected}
-            onSelectPoint={onSelectPaths}
-            onTranslateStart={onTranslateStart}
           />
         ))}
       </g>
@@ -92,37 +75,29 @@ const EditPath = ({
 
 type AnchorPointProps = {
   point: PointObject
-  selectPointIndex: SelectPointIndex
+  pathKey: string
+  commandIndex: number
+  pointIndex: number
   selected?: boolean
-  onSelectPoint: EditProps['onSelectPaths']
-  onTranslateStart: EditProps['onTranslateStart']
 }
 
 const AnchorPoint = ({
   point,
-  selectPointIndex,
+  pathKey,
+  commandIndex,
+  pointIndex,
   selected,
-  onSelectPoint: onSelectPoint,
-  onTranslateStart,
 }: AnchorPointProps) => {
-  const handleMoveStartPoint = useCallback(
-    (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      onSelectPoint(selectPointIndex)
-      onTranslateStart(ev)
-    },
-    [onSelectPoint, onTranslateStart, selectPointIndex]
-  )
-
   return (
     <circle
+      {...{
+        [dataEditType]: 'point',
+        [dataPathKey]: pathKey,
+        [dataCommandIndex]: `${commandIndex}`,
+        [dataPointIndex]: `${pointIndex}`,
+      }}
       cx={point.x}
       cy={point.y}
-      onMouseDown={handleMoveStartPoint}
-      onTouchStart={handleMoveStartPoint}
       r={EDIT_PATH_STYLE.point}
       style={{
         fill: selected
@@ -134,87 +109,58 @@ const AnchorPoint = ({
 }
 
 const BoundingBox = ({
-  boundingBox: { pathKeys, position, size, vertexes },
+  boundingBox: { position, size, vertexes },
   selectedOnlyPaths,
-  onSelectPaths,
-  onTranslateStart,
-  onResizeStart,
-}: BoundingBoxProps) => {
-  const handleMovePathsStart = useCallback(
-    (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      onSelectPaths(pathKeys.map((key) => ({ path: key })))
-      onTranslateStart(ev)
-    },
-    [onSelectPaths, onTranslateStart, pathKeys]
-  )
-
-  return (
-    <>
-      <rect
-        x={position.x}
-        y={position.y}
-        width={size.width}
-        height={size.height}
-        stroke={EDIT_PATH_STYLE.color.main}
-        fill={
-          selectedOnlyPaths
-            ? EDIT_PATH_STYLE.fill.selected
-            : EDIT_PATH_STYLE.fill.boundingBox
-        }
-        onMouseDown={handleMovePathsStart}
-        onTouchStart={handleMovePathsStart}
-      />
-      {vertexes.map((vertex) => (
-        <BoundingBoxVertex
-          key={vertex.type}
-          vertex={vertex}
-          selectedOnlyPaths={selectedOnlyPaths}
-          onResizeStart={onResizeStart}
-        />
-      ))}
-    </>
-  )
-}
-
-type BoundingBoxVertexProps = {
-  vertex: Vertex
-  selectedOnlyPaths: boolean
-  onResizeStart: EditProps['onResizeStart']
-}
-
-const BoundingBoxVertex = ({
-  vertex,
-  selectedOnlyPaths,
-  onResizeStart,
-}: BoundingBoxVertexProps) => {
-  const handleResizeStart = useCallback(
-    (
-      ev:
-        | React.MouseEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-        | React.TouchEvent<SVGRectElement | SVGPathElement | SVGCircleElement>
-    ) => {
-      onResizeStart(ev, vertex.type)
-    },
-    [vertex, onResizeStart]
-  )
-  return (
-    <circle
-      key={vertex.type}
-      cx={vertex.point.x}
-      cy={vertex.point.y}
-      r={EDIT_PATH_STYLE.point}
+}: BoundingBoxProps) => (
+  <>
+    <rect
+      {...{
+        [dataEditType]: 'bounding-box',
+      }}
+      x={position.x}
+      y={position.y}
+      width={size.width}
+      height={size.height}
       stroke={EDIT_PATH_STYLE.color.main}
       fill={
         selectedOnlyPaths
           ? EDIT_PATH_STYLE.fill.selected
           : EDIT_PATH_STYLE.fill.boundingBox
       }
-      onMouseDown={handleResizeStart}
-      onTouchStart={handleResizeStart}
     />
-  )
+    {vertexes.map((vertex) => (
+      <BoundingBoxVertex
+        key={vertex.type}
+        vertex={vertex}
+        selectedOnlyPaths={selectedOnlyPaths}
+      />
+    ))}
+  </>
+)
+
+type BoundingBoxVertexProps = {
+  vertex: Vertex
+  selectedOnlyPaths: boolean
 }
+
+const BoundingBoxVertex = ({
+  vertex,
+  selectedOnlyPaths,
+}: BoundingBoxVertexProps) => (
+  <circle
+    {...{
+      [dataEditType]: 'bounding-box-vertex',
+      [dataVertexType]: vertex.type,
+    }}
+    key={vertex.type}
+    cx={vertex.point.x}
+    cy={vertex.point.y}
+    r={EDIT_PATH_STYLE.point}
+    stroke={EDIT_PATH_STYLE.color.main}
+    fill={
+      selectedOnlyPaths
+        ? EDIT_PATH_STYLE.fill.selected
+        : EDIT_PATH_STYLE.fill.boundingBox
+    }
+  />
+)
