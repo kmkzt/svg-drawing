@@ -32,8 +32,8 @@ export class TranslatePathHandler {
     }
   }
 
-  start(po: PointObject) {
-    this.basePoint = po
+  start(ev: MouseEvent | TouchEvent) {
+    this.basePoint = this.getTranslatePoint(ev)
 
     addEventListener('mouseup', this.handleTranslateEnd)
     addEventListener('touchend', this.handleTranslateEnd)

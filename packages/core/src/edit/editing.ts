@@ -31,6 +31,12 @@ export class Editing {
     this.updater(this.editSvg)
   }
 
+  /** Select Bounding box */
+  selectBoundingBox() {
+    this.editSvg.selectBoundingBox()
+    this.updater(this.editSvg)
+  }
+
   /** Delete path and update screen. */
   deletePaths() {
     this.editSvg.delete()

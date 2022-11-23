@@ -1,5 +1,5 @@
 import { getEventPoint } from '../event'
-import type { PointObject, Vertex } from '../types'
+import type { PointObject, Vertex, VertexType } from '../types'
 import type { Editing } from './editing' // TODO: Replace interface
 
 export class ResizePathHandler {
@@ -36,8 +36,12 @@ export class ResizePathHandler {
     this.selectedVertex = null
   }
 
-  start(vertex: Vertex) {
-    this.selectedVertex = vertex
+  start(ev: MouseEvent | TouchEvent, type: VertexType) {
+    this.selectedVertex = {
+      point: getEventPoint(ev),
+      type,
+    }
+
     addEventListener('mouseup', this.handleResizePathEnd)
     addEventListener('touchend', this.handleResizePathEnd)
 

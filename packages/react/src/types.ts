@@ -7,11 +7,9 @@ import type {
   ResizeCallback,
   DrawingClass,
   Editing,
-  SelectIndex,
   SvgOption,
   PathClass,
   AnimateObject,
-  VertexType,
   PathObject,
   AnimateAttribute,
 } from '@svg-drawing/core'
@@ -55,48 +53,30 @@ export type DrawAction = {
 export type UseEdit = (opts: {
   svg: SvgClass
   editSvgObject: EditSvgObject | null
-  multipleSelectBindKey?: string
   onChangeEdit: (arg: EditSvgObject | null) => void
   onChangeSvg: (obj: SvgObject) => void
 }) => EditSvgAction
 
 export type EditSvgAction = {
   edit: Editing
-  keyboardMap: KeyboardMap
   update: () => void
-  deletePaths: () => void
-  translate: Editing['translate']
-  changeAttributes: Editing['changeAttributes']
-  selectPaths: (sel: SelectIndex | SelectIndex[]) => void
-  cancelSelect: () => void
+  keyboardMap: KeyboardMap
   editProps: EditProps
 }
+
+/** UseEditEventHandler */
+export type UseEditEventHandler<E extends HTMLElement = HTMLElement> = (
+  ref: RefObject<E>,
+  edit: Editing,
+  opts?: {
+    multipleSelectBindKey?: string
+  }
+) => void
 
 export type EditProps = {
   editPaths: EditSvgObject['paths'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
   selectedOnlyPaths: boolean
-  onCancelSelect: () => void
-  onResizeStart: (
-    ev:
-      | React.MouseEvent<
-          SVGSVGElement | SVGRectElement | SVGPathElement | SVGCircleElement
-        >
-      | React.TouchEvent<
-          SVGSVGElement | SVGRectElement | SVGPathElement | SVGCircleElement
-        >,
-    type: VertexType
-  ) => void
-  onTranslateStart: (
-    ev:
-      | React.MouseEvent<
-          SVGSVGElement | SVGRectElement | SVGPathElement | SVGCircleElement
-        >
-      | React.TouchEvent<
-          SVGSVGElement | SVGRectElement | SVGPathElement | SVGCircleElement
-        >
-  ) => void
-  onSelectPaths: (sel: SelectIndex | SelectIndex[]) => void
 }
 
 export type BoundingBoxProps = {

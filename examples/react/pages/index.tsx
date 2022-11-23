@@ -13,6 +13,7 @@ import {
   useAnimation,
   usePencilHandler,
   usePenHandler,
+  useEditEventHandler,
 } from '@svg-drawing/react'
 import { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
@@ -126,17 +127,19 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
 
   const [editSvgObject, onChangeEdit] = useState<EditSvgObject | null>(null)
   const {
-    keyboardMap,
+    edit,
     editProps,
+    keyboardMap,
     update: updateEdit,
     changeAttributes,
-    cancelSelect,
   } = useEdit({
     svg,
     editSvgObject,
     onChangeEdit,
     onChangeSvg,
   })
+
+  useEditEventHandler(targetRef, edit)
 
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (e: React.MouseEvent<HTMLElement>) => {
@@ -212,11 +215,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         strokeWidth: `${num}`,
       }))
-      changeAttributes({
+      edit.changeAttributes({
         strokeWidth: num + '',
       })
     },
-    [changeAttributes]
+    [edit]
   )
 
   const handleChangePenColor = useCallback<
@@ -227,11 +230,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         stroke: e.target.value,
       }))
-      changeAttributes({
+      edit.changeAttributes({
         stroke: e.target.value,
       })
     },
-    [changeAttributes]
+    [edit]
   )
 
   const handleClickPenColor = useCallback(
@@ -240,11 +243,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         stroke: col,
       }))
-      changeAttributes({
+      edit.changeAttributes({
         stroke: col,
       })
     },
-    [changeAttributes]
+    [edit]
   )
 
   const handleChangeFill = useCallback<ChangeEventHandler<HTMLInputElement>>(
@@ -253,7 +256,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         fill: e.target.value,
       }))
-      changeAttributes({
+      edit.changeAttributes({
         fill: e.target.value,
       })
     },
@@ -266,11 +269,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         ...opts,
         fill: col,
       }))
-      changeAttributes({
+      edit.changeAttributes({
         fill: col,
       })
     },
-    [changeAttributes]
+    [edit]
   )
 
   const parseFile = useParseFile({
@@ -376,7 +379,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         )}
         {mode === 'edit' && (
           <Flex pt={3} justifyContent="start">
-            <Button mr={1} mb={1} onClick={cancelSelect}>
+            <Button mr={1} mb={1} onClick={() => edit.cancel()}>
               Cancel
             </Button>
             <Button mr={1} mb={1} onClick={clear}>

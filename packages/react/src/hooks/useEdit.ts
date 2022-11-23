@@ -1,14 +1,7 @@
-import {
-  EditSvg,
-  Editing,
-  TranslatePathHandler,
-  ResizePathHandler,
-} from '@svg-drawing/core'
-import { useCallback, useMemo, useEffect } from 'react'
-import { usePressedKey } from './usePressedKey'
+import { EditSvg, Editing } from '@svg-drawing/core'
+import { useCallback, useMemo } from 'react'
 import { useRenderInterval } from './useRenderInterval'
-import type { UseEdit, EditSvgAction, EditProps } from '../types'
-import type { PointObject } from '@svg-drawing/core'
+import type { KeyboardMap, UseEdit } from '../types'
 
 /**
  * ### Basic usage.
@@ -58,7 +51,6 @@ import type { PointObject } from '@svg-drawing/core'
  * ```
  */
 export const useEdit: UseEdit = ({
-  multipleSelectBindKey = 'Shift',
   editSvgObject,
   svg,
   onChangeEdit,
@@ -86,68 +78,16 @@ export const useEdit: UseEdit = ({
     [editSvg, onChangeEdit, onChangeSvg, render]
   )
 
-  const translatePathHandler = useMemo(
-    () => new TranslatePathHandler(edit),
-    [edit]
-  )
-  useEffect(() => () => translatePathHandler.end(), [translatePathHandler])
-
-  const resizePathHandler = useMemo(() => new ResizePathHandler(edit), [edit])
-  useEffect(() => () => resizePathHandler.end(), [resizePathHandler])
-
-  const multipleSelect = usePressedKey(multipleSelectBindKey)
-
-  const selectPaths = useCallback<EditSvgAction['selectPaths']>(
-    (sel) => edit.select(sel, multipleSelect.current),
-    [edit, multipleSelect]
-  )
-
-  const changeAttributes = useCallback<EditSvgAction['changeAttributes']>(
-    (arg) => {
-      edit.changeAttributes(arg)
-    },
-    [edit]
-  )
-
-  const cancelSelect = useCallback<EditSvgAction['cancelSelect']>(() => {
-    edit.cancel()
-  }, [edit])
-
-  const deletePaths = useCallback<EditSvgAction['deletePaths']>(() => {
-    edit.deletePaths()
-  }, [edit])
-
-  const translate = useCallback<EditSvgAction['translate']>(
-    (po) => {
-      edit.translate(po)
-    },
-    [edit]
-  )
-
-  const onTranslateStart = useCallback<EditProps['onTranslateStart']>(
-    (ev) => {
-      translatePathHandler.start(getPointFromEvent(ev))
-    },
-    [translatePathHandler]
-  )
-
-  const onResizeStart = useCallback<EditProps['onResizeStart']>(
-    (ev, type) => {
-      resizePathHandler.start({ type, point: getPointFromEvent(ev) })
-    },
-    [resizePathHandler]
-  )
-
-  const keyboardMap = useMemo<EditSvgAction['keyboardMap']>(
+  const keyboardMap = useMemo<KeyboardMap>(
     () => ({
-      ['Escape']: cancelSelect,
-      ['ArrowRight']: () => translate({ x: 0.5, y: 0 }),
-      ['ArrowLeft']: () => translate({ x: -0.5, y: 0 }),
-      ['ArrowUp']: () => translate({ x: 0, y: -0.5 }),
-      ['ArrowDown']: () => translate({ x: 0, y: 0.5 }),
-      ['Backspace']: deletePaths,
+      ['Escape']: () => edit.cancel(),
+      ['ArrowRight']: () => edit.translate({ x: 0.5, y: 0 }),
+      ['ArrowLeft']: () => edit.translate({ x: -0.5, y: 0 }),
+      ['ArrowUp']: () => edit.translate({ x: 0, y: -0.5 }),
+      ['ArrowDown']: () => edit.translate({ x: 0, y: 0.5 }),
+      ['Backspace']: () => edit.deletePaths(),
     }),
-    [cancelSelect, deletePaths, translate]
+    [edit]
   )
 
   const { editPaths, boundingBox, selectedOnlyPaths } = useMemo(
@@ -163,35 +103,10 @@ export const useEdit: UseEdit = ({
     edit,
     keyboardMap,
     update,
-    selectPaths,
-    cancelSelect,
-    changeAttributes,
-    translate,
-    deletePaths,
     editProps: {
       editPaths,
       boundingBox,
       selectedOnlyPaths,
-      onCancelSelect: cancelSelect,
-      onTranslateStart,
-      onResizeStart,
-      onSelectPaths: selectPaths,
     },
-  }
-}
-
-const getPointFromEvent = (
-  ev: React.MouseEvent<any> | React.TouchEvent<any>
-): PointObject => {
-  if ('touches' in ev) {
-    const touche = ev.touches[0]
-    return {
-      x: touche.clientX,
-      y: touche.clientY,
-    }
-  }
-  return {
-    x: ev.clientX,
-    y: ev.clientY,
   }
 }

@@ -35,6 +35,11 @@ export class EditSvg {
     this.pathSelector.select(index, combined)
   }
 
+  /** Select boundingBox */
+  selectBoundingBox() {
+    this.pathSelector.selectBoundingBox()
+  }
+
   /** Clear selected status. */
   cancel() {
     this.pathSelector.clear()

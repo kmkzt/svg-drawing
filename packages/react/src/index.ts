@@ -8,6 +8,7 @@ export {
 } from './hooks/useDrawEventHandler'
 export { useDrawFactory } from './hooks/useDrawFactory'
 export { useEdit } from './hooks/useEdit'
+export { useEditEventHandler } from './hooks/useEditEventHandler'
 export { useSvg } from './hooks/useSvg'
 export { useKeyboardBind } from './hooks/useKeyboardBind'
 export { usePressedKey } from './hooks/usePressedKey'

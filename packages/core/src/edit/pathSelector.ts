@@ -101,6 +101,10 @@ export class PathSelector {
     )
   }
 
+  selectBoundingBox() {
+    this.select(this.pathsIndex.map((pathKey) => ({ path: pathKey })))
+  }
+
   unselect(index: SelectIndex) {
     if (!this.selecting) return
 
