@@ -131,7 +131,6 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     editProps,
     keyboardMap,
     update: updateEdit,
-    changeAttributes,
   } = useEdit({
     svg,
     editSvgObject,
@@ -260,7 +259,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         fill: e.target.value,
       })
     },
-    [changeAttributes]
+    [edit]
   )
 
   const handleClickFill = useCallback(
