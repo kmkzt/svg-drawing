@@ -51,5 +51,6 @@ export {
   parseSVGString,
 } from './parser'
 export { SvgDrawing } from './SvgDrawing'
+export { SvgEditing } from './SvgEditing'
 export { SvgAnimation } from './SvgAnimation'
 export { Animation } from './animation/animation'
