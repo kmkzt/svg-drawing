@@ -1,5 +1,5 @@
 import { SvgEditing } from '@svg-drawing/core'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import type { UseEditEventHandler } from '../types'
 
 export const useEditEventHandler: UseEditEventHandler = (
