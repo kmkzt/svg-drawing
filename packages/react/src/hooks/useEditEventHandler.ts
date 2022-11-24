@@ -15,7 +15,7 @@ import type { VertexType, SelectIndex } from '@svg-drawing/core'
 export const useEditEventHandler: UseEditEventHandler = (
   ref,
   edit,
-  { multipleSelectBindKey = 'ShiftKey' } = {}
+  { multipleSelectBindKey = 'Shift' } = {}
 ) => {
   const translatePathHandler = useMemo(
     () => new TranslatePathHandler(edit),
