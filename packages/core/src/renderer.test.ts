@@ -15,7 +15,7 @@ describe('renderer.ts', () => {
     .addPath(
       new Path({
         strokeLinecap: 'square',
-        strokeLinejoin: 'mitter',
+        strokeLinejoin: 'miter',
       })
         .addCommand({ type: 'M', values: [4, 4] })
         .addCommand({ type: 'L', values: [9, 4] })
@@ -40,7 +40,7 @@ describe('renderer.ts', () => {
         <path
           d="M4 4 l5 0 l0 4 l-6 -8 z"
           stroke-linecap="square"
-          stroke-linejoin="mitter"
+          stroke-linejoin="miter"
         />
       </svg>
     `)
