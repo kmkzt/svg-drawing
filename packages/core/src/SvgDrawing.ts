@@ -1,7 +1,7 @@
 import { Drawing } from './drawing/drawing'
 import { PencilHandler } from './drawing/eventHandler'
 import { BasicDrawFactory } from './drawing/factory'
-import { Renderer } from './renderer'
+import { SvgRenderer } from './renderer/svgRenderer'
 import { Svg } from './svg/svg'
 import { isAlmostSameNumber } from './utils'
 import type {
@@ -47,7 +47,7 @@ export class SvgDrawing {
   private drawing: DrawingClass
   private factory: BasicDrawFactory
   private handler: DrawEventHandler
-  private renderer: Renderer
+  private renderer: SvgRenderer
   constructor(
     el: HTMLElement,
     {
@@ -62,7 +62,7 @@ export class SvgDrawing {
   ) {
     const { width, height } = el.getBoundingClientRect()
 
-    this.renderer = new Renderer(el, { background })
+    this.renderer = new SvgRenderer(el, { background })
 
     this.update = this.update.bind(this)
 

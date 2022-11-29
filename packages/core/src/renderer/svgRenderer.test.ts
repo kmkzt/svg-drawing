@@ -1,8 +1,8 @@
-import { svgObjectToElement } from './renderer'
-import { Path } from './svg/path'
-import { Svg } from './svg/svg'
+import { svgObjectToElement } from './svgRenderer'
+import { Path } from '../svg/path'
+import { Svg } from '../svg/svg'
 
-describe('renderer.ts', () => {
+describe('svgRenderer.ts', () => {
   const svg = new Svg({ width: 500, height: 500 })
     // TODO: rewrite bezier curve test
     .addPath(

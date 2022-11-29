@@ -1,10 +1,10 @@
 import { Animation } from './animation/animation'
 import {
-  Renderer,
+  SvgRenderer,
   createSvgChildElement,
   createSvgElement,
   pathObjectToElement,
-} from './renderer'
+} from './renderer/svgRenderer'
 import { Svg } from './svg/svg'
 import type {
   AnimationOption,
@@ -124,7 +124,7 @@ export class SvgAnimation {
     return new SvgAnimation(
       new Svg({ width, height }),
       new Animation({ ms }),
-      (svg) => new Renderer(el, { background }).update({ svg: svg.toJson() })
+      (svg) => new SvgRenderer(el, { background }).update({ svg: svg.toJson() })
     )
   }
 }

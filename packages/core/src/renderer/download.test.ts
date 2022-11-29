@@ -1,8 +1,7 @@
 import { Download } from './download'
-import { svgObjectToElement } from './renderer'
-import { Path } from './svg/path'
-import { Point } from './svg/point'
-import { Svg } from './svg/svg'
+import { svgObjectToElement } from './svgRenderer'
+import { Path } from '../svg/path'
+import { Svg } from '../svg/svg'
 
 describe('download.ts', () => {
   const svg = new Svg({ width: 4, height: 4 })
@@ -17,7 +16,7 @@ describe('download.ts', () => {
     .addPath(
       new Path({
         strokeLinecap: 'square',
-        strokeLinejoin: 'mitter',
+        strokeLinejoin: 'miter',
       }).addCommand([
         { type: 'M', values: [4, 4] },
         { type: 'L', values: [9, 4] },
@@ -30,7 +29,7 @@ describe('download.ts', () => {
 
   it('toBase64', () => {
     expect(new Download(svgElement).toBase64()).toMatchInlineSnapshot(
-      `"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0wIDAgYzAuMiAwLjIgMC42IDAuOCAxIDEgYzAuNCAwLjIgMC42IDAuMiAxIDAgYzAuNCAtMC4yIDAuOCAtMC44IDEgLTEiPjwvcGF0aD48cGF0aCBkPSJNNCA0IGw1IDAgbDAgNCBsLTYgLTggeiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXR0ZXIiPjwvcGF0aD48L3N2Zz4="`
+      `"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0wIDAgYzAuMiAwLjIgMC42IDAuOCAxIDEgYzAuNCAwLjIgMC42IDAuMiAxIDAgYzAuNCAtMC4yIDAuOCAtMC44IDEgLTEiPjwvcGF0aD48cGF0aCBkPSJNNCA0IGw1IDAgbDAgNCBsLTYgLTggeiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciI+PC9wYXRoPjwvc3ZnPg=="`
     )
   })
 
@@ -39,7 +38,7 @@ describe('download.ts', () => {
     const testDownload = (param: any): void => {
       expect(param).toMatchInlineSnapshot(`
         Object {
-          "data": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0wIDAgYzAuMiAwLjIgMC42IDAuOCAxIDEgYzAuNCAwLjIgMC42IDAuMiAxIDAgYzAuNCAtMC4yIDAuOCAtMC44IDEgLTEiPjwvcGF0aD48cGF0aCBkPSJNNCA0IGw1IDAgbDAgNCBsLTYgLTggeiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXR0ZXIiPjwvcGF0aD48L3N2Zz4=",
+          "data": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNCIgd2lkdGg9IjQiPjxwYXRoIGQ9Ik0wIDAgYzAuMiAwLjIgMC42IDAuOCAxIDEgYzAuNCAwLjIgMC42IDAuMiAxIDAgYzAuNCAtMC4yIDAuOCAtMC44IDEgLTEiPjwvcGF0aD48cGF0aCBkPSJNNCA0IGw1IDAgbDAgNCBsLTYgLTggeiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciI+PC9wYXRoPjwvc3ZnPg==",
           "extension": "svg",
           "filename": "download.svg",
         }

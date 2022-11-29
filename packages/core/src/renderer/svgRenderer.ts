@@ -1,5 +1,5 @@
-import { camel2kebab } from './utils'
-import type { PathAttributes, RendererOption, SvgObject } from './types'
+import { camel2kebab } from '../utils'
+import type { PathAttributes, RendererOption, SvgObject } from '../types'
 
 const VERSION = '1.1'
 const SVG_NS = 'http://www.w3.org/2000/svg'
@@ -74,7 +74,7 @@ export const svgObjectToElement = ({
   return updateEl
 }
 
-export class Renderer {
+export class SvgRenderer {
   constructor(public el: HTMLElement, { background }: RendererOption = {}) {
     /** Setup parameter */
     const { width, height } = this.el.getBoundingClientRect()

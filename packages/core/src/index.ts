@@ -36,13 +36,13 @@ export { segmentPoint } from './edit/segment'
 export { ResizePathHandler } from './edit/resizePathHandler'
 export { TranslatePathHandler } from './edit/translatePathHandler'
 export {
-  Renderer,
+  SvgRenderer as Renderer,
   createSvgChildElement,
   createSvgElement,
   pathObjectToElement,
   svgObjectToElement,
-} from './renderer'
-export { Download } from './download'
+} from './renderer/svgRenderer'
+export { Download } from './renderer/download'
 export { ResizeHandler } from './resize'
 export {
   parseCommandString,
