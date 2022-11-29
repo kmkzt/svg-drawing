@@ -1,5 +1,10 @@
 import { camel2kebab } from '../utils'
-import type { PathAttributes, RendererOption, SvgObject } from '../types'
+import type {
+  AnimateAttribute,
+  PathAttributes,
+  RendererOption,
+  SvgObject,
+} from '../types'
 
 const VERSION = '1.1'
 const SVG_NS = 'http://www.w3.org/2000/svg'
@@ -7,29 +12,7 @@ const SVG_XLINK = 'http://www.w3.org/1999/xlink'
 interface Attrs {
   [key: string]: string
 }
-
-export const createSvgElement = (
-  attrs: Attrs,
-  childs: SVGElement[]
-): SVGSVGElement => {
-  const svg = document.createElementNS(SVG_NS, 'svg')
-  svg.setAttributeNS(null, 'version', VERSION)
-  svg.setAttribute('xmlns', SVG_NS)
-  svg.setAttribute('xmlns:xlink', SVG_XLINK)
-  Object.keys(attrs)
-    .sort()
-    .map((key: string) => {
-      svg.setAttribute(key, attrs[key])
-    })
-  childs.map((el: SVGElement) => {
-    svg.appendChild(el)
-  })
-  return svg
-}
-
-export const createSvgChildElement = <
-  T extends keyof SVGElementTagNameMap = any
->(
+export const createSvgElement = <T extends keyof SVGElementTagNameMap = any>(
   elName: T,
   attrs: Attrs
 ): SVGElementTagNameMap[T] => {
@@ -42,8 +25,35 @@ export const createSvgChildElement = <
   return path
 }
 
-/** @deprecated */
-export const pathObjectToElement = (path: PathAttributes): SVGPathElement => {
+export const svgElement = (
+  {
+    width,
+    height,
+    background,
+  }: { width: number; height: number; background?: string },
+  childs: SVGElement[]
+): SVGSVGElement => {
+  const svg = document.createElementNS(SVG_NS, 'svg')
+  svg.setAttributeNS(null, 'version', VERSION)
+  svg.setAttribute('xmlns', SVG_NS)
+  svg.setAttribute('xmlns:xlink', SVG_XLINK)
+  svg.setAttribute('width', String(width))
+  svg.setAttribute('height', String(height))
+
+  if (background) {
+    svg.appendChild(rectElement({ width, height, fill: background }))
+  }
+
+  childs.map((el: SVGElement) => {
+    svg.appendChild(el)
+  })
+  return svg
+}
+
+export const pathElement = (
+  path: PathAttributes,
+  animateAttrs?: AnimateAttribute[]
+): SVGPathElement => {
   const kebabAttrs = Object.entries(path).reduce(
     (acc, [key, val], _i) =>
       val
@@ -54,8 +64,32 @@ export const pathObjectToElement = (path: PathAttributes): SVGPathElement => {
         : acc,
     {}
   )
-  return createSvgChildElement('path', kebabAttrs)
+  const pathElement = createSvgElement('path', kebabAttrs)
+
+  animateAttrs?.forEach((animateAttr) => {
+    pathElement.appendChild(animateElement(animateAttr))
+  })
+
+  return pathElement
 }
+
+const rectElement = ({
+  width,
+  height,
+  fill,
+}: {
+  width: number
+  height: number
+  fill: string
+}) =>
+  createSvgElement('rect', {
+    width: String(width),
+    height: String(height),
+    fill,
+  })
+
+const animateElement = (attrs: AnimateAttribute) =>
+  createSvgElement('animate', attrs)
 
 export const svgObjectToElement = ({
   width,
@@ -63,14 +97,10 @@ export const svgObjectToElement = ({
   background,
   paths,
 }: SvgObject): SVGSVGElement => {
-  const size = { width: String(width), height: String(height) }
-  const bgEl = background
-    ? [createSvgChildElement('rect', { ...size, fill: background })]
-    : []
-  const updateEl = createSvgElement(size, [
-    ...bgEl,
-    ...paths.map(({ attributes }) => pathObjectToElement(attributes)),
-  ])
+  const updateEl = svgElement(
+    { width, height, background },
+    paths.map(({ attributes }) => pathElement(attributes))
+  )
   return updateEl
 }
 

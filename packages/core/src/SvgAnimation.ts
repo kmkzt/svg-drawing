@@ -1,9 +1,9 @@
 import { Animation } from './animation/animation'
 import {
   SvgRenderer,
-  createSvgChildElement,
   createSvgElement,
-  pathObjectToElement,
+  svgElement,
+  pathElement,
 } from './renderer/svgRenderer'
 import { Svg } from './svg/svg'
 import type {
@@ -76,37 +76,27 @@ export class SvgAnimation {
   }
 
   public toElement() {
-    const sizeAttributes = {
-      width: String(this.svg.width),
-      height: String(this.svg.height),
-    }
-
     const animation = this.animation.toJson()
 
     const pathEls = this.animation.paths.map((path) => {
       const { key, attributes } = path.toJson()
-      const pathEl = pathObjectToElement(attributes)
+      const animateAttrs = animation.find(
+        (animate) => animate.key === key
+      )?.animates
 
-      animation
-        .find((animate) => animate.key === key)
-        ?.animates.map((attributes) => {
-          pathEl.appendChild(createSvgChildElement('animate', attributes))
-        })
+      const pathEl = pathElement(attributes, animateAttrs)
 
       return pathEl
     })
 
-    const childEls: SVGElement[] = this.svg.background
-      ? [
-          createSvgChildElement('rect', {
-            ...sizeAttributes,
-            fill: this.svg.background,
-          }),
-          ...pathEls,
-        ]
-      : pathEls
-
-    return createSvgElement(sizeAttributes, childEls)
+    return svgElement(
+      {
+        width: this.svg.width,
+        height: this.svg.height,
+        background: this.svg.background,
+      },
+      pathEls
+    )
   }
 
   public resize({ width, height }: Parameters<ResizeCallback>[0]): void {
