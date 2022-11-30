@@ -9,7 +9,7 @@ import React from 'react'
 import { Path } from './Path'
 import { useSvgContext } from './SvgContext'
 import { EDIT_PATH_STYLE } from '../config/editPathStyle'
-import type { BoundingBoxProps, EditProps } from '../types'
+import type { BoundingBoxProps } from '../types'
 import type { PointObject, Vertex, EditPathObject } from '@svg-drawing/core'
 
 export const EditLayer = () => {
@@ -46,7 +46,7 @@ const EditPath = ({ editPath: { path, anchorPoints } }: EditPathProps) => (
       pathKey={path.key}
       strokeWidth={EDIT_PATH_STYLE.line}
       stroke={path.attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined}
-      fill={path.attributes?.fill ? 'transparent' : undefined}
+      fill="none"
       strokeLinecap={path.attributes.strokeLinecap}
       strokeLinejoin={path.attributes.strokeLinejoin}
     />
