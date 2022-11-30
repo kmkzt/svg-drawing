@@ -181,6 +181,14 @@ export interface BezierCurveOption {
   ratio?: number
 }
 
+export interface RendererClass {
+  update: (arg: {
+    svg: SvgObject
+    edit?: EditSvgObject
+    animation?: AnimationObject
+  }) => void
+}
+
 export type RendererOption = Pick<SvgOption, 'background'>
 
 export type DrawingOption = RendererOption & {
@@ -335,3 +343,5 @@ export type AnimateObject = {
   key: PathObject['key']
   animates: AnimateAttribute[]
 }
+
+export type AnimationObject = AnimateObject[]

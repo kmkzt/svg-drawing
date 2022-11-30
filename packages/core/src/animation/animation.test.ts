@@ -149,7 +149,7 @@ describe('Animation', () => {
           // Test Attribute
           if (count % 3 === 0) {
             path.updateAttributes({
-              strokeLinecap: 'mitter',
+              strokeLinecap: 'square',
             })
           }
 

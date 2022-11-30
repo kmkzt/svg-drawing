@@ -35,7 +35,7 @@ export { Editing } from './edit/editing'
 export { segmentPoint } from './edit/segment'
 export { ResizePathHandler } from './edit/resizePathHandler'
 export { TranslatePathHandler } from './edit/translatePathHandler'
-export { SvgRenderer as Renderer } from './renderer/svgRenderer'
+export { SvgRenderer } from './renderer/svgRenderer'
 export { Download } from './renderer/download'
 export { ResizeHandler } from './resize'
 export {

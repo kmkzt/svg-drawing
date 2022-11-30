@@ -1,10 +1,5 @@
 import { Animation } from './animation/animation'
-import {
-  SvgRenderer,
-  createSvgElement,
-  svgElement,
-  pathElement,
-} from './renderer/svgRenderer'
+import { SvgRenderer, toElement } from './renderer/svgRenderer'
 import { Svg } from './svg/svg'
 import type {
   AnimationOption,
@@ -76,27 +71,10 @@ export class SvgAnimation {
   }
 
   public toElement() {
-    const animation = this.animation.toJson()
-
-    const pathEls = this.animation.paths.map((path) => {
-      const { key, attributes } = path.toJson()
-      const animateAttrs = animation.find(
-        (animate) => animate.key === key
-      )?.animates
-
-      const pathEl = pathElement(attributes, animateAttrs)
-
-      return pathEl
+    return toElement({
+      svg: this.svg.toJson(),
+      animation: this.animation.toJson(),
     })
-
-    return svgElement(
-      {
-        width: this.svg.width,
-        height: this.svg.height,
-        background: this.svg.background,
-      },
-      pathEls
-    )
   }
 
   public resize({ width, height }: Parameters<ResizeCallback>[0]): void {
