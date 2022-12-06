@@ -1,16 +1,21 @@
+import { EDIT_PATH_STYLE } from './editPathStyle'
 import { camel2kebab } from '../utils'
 import type {
   AnimateAttribute,
+  BoundingBoxObject,
+  EditSvgObject,
   PathAttributes,
   RendererClass,
   RendererOption,
+  Vertex,
 } from '../types'
 
 const VERSION = '1.1'
 const SVG_NS = 'http://www.w3.org/2000/svg'
 const SVG_XLINK = 'http://www.w3.org/1999/xlink'
-interface Attrs {
-  [key: string]: string
+
+type Attrs = {
+  [key: string]: string | number | undefined
 }
 
 const element = <T extends keyof SVGElementTagNameMap = any>(
@@ -20,8 +25,11 @@ const element = <T extends keyof SVGElementTagNameMap = any>(
   const path = document.createElementNS(SVG_NS, elName)
   Object.keys(attrs)
     .sort()
-    .map((key: string) => {
-      path.setAttribute(key, attrs[key])
+    .map((key) => {
+      const val = key in attrs ? attrs[key] : undefined
+      if (val === undefined) return
+
+      path.setAttribute(key, String(val))
     })
   return path
 }
@@ -56,7 +64,7 @@ const pathElement = (
   animateAttrs?: AnimateAttribute[]
 ): SVGPathElement => {
   const kebabAttrs = Object.entries(path).reduce(
-    (acc, [key, val], _i) =>
+    (acc: Attrs, [key, val], _i) =>
       val
         ? {
             ...acc,
@@ -74,36 +82,81 @@ const pathElement = (
   return pathElement
 }
 
-const rectElement = ({
-  width,
-  height,
-  fill,
-}: {
+const rectElement = (attrs: {
   width: number
   height: number
-  fill: string
-}) =>
-  element('rect', {
-    width: String(width),
-    height: String(height),
-    fill,
-  })
+  x?: number
+  y?: number
+  fill?: string
+  stroke?: string
+}) => element('rect', attrs)
 
 const animateElement = (attrs: AnimateAttribute) => element('animate', attrs)
+
+const boundingBoxElement = ({
+  boundingBox: { position, size },
+  selectedOnlyPaths,
+}: {
+  boundingBox: BoundingBoxObject
+  selectedOnlyPaths: boolean
+}) =>
+  rectElement({
+    x: position.x,
+    y: position.y,
+    width: size.width,
+    height: size.height,
+    stroke: EDIT_PATH_STYLE.color.main,
+    fill: selectedOnlyPaths
+      ? EDIT_PATH_STYLE.fill.selected
+      : EDIT_PATH_STYLE.fill.boundingBox,
+  })
+
+const boundingBoxVertexElement = ({
+  vertex,
+  selectedOnlyPaths,
+}: {
+  vertex: Vertex
+  selectedOnlyPaths: boolean
+}) =>
+  element('circle', {
+    cx: vertex.point.x,
+    cy: vertex.point.y,
+    r: EDIT_PATH_STYLE.point,
+    stroke: EDIT_PATH_STYLE.color.main,
+    fill: selectedOnlyPaths
+      ? EDIT_PATH_STYLE.fill.selected
+      : EDIT_PATH_STYLE.fill.boundingBox,
+  })
+
+const editLayer = ({
+  boundingBox,
+  selectedOnlyPaths,
+}: EditSvgObject): SVGElement[] => {
+  return [
+    boundingBoxElement({ boundingBox, selectedOnlyPaths }),
+    ...boundingBox.vertexes.map((vertex) =>
+      boundingBoxVertexElement({
+        vertex,
+        selectedOnlyPaths,
+      })
+    ),
+  ]
+}
 
 export const toElement = ({
   svg: { width, height, background, paths },
   animation,
+  edit,
 }: Parameters<RendererClass['update']>[0]): SVGSVGElement => {
-  return svgElement(
-    { width, height, background },
-    paths.map(({ key, attributes }) =>
+  return svgElement({ width, height, background }, [
+    ...paths.map(({ key, attributes }) =>
       pathElement(
         attributes,
         animation?.find((animate) => animate.key === key)?.animates
       )
-    )
-  )
+    ),
+    ...(edit ? editLayer(edit) : []),
+  ])
 }
 
 export class SvgRenderer implements RendererClass {
