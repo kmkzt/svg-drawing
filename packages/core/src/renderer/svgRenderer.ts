@@ -1,8 +1,10 @@
 import { EDIT_PATH_STYLE } from './editPathStyle'
 import { camel2kebab } from '../utils'
 import type {
+  AnchorPoint,
   AnimateAttribute,
   BoundingBoxObject,
+  EditPathObject,
   EditSvgObject,
   PathAttributes,
   RendererClass,
@@ -20,7 +22,8 @@ type Attrs = {
 
 const element = <T extends keyof SVGElementTagNameMap = any>(
   elName: T,
-  attrs: Attrs
+  attrs: Attrs = {},
+  children?: SVGElement[]
 ): SVGElementTagNameMap[T] => {
   const path = document.createElementNS(SVG_NS, elName)
   Object.keys(attrs)
@@ -31,6 +34,9 @@ const element = <T extends keyof SVGElementTagNameMap = any>(
 
       path.setAttribute(key, String(val))
     })
+
+  children?.forEach((child) => path.appendChild(child))
+
   return path
 }
 
@@ -73,13 +79,12 @@ const pathElement = (
         : acc,
     {}
   )
-  const pathElement = element('path', kebabAttrs)
 
-  animateAttrs?.forEach((animateAttr) => {
-    pathElement.appendChild(animateElement(animateAttr))
-  })
-
-  return pathElement
+  return element(
+    'path',
+    kebabAttrs,
+    animateAttrs?.map((animateAttr) => animateElement(animateAttr))
+  )
 }
 
 const rectElement = (attrs: {
@@ -128,9 +133,43 @@ const boundingBoxVertexElement = ({
       : EDIT_PATH_STYLE.fill.boundingBox,
   })
 
+const anchorElement = ({ d, points }: AnchorPoint): SVGElement =>
+  element('g', {}, [
+    element('path', {
+      d,
+      stroke: EDIT_PATH_STYLE.color.main,
+      strokeWidth: EDIT_PATH_STYLE.line,
+      fill: EDIT_PATH_STYLE.fill.default,
+    }),
+    ...points.map((point) =>
+      element('circle', {
+        cx: point.value.x,
+        cy: point.value.y,
+        r: EDIT_PATH_STYLE.point,
+        fill: point.selected
+          ? EDIT_PATH_STYLE.color.selected
+          : EDIT_PATH_STYLE.color.sub,
+      })
+    ),
+  ])
+
+const segmentElement = ({ path, anchorPoints }: EditPathObject): SVGElement =>
+  element('g', {}, [
+    pathElement({
+      key: path.key,
+      strokeWidth: EDIT_PATH_STYLE.line,
+      stroke: path.attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined,
+      fill: 'none',
+      strokeLinecap: path.attributes.strokeLinecap,
+      strokeLinejoin: path.attributes.strokeLinejoin,
+    }),
+    ...anchorPoints.map((anchorPoint) => anchorElement(anchorPoint)),
+  ])
+
 const editLayer = ({
   boundingBox,
   selectedOnlyPaths,
+  paths,
 }: EditSvgObject): SVGElement[] => {
   return [
     boundingBoxElement({ boundingBox, selectedOnlyPaths }),
@@ -140,6 +179,7 @@ const editLayer = ({
         selectedOnlyPaths,
       })
     ),
+    ...paths.map((editPath) => segmentElement(editPath)),
   ]
 }
 

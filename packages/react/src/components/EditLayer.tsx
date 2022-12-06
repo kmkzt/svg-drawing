@@ -99,11 +99,9 @@ const AnchorPoint = ({
       cx={point.x}
       cy={point.y}
       r={EDIT_PATH_STYLE.point}
-      style={{
-        fill: selected
-          ? EDIT_PATH_STYLE.color.selected
-          : EDIT_PATH_STYLE.color.sub,
-      }}
+      fill={
+        selected ? EDIT_PATH_STYLE.color.selected : EDIT_PATH_STYLE.color.sub
+      }
     />
   )
 }
