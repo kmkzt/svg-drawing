@@ -20,7 +20,7 @@ describe('BoundingBox', () => {
     const boundingBox = new BoundingBox([exampleData])
 
     const testData: BoundingBoxObject = {
-      pathKeys: ['path_key'],
+      elementKeys: ['path_key'],
       position: {
         x: 0,
         y: 0,
@@ -29,24 +29,37 @@ describe('BoundingBox', () => {
         height: 115,
         width: 300,
       },
-      vertex: {
-        LeftBottom: {
-          x: 0,
-          y: 115,
+
+      vertexes: [
+        {
+          type: 'LeftBottom',
+          point: {
+            x: 0,
+            y: 115,
+          },
         },
-        LeftTop: {
-          x: 0,
-          y: 0,
+        {
+          type: 'LeftTop',
+          point: {
+            x: 0,
+            y: 0,
+          },
         },
-        RightBottom: {
-          x: 300,
-          y: 115,
+        {
+          type: 'RightBottom',
+          point: {
+            x: 300,
+            y: 115,
+          },
         },
-        RightTop: {
-          x: 300,
-          y: 0,
+        {
+          type: 'RightTop',
+          point: {
+            x: 300,
+            y: 0,
+          },
         },
-      },
+      ],
     }
 
     it('boundingBox.toJson()', () => {

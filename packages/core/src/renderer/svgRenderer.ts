@@ -20,7 +20,7 @@ type Attrs = {
   [key: string]: string | number | undefined
 }
 
-const element = <T extends keyof SVGElementTagNameMap = any>(
+export const element = <T extends keyof SVGElementTagNameMap = any>(
   elName: T,
   attrs: Attrs = {},
   children?: SVGElement[]
@@ -40,7 +40,7 @@ const element = <T extends keyof SVGElementTagNameMap = any>(
   return path
 }
 
-const svgElement = (
+export const svgElement = (
   {
     width,
     height,
@@ -65,7 +65,7 @@ const svgElement = (
   return svg
 }
 
-const pathElement = (
+export const pathElement = (
   path: PathAttributes,
   animateAttrs?: AnimateAttribute[]
 ): SVGPathElement => {
@@ -153,7 +153,10 @@ const anchorElement = ({ d, points }: AnchorPoint): SVGElement =>
     ),
   ])
 
-const segmentElement = ({ path, anchorPoints }: EditPathObject): SVGElement =>
+export const segmentElement = ({
+  path,
+  anchorPoints,
+}: EditPathObject): SVGElement =>
   element('g', {}, [
     pathElement({
       key: path.key,
@@ -166,10 +169,10 @@ const segmentElement = ({ path, anchorPoints }: EditPathObject): SVGElement =>
     ...anchorPoints.map((anchorPoint) => anchorElement(anchorPoint)),
   ])
 
-const editLayer = ({
+export const editLayer = ({
   boundingBox,
-  selectedOnlyPaths,
-  paths,
+  selectedOnlyElements: selectedOnlyPaths,
+  elements: paths,
 }: EditSvgObject): SVGElement[] => {
   return [
     boundingBoxElement({ boundingBox, selectedOnlyPaths }),
@@ -184,7 +187,7 @@ const editLayer = ({
 }
 
 export const toElement = ({
-  svg: { width, height, background, paths },
+  svg: { width, height, background, elements: paths },
   animation,
   edit,
 }: Parameters<RendererClass['update']>[0]): SVGSVGElement => {
@@ -204,7 +207,7 @@ export class SvgRenderer implements RendererClass {
     /** Setup parameter */
     const { width, height } = this.el.getBoundingClientRect()
     this.el.appendChild(
-      toElement({ svg: { background, width, height, paths: [] } })
+      toElement({ svg: { background, width, height, elements: [] } })
     )
 
     this.update = this.update.bind(this)

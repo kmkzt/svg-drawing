@@ -17,7 +17,7 @@ describe('Drawing', () => {
     const drawing = new Drawing(svg, drawMockFactory, updateHandler)
     drawing.start()
 
-    expect(svg.paths.length).toBe(1)
+    expect(svg.elements.length).toBe(1)
     expect(updateHandler).not.toBeCalled()
   })
 
@@ -29,8 +29,8 @@ describe('Drawing', () => {
     drawing.start()
     drawing.dot({ x: 10, y: 10 })
 
-    expect(svg.paths.length).toBe(1)
-    expect(svg.paths[0].getCommandString()).toEqual('M10 10')
+    expect(svg.elements.length).toBe(1)
+    expect(svg.elements[0].getCommandString()).toEqual('M10 10')
     expect(updateHandler).toBeCalledTimes(1)
     expect(updateHandler).toBeCalledWith(svg)
   })
@@ -50,9 +50,9 @@ describe('Drawing', () => {
     drawing.dot({ x: 40, y: 40 })
     drawing.end()
 
-    expect(svg.paths.length).toBe(2)
-    expect(svg.paths[0].getCommandString()).toEqual('M10 10 l10 10')
-    expect(svg.paths[1].getCommandString()).toEqual('M30 30 l10 10')
+    expect(svg.elements.length).toBe(2)
+    expect(svg.elements[0].getCommandString()).toEqual('M10 10 l10 10')
+    expect(svg.elements[1].getCommandString()).toEqual('M30 30 l10 10')
     expect(updateHandler).toBeCalledTimes(6)
     expect(updateHandler).toBeCalledWith(svg)
   })

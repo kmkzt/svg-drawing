@@ -28,7 +28,7 @@ export class SvgEditing {
       options?.multipleSelectBindKey ?? 'Shift'
     )
 
-    this.selectPaths = this.selectPaths.bind(this)
+    this.selectElements = this.selectElements.bind(this)
     this.editHandler = this.editHandler.bind(this)
   }
 
@@ -36,7 +36,7 @@ export class SvgEditing {
     return this.pressedKeyHandler.pressed
   }
 
-  private selectPaths(selectIndex: SelectIndex | SelectIndex) {
+  private selectElements(selectIndex: SelectIndex | SelectIndex) {
     this.editing.select(selectIndex, this.multipleSelect)
   }
 
@@ -51,7 +51,7 @@ export class SvgEditing {
 
       if (!pathKey) return
 
-      this.selectPaths({ path: pathKey })
+      this.selectElements({ path: pathKey })
       this.translatePathHandler.start(ev)
       return
     }
@@ -66,7 +66,7 @@ export class SvgEditing {
       if (commandIndex === null) return
       if (pointIndex === null) return
 
-      this.selectPaths({
+      this.selectElements({
         path: pathKey,
         command: +commandIndex,
         point: +pointIndex,

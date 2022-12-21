@@ -1,13 +1,13 @@
-import type { SvgOption, PathClass, SvgClass } from '../types'
+import type { SvgOption, ElementClass, SvgClass, SvgObject } from '../types'
 
 export class Svg implements SvgClass {
-  public paths: PathClass[]
+  public elements: ElementClass[]
   public width: number
   public height: number
   public background?: string
 
   constructor({ width, height, background }: SvgOption) {
-    this.paths = []
+    this.elements = []
     this.width = width
     this.height = height
     this.background = background
@@ -21,49 +21,49 @@ export class Svg implements SvgClass {
 
   private scale(r: number) {
     if (r !== 1 && isFinite(r) && r !== 0) {
-      for (let i = 0; i < this.paths.length; i += 1) {
-        this.paths[i].scale(r)
+      for (let i = 0; i < this.elements.length; i += 1) {
+        this.elements[i].scale(r)
       }
     }
     return this
   }
 
-  public addPath(pa: PathClass | PathClass[]) {
+  public addElement(pa: ElementClass | ElementClass[]) {
     if (Array.isArray(pa)) {
-      this.paths.push(...pa)
+      this.elements.push(...pa)
     } else {
-      this.paths.push(pa)
+      this.elements.push(pa)
     }
     return this
   }
 
-  public getPath(key: string): PathClass | undefined {
-    return this.paths.find((p) => p.key === key)
+  public getElement(key: string): ElementClass | undefined {
+    return this.elements.find((p) => p.key === key)
   }
 
-  public updatePath(path: PathClass) {
-    const index = this.paths.findIndex((p) => p.key === path.key)
+  public updateElement(path: ElementClass) {
+    const index = this.elements.findIndex((p) => p.key === path.key)
     if (index !== -1) {
-      this.paths[index] = path
+      this.elements[index] = path
     }
     return this
   }
 
-  public deletePath(deletePath: PathClass) {
-    this.paths = this.paths.filter((path) => path.key !== deletePath.key)
+  public deleteElement(element: ElementClass) {
+    this.elements = this.elements.filter((path) => path.key !== element.key)
     return this
   }
 
-  public clonePaths() {
-    return this.paths.map((p) => p.clone())
+  public cloneElements() {
+    return this.elements.map((p) => p.clone())
   }
 
-  public toJson() {
+  public toJson(): SvgObject {
     return {
       width: this.width,
       height: this.height,
       background: this.background,
-      paths: this.paths.map((p) => p.toJson()),
+      elements: this.elements.map((p) => p.toJson()),
     }
   }
 
@@ -78,7 +78,7 @@ export class Svg implements SvgClass {
    * ```
    */
   public copy(svg: SvgClass) {
-    this.paths = svg.clonePaths()
+    this.elements = svg.cloneElements()
     if (svg.width && this.width) {
       this.scale(this.width / svg.width)
     }
@@ -91,7 +91,7 @@ export class Svg implements SvgClass {
       height: this.height,
       background: this.background,
     })
-    svg.addPath(this.clonePaths())
+    svg.addElement(this.cloneElements())
     return svg
   }
 }

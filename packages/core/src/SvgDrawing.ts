@@ -110,14 +110,14 @@ export class SvgDrawing {
   }
 
   public clear(): PathClass[] {
-    const paths = this.svg.paths
-    this.svg.paths = []
+    const paths = this.svg.elements
+    this.svg.elements = []
     this.update()
     return paths
   }
 
   public undo(): PathClass | undefined {
-    const path = this.svg.paths.pop()
+    const path = this.svg.elements.pop()
     this.update()
     return path
   }

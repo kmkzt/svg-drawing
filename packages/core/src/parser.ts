@@ -18,7 +18,7 @@ export const parseSVGElement = (svgEl: SVGSVGElement): SvgClass => {
 
   const svg = new Svg({ width, height })
   svgEl.querySelectorAll('path').forEach((pEl) => {
-    svg.addPath(parsePathElement(pEl))
+    svg.addElement(parsePathElement(pEl))
   })
 
   return svg

@@ -26,7 +26,7 @@ export class SvgAnimation {
   }
 
   public restore(): void {
-    this.svg.paths = this.animation.restorePaths()
+    this.svg.elements = this.animation.restorePaths()
     this.update(this.svg)
   }
 
@@ -39,7 +39,7 @@ export class SvgAnimation {
   }
 
   private _setupAnimation() {
-    this.animation.initialize(this.svg.paths)
+    this.animation.initialize(this.svg.elements)
   }
 
   private _updateFrame() {
@@ -51,7 +51,7 @@ export class SvgAnimation {
       return
     }
 
-    this.svg.paths = result.value
+    this.svg.elements = result.value
     this.update(this.svg)
   }
 
@@ -80,7 +80,7 @@ export class SvgAnimation {
   public resize({ width, height }: Parameters<ResizeCallback>[0]): void {
     this.stop()
     this.svg.resize({ width, height })
-    this.animation.initialize(this.svg.paths)
+    this.animation.initialize(this.svg.elements)
     this.start()
   }
 

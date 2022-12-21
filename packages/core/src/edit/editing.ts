@@ -38,7 +38,7 @@ export class Editing {
   }
 
   /** Delete path and update screen. */
-  deletePaths() {
+  deleteElements() {
     this.editSvg.delete()
     this.updater(this.editSvg)
   }

@@ -47,13 +47,13 @@ describe('Svg', () => {
         },
       ])
 
-      svg.addPath(testPath)
+      svg.addElement(testPath)
 
       const resizeArgs = { width: 200, height: 300 }
       svg.resize(resizeArgs)
 
       expect(testPath.scale(resizeArgs.width / svg.width).toJson()).toEqual(
-        svg.paths[0].toJson()
+        svg.elements[0].toJson()
       )
     })
   })
@@ -82,19 +82,19 @@ describe('Svg', () => {
       ])
 
       const copiedSvg = new Svg({ width: 200, height: 200 })
-      copiedSvg.addPath(testPath)
+      copiedSvg.addElement(testPath)
 
       svg.copy(copiedSvg)
 
-      expect(svg.paths[0].toJson()).toEqual(
-        copiedSvg.paths[0].scale(svg.width / copiedSvg.width).toJson()
+      expect(svg.elements[0].toJson()).toEqual(
+        copiedSvg.elements[0].scale(svg.width / copiedSvg.width).toJson()
       )
     })
   })
 
-  describe('addPath', () => {
+  describe('addElement', () => {
     it('Add an array of paths', () => {
-      const svg = new Svg({ width: 500, height: 500 }).addPath([
+      const svg = new Svg({ width: 500, height: 500 }).addElement([
         new Path(undefined, 'p1').addCommand([
           {
             type: 'M',
@@ -116,7 +116,7 @@ describe('Svg', () => {
         new Path(
           {
             strokeLinecap: 'square',
-            strokeLinejoin: 'mitter',
+            strokeLinejoin: 'miter',
           },
           'p2'
         ).addCommand([
@@ -172,7 +172,7 @@ describe('Svg', () => {
 
     it('Add path', () => {
       const svg = new Svg({ width: 500, height: 500 })
-        .addPath(
+        .addElement(
           new Path(undefined, 'p1').addCommand([
             {
               type: 'M',
@@ -192,11 +192,11 @@ describe('Svg', () => {
             },
           ])
         )
-        .addPath(
+        .addElement(
           new Path(
             {
               strokeLinecap: 'square',
-              strokeLinejoin: 'mitter',
+              strokeLinejoin: 'miter',
             },
             'p2'
           ).addCommand([
@@ -255,7 +255,7 @@ describe('Svg', () => {
     let svg: Svg
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
-        .addPath(
+        .addElement(
           new Path(undefined, 'p1').addCommand([
             {
               type: 'M',
@@ -275,11 +275,11 @@ describe('Svg', () => {
             },
           ])
         )
-        .addPath(
+        .addElement(
           new Path(
             {
               strokeLinecap: 'square',
-              strokeLinejoin: 'mitter',
+              strokeLinejoin: 'miter',
             },
             'p2'
           ).addCommand([
@@ -316,9 +316,11 @@ describe('Svg', () => {
     it('Cloned object changes have no effect the original object.', () => {
       const cloneSvg = svg.clone()
 
-      cloneSvg.updatePath(cloneSvg.paths[0].scale(2))
+      cloneSvg.updateElement(cloneSvg.elements[0].scale(2))
 
-      expect(cloneSvg.paths[0].toJson()).not.toEqual(svg.paths[0].toJson())
+      expect(cloneSvg.elements[0].toJson()).not.toEqual(
+        svg.elements[0].toJson()
+      )
     })
   })
 })

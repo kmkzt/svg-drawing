@@ -45,7 +45,7 @@ export class Drawing implements DrawingClass {
   public start(): void {
     this._drawPoints = []
     this._drawPath = this.pathFactory.createPath()
-    this.svg.addPath(this._drawPath)
+    this.svg.addElement(this._drawPath)
   }
 
   public dot(po: EventPoint): void {

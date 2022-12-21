@@ -1,4 +1,4 @@
-import { svgObjectToElement } from './renderer'
+import { toElement, svgElement } from './renderer/svgRenderer'
 import { SvgDrawing } from './SvgDrawing'
 
 describe('SvgDrawing', () => {
@@ -10,7 +10,7 @@ describe('SvgDrawing', () => {
     draw.drawMove({ x: 2, y: 1 })
     draw.drawMove({ x: 3, y: 0 })
     draw.drawEnd()
-    expect(svgObjectToElement(draw.toJson())).toMatchInlineSnapshot(`
+    expect(toElement({ svg: draw.toJson() })).toMatchInlineSnapshot(`
       <svg
         height="0"
         version="1.1"
@@ -39,7 +39,7 @@ describe('SvgDrawing', () => {
     draw.drawMove({ x: 2, y: 1 })
     draw.drawMove({ x: 3, y: 0 })
     draw.drawEnd()
-    const el = svgObjectToElement(draw.toJson())
+    const el = toElement({ svg: draw.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
         height="0"
@@ -69,7 +69,7 @@ describe('SvgDrawing', () => {
     draw.drawMove({ x: 2, y: 1 })
     draw.drawMove({ x: 3, y: 0 })
     draw.drawEnd()
-    const el = svgObjectToElement(draw.toJson())
+    const el = toElement({ svg: draw.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
         height="0"
@@ -97,7 +97,7 @@ describe('SvgDrawing', () => {
     draw.drawMove({ x: 0, y: 0 })
     draw.drawEnd()
     draw.clear()
-    const el = svgObjectToElement(draw.toJson())
+    const el = toElement({ svg: draw.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
         height="0"
@@ -118,7 +118,7 @@ describe('SvgDrawing', () => {
     draw.drawMove({ x: 0, y: 0 })
     draw.drawEnd()
     draw.undo()
-    const el = svgObjectToElement(draw.toJson())
+    const el = toElement({ svg: draw.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
         height="0"

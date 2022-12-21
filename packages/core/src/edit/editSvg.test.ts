@@ -16,21 +16,21 @@ describe('EditSvg', () => {
   beforeEach(() => {
     const parsedSvg = parseSVGString(testSvgData)
     const svg = new Svg({ width: parsedSvg.width, height: parsedSvg.height })
-    parsedSvg.paths.forEach((p, i) => {
+    parsedSvg.elements.forEach((p, i) => {
       p.key = `path_key_${i}`
-      svg.addPath(p)
+      svg.addElement(p)
     })
 
     edit = new EditSvg(svg)
   })
   describe('changeAttributes', () => {
     it('Change attributes of selected paths', () => {
-      const editKey = edit.svg.paths[0].key
+      const editKey = edit.svg.elements[0].key
       edit.select({
         path: editKey,
       })
       edit.changeAttributes({ fill: '#ff0' })
-      expect(edit.svg.paths[0].attrs.fill).toBe('#ff0')
+      expect(edit.svg.elements[0].attrs.fill).toBe('#ff0')
     })
     it.todo('Selecting commands')
     it.todo('Selecting point')
@@ -40,8 +40,8 @@ describe('EditSvg', () => {
   describe('translate', () => {
     const pathIndex = 0
     it('Translate selected path', () => {
-      const editKey = edit.svg.paths[pathIndex].key
-      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
+      const editKey = edit.svg.elements[pathIndex].key
+      expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
         'M1 1 l1 1 c2 2 4 2 6 2 z'
       )
 
@@ -49,13 +49,13 @@ describe('EditSvg', () => {
         path: editKey,
       })
       edit.translate({ x: 1, y: -1 })
-      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
+      expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
         'M2 0 l1 1 c2 2 4 2 6 2 z'
       )
     })
     it('Translate selected commands', () => {
-      const editKey = edit.svg.paths[pathIndex].key
-      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
+      const editKey = edit.svg.elements[pathIndex].key
+      expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
         'M1 1 l1 1 c2 2 4 2 6 2 z'
       )
 
@@ -64,13 +64,13 @@ describe('EditSvg', () => {
         command: 1,
       })
       edit.translate({ x: 1, y: -1 })
-      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
+      expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
         'M1 1 l2 0 c1 3 3 3 5 3 z'
       )
     })
     it('Translate selected point', () => {
-      const editKey = edit.svg.paths[pathIndex].key
-      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
+      const editKey = edit.svg.elements[pathIndex].key
+      expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
         'M1 1 l1 1 c2 2 4 2 6 2 z'
       )
 
@@ -80,7 +80,7 @@ describe('EditSvg', () => {
         point: 0,
       })
       edit.translate({ x: 1, y: -1 })
-      expect(edit.svg.paths[pathIndex].getCommandString()).toBe(
+      expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
         'M1 1 l1 1 c3 1 4 2 6 2 z'
       )
     })
@@ -89,10 +89,10 @@ describe('EditSvg', () => {
 
   describe('scale', () => {
     it('Selecting path', () => {
-      const editKey = edit.svg.paths[0].key
+      const editKey = edit.svg.elements[0].key
       edit.select({ path: editKey })
       edit.scale(2)
-      expect(edit.svg.paths[0].getCommandString()).toBe(
+      expect(edit.svg.elements[0].getCommandString()).toBe(
         'M2 2 l2 2 c4 4 8 4 12 4 z'
       )
     })
@@ -101,10 +101,10 @@ describe('EditSvg', () => {
 
   describe('scaleX', () => {
     it('Selecting path', () => {
-      const editKey = edit.svg.paths[0].key
+      const editKey = edit.svg.elements[0].key
       edit.select({ path: editKey })
       edit.scaleX(2)
-      expect(edit.svg.paths[0].getCommandString()).toBe(
+      expect(edit.svg.elements[0].getCommandString()).toBe(
         'M2 1 l2 1 c4 2 8 2 12 2 z'
       )
     })
@@ -113,10 +113,10 @@ describe('EditSvg', () => {
 
   describe('scaleY', () => {
     it('Selecting path', () => {
-      const editKey = edit.svg.paths[0].key
+      const editKey = edit.svg.elements[0].key
       edit.select({ path: editKey })
       edit.scaleY(2)
-      expect(edit.svg.paths[0].getCommandString()).toBe(
+      expect(edit.svg.elements[0].getCommandString()).toBe(
         'M1 2 l1 2 c2 4 4 4 6 4 z'
       )
     })
@@ -133,21 +133,21 @@ describe('EditSvg', () => {
   describe('delete', () => {
     describe('Delete Selected path.', () => {
       it('Update paths', () => {
-        const editKey = edit.svg.paths[0].key
+        const editKey = edit.svg.elements[0].key
         edit.select({ path: editKey })
 
-        expect(edit.svg.paths.length).toBe(3)
-        expect(edit.svg.paths[0].attrs.id).toBe('path_0')
-        expect(edit.svg.paths[1].attrs.id).toBe('path_1')
-        expect(edit.svg.paths[2].attrs.id).toBe('path_2')
+        expect(edit.svg.elements.length).toBe(3)
+        expect(edit.svg.elements[0].attrs.id).toBe('path_0')
+        expect(edit.svg.elements[1].attrs.id).toBe('path_1')
+        expect(edit.svg.elements[2].attrs.id).toBe('path_2')
 
         edit.delete()
-        expect(edit.svg.paths.length).toBe(2)
-        expect(edit.svg.paths[0].attrs.id).toBe('path_1')
-        expect(edit.svg.paths[1].attrs.id).toBe('path_2')
+        expect(edit.svg.elements.length).toBe(2)
+        expect(edit.svg.elements[0].attrs.id).toBe('path_1')
+        expect(edit.svg.elements[1].attrs.id).toBe('path_2')
       })
       it('Update selected status.', () => {
-        const editKey = edit.svg.paths[0].key
+        const editKey = edit.svg.elements[0].key
         edit.select({ path: editKey })
 
         expect(edit.selected).toBe(true)
@@ -164,12 +164,12 @@ describe('EditSvg', () => {
   it.todo('preview')
 
   it('toJson', () => {
-    const editKey = edit.svg.paths[0].key
+    const editKey = edit.svg.elements[0].key
     edit.select({ path: editKey })
 
     const result: EditSvgObject = {
       boundingBox: {
-        pathKeys: ['path_key_0'],
+        elementKeys: ['path_key_0'],
         position: {
           x: 1,
           y: 1,
@@ -209,7 +209,7 @@ describe('EditSvg', () => {
           },
         ],
       },
-      paths: [
+      elements: [
         {
           path: {
             attributes: {
@@ -301,7 +301,7 @@ describe('EditSvg', () => {
           ],
         },
       ],
-      selectedOnlyPaths: true,
+      selectedOnlyElements: true,
     }
 
     expect(edit.toJson()).toStrictEqual(result)

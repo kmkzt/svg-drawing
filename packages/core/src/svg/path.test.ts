@@ -1,6 +1,6 @@
 import { Path } from './path'
 import { Point } from './point'
-import { pathObjectToElement } from '../renderer'
+import { pathElement } from '../renderer/svgRenderer'
 import type { PointClass } from '../types'
 
 describe('Path', () => {
@@ -73,7 +73,7 @@ describe('Path', () => {
     })
     it('toElement', () => {
       const { attributes } = path.toJson()
-      expect(pathObjectToElement(attributes)).toMatchInlineSnapshot(`
+      expect(pathElement(attributes)).toMatchInlineSnapshot(`
         <path
           d="M0 0 l1 1 l1 0 l1 -1"
         />

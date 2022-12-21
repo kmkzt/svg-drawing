@@ -1,18 +1,18 @@
-import { svgObjectToElement } from './svgRenderer'
+import { toElement } from './svgRenderer'
 import { Path } from '../svg/path'
 import { Svg } from '../svg/svg'
 
 describe('svgRenderer.ts', () => {
   const svg = new Svg({ width: 500, height: 500 })
     // TODO: rewrite bezier curve test
-    .addPath(
+    .addElement(
       new Path()
         .addCommand({ type: 'M', values: [0, 0] })
         .addCommand({ type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] })
         .addCommand({ type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] })
         .addCommand({ type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] })
     )
-    .addPath(
+    .addElement(
       new Path({
         strokeLinecap: 'square',
         strokeLinejoin: 'miter',
@@ -25,7 +25,7 @@ describe('svgRenderer.ts', () => {
     )
 
   it('svgObjectToElement', () => {
-    const el = svgObjectToElement(svg.toJson())
+    const el = toElement({ svg: svg.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
         height="500"

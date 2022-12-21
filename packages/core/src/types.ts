@@ -90,15 +90,17 @@ export type PathAttributes = {
   [camelCase: string]: string | undefined
 }
 
+/** Identification key. Use for update, delete. Return same key when ElementClass cloned. */
+export type ElementKey = string
+
 export type PathObject = {
-  key: string
-  type: keyof SVGElementTagNameMap
+  key: ElementKey
+  type: 'path'
   attributes: PathAttributes
 }
 
 export interface PathClass {
-  /** Identification key. Use for update, delete. Return same key when PathClass cloned. */
-  key: string
+  key: ElementKey
   readonly attrs: PathAttributes
   readonly absoluteCommands: CommandClass[]
   readonly relativeCommands: CommandClass[]
@@ -124,11 +126,15 @@ export interface PathClass {
   toJson: () => PathObject
 }
 
+export type ElementObject = PathObject
+
+export type ElementClass = PathClass
+
 export type SvgObject = {
   width: number
   height: number
   background?: string
-  paths: PathObject[]
+  elements: ElementObject[]
 }
 
 export type SvgOption = {
@@ -139,22 +145,22 @@ export type SvgOption = {
 
 export interface SvgClass {
   /** Svg child element */
-  paths: PathClass[]
+  elements: ElementClass[]
   width: number
   height: number
   background?: string
   /** Resize svg and path of children. */
   resize: (arg: { width: number; height: number }) => void
   /** Add multiple paths. */
-  addPath: (path: PathClass | PathClass[]) => this
+  addElement: (element: ElementClass | ElementClass[]) => this
   /** Get path */
-  getPath: (key: string) => PathClass | undefined
+  getElement: (key: string) => ElementClass | undefined
   /** Update path */
-  updatePath: (path: PathClass) => this
+  updateElement: (element: ElementClass) => this
   /** Delete paths */
-  deletePath: (path: PathClass) => this
+  deleteElement: (element: ElementClass) => this
   /** Return cloned paths. */
-  clonePaths: () => PathClass[]
+  cloneElements: () => ElementClass[]
   toJson: () => SvgObject
   /**
    * Copy resized paths.
@@ -256,19 +262,19 @@ export interface DrawEventHandler {
 }
 
 export type SelectPathIndex = {
-  path: PathObject['key']
+  path: ElementKey
   command?: undefined
   point?: undefined
 }
 
 export type SelectCommandIndex = {
-  path: PathObject['key']
+  path: ElementKey
   command: number
   point?: undefined
 }
 
 export type SelectPointIndex = {
-  path: PathObject['key']
+  path: ElementKey
   command: number
   point: number
 }
@@ -289,7 +295,7 @@ export type AnchorPoint = {
 
 export type BoundingBoxObject = {
   /** Key of paths included bounding box */
-  pathKeys: string[]
+  elementKeys: ElementKey[]
   /** LeftTop vertex is same position. */
   position: {
     x: number
@@ -314,10 +320,12 @@ export type EditPathObject = {
   anchorPoints: AnchorPoint[]
 }
 
+export type EditElementObject = EditPathObject
+
 export type EditSvgObject = {
-  paths: EditPathObject[]
+  elements: EditElementObject[]
   boundingBox: BoundingBoxObject
-  selectedOnlyPaths: boolean
+  selectedOnlyElements: boolean
 }
 
 export type CreateCommand = (points: EventPoint[]) => CommandClass[]
@@ -340,7 +348,7 @@ export type AnimateAttribute = {
 }
 
 export type AnimateObject = {
-  key: PathObject['key']
+  key: ElementKey
   animates: AnimateAttribute[]
 }
 
