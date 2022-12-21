@@ -5,18 +5,18 @@ import type { PathObject } from '@svg-drawing/core'
 import type { ReactNode, SVGProps } from 'react'
 
 type PathProps = {
-  pathKey: PathObject['key']
+  elementKey?: PathObject['key']
   children?: ReactNode
 } & SVGProps<SVGPathElement>
 
-export const Path = ({ pathKey, children, ...attrs }: PathProps) => (
+export const Path = ({ elementKey, children, ...attrs }: PathProps) => (
   <path
-    {...{
+    {...(elementKey && {
       [dataEditType]: 'path',
-      [dataPathKey]: pathKey,
-    }}
+      [dataPathKey]: elementKey,
+    })}
     {...attrs}
   >
-    {children ?? <Animates pathKey={pathKey} />}
+    {children ?? <Animates elementKey={elementKey} />}
   </path>
 )

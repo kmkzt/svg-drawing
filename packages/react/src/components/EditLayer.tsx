@@ -17,18 +17,18 @@ export const EditLayer = () => {
 
   if (!editProps) return null
 
-  const { boundingBox, selectedOnlyPaths, editPaths } = editProps
+  const { boundingBox, selectedOnlyElements, editElements } = editProps
 
   return (
     <>
       {boundingBox && (
         <BoundingBox
-          selectedOnlyPaths={selectedOnlyPaths}
+          selectedOnlyElements={selectedOnlyElements}
           boundingBox={boundingBox}
         />
       )}
-      {editPaths &&
-        editPaths.map((editPath, i) => (
+      {editElements &&
+        editElements.map((editPath, i) => (
           <EditPath key={i} editPath={editPath} />
         ))}
     </>
@@ -43,7 +43,7 @@ const EditPath = ({ editPath: { path, anchorPoints } }: EditPathProps) => (
   <g key={path.key}>
     <Path
       {...path.attributes}
-      pathKey={path.key}
+      elementKey={path.key}
       strokeWidth={EDIT_PATH_STYLE.line}
       stroke={path.attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined}
       fill="none"
@@ -108,7 +108,7 @@ const AnchorPoint = ({
 
 const BoundingBox = ({
   boundingBox: { position, size, vertexes },
-  selectedOnlyPaths,
+  selectedOnlyElements: selectedOnlyPaths,
 }: BoundingBoxProps) => (
   <>
     <rect

@@ -2,12 +2,12 @@ import React, { useMemo } from 'react'
 import { useSvgContext } from './SvgContext'
 import type { AnimatesProps } from '../types'
 
-export const Animates = ({ pathKey }: AnimatesProps) => {
+export const Animates = ({ elementKey }: AnimatesProps) => {
   const { animationProps } = useSvgContext()
 
   const animates = useMemo(
-    () => animationProps?.getAnimates(pathKey),
-    [animationProps, pathKey]
+    () => (elementKey ? animationProps?.getAnimates(elementKey) : undefined),
+    [animationProps, elementKey]
   )
 
   return (

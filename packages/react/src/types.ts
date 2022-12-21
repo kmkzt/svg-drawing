@@ -12,6 +12,7 @@ import type {
   AnimateObject,
   PathObject,
   AnimateAttribute,
+  ElementKey,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
@@ -29,10 +30,6 @@ export type SvgProps = HTMLAttributes<SVGSVGElement> &
     background?: SvgObject['background']
     children?: React.ReactNode
   }
-
-export type PathsProps = {
-  paths: SvgObject['paths']
-}
 
 /** UseDraw */
 export type UseDraw = (opts: UseDrawOptions) => DrawAction
@@ -74,22 +71,22 @@ export type UseEditEventHandler<E extends HTMLElement = HTMLElement> = (
 ) => void
 
 export type EditProps = {
-  editPaths: EditSvgObject['paths'] | null
+  editElements: EditSvgObject['elements'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
-  selectedOnlyPaths: boolean
+  selectedOnlyElements: boolean
 }
 
 export type BoundingBoxProps = {
   boundingBox: EditSvgObject['boundingBox']
-  selectedOnlyPaths: boolean
+  selectedOnlyElements: boolean
 }
 
 export type AnimationProps = {
-  getAnimates: (pathKey: PathObject['key']) => AnimateAttribute[]
+  getAnimates: (elementKey: ElementKey) => AnimateAttribute[]
 }
 
 export type AnimatesProps = {
-  pathKey: PathObject['key']
+  elementKey?: ElementKey
 }
 
 /** UseAnimation */
