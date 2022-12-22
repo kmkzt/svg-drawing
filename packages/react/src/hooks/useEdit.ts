@@ -85,7 +85,7 @@ export const useEdit: UseEdit = ({
       ['ArrowLeft']: () => edit.translate({ x: -0.5, y: 0 }),
       ['ArrowUp']: () => edit.translate({ x: 0, y: -0.5 }),
       ['ArrowDown']: () => edit.translate({ x: 0, y: 0.5 }),
-      ['Backspace']: () => edit.deletePaths(),
+      ['Backspace']: () => edit.deleteElements(),
     }),
     [edit]
   )

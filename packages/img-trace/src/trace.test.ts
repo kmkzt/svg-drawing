@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs'
 import { resolve } from 'path'
-import { svgObjectToElement } from '@svg-drawing/core'
+import { toElement } from '@svg-drawing/core'
 import { loadPngData } from './__test__/loadPngData'
 import { Palette } from './palette'
 import { ImgTrace } from './trace'
@@ -67,13 +67,13 @@ describe('trace.ts', () => {
   describe('ImgTrace', () => {
     Object.entries(testPattern).map(([testname, testopts]) => {
       it(`${testname}`, (done) => {
-        loadPngData(testimage, (png) => {
+        loadPngData(testimage, (png: any) => {
           const svg = new ImgTrace({
             palettes: Palette.imageData(png),
             ...testopts,
           }).load(png)
 
-          const data = svgObjectToElement(svg.toJson()).outerHTML
+          const data = toElement({ svg: svg.toJson() }).outerHTML
           /** DEBUG */
           if (process.env.DEBUG === 'debug') {
             writeFileSync(

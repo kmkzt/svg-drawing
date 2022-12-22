@@ -1,4 +1,4 @@
-import { Renderer, Download, svgObjectToElement } from '@svg-drawing/core'
+import { SvgRenderer, Download, toElement } from '@svg-drawing/core'
 import {
   ImgTrace,
   Palette,
@@ -98,7 +98,7 @@ const ImageTrace = () => {
     if (!renderRef.current) return
     const renderSvg = () => {
       if (!renderRef.current || !svg) return
-      const renderer = new Renderer(renderRef.current)
+      const renderer = new SvgRenderer(renderRef.current)
       const { width, height } = renderRef.current.getBoundingClientRect()
       svg.resize({ width, height })
       renderer.update({ svg: svg.toJson() })
@@ -150,7 +150,7 @@ const ImageTrace = () => {
 
   const handleDownload = useCallback(() => {
     if (!svg) return
-    new Download(svgObjectToElement(svg.toJson())).svg(`${Date.now()}.svg`)
+    new Download(toElement({ svg: svg.toJson() })).svg(`${Date.now()}.svg`)
   }, [svg])
 
   useEffect(() => {

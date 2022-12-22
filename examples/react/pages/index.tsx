@@ -1,5 +1,5 @@
 import { DrawFrame } from '@svg-drawing/animation'
-import { Download, svgObjectToElement } from '@svg-drawing/core'
+import { Download, toElement } from '@svg-drawing/core'
 import {
   useDraw,
   useEdit,
@@ -96,7 +96,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
 
   /** Setup draw */
   const svg = useSvg({})
-  const [{ paths, width, height, background }, onChangeSvg] = useState(
+  const [{ elements, width, height, background }, onChangeSvg] = useState(
     svg.toJson()
   )
 
@@ -142,7 +142,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
 
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (e: React.MouseEvent<HTMLElement>) => {
-      const download = new Download(svgObjectToElement(svg.toJson()))
+      const download = new Download(toElement({ svg: svg.toJson() }))
       const filename = `${Date.now()}`
 
       switch (extension) {
@@ -169,11 +169,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   })
 
   const handleClickAnimation = useCallback(() => {
-    const drawFrame = new DrawFrame(svg.paths)
+    const drawFrame = new DrawFrame(svg.elements)
     animation.setup(drawFrame)
-    animation.update(svg.paths)
+    animation.update(svg.elements)
     updateEdit()
-  }, [animation, svg.paths, updateEdit])
+  }, [animation, svg.elements, updateEdit])
 
   /** Setup resize */
   const handleResize = useCallback<ResizeCallback>(
@@ -533,8 +533,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             background={background}
             editProps={editProps}
           >
-            {paths.map(({ key, attributes }) => (
-              <Path key={key} pathKey={key} {...attributes} />
+            {elements.map(({ key, attributes }) => (
+              <Path key={key} elementKey={key} {...attributes} />
             ))}
           </Svg>
         </div>
@@ -546,8 +546,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
         editProps={editProps}
         animationProps={animation.animationProps}
       >
-        {paths.map(({ key, attributes }) => (
-          <Path key={key} pathKey={key} {...attributes} />
+        {elements.map(({ key, attributes }) => (
+          <Path key={key} elementKey={key} {...attributes} />
         ))}
       </Svg>
       <div>{JSON.stringify(editProps?.boundingBox)}</div>
