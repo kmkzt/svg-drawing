@@ -6,7 +6,6 @@ export const useKeyboardBind = (keyboardMap: KeyboardMap = {}) => {
     const handleKeyboardEvent = (ev: KeyboardEvent) => {
       const fn = keyboardMap[ev.key]
       if (typeof fn !== 'function') return
-      ev.preventDefault()
       fn()
     }
     addEventListener('keydown', handleKeyboardEvent)
