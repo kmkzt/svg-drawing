@@ -235,8 +235,12 @@ export class SvgRenderer implements RendererClass {
   /** Update render */
   public update({
     svg,
+    edit,
     animation,
   }: Parameters<RendererClass['update']>[0]): void {
-    this.el.replaceChild(toElement({ svg, animation }), this.el.childNodes[0])
+    this.el.replaceChild(
+      toElement({ svg, edit, animation }),
+      this.el.childNodes[0]
+    )
   }
 }

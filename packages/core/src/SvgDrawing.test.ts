@@ -1,4 +1,4 @@
-import { toElement, svgElement } from './renderer/svgRenderer'
+import { toElement } from './renderer/svgRenderer'
 import { SvgDrawing } from './SvgDrawing'
 
 describe('SvgDrawing', () => {

@@ -24,7 +24,7 @@ describe('svgRenderer.ts', () => {
         .addCommand({ type: 'Z', values: [] })
     )
 
-  it('svgObjectToElement', () => {
+  it('toElement', () => {
     const el = toElement({ svg: svg.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
