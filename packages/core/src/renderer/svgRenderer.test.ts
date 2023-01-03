@@ -28,6 +28,7 @@ describe('svgRenderer.ts', () => {
     const el = toElement({ svg: svg.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
+        data-edit-type="frame"
         height="500"
         version="1.1"
         width="500"
@@ -36,9 +37,13 @@ describe('svgRenderer.ts', () => {
       >
         <path
           d="M0 0 c0.2 0.2 0.6 0.8 1 1 c0.4 0.2 0.6 0.2 1 0 c0.4 -0.2 0.8 -0.8 1 -1"
+          data-edit-type="path"
+          data-element-key="p1"
         />
         <path
           d="M4 4 l5 0 l0 4 l-6 -8 z"
+          data-edit-type="path"
+          data-element-key="p2"
           stroke-linecap="square"
           stroke-linejoin="miter"
         />

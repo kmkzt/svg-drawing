@@ -146,8 +146,7 @@ describe('Svg', () => {
       expect(svg.toJson()).toMatchInlineSnapshot(`
         Object {
           "background": undefined,
-          "height": 500,
-          "paths": Array [
+          "elements": Array [
             Object {
               "attributes": Object {
                 "d": "M0 0 c0.2 0.2 0.6 0.8 1 1 c0.4 0.2 0.6 0.2 1 0 c0.4 -0.2 0.8 -0.8 1 -1",
@@ -159,12 +158,13 @@ describe('Svg', () => {
               "attributes": Object {
                 "d": "M4 4 l5 0 l0 4 l-6 -8 z",
                 "strokeLinecap": "square",
-                "strokeLinejoin": "mitter",
+                "strokeLinejoin": "miter",
               },
               "key": "p2",
               "type": "path",
             },
           ],
+          "height": 500,
           "width": 500,
         }
       `)
@@ -226,8 +226,7 @@ describe('Svg', () => {
       expect(svg.toJson()).toMatchInlineSnapshot(`
         Object {
           "background": undefined,
-          "height": 500,
-          "paths": Array [
+          "elements": Array [
             Object {
               "attributes": Object {
                 "d": "M0 0 c0.2 0.2 0.6 0.8 1 1 c0.4 0.2 0.6 0.2 1 0 c0.4 -0.2 0.8 -0.8 1 -1",
@@ -239,12 +238,13 @@ describe('Svg', () => {
               "attributes": Object {
                 "d": "M4 4 l5 0 l0 4 l-6 -8 z",
                 "strokeLinecap": "square",
-                "strokeLinejoin": "mitter",
+                "strokeLinejoin": "miter",
               },
               "key": "p2",
               "type": "path",
             },
           ],
+          "height": 500,
           "width": 500,
         }
       `)

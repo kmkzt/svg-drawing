@@ -12,6 +12,7 @@ describe('SvgDrawing', () => {
     draw.drawEnd()
     expect(toElement({ svg: draw.toJson() })).toMatchInlineSnapshot(`
       <svg
+        data-edit-type="frame"
         height="0"
         version="1.1"
         width="0"
@@ -20,6 +21,8 @@ describe('SvgDrawing', () => {
       >
         <path
           d="M0 0 c0.4 0.4 0.49404 0.74702 1 1 c0.35777 0.17889 0.64223 0.17889 1 0 c0.50596 -0.25298 0.6 -0.6 1 -1"
+          data-edit-type="path"
+          data-element-key="p1"
           fill="none"
           stroke="#000"
           stroke-linecap="round"
@@ -42,6 +45,7 @@ describe('SvgDrawing', () => {
     const el = toElement({ svg: draw.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
+        data-edit-type="frame"
         height="0"
         version="1.1"
         width="0"
@@ -50,6 +54,8 @@ describe('SvgDrawing', () => {
       >
         <path
           d="M0 0 c0.4 0.4 0.49404 0.74702 1 1 c0.35777 0.17889 0.64223 0.17889 1 0 c0.50596 -0.25298 0.6 -0.6 1 -1"
+          data-edit-type="path"
+          data-element-key="p2"
           fill="none"
           stroke="#000"
           stroke-linecap="round"
@@ -72,6 +78,7 @@ describe('SvgDrawing', () => {
     const el = toElement({ svg: draw.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
+        data-edit-type="frame"
         height="0"
         version="1.1"
         width="0"
@@ -80,10 +87,12 @@ describe('SvgDrawing', () => {
       >
         <path
           d="M0 0 l1 1 l1 0 l1 -1"
+          data-edit-type="path"
+          data-element-key="p3"
           fill="none"
           stroke="#000"
-          stroke-linecap="mitter"
-          stroke-linejoin="square"
+          stroke-linecap="square"
+          stroke-linejoin="miter"
           stroke-width="1"
         />
       </svg>
@@ -100,6 +109,7 @@ describe('SvgDrawing', () => {
     const el = toElement({ svg: draw.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
+        data-edit-type="frame"
         height="0"
         version="1.1"
         width="0"
@@ -121,6 +131,7 @@ describe('SvgDrawing', () => {
     const el = toElement({ svg: draw.toJson() })
     expect(el).toMatchInlineSnapshot(`
       <svg
+        data-edit-type="frame"
         height="0"
         version="1.1"
         width="0"
@@ -129,6 +140,8 @@ describe('SvgDrawing', () => {
       >
         <path
           d="M0 0"
+          data-edit-type="path"
+          data-element-key="p5"
           fill="none"
           stroke="#000"
           stroke-linecap="round"

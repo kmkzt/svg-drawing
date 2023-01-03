@@ -10,7 +10,7 @@ const defaultTestData = `<svg width="200" height="200">
 describe('Animation', () => {
   const init = (svgStr = defaultTestData) =>
     new Animation().initialize(
-      parseSVGString(svgStr).paths.map((p, i) => {
+      parseSVGString(svgStr).elements.map((p, i) => {
         p.key = `p${i}`
         return p
       })
@@ -191,7 +191,7 @@ describe('Animation', () => {
             dur: '480ms',
             keyTimes: '0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1',
             repeatCount: 'indefinite',
-            values: 'mitter;round;round;mitter;round;round;mitter;round;round',
+            values: 'square;round;round;square;round;round;square;round;round',
           },
         ],
       },
@@ -218,7 +218,7 @@ describe('Animation', () => {
             dur: '480ms',
             keyTimes: '0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1',
             repeatCount: 'indefinite',
-            values: 'butt;butt;butt;butt;mitter;butt;butt;mitter;butt',
+            values: 'butt;butt;butt;butt;square;butt;butt;square;butt',
           },
         ],
       },

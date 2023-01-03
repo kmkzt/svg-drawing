@@ -21,8 +21,7 @@ describe('parser', () => {
     ).toMatchInlineSnapshot(`
       Svg {
         "background": undefined,
-        "height": 200,
-        "paths": Array [
+        "elements": Array [
           Path {
             "attrs": Object {
               "fill": "#f00",
@@ -72,6 +71,7 @@ describe('parser', () => {
             "key": "p2",
           },
         ],
+        "height": 200,
         "width": 200,
       }
     `)
@@ -93,8 +93,7 @@ describe('parser', () => {
     expect(parseSVGElement(svgEl)).toMatchInlineSnapshot(`
       Svg {
         "background": undefined,
-        "height": 200,
-        "paths": Array [
+        "elements": Array [
           Path {
             "attrs": Object {
               "fill": "#f00",
@@ -144,6 +143,7 @@ describe('parser', () => {
             "key": "p3",
           },
         ],
+        "height": 200,
         "width": 200,
       }
     `)

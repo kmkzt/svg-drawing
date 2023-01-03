@@ -25,8 +25,7 @@ describe('SvgAnimation.ts', () => {
           "resize": [Function],
           "svg": Svg {
             "background": undefined,
-            "height": 0,
-            "paths": Array [
+            "elements": Array [
               Path {
                 "attrs": Object {
                   "fill": "#f00",
@@ -126,6 +125,7 @@ describe('SvgAnimation.ts', () => {
                 "key": "p2",
               },
             ],
+            "height": 0,
             "width": 0,
           },
           "update": [Function],
@@ -176,6 +176,7 @@ describe('SvgAnimation.ts', () => {
 
       expect(svg.toElement()).toMatchInlineSnapshot(`
         <svg
+          data-edit-type="frame"
           height="0"
           version="1.1"
           width="0"
@@ -184,6 +185,8 @@ describe('SvgAnimation.ts', () => {
         >
           <path
             d="M1 1 l1 1 c1 1 3 1 5 1 z"
+            data-edit-type="path"
+            data-element-key="p3"
             fill="#f00"
             stroke="#00f"
             stroke-linecap="round"
@@ -191,6 +194,8 @@ describe('SvgAnimation.ts', () => {
           />
           <path
             d="M2 2 l2 2 c2 2 6 2 10 2 z"
+            data-edit-type="path"
+            data-element-key="p4"
             fill="#ff0"
             stroke="#f0f"
             stroke-linecap="butt"

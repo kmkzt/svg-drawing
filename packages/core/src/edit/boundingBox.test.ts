@@ -32,16 +32,16 @@ describe('BoundingBox', () => {
 
       vertexes: [
         {
-          type: 'LeftBottom',
-          point: {
-            x: 0,
-            y: 115,
-          },
-        },
-        {
           type: 'LeftTop',
           point: {
             x: 0,
+            y: 0,
+          },
+        },
+        {
+          type: 'RightTop',
+          point: {
+            x: 300,
             y: 0,
           },
         },
@@ -53,10 +53,10 @@ describe('BoundingBox', () => {
           },
         },
         {
-          type: 'RightTop',
+          type: 'LeftBottom',
           point: {
-            x: 300,
-            y: 0,
+            x: 0,
+            y: 115,
           },
         },
       ],
