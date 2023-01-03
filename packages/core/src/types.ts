@@ -242,8 +242,8 @@ export type DrawEventName =
 export type ClearListener = () => void
 
 export interface DrawFactory {
-  createPath: () => PathClass
-  createCommand: CreateCommand
+  createElement: () => ElementClass
+  updateElement: (element: ElementClass, points: EventPoint[]) => ElementClass
 }
 
 export interface DrawingClass {

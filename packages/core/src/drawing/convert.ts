@@ -6,10 +6,9 @@ import type {
   CommandClass,
   PointObject,
   BezierCurveOption,
-  CreateCommand,
 } from '../types'
 
-export const createLineCommands: CreateCommand = (points) =>
+export const createLineCommands = (points: EventPoint[]): CommandClass[] =>
   points.map((p, i) =>
     i === 0
       ? createCommand({ type: 'M', values: [p.x, p.y] })
@@ -17,7 +16,7 @@ export const createLineCommands: CreateCommand = (points) =>
   )
 
 interface GenerateCommandsConverter {
-  create: CreateCommand
+  create: (points: EventPoint[]) => CommandClass[]
 }
 
 export class BezierCurve implements GenerateCommandsConverter {
@@ -58,22 +57,24 @@ export class BezierCurve implements GenerateCommandsConverter {
     })
   }
 
-  public create(p: EventPoint[]): CommandClass[] {
+  public create(points: EventPoint[]): CommandClass[] {
     const commands: CommandClass[] = []
-    if (p.length < 3) {
-      return createLineCommands(p)
+    if (points.length < 3) {
+      return createLineCommands(points)
     }
-    for (let i = 0; i < p.length; i += 1) {
+    for (let i = 0; i < points.length; i += 1) {
       if (i === 0) {
-        commands.push(createCommand({ type: 'M', values: [p[i].x, p[i].y] }))
+        commands.push(
+          createCommand({ type: 'M', values: [points[i].x, points[i].y] })
+        )
         continue
       }
       commands.push(
         this.genCommand(
-          p[i - 2 < 0 ? 0 : i - 2],
-          p[i - 1],
-          p[i],
-          i < p.length - 1 ? p[i + 1] : p[i]
+          points[i - 2 < 0 ? 0 : i - 2],
+          points[i - 1],
+          points[i],
+          i < points.length - 1 ? points[i + 1] : points[i]
         )
       )
     }

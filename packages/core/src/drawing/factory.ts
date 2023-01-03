@@ -1,8 +1,9 @@
 import { BezierCurve, closeCommands, createLineCommands } from './convert'
 import { Path } from '../svg/path'
 import type {
-  CreateCommand,
   DrawFactory,
+  ElementClass,
+  EventPoint,
   PathAttributes,
   PathClass,
 } from '../types'
@@ -19,20 +20,24 @@ export class BasicDrawFactory implements DrawFactory {
     }
   }
 
-  createPath(): PathClass {
+  createElement(): PathClass {
     return new Path({
       ...this.attrs,
       ...this.curveAttribute,
     })
   }
 
-  get createCommand(): CreateCommand {
-    const createCommand = this.opts.curve
+  updateElement(element: ElementClass, points: EventPoint[]): ElementClass {
+    const createCommands = this.opts.curve
       ? new BezierCurve().create
       : createLineCommands
 
-    return (po) =>
-      this.opts.close ? closeCommands(createCommand(po)) : createCommand(po)
+    const commands = this.opts.close
+      ? closeCommands(createCommands(points))
+      : createCommands(points)
+    element.setCommands(commands)
+
+    return element
   }
 
   setPathAttributes(attrs: PathAttributes) {

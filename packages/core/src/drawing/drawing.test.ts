@@ -5,8 +5,9 @@ import { Svg } from '../svg/svg'
 import type { DrawFactory } from '../types'
 
 const drawMockFactory: DrawFactory = {
-  createPath: () => new Path({}),
-  createCommand: createLineCommands,
+  createElement: () => new Path({}),
+  updateElement: (element, points) =>
+    element.setCommands(createLineCommands(points)),
 }
 
 describe('Drawing', () => {
@@ -53,7 +54,7 @@ describe('Drawing', () => {
     expect(svg.elements.length).toBe(2)
     expect(svg.elements[0].getCommandString()).toEqual('M10 10 l10 10')
     expect(svg.elements[1].getCommandString()).toEqual('M30 30 l10 10')
-    expect(updateHandler).toBeCalledTimes(6)
+    expect(updateHandler).toBeCalledTimes(4)
     expect(updateHandler).toBeCalledWith(svg)
   })
 })
