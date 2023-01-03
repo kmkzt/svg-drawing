@@ -328,6 +328,27 @@ export type EditSvgObject = {
   selectedOnlyElements: boolean
 }
 
+/** Edit event */
+export type EditEventObject =
+  | {
+      type: 'path'
+      elementKey: ElementKey
+    }
+  | {
+      type: 'path-anchor-point'
+      elementKey: ElementKey
+      commandIndex: number
+      pointIndex: number
+    }
+  | {
+      type: 'bounding-box'
+    }
+  | {
+      type: 'bounding-box-vertex'
+      vertexType: VertexType
+    }
+  | { type: 'frame' }
+
 export type CreateCommand = (points: EventPoint[]) => CommandClass[]
 
 export type AnimationOption = {

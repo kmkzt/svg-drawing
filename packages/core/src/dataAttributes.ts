@@ -1,5 +1,0 @@
-export const dataEditType = 'data-edit-type'
-export const dataPathKey = 'data-path-key'
-export const dataCommandIndex = 'data-command-index'
-export const dataPointIndex = 'data-point-index'
-export const dataVertexType = 'data-vertex-type'

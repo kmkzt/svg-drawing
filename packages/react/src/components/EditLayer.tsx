@@ -1,9 +1,7 @@
 import {
-  dataCommandIndex,
-  dataEditType,
-  dataPathKey,
-  dataPointIndex,
-  dataVertexType,
+  dataBoundingBoxAttributes,
+  dataBoundingBoxVertexAttributes,
+  dataPathAnchorPointAttributes,
 } from '@svg-drawing/core'
 import React from 'react'
 import { Path } from './Path'
@@ -90,12 +88,11 @@ const AnchorPoint = ({
 }: AnchorPointProps) => {
   return (
     <circle
-      {...{
-        [dataEditType]: 'point',
-        [dataPathKey]: pathKey,
-        [dataCommandIndex]: `${commandIndex}`,
-        [dataPointIndex]: `${pointIndex}`,
-      }}
+      {...dataPathAnchorPointAttributes({
+        elementKey: pathKey,
+        commandIndex,
+        pointIndex,
+      })}
       cx={point.x}
       cy={point.y}
       r={EDIT_PATH_STYLE.point}
@@ -112,9 +109,7 @@ const BoundingBox = ({
 }: BoundingBoxProps) => (
   <>
     <rect
-      {...{
-        [dataEditType]: 'bounding-box',
-      }}
+      {...dataBoundingBoxAttributes}
       x={position.x}
       y={position.y}
       width={size.width}
@@ -146,10 +141,7 @@ const BoundingBoxVertex = ({
   selectedOnlyPaths,
 }: BoundingBoxVertexProps) => (
   <circle
-    {...{
-      [dataEditType]: 'bounding-box-vertex',
-      [dataVertexType]: vertex.type,
-    }}
+    {...dataBoundingBoxVertexAttributes(vertex.type)}
     key={vertex.type}
     cx={vertex.point.x}
     cy={vertex.point.y}

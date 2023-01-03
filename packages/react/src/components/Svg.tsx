@@ -1,4 +1,4 @@
-import { dataEditType } from '@svg-drawing/core'
+import { dataFrameAttributes } from '@svg-drawing/core'
 import React, { forwardRef } from 'react'
 import { EditLayer } from './EditLayer'
 import { SvgProvider } from './SvgContext'
@@ -28,7 +28,7 @@ export const Svg = forwardRef<SVGSVGElement, SvgProps>(
 const SvgElement = forwardRef<SVGSVGElement, Omit<SvgProps, 'editProps'>>(
   ({ background, children, ...rest }, ref) => {
     return (
-      <svg ref={ref} {...{ [dataEditType]: 'frame' }} {...rest}>
+      <svg ref={ref} {...dataFrameAttributes} {...rest}>
         {background && (
           <rect
             style={{ pointerEvents: 'none' }}

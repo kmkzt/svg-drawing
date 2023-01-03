@@ -20,7 +20,7 @@ type Attrs = {
   [key: string]: string | number | undefined
 }
 
-export const element = <T extends keyof SVGElementTagNameMap = any>(
+const element = <T extends keyof SVGElementTagNameMap = any>(
   elName: T,
   attrs: Attrs = {},
   children?: SVGElement[]
@@ -40,7 +40,7 @@ export const element = <T extends keyof SVGElementTagNameMap = any>(
   return path
 }
 
-export const svgElement = (
+const svgElement = (
   {
     width,
     height,
@@ -65,7 +65,7 @@ export const svgElement = (
   return svg
 }
 
-export const pathElement = (
+const pathElement = (
   path: PathAttributes,
   animateAttrs?: AnimateAttribute[]
 ): SVGPathElement => {
@@ -153,10 +153,7 @@ const anchorElement = ({ d, points }: AnchorPoint): SVGElement =>
     ),
   ])
 
-export const segmentElement = ({
-  path,
-  anchorPoints,
-}: EditPathObject): SVGElement =>
+const segmentElement = ({ path, anchorPoints }: EditPathObject): SVGElement =>
   element('g', {}, [
     pathElement({
       key: path.key,
@@ -169,7 +166,7 @@ export const segmentElement = ({
     ...anchorPoints.map((anchorPoint) => anchorElement(anchorPoint)),
   ])
 
-export const editLayer = ({
+const editLayer = ({
   boundingBox,
   selectedOnlyElements: selectedOnlyPaths,
   elements: paths,

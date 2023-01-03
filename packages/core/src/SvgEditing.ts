@@ -1,13 +1,7 @@
-import {
-  dataEditType,
-  dataPathKey,
-  dataCommandIndex,
-  dataPointIndex,
-  dataVertexType,
-} from './dataAttributes'
 import { PressedKeyHandler } from './edit/pressedKeyHandler'
 import { ResizePathHandler } from './edit/resizePathHandler'
 import { TranslatePathHandler } from './edit/translatePathHandler'
+import { getEditDataAttributes } from './renderer/dataAttributes'
 import type { Editing } from './edit/editing'
 import type { SelectIndex, VertexType } from './types'
 
@@ -42,57 +36,42 @@ export class SvgEditing {
 
   private editHandler(ev: MouseEvent | TouchEvent) {
     const el = ev.target as HTMLElement
-    const editType = el.getAttribute(dataEditType)
-    // DEBUG: console.info(ev.target, editType)
+    const editData = getEditDataAttributes(el)
 
-    // path
-    if (editType === 'path') {
-      const pathKey = el.getAttribute(dataPathKey)
+    if (!editData) return
 
-      if (!pathKey) return
+    switch (editData.type) {
+      case 'path': {
+        this.selectElements({ path: editData.elementKey })
+        this.translatePathHandler.start(ev)
+        break
+      }
 
-      this.selectElements({ path: pathKey })
-      this.translatePathHandler.start(ev)
-      return
-    }
+      case 'path-anchor-point': {
+        this.selectElements({
+          path: editData.elementKey,
+          command: editData.commandIndex,
+          point: editData.pointIndex,
+        })
+        this.translatePathHandler.start(ev)
+        break
+      }
 
-    // point
-    if (editType === 'point') {
-      const pathKey = el.getAttribute(dataPathKey)
-      const commandIndex = el.getAttribute(dataCommandIndex)
-      const pointIndex = el.getAttribute(dataPointIndex)
+      case 'bounding-box': {
+        this.editing.selectBoundingBox()
+        this.translatePathHandler.start(ev)
+        break
+      }
 
-      if (!pathKey) return
-      if (commandIndex === null) return
-      if (pointIndex === null) return
+      case 'bounding-box-vertex': {
+        this.resizePathHandler.start(ev, editData.vertexType)
+        break
+      }
 
-      this.selectElements({
-        path: pathKey,
-        command: +commandIndex,
-        point: +pointIndex,
-      })
-      this.translatePathHandler.start(ev)
-    }
-
-    // bounding-box
-    if (editType === 'bounding-box') {
-      this.editing.selectBoundingBox()
-      this.translatePathHandler.start(ev)
-      return
-    }
-
-    // bounding-box-vertex
-    if (editType === 'bounding-box-vertex') {
-      const vertexType = el.getAttribute(dataVertexType)
-      if (!vertexType) return
-
-      this.resizePathHandler.start(ev, vertexType as VertexType)
-
-      return
-    }
-
-    if (editType === 'frame') {
-      this.editing.cancel()
+      case 'frame': {
+        this.editing.cancel()
+        break
+      }
     }
   }
 

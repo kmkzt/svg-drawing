@@ -1,11 +1,11 @@
 export * from './types'
 export {
-  dataEditType,
-  dataPathKey,
-  dataCommandIndex,
-  dataPointIndex,
-  dataVertexType,
-} from './dataAttributes'
+  dataFrameAttributes,
+  dataPathAttributes,
+  dataPathAnchorPointAttributes,
+  dataBoundingBoxAttributes,
+  dataBoundingBoxVertexAttributes,
+} from './renderer/dataAttributes'
 export { Drawing } from './drawing/drawing'
 export { BasicDrawFactory } from './drawing/factory'
 export {

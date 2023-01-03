@@ -1,4 +1,4 @@
-import { dataEditType, dataPathKey } from '@svg-drawing/core'
+import { dataPathAttributes } from '@svg-drawing/core'
 import React from 'react'
 import { Animates } from './Animates'
 import type { PathObject } from '@svg-drawing/core'
@@ -10,13 +10,7 @@ type PathProps = {
 } & SVGProps<SVGPathElement>
 
 export const Path = ({ elementKey, children, ...attrs }: PathProps) => (
-  <path
-    {...(elementKey && {
-      [dataEditType]: 'path',
-      [dataPathKey]: elementKey,
-    })}
-    {...attrs}
-  >
+  <path {...(elementKey && dataPathAttributes(elementKey))} {...attrs}>
     {children ?? <Animates elementKey={elementKey} />}
   </path>
 )
