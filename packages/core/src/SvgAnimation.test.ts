@@ -22,7 +22,6 @@ describe('SvgAnimation.ts', () => {
             "ms": 60,
             "paths": Array [],
           },
-          "resize": [Function],
           "svg": Svg {
             "background": undefined,
             "elements": Array [

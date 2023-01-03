@@ -1,12 +1,7 @@
 import { Animation } from './animation/animation'
 import { SvgRenderer, toElement } from './renderer/svgRenderer'
 import { Svg } from './svg/svg'
-import type {
-  AnimationOption,
-  RendererOption,
-  ResizeCallback,
-  SvgClass,
-} from './types'
+import type { AnimationOption, RendererOption, SvgClass } from './types'
 
 export class SvgAnimation {
   private _stopId?: number
@@ -14,9 +9,7 @@ export class SvgAnimation {
     public svg: SvgClass,
     public animation: Animation,
     private update: (svg: SvgClass) => void
-  ) {
-    this.resize = this.resize.bind(this)
-  }
+  ) {}
 
   public stop(): void {
     if (!this._stopId) return
@@ -75,13 +68,6 @@ export class SvgAnimation {
       svg: this.svg.toJson(),
       animation: this.animation.toJson(),
     })
-  }
-
-  public resize({ width, height }: Parameters<ResizeCallback>[0]): void {
-    this.stop()
-    this.svg.resize({ width, height })
-    this.animation.initialize(this.svg.elements)
-    this.start()
   }
 
   public static init(

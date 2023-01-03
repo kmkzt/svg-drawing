@@ -3,14 +3,12 @@ import { PencilHandler } from './drawing/eventHandler'
 import { BasicDrawFactory } from './drawing/factory'
 import { SvgRenderer } from './renderer/svgRenderer'
 import { Svg } from './svg/svg'
-import { isAlmostSameNumber } from './utils'
 import type {
   DrawingOption,
   DrawEventHandler,
   SvgClass,
   DrawingClass,
   PathClass,
-  ResizeCallback,
   SvgObject,
   EventPoint,
 } from './types'
@@ -124,12 +122,5 @@ export class SvgDrawing {
 
   private update(): void {
     this.renderer.update({ svg: this.svg.toJson() })
-  }
-
-  public resize({ width, height }: Parameters<ResizeCallback>[0]) {
-    if (isAlmostSameNumber(this.svg.width, width)) return
-
-    this.svg.resize({ width, height })
-    this.update()
   }
 }
