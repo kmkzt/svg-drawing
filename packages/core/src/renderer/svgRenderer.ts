@@ -1,3 +1,10 @@
+import {
+  dataBoundingBoxAttributes,
+  dataBoundingBoxVertexAttributes,
+  dataFrameAttributes,
+  dataPathAnchorPointAttributes,
+  dataPathAttributes,
+} from './dataAttributes'
 import { EDIT_PATH_STYLE } from './editPathStyle'
 import { camel2kebab } from '../utils'
 import type {
@@ -6,6 +13,7 @@ import type {
   BoundingBoxObject,
   EditPathObject,
   EditSvgObject,
+  ElementKey,
   PathAttributes,
   RendererClass,
   RendererOption,
@@ -55,6 +63,10 @@ const svgElement = (
   svg.setAttribute('width', String(width))
   svg.setAttribute('height', String(height))
 
+  Object.entries(dataFrameAttributes).map(([key, value]) => {
+    svg.setAttribute(key, value)
+  })
+
   if (background) {
     svg.appendChild(rectElement({ width, height, fill: background }))
   }
@@ -66,6 +78,7 @@ const svgElement = (
 }
 
 const pathElement = (
+  elementKey: ElementKey,
   path: PathAttributes,
   animateAttrs?: AnimateAttribute[]
 ): SVGPathElement => {
@@ -82,7 +95,10 @@ const pathElement = (
 
   return element(
     'path',
-    kebabAttrs,
+    {
+      ...dataPathAttributes(elementKey),
+      ...kebabAttrs,
+    },
     animateAttrs?.map((animateAttr) => animateElement(animateAttr))
   )
 }
@@ -106,6 +122,7 @@ const boundingBoxElement = ({
   selectedOnlyPaths: boolean
 }) =>
   rectElement({
+    ...dataBoundingBoxAttributes,
     x: position.x,
     y: position.y,
     width: size.width,
@@ -124,6 +141,7 @@ const boundingBoxVertexElement = ({
   selectedOnlyPaths: boolean
 }) =>
   element('circle', {
+    ...dataBoundingBoxVertexAttributes(vertex.type),
     cx: vertex.point.x,
     cy: vertex.point.y,
     r: EDIT_PATH_STYLE.point,
@@ -133,7 +151,7 @@ const boundingBoxVertexElement = ({
       : EDIT_PATH_STYLE.fill.boundingBox,
   })
 
-const anchorElement = ({ d, points }: AnchorPoint): SVGElement =>
+const pathAnchorPointElement = ({ d, points }: AnchorPoint): SVGElement =>
   element('g', {}, [
     element('path', {
       d,
@@ -143,6 +161,11 @@ const anchorElement = ({ d, points }: AnchorPoint): SVGElement =>
     }),
     ...points.map((point) =>
       element('circle', {
+        ...dataPathAnchorPointAttributes({
+          elementKey: point.index.path,
+          commandIndex: point.index.command,
+          pointIndex: point.index.point,
+        }),
         cx: point.value.x,
         cy: point.value.y,
         r: EDIT_PATH_STYLE.point,
@@ -155,15 +178,14 @@ const anchorElement = ({ d, points }: AnchorPoint): SVGElement =>
 
 const segmentElement = ({ path, anchorPoints }: EditPathObject): SVGElement =>
   element('g', {}, [
-    pathElement({
-      key: path.key,
+    pathElement(path.key, {
       strokeWidth: EDIT_PATH_STYLE.line,
       stroke: path.attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined,
       fill: 'none',
       strokeLinecap: path.attributes.strokeLinecap,
       strokeLinejoin: path.attributes.strokeLinejoin,
     }),
-    ...anchorPoints.map((anchorPoint) => anchorElement(anchorPoint)),
+    ...anchorPoints.map((anchorPoint) => pathAnchorPointElement(anchorPoint)),
   ])
 
 const editLayer = ({
@@ -191,6 +213,7 @@ export const toElement = ({
   return svgElement({ width, height, background }, [
     ...paths.map(({ key, attributes }) =>
       pathElement(
+        key,
         attributes,
         animation?.find((animate) => animate.key === key)?.animates
       )
