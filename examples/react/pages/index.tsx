@@ -126,12 +126,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   /** Setup edit */
 
   const [editSvgObject, onChangeEdit] = useState<EditSvgObject | null>(null)
-  const {
-    edit,
-    editProps,
-    keyboardMap,
-    update: updateEdit,
-  } = useEdit({
+  const { edit, editProps, keyboardMap } = useEdit({
     svg,
     editSvgObject,
     onChangeEdit,
@@ -172,8 +167,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     const drawFrame = new DrawFrame(svg.elements)
     animation.setup(drawFrame)
     animation.update(svg.elements)
-    updateEdit()
-  }, [animation, svg.elements, updateEdit])
+    edit.update()
+  }, [animation, svg.elements, edit])
 
   /** Setup resize */
   const handleResize = useCallback<ResizeCallback>(
@@ -181,9 +176,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       svg.resize(arg)
 
       updateDraw()
-      updateEdit()
+      edit.update()
     },
-    [svg, updateDraw, updateEdit]
+    [svg, updateDraw, edit]
   )
 
   useResize(targetRef, handleResize)
@@ -284,9 +279,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       if (!e.target?.files) return
       await parseFile(e.target.files[0])
       updateDraw()
-      updateEdit()
+      edit.update()
     },
-    [parseFile, updateDraw, updateEdit]
+    [parseFile, updateDraw, edit]
   )
 
   const handleChangeType = useCallback<ChangeEventHandler<HTMLSelectElement>>(
@@ -308,11 +303,11 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
       const upd = ev.target.value
       if (isDrawMode(upd)) {
         updateDraw()
-        updateEdit()
+        edit.update()
         setMode(upd)
       }
     },
-    [updateDraw, updateEdit]
+    [edit, updateDraw]
   )
 
   return (

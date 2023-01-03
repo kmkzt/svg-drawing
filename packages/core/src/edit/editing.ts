@@ -1,17 +1,20 @@
+import { EditSvg } from './editSvg'
 import type {
   PointObject,
   PathAttributes,
   SelectIndex,
   VertexType,
+  SvgClass,
 } from '../types'
-import type { EditSvg } from './editSvg'
 
 export class Editing {
+  private editSvg: EditSvg
   constructor(
-    private editSvg: EditSvg,
-    /** Callback function that refreshes the screen. */
-    private updater: (eSvg: EditSvg) => void = () => void 0
+    svg: SvgClass,
+    private _update: (eSvg: EditSvg) => void = () => void 0
   ) {
+    this.editSvg = new EditSvg(svg)
+
     this.translate = this.translate.bind(this)
     this.translatePreview = this.translatePreview.bind(this)
 
@@ -22,31 +25,36 @@ export class Editing {
   /** Clear selected status and update screen. */
   cancel() {
     this.editSvg.cancel()
-    this.updater(this.editSvg)
+    this.update()
+  }
+
+  /** Callback function that refreshes the screen. */
+  update() {
+    this._update(this.editSvg)
   }
 
   /** Select edit path and update screen. */
   select(index: SelectIndex | SelectIndex[], combined?: boolean) {
     this.editSvg.select(index, combined)
-    this.updater(this.editSvg)
+    this.update()
   }
 
   /** Select Bounding box */
   selectBoundingBox() {
     this.editSvg.selectBoundingBox()
-    this.updater(this.editSvg)
+    this.update()
   }
 
   /** Delete path and update screen. */
   deleteElements() {
     this.editSvg.delete()
-    this.updater(this.editSvg)
+    this.update()
   }
 
   /** Change attributes and update screen. */
   changeAttributes(attrs: PathAttributes) {
     this.editSvg.changeAttributes(attrs)
-    this.updater(this.editSvg)
+    this.update()
   }
 
   translatePreview(po: PointObject) {
@@ -59,7 +67,7 @@ export class Editing {
 
   private translateEditSvg(editSvg: EditSvg, po: PointObject) {
     editSvg.translate(po)
-    this.updater(editSvg)
+    this._update(editSvg)
   }
 
   resize(vertexType: VertexType, movePoint: PointObject) {
@@ -76,6 +84,6 @@ export class Editing {
     movePoint: PointObject
   ) {
     editSvg.resizeBoundingBox(vertexType, movePoint)
-    this.updater(editSvg)
+    this._update(editSvg)
   }
 }

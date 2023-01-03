@@ -1,5 +1,5 @@
-import { EditSvg, Editing } from '@svg-drawing/core'
-import { useCallback, useMemo } from 'react'
+import { Editing } from '@svg-drawing/core'
+import { useMemo } from 'react'
 import { useRenderInterval } from './useRenderInterval'
 import type { EditProps, KeyboardMap, UseEdit } from '../types'
 
@@ -56,26 +56,17 @@ export const useEdit: UseEdit = ({
   onChangeEdit,
   onChangeSvg,
 }) => {
-  const editSvg = useMemo(() => new EditSvg(svg), [svg])
-
   const render = useRenderInterval()
-
-  const update = useCallback(() => {
-    render(() => {
-      onChangeEdit(editSvg.toJson())
-      onChangeSvg(editSvg.svg.toJson())
-    })
-  }, [editSvg, onChangeEdit, onChangeSvg, render])
 
   const edit = useMemo(
     () =>
-      new Editing(editSvg, (eSvg: EditSvg) => {
+      new Editing(svg, (eSvg) => {
         render(() => {
           onChangeEdit(eSvg.toJson())
           onChangeSvg(eSvg.svg.toJson())
         })
       }),
-    [editSvg, onChangeEdit, onChangeSvg, render]
+    [svg, onChangeEdit, onChangeSvg, render]
   )
 
   const keyboardMap = useMemo<KeyboardMap>(
@@ -102,7 +93,6 @@ export const useEdit: UseEdit = ({
   return {
     edit,
     keyboardMap,
-    update,
     editProps,
   }
 }

@@ -56,7 +56,6 @@ export type UseEdit = (opts: {
 
 export type EditSvgAction = {
   edit: Editing
-  update: () => void
   keyboardMap: KeyboardMap
   editProps: EditProps
 }
