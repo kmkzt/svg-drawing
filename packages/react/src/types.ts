@@ -10,9 +10,9 @@ import type {
   SvgOption,
   PathClass,
   AnimateObject,
-  PathObject,
   AnimateAttribute,
   ElementKey,
+  ElementClass,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
@@ -42,8 +42,8 @@ export type UseDrawOptions = {
 export type DrawAction = {
   draw: DrawingClass
   update: () => void
-  clear: () => PathClass[]
-  undo: () => PathClass | undefined
+  clear: () => ReadonlyArray<ElementClass>
+  undo: () => ElementClass | undefined
 }
 
 /** UseEdit */

@@ -5,6 +5,7 @@ import type {
   FrameAnimation,
   AnimateAttribute,
   AnimateObject,
+  ElementClass,
 } from '../types'
 
 const createAnimateAttributeValues = (
@@ -81,7 +82,7 @@ export class Animation {
     }
   }
 
-  public initialize(paths: PathClass[]) {
+  public initialize(paths: ReadonlyArray<ElementClass>) {
     this.paths = paths.map((p) => p.clone())
     this.generator = this.setupGenerator()
     return this

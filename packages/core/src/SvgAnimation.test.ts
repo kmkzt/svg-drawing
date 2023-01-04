@@ -24,8 +24,8 @@ describe('SvgAnimation.ts', () => {
           },
           "svg": Svg {
             "background": undefined,
-            "elements": Array [
-              Path {
+            "elementsMap": Map {
+              "p1" => Path {
                 "attrs": Object {
                   "fill": "#f00",
                   "stroke": "#00f",
@@ -74,7 +74,7 @@ describe('SvgAnimation.ts', () => {
                 ],
                 "key": "p1",
               },
-              Path {
+              "p2" => Path {
                 "attrs": Object {
                   "fill": "#ff0",
                   "stroke": "#f0f",
@@ -123,7 +123,7 @@ describe('SvgAnimation.ts', () => {
                 ],
                 "key": "p2",
               },
-            ],
+            },
             "height": 0,
             "width": 0,
           },

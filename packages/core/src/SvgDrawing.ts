@@ -11,6 +11,7 @@ import type {
   PathClass,
   SvgObject,
   EventPoint,
+  ElementClass,
 } from './types'
 
 /**
@@ -107,17 +108,19 @@ export class SvgDrawing {
     this.factory.changeClose(close)
   }
 
-  public clear(): PathClass[] {
+  public clear() {
     const paths = this.svg.elements
-    this.svg.elements = []
+    this.svg.setElements([])
     this.update()
     return paths
   }
 
-  public undo(): PathClass | undefined {
-    const path = this.svg.elements.pop()
+  public undo(): ElementClass | undefined {
+    const lastElement = this.svg.elements[this.svg.elements.length - 1].clone()
+    this.svg.deleteElement(lastElement)
+
     this.update()
-    return path
+    return lastElement
   }
 
   private update(): void {

@@ -60,17 +60,20 @@ export const useDraw: UseDraw = ({ factory, svg, onChangeSvg }) => {
   )
 
   const clear = useCallback(() => {
-    const paths = svg.elements
-    svg.elements = []
+    const paths = svg.cloneElements()
+    svg.setElements([])
+
     update()
     return paths
   }, [svg, update])
 
   const undo = useCallback(() => {
-    const path = svg.elements.pop()
+    const lastElement = svg.elements[svg.elements.length - 1].clone()
+    svg.deleteElement(lastElement)
+
     update()
-    return path
-  }, [svg.elements, update])
+    return lastElement
+  }, [svg, update])
 
   return {
     draw,

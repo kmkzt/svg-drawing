@@ -1,16 +1,20 @@
-import type { SvgOption, ElementClass, SvgClass, SvgObject } from '../types'
+import type { SvgOption, ElementClass, SvgClass, ElementKey } from '../types'
 
 export class Svg implements SvgClass {
-  public elements: ElementClass[]
+  private elementsMap: Map<ElementKey, ElementClass>
   public width: number
   public height: number
   public background?: string
 
   constructor({ width, height, background }: SvgOption) {
-    this.elements = []
+    this.elementsMap = new Map<ElementKey, ElementClass>()
     this.width = width
     this.height = height
     this.background = background
+  }
+
+  public get elements() {
+    return [...this.elementsMap.values()]
   }
 
   public resize({ width, height }: { width: number; height: number }) {
@@ -21,44 +25,46 @@ export class Svg implements SvgClass {
 
   private scale(r: number) {
     if (r !== 1 && isFinite(r) && r !== 0) {
-      for (let i = 0; i < this.elements.length; i += 1) {
-        this.elements[i].scale(r)
-      }
+      this.elementsMap.forEach((element) => element.scale(r))
     }
     return this
   }
 
-  public addElement(pa: ElementClass | ElementClass[]) {
-    if (Array.isArray(pa)) {
-      this.elements.push(...pa)
-    } else {
-      this.elements.push(pa)
-    }
+  public addElement(elements: ElementClass | ReadonlyArray<ElementClass>) {
+    ;[elements].flat().map((element) => {
+      this.elementsMap.set(element.key, element)
+    })
+
     return this
   }
 
-  public getElement(key: string): ElementClass | undefined {
-    return this.elements.find((p) => p.key === key)
+  public getElement(elementKey: ElementKey): ElementClass | undefined {
+    return this.elementsMap.get(elementKey)
   }
 
-  public updateElement(path: ElementClass) {
-    const index = this.elements.findIndex((p) => p.key === path.key)
-    if (index !== -1) {
-      this.elements[index] = path
-    }
+  public updateElement(element: ElementClass) {
+    this.elementsMap.set(element.key, element)
     return this
   }
 
   public deleteElement(element: ElementClass) {
-    this.elements = this.elements.filter((path) => path.key !== element.key)
+    this.elementsMap.delete(element.key)
+    return this
+  }
+
+  public setElements(elements: ReadonlyArray<ElementClass>) {
+    this.elementsMap.clear()
+
+    elements.forEach((element) => this.elementsMap.set(element.key, element))
+
     return this
   }
 
   public cloneElements() {
-    return this.elements.map((p) => p.clone())
+    return this.elements.map((element) => element.clone())
   }
 
-  public toJson(): SvgObject {
+  public toJson() {
     return {
       width: this.width,
       height: this.height,
@@ -78,7 +84,7 @@ export class Svg implements SvgClass {
    * ```
    */
   public copy(svg: SvgClass) {
-    this.elements = svg.cloneElements()
+    this.setElements(svg.cloneElements())
     if (svg.width && this.width) {
       this.scale(this.width / svg.width)
     }
@@ -91,7 +97,7 @@ export class Svg implements SvgClass {
       height: this.height,
       background: this.background,
     })
-    svg.addElement(this.cloneElements())
+    svg.setElements(this.cloneElements())
     return svg
   }
 }

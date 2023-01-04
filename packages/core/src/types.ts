@@ -145,22 +145,24 @@ export type SvgOption = {
 
 export interface SvgClass {
   /** Svg child element */
-  elements: ElementClass[]
+  elements: ReadonlyArray<ElementClass>
   width: number
   height: number
   background?: string
   /** Resize svg and path of children. */
   resize: (arg: { width: number; height: number }) => void
-  /** Add multiple paths. */
-  addElement: (element: ElementClass | ElementClass[]) => this
-  /** Get path */
+  /** Get element */
   getElement: (key: string) => ElementClass | undefined
-  /** Update path */
+  /** Update element */
   updateElement: (element: ElementClass) => this
-  /** Delete paths */
+  /** Delete element */
   deleteElement: (element: ElementClass) => this
+  /** Add multiple paths. */
+  addElement: (element: ElementClass | ReadonlyArray<ElementClass>) => this
+  /** Set elements */
+  setElements: (elements: ReadonlyArray<ElementClass>) => this
   /** Return cloned paths. */
-  cloneElements: () => ElementClass[]
+  cloneElements: () => ReadonlyArray<ElementClass>
   toJson: () => SvgObject
   /**
    * Copy resized paths.
