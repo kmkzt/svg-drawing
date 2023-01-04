@@ -5,7 +5,7 @@ import { Svg } from '../svg/svg'
 
 describe('download.ts', () => {
   const svg = new Svg({ width: 4, height: 4 })
-    .addElement(
+    .updateElement(
       new Path().addCommand([
         { type: 'M', values: [0, 0] },
         { type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] },
@@ -13,7 +13,7 @@ describe('download.ts', () => {
         { type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] },
       ])
     )
-    .addElement(
+    .updateElement(
       new Path({
         strokeLinecap: 'square',
         strokeLinejoin: 'miter',

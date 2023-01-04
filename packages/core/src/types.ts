@@ -153,12 +153,10 @@ export interface SvgClass {
   resize: (arg: { width: number; height: number }) => void
   /** Get element */
   getElement: (key: string) => ElementClass | undefined
-  /** Update element */
+  /** Update element. If it exists it will be updated, otherwise it will be newly added */
   updateElement: (element: ElementClass) => this
   /** Delete element */
   deleteElement: (element: ElementClass) => this
-  /** Add multiple paths. */
-  addElement: (element: ElementClass | ReadonlyArray<ElementClass>) => this
   /** Set elements */
   setElements: (elements: ReadonlyArray<ElementClass>) => this
   /** Return cloned paths. */

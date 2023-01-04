@@ -234,7 +234,7 @@ export class ImgTrace {
     return new Svg({
       width: cq[0].length - 2,
       height: cq.length - 2,
-    }).addElement(paths)
+    }).setElements(paths)
   }
 
   private _colorQuantization(imgd: ImageData): ColorQuantization {

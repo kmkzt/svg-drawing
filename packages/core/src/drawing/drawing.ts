@@ -58,7 +58,7 @@ export class Drawing implements DrawingClass {
     const drawElement = this.pathFactory.createElement()
 
     this._drawElementKey = drawElement.key
-    this.svg.addElement(drawElement)
+    this.svg.updateElement(drawElement)
   }
 
   public dot(po: EventPoint): void {

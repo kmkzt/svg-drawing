@@ -4,19 +4,21 @@ import { Svg } from '../svg/svg'
 
 describe('svgRenderer.ts', () => {
   const svg = new Svg({ width: 500, height: 500 })
-    // TODO: rewrite bezier curve test
-    .addElement(
-      new Path()
+    .updateElement(
+      new Path({}, 'p1')
         .addCommand({ type: 'M', values: [0, 0] })
         .addCommand({ type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] })
         .addCommand({ type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] })
         .addCommand({ type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] })
     )
-    .addElement(
-      new Path({
-        strokeLinecap: 'square',
-        strokeLinejoin: 'miter',
-      })
+    .updateElement(
+      new Path(
+        {
+          strokeLinecap: 'square',
+          strokeLinejoin: 'miter',
+        },
+        'p2'
+      )
         .addCommand({ type: 'M', values: [4, 4] })
         .addCommand({ type: 'L', values: [9, 4] })
         .addCommand({ type: 'L', values: [9, 8] })

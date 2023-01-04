@@ -30,14 +30,6 @@ export class Svg implements SvgClass {
     return this
   }
 
-  public addElement(elements: ElementClass | ReadonlyArray<ElementClass>) {
-    ;[elements].flat().map((element) => {
-      this.elementsMap.set(element.key, element)
-    })
-
-    return this
-  }
-
   public getElement(elementKey: ElementKey): ElementClass | undefined {
     return this.elementsMap.get(elementKey)
   }

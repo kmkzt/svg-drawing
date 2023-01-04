@@ -47,7 +47,7 @@ describe('Svg', () => {
         },
       ])
 
-      svg.addElement(testPath)
+      svg.updateElement(testPath)
 
       const resizeArgs = { width: 200, height: 300 }
       svg.resize(resizeArgs)
@@ -82,7 +82,7 @@ describe('Svg', () => {
       ])
 
       const copiedSvg = new Svg({ width: 200, height: 200 })
-      copiedSvg.addElement(testPath)
+      copiedSvg.updateElement(testPath)
 
       svg.copy(copiedSvg)
 
@@ -92,9 +92,9 @@ describe('Svg', () => {
     })
   })
 
-  describe('addElement', () => {
+  describe('setElements', () => {
     it('Add an array of paths', () => {
-      const svg = new Svg({ width: 500, height: 500 }).addElement([
+      const svg = new Svg({ width: 500, height: 500 }).setElements([
         new Path(undefined, 'p1').addCommand([
           {
             type: 'M',
@@ -172,7 +172,7 @@ describe('Svg', () => {
 
     it('Add path', () => {
       const svg = new Svg({ width: 500, height: 500 })
-        .addElement(
+        .updateElement(
           new Path(undefined, 'p1').addCommand([
             {
               type: 'M',
@@ -192,7 +192,7 @@ describe('Svg', () => {
             },
           ])
         )
-        .addElement(
+        .updateElement(
           new Path(
             {
               strokeLinecap: 'square',
@@ -255,7 +255,7 @@ describe('Svg', () => {
     let svg: Svg
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
-        .addElement(
+        .updateElement(
           new Path(undefined, 'p1').addCommand([
             {
               type: 'M',
@@ -275,7 +275,7 @@ describe('Svg', () => {
             },
           ])
         )
-        .addElement(
+        .updateElement(
           new Path(
             {
               strokeLinecap: 'square',

@@ -18,7 +18,7 @@ describe('EditSvg', () => {
     const svg = new Svg({ width: parsedSvg.width, height: parsedSvg.height })
     parsedSvg.elements.forEach((p, i) => {
       p.key = `path_key_${i}`
-      svg.addElement(p)
+      svg.updateElement(p)
     })
 
     edit = new EditSvg(svg)
