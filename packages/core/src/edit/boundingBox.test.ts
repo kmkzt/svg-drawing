@@ -1,18 +1,19 @@
 import { BoundingBox } from './boundingBox'
+import { createCommand } from '../svg/command'
 import { Path } from '../svg/path'
 import type { BoundingBoxObject } from '../types'
 
-const exampleData = new Path({}, 'path_key').addCommand([
-  { type: 'M', values: [0, 0] },
-  { type: 'C', values: [20, 20, 60, 80, 100, 100] },
-  {
+const exampleData = new Path({}, 'path_key').setCommands([
+  createCommand({ type: 'M', values: [0, 0] }),
+  createCommand({ type: 'C', values: [20, 20, 60, 80, 100, 100] }),
+  createCommand({
     type: 'C',
     values: [140, 120, 160, 120, 200, 100],
-  },
-  {
+  }),
+  createCommand({
     type: 'C',
     values: [240, 80, 280, 20, 300, 0],
-  },
+  }),
 ])
 
 describe('BoundingBox', () => {

@@ -755,7 +755,7 @@ export class ImgTrace {
           fill: color,
           opacity: String(rgba.a / 255.0),
         })
-        path.addCommand([
+        path.setCommands([
           ...smp.commands,
           ...this._complementCommand(layer, pcnt),
         ])

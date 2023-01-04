@@ -114,9 +114,7 @@ export interface PathClass {
     i: number,
     update: (absoluteCommand: CommandClass) => CommandClass
   ) => this
-  addCommand: (
-    params: ReadonlyArray<CommandObject> | Readonly<CommandObject>
-  ) => this
+  addCommand: (params: Readonly<CommandClass>) => this
   deleteCommand: (i: number) => this
   translate: (p: PointObject) => this
   setAttributes: (attr: PathAttributes) => this

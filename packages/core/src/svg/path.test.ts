@@ -1,3 +1,4 @@
+import { createCommand } from './command'
 import { Path } from './path'
 import { Point } from './point'
 import type { PointClass } from '../types'
@@ -5,9 +6,9 @@ import type { PointClass } from '../types'
 describe('Path', () => {
   let path: Path
   beforeEach(() => {
-    path = new Path({ strokeWidth: '1' }).addCommand([
-      { type: 'M', values: [1, 1] },
-      { type: 'L', values: [2, 2] },
+    path = new Path({ strokeWidth: '1' }).setCommands([
+      createCommand({ type: 'M', values: [1, 1] }),
+      createCommand({ type: 'L', values: [2, 2] }),
     ])
   })
 
@@ -28,15 +29,16 @@ describe('Path', () => {
     })
   })
   it('clone', () => {
-    const origin = new Path({ strokeWidth: '1' }).addCommand({
-      type: 'M',
-      values: [1, 1],
-    })
-    const clone = origin.clone().addCommand({ type: 'L', values: [2, 2] })
-    clone.absoluteCommands[0].points[0] = new Point(
-      3,
-      (clone.absoluteCommands[0].point as PointClass).y
-    )
+    const origin = new Path({ strokeWidth: '1' }).setCommands([
+      createCommand({
+        type: 'M',
+        values: [1, 1],
+      }),
+    ])
+    const clone = origin.clone()
+    clone.updateCommand(0, (command) => command.translate({ x: 2, y: 0 }))
+    clone.addCommand(createCommand({ type: 'l', values: [1, 1] }))
+
     expect(origin.getCommandString()).toMatchInlineSnapshot(`"M1 1"`)
     expect(clone.getCommandString()).toMatchInlineSnapshot(`"M3 1 l1 1"`)
   })
@@ -53,11 +55,11 @@ describe('Path', () => {
   })
 
   describe('toJson and toElement', () => {
-    const path = new Path().addCommand([
-      { type: 'M', values: [0, 0] },
-      { type: 'L', values: [1, 1] },
-      { type: 'L', values: [2, 1] },
-      { type: 'L', values: [3, 0] },
+    const path = new Path().setCommands([
+      createCommand({ type: 'M', values: [0, 0] }),
+      createCommand({ type: 'L', values: [1, 1] }),
+      createCommand({ type: 'L', values: [2, 1] }),
+      createCommand({ type: 'L', values: [3, 0] }),
     ])
     it('toJson', () => {
       expect(path.toJson()).toMatchInlineSnapshot(`
@@ -72,10 +74,10 @@ describe('Path', () => {
     })
   })
   describe('commands parameter and getCommandString', () => {
-    const path = new Path().addCommand([
-      { type: 'M', values: [0, 0] },
-      { type: 'L', values: [1, 1] },
-      { type: 'L', values: [-1, -1] },
+    const path = new Path().setCommands([
+      createCommand({ type: 'M', values: [0, 0] }),
+      createCommand({ type: 'L', values: [1, 1] }),
+      createCommand({ type: 'L', values: [-1, -1] }),
     ])
 
     it('Normal', () => {

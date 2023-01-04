@@ -28,23 +28,23 @@ describe('Svg', () => {
     it('Resize the path to fit the resized width.', () => {
       const svg = new Svg({ width: 100, height: 100 })
 
-      const testPath = new Path(undefined, 'p1').addCommand([
-        {
+      const testPath = new Path(undefined, 'p1').setCommands([
+        createCommand({
           type: 'M',
           values: [0, 0],
-        },
-        {
+        }),
+        createCommand({
           type: 'C',
           values: [0.2, 0.2, 0.6, 0.8, 1, 1],
-        },
-        {
+        }),
+        createCommand({
           type: 'C',
           values: [1.4, 1.2, 1.6, 1.2, 2, 1],
-        },
-        {
+        }),
+        createCommand({
           type: 'C',
           values: [2.4, 0.8, 2.8, 0.2, 3, 0],
-        },
+        }),
       ])
 
       svg.updateElement(testPath)
@@ -62,23 +62,23 @@ describe('Svg', () => {
     it('Resize path of copied object.', () => {
       const svg = new Svg({ width: 100, height: 100 })
 
-      const testPath = new Path(undefined, 'p1').addCommand([
-        {
+      const testPath = new Path(undefined, 'p1').setCommands([
+        createCommand({
           type: 'M',
           values: [0, 0],
-        },
-        {
+        }),
+        createCommand({
           type: 'C',
           values: [0.2, 0.2, 0.6, 0.8, 1, 1],
-        },
-        {
+        }),
+        createCommand({
           type: 'C',
           values: [1.4, 1.2, 1.6, 1.2, 2, 1],
-        },
-        {
+        }),
+        createCommand({
           type: 'C',
           values: [2.4, 0.8, 2.8, 0.2, 3, 0],
-        },
+        }),
       ])
 
       const copiedSvg = new Svg({ width: 200, height: 200 })
@@ -95,23 +95,23 @@ describe('Svg', () => {
   describe('setElements', () => {
     it('Add an array of paths', () => {
       const svg = new Svg({ width: 500, height: 500 }).setElements([
-        new Path(undefined, 'p1').addCommand([
-          {
+        new Path(undefined, 'p1').setCommands([
+          createCommand({
             type: 'M',
             values: [0, 0],
-          },
-          {
+          }),
+          createCommand({
             type: 'C',
             values: [0.2, 0.2, 0.6, 0.8, 1, 1],
-          },
-          {
+          }),
+          createCommand({
             type: 'C',
             values: [1.4, 1.2, 1.6, 1.2, 2, 1],
-          },
-          {
+          }),
+          createCommand({
             type: 'C',
             values: [2.4, 0.8, 2.8, 0.2, 3, 0],
-          },
+          }),
         ]),
         new Path(
           {
@@ -119,27 +119,27 @@ describe('Svg', () => {
             strokeLinejoin: 'miter',
           },
           'p2'
-        ).addCommand([
-          {
+        ).setCommands([
+          createCommand({
             type: 'M',
             values: [4, 4],
-          },
-          {
+          }),
+          createCommand({
             type: 'L',
             values: [9, 4],
-          },
-          {
+          }),
+          createCommand({
             type: 'L',
             values: [9, 8],
-          },
-          {
+          }),
+          createCommand({
             type: 'L',
             values: [3, 0],
-          },
-          {
+          }),
+          createCommand({
             type: 'Z',
             values: [],
-          },
+          }),
         ]),
       ])
 
@@ -173,23 +173,23 @@ describe('Svg', () => {
     it('Add path', () => {
       const svg = new Svg({ width: 500, height: 500 })
         .updateElement(
-          new Path(undefined, 'p1').addCommand([
-            {
+          new Path(undefined, 'p1').setCommands([
+            createCommand({
               type: 'M',
               values: [0, 0],
-            },
-            {
+            }),
+            createCommand({
               type: 'C',
               values: [0.2, 0.2, 0.6, 0.8, 1, 1],
-            },
-            {
+            }),
+            createCommand({
               type: 'C',
               values: [1.4, 1.2, 1.6, 1.2, 2, 1],
-            },
-            {
+            }),
+            createCommand({
               type: 'C',
               values: [2.4, 0.8, 2.8, 0.2, 3, 0],
-            },
+            }),
           ])
         )
         .updateElement(
@@ -199,27 +199,27 @@ describe('Svg', () => {
               strokeLinejoin: 'miter',
             },
             'p2'
-          ).addCommand([
-            {
+          ).setCommands([
+            createCommand({
               type: 'M',
               values: [4, 4],
-            },
-            {
+            }),
+            createCommand({
               type: 'L',
               values: [9, 4],
-            },
-            {
+            }),
+            createCommand({
               type: 'L',
               values: [9, 8],
-            },
-            {
+            }),
+            createCommand({
               type: 'L',
               values: [3, 0],
-            },
-            {
+            }),
+            createCommand({
               type: 'Z',
               values: [],
-            },
+            }),
           ])
         )
 
@@ -256,23 +256,23 @@ describe('Svg', () => {
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
         .updateElement(
-          new Path(undefined, 'p1').addCommand([
-            {
+          new Path(undefined, 'p1').setCommands([
+            createCommand({
               type: 'M',
               values: [0, 0],
-            },
-            {
+            }),
+            createCommand({
               type: 'C',
               values: [0.2, 0.2, 0.6, 0.8, 1, 1],
-            },
-            {
+            }),
+            createCommand({
               type: 'C',
               values: [1.4, 1.2, 1.6, 1.2, 2, 1],
-            },
-            {
+            }),
+            createCommand({
               type: 'C',
               values: [2.4, 0.8, 2.8, 0.2, 3, 0],
-            },
+            }),
           ])
         )
         .updateElement(
@@ -282,27 +282,27 @@ describe('Svg', () => {
               strokeLinejoin: 'miter',
             },
             'p2'
-          ).addCommand([
-            {
+          ).setCommands([
+            createCommand({
               type: 'M',
               values: [4, 4],
-            },
-            {
+            }),
+            createCommand({
               type: 'L',
               values: [9, 4],
-            },
-            {
+            }),
+            createCommand({
               type: 'L',
               values: [9, 8],
-            },
-            {
+            }),
+            createCommand({
               type: 'L',
               values: [3, 0],
-            },
-            {
+            }),
+            createCommand({
               type: 'Z',
               values: [],
-            },
+            }),
           ])
         )
     })

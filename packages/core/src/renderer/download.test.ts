@@ -1,28 +1,29 @@
 import { Download } from './download'
 import { toElement } from './svgRenderer'
+import { createCommand } from '../svg/command'
 import { Path } from '../svg/path'
 import { Svg } from '../svg/svg'
 
 describe('download.ts', () => {
   const svg = new Svg({ width: 4, height: 4 })
     .updateElement(
-      new Path().addCommand([
-        { type: 'M', values: [0, 0] },
-        { type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] },
-        { type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] },
-        { type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] },
+      new Path().setCommands([
+        createCommand({ type: 'M', values: [0, 0] }),
+        createCommand({ type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] }),
+        createCommand({ type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] }),
+        createCommand({ type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] }),
       ])
     )
     .updateElement(
       new Path({
         strokeLinecap: 'square',
         strokeLinejoin: 'miter',
-      }).addCommand([
-        { type: 'M', values: [4, 4] },
-        { type: 'L', values: [9, 4] },
-        { type: 'L', values: [9, 8] },
-        { type: 'L', values: [3, 0] },
-        { type: 'Z', values: [] },
+      }).setCommands([
+        createCommand({ type: 'M', values: [4, 4] }),
+        createCommand({ type: 'L', values: [9, 4] }),
+        createCommand({ type: 'L', values: [9, 8] }),
+        createCommand({ type: 'L', values: [3, 0] }),
+        createCommand({ type: 'Z', values: [] }),
       ])
     )
   const svgElement = toElement({ svg: svg.toJson() })

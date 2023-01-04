@@ -6,7 +6,7 @@ describe('parser', () => {
     const path = new Path()
     const testData =
       'M0 0 L1 1 C2 2 2 4 6 0 Q0 0 1 1 m0 0 l1 1 c1 1 2 2 3 3 H10 V20 h10 v20 A6 4 10 0 1 14 10 a6 4 10 0 1 14 10'
-    path.addCommand(parseCommandString(testData))
+    path.setCommands(parseCommandString(testData))
 
     expect(path.getCommandString()).toMatchInlineSnapshot(
       `"M0 0 l1 1 c1 1 1 3 5 -1 q-6 0 -5 1 m0 0 l1 1 c1 1 2 2 3 3 H10 V20 h10 v20 A6 4 10 0 1 14 10 a6 4 10 0 1 14 10"`

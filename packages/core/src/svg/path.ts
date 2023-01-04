@@ -1,11 +1,6 @@
-import {
-  createCommand,
-  toAbsoluteCommands,
-  toRelativeCommands,
-} from './command'
+import { toAbsoluteCommands, toRelativeCommands } from './command'
 import type {
   PathClass,
-  CommandObject,
   CommandClass,
   PathAttributes,
   PointObject,
@@ -40,11 +35,8 @@ export class Path implements PathClass {
     return this
   }
 
-  addCommand(param: ReadonlyArray<CommandObject> | Readonly<CommandObject>) {
-    this.setCommands([
-      ...this.commands,
-      ...[param].flat().map((obj) => createCommand(obj)),
-    ])
+  addCommand(command: Readonly<CommandClass>) {
+    this.setCommands([...this.commands, command])
 
     return this
   }

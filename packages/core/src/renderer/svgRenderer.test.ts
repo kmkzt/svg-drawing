@@ -1,15 +1,17 @@
 import { toElement } from './svgRenderer'
+import { createCommand } from '../svg/command'
 import { Path } from '../svg/path'
 import { Svg } from '../svg/svg'
 
 describe('svgRenderer.ts', () => {
   const svg = new Svg({ width: 500, height: 500 })
     .updateElement(
-      new Path({}, 'p1')
-        .addCommand({ type: 'M', values: [0, 0] })
-        .addCommand({ type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] })
-        .addCommand({ type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] })
-        .addCommand({ type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] })
+      new Path({}, 'p1').setCommands([
+        createCommand({ type: 'M', values: [0, 0] }),
+        createCommand({ type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] }),
+        createCommand({ type: 'C', values: [1.4, 1.2, 1.6, 1.2, 2, 1] }),
+        createCommand({ type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] }),
+      ])
     )
     .updateElement(
       new Path(
@@ -18,12 +20,13 @@ describe('svgRenderer.ts', () => {
           strokeLinejoin: 'miter',
         },
         'p2'
-      )
-        .addCommand({ type: 'M', values: [4, 4] })
-        .addCommand({ type: 'L', values: [9, 4] })
-        .addCommand({ type: 'L', values: [9, 8] })
-        .addCommand({ type: 'L', values: [3, 0] })
-        .addCommand({ type: 'Z', values: [] })
+      ).setCommands([
+        createCommand({ type: 'M', values: [4, 4] }),
+        createCommand({ type: 'L', values: [9, 4] }),
+        createCommand({ type: 'L', values: [9, 8] }),
+        createCommand({ type: 'L', values: [3, 0] }),
+        createCommand({ type: 'Z', values: [] }),
+      ])
     )
 
   it('toElement', () => {

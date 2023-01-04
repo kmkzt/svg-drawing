@@ -30,7 +30,7 @@ export const parsePathElement = (pathEl: SVGPathElement): PathClass => {
     const attr: Attr | null = pathEl.attributes.item(i)
     if (!attr || !attr.value) continue
     if (attr.name === 'd') {
-      path.addCommand(parseCommandString(attr.value))
+      path.setCommands(parseCommandString(attr.value))
       continue
     }
 
