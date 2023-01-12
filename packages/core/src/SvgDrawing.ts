@@ -1,6 +1,6 @@
 import { Drawing } from './drawing/drawing'
-import { PencilHandler } from './drawing/eventHandler'
 import { BasicDrawFactory } from './drawing/factory'
+import { PencilHandler } from './event/pencilHandler'
 import { SvgRenderer } from './renderer/svgRenderer'
 import { Svg } from './svg/svg'
 import type {

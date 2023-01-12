@@ -13,7 +13,8 @@ export {
   BezierCurve,
   closeCommands,
 } from './drawing/convert'
-export { BaseHandler, PenHandler, PencilHandler } from './drawing/eventHandler'
+export { PenHandler } from './event/penHandler'
+export { PencilHandler } from './event/pencilHandler'
 export { Svg } from './svg/svg'
 export { Path } from './svg/path'
 export {
