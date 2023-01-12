@@ -8,7 +8,9 @@ import type {
   BezierCurveOption,
 } from '../types'
 
-export const createLineCommands = (points: EventPoint[]): CommandClass[] =>
+export const createLineCommands = (
+  points: ReadonlyArray<EventPoint>
+): CommandClass[] =>
   points.map((p, i) =>
     i === 0
       ? createCommand({ type: 'M', values: [p.x, p.y] })
@@ -16,7 +18,7 @@ export const createLineCommands = (points: EventPoint[]): CommandClass[] =>
   )
 
 interface GenerateCommandsConverter {
-  create: (points: EventPoint[]) => CommandClass[]
+  create: (points: ReadonlyArray<EventPoint>) => CommandClass[]
 }
 
 export class BezierCurve implements GenerateCommandsConverter {
@@ -57,7 +59,7 @@ export class BezierCurve implements GenerateCommandsConverter {
     })
   }
 
-  public create(points: EventPoint[]): CommandClass[] {
+  public create(points: ReadonlyArray<EventPoint>): CommandClass[] {
     const commands: CommandClass[] = []
     if (points.length < 3) {
       return createLineCommands(points)
@@ -82,7 +84,9 @@ export class BezierCurve implements GenerateCommandsConverter {
   }
 }
 
-export const closeCommands = (commands: CommandClass[]): CommandClass[] => [
+export const closeCommands = (
+  commands: ReadonlyArray<CommandClass>
+): ReadonlyArray<CommandClass> => [
   ...commands,
   createCommand({ type: 'Z', values: [] }),
 ]

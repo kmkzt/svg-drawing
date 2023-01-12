@@ -27,7 +27,10 @@ export class BasicDrawFactory implements DrawFactory {
     })
   }
 
-  updateElement(element: ElementClass, points: EventPoint[]): ElementClass {
+  updateElement(
+    element: ElementClass,
+    points: ReadonlyArray<EventPoint>
+  ): ElementClass {
     const createCommands = this.opts.curve
       ? new BezierCurve().create
       : createLineCommands
