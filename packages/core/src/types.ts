@@ -1,7 +1,7 @@
-export type PointObject = Readonly<{
+export type PointObject = {
   x: number
   y: number
-}>
+}
 
 export interface PointClass {
   readonly x: number
@@ -69,7 +69,7 @@ export type CommandObject<T extends CommandType = CommandType> = {
 
 export interface CommandClass<T extends CommandType = CommandType> {
   readonly type: T
-  readonly values: number[]
+  readonly values: ReadonlyArray<number>
   readonly point: T extends OtherCommandType ? undefined : PointClass
   points: PointsLengthMap<T>
   toString: () => string
@@ -102,8 +102,8 @@ export type PathObject = {
 export interface PathClass {
   key: ElementKey
   readonly attrs: PathAttributes
-  readonly absoluteCommands: CommandClass[]
-  readonly relativeCommands: CommandClass[]
+  absoluteCommands: ReadonlyArray<CommandClass>
+  relativeCommands: ReadonlyArray<CommandClass>
   scale: (r: number) => this
   scaleX: (r: number) => this
   scaleY: (r: number) => this
@@ -241,7 +241,10 @@ export type ClearListener = () => void
 
 export interface DrawFactory {
   createElement: () => ElementClass
-  updateElement: (element: ElementClass, points: EventPoint[]) => ElementClass
+  updateElement: (
+    element: ElementClass,
+    points: ReadonlyArray<EventPoint>
+  ) => ElementClass
 }
 
 export interface DrawingClass {
