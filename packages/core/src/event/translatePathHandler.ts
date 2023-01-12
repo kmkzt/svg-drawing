@@ -1,6 +1,6 @@
 import { getEventPoint } from '../event'
+import type { Editing } from '../edit/editing' // todo: Replace interface
 import type { PointObject } from '../types'
-import type { Editing } from './editing' // todo: Replace interface
 
 export class TranslatePathHandler {
   private basePoint: PointObject | null

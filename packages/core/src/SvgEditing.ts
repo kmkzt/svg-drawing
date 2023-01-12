@@ -1,6 +1,6 @@
 import { PressedKeyHandler } from './edit/pressedKeyHandler'
-import { ResizePathHandler } from './edit/resizePathHandler'
-import { TranslatePathHandler } from './edit/translatePathHandler'
+import { ResizePathHandler } from './event/resizePathHandler'
+import { TranslatePathHandler } from './event/translatePathHandler'
 import { getEditDataAttributes } from './renderer/dataAttributes'
 import type { Editing } from './edit/editing'
 import type { SelectIndex } from './types'

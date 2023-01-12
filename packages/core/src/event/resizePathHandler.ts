@@ -1,6 +1,6 @@
 import { getEventPoint } from '../event'
+import type { Editing } from '../edit/editing' // TODO: Replace interface
 import type { PointObject, Vertex, VertexType } from '../types'
-import type { Editing } from './editing' // TODO: Replace interface
 
 export class ResizePathHandler {
   private selectedVertex: Vertex | null = null
