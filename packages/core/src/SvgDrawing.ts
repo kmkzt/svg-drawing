@@ -8,7 +8,6 @@ import type {
   DrawEventHandler,
   SvgClass,
   DrawingClass,
-  PathClass,
   SvgObject,
   EventPoint,
   ElementClass,
