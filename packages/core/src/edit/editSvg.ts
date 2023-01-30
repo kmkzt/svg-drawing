@@ -61,29 +61,17 @@ export class EditSvg {
 
   /** Scale the selected path. */
   scale(r: number) {
-    this.exec(
-      (path) => path.scale(r),
-      (command) => command.scale(r),
-      (point) => point.scale(r)
-    )
+    this.exec((path) => path.scale(r))
   }
 
   /** Scale the selected path horizontally. */
   scaleX(r: number) {
-    this.exec(
-      (path) => path.scaleX(r),
-      (command) => command.scaleX(r),
-      (point) => point.scaleX(r)
-    )
+    this.exec((path) => path.scaleX(r))
   }
 
   /** Scale the selected path vertically. */
   scaleY(r: number) {
-    this.exec(
-      (path) => path.scaleY(r),
-      (command) => command.scaleY(r),
-      (point) => point.scaleY(r)
-    )
+    this.exec((path) => path.scaleY(r))
   }
 
   /** Resize based on the bounding box vertices */
