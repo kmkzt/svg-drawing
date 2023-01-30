@@ -1,4 +1,4 @@
-import { PressedKeyHandler } from './edit/pressedKeyHandler'
+import { PressedKeyHandler } from './event/pressedKeyHandler'
 import { ResizePathHandler } from './event/resizePathHandler'
 import { TranslatePathHandler } from './event/translatePathHandler'
 import { getEditDataAttributes } from './renderer/dataAttributes'
