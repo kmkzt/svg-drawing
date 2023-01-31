@@ -74,17 +74,17 @@ describe('svg.ts', () => {
       })
       it('point is not overwritten', () => {
         clone.point = new Point(1.5, 1)
-        expect(cmd.point.x).toBe(1)
+        expect(cmd.point?.x).toBe(1)
         expect(clone.point.x).toBe(1.5)
       })
       it('cl is not overwritten', () => {
         clone.cl = new Point(0.1, 0.1)
-        expect(cmd.cl.x).toBe(0.25)
+        expect(cmd.cl?.x).toBe(0.25)
         expect(clone.cl.x).toBe(0.1)
       })
       it('cr is not overwritten', () => {
         clone.cr = new Point(1.2, 0.1)
-        expect(cmd.cr.x).toBe(0.75)
+        expect(cmd.cr?.x).toBe(0.75)
         expect(clone.cr.x).toBe(1.2)
       })
     })
@@ -99,15 +99,15 @@ describe('svg.ts', () => {
     it('addCommand', () => {
       expect(path.commands.length).toBe(2)
       expect(path.commands[0].type).toBe(COMMAND_TYPE.MOVE)
-      expect(path.commands[0].point.x).toBe(1)
-      expect(path.commands[0].point.y).toBe(1)
+      expect(path.commands[0].point?.x).toBe(1)
+      expect(path.commands[0].point?.y).toBe(1)
     })
     it('scale', () => {
       path.scale(2)
       expect(path.attrs.strokeWidth).toBe('2')
       expect(path.commands[0].type).toBe(COMMAND_TYPE.MOVE)
-      expect(path.commands[0].point.x).toBe(2)
-      expect(path.commands[0].point.y).toBe(2)
+      expect(path.commands[0].point?.x).toBe(2)
+      expect(path.commands[0].point?.y).toBe(2)
     })
     describe('parseCommandString', () => {
       beforeEach(() => {
@@ -138,10 +138,11 @@ describe('svg.ts', () => {
       const clone = origin
         .clone()
         .addCommand(new Command(COMMAND_TYPE.LINE, [2, 2]))
-      clone.commands[0].point = new Point(3, clone.commands[0].point.y)
+
+      clone.commands[0].point = new Point(3, clone.commands[0].point?.y ?? NaN)
       expect(origin.commands.length).toBe(1)
       expect(clone.commands.length).toBe(2)
-      expect(origin.commands[0].point.x).toBe(1)
+      expect(origin.commands[0].point?.x).toBe(1)
       expect(clone.commands[0].point.x).toBe(3)
     })
     describe('toJson and toElement', () => {

@@ -34,9 +34,9 @@ describe('trace.ts', () => {
       it(`${testname}`, (done) => {
         loadPngData(testimage, (png) => {
           const svg = new ImgTrace({
-            palettes: Palette.imageData(png),
+            palettes: Palette.imageData(png as any),
             ...testopts,
-          }).load(png)
+          }).load(png as any)
 
           const data = svgObjectToElement(svg.toJson()).outerHTML
           /** DEBUG * */
