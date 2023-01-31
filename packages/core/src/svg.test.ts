@@ -139,7 +139,7 @@ describe('svg.ts', () => {
         .clone()
         .addCommand(new Command(COMMAND_TYPE.LINE, [2, 2]))
 
-      clone.commands[0].point = new Point(3, clone.commands[0].point?.y ?? NaN)
+      clone.commands[0].point = new Point(3, clone.commands[0].point?.y as any)
       expect(origin.commands.length).toBe(1)
       expect(clone.commands.length).toBe(2)
       expect(origin.commands[0].point?.x).toBe(1)
