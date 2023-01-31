@@ -40,7 +40,7 @@
     "dev:tsc": "NODE_ENV=development tsc -w",
     "build": "npm-run-all -p lib:*",
     "lib:rollup": "NODE_ENV=production rollup -c",
-    "lib:tsc": "NODE_ENV=production tsc --emitDeclarationOnly",
+    "lib:tsc": "NODE_ENV=production tsc -p ./tsconfig.lib.json",
     "clear": "rimraf lib/*",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ./src --ext .js,.ts,.tsx",

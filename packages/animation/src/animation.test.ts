@@ -25,7 +25,7 @@ describe('animation.ts', () => {
     // TODO Improve test pattern
     it('toAnimationElement', () => {
       const svg = generateAnimation()
-      const testAnimation: FrameAnimation = (paths, count) => {
+      const testAnimation: FrameAnimation = (paths, count: any) => {
         const update = []
         for (let i = 0; i < paths.length; i += 1) {
           // Test property

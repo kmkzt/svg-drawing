@@ -17,7 +17,7 @@ describe('palette.ts', () => {
           it(`colorQuantCycles: ${
             colorQuantCycles || 'default'
           } ;numberOfColors: ${numberOfColors || 'default'}`, (done) => {
-            loadPngData(testimage, (imgd) => {
+            loadPngData(testimage, (imgd: any) => {
               expect(
                 getTestResult(
                   Palette.imageData(imgd, { colorQuantCycles, numberOfColors })
