@@ -1,4 +1,6 @@
 import { readFile } from 'fs'
+// @ts-ignore
+// eslint-disable-next-line import/no-unresolved
 import PNGReader from 'png.js'
 interface PngData {
   width: number
@@ -15,7 +17,7 @@ export const loadPngData = (filepath: string, cb: (png: PngData) => void) => {
 
     const reader = new PNGReader(bytes)
 
-    reader.parse((err, png) => {
+    reader.parse((err: any, png: any) => {
       if (err) {
         console.log(err)
         throw err
