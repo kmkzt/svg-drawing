@@ -1,27 +1,16 @@
 {
   "extends": "../../tsconfig.json",
-  "include": [
-    "next-env.d.ts",
-    "modules.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
+  "include": ["next-env.d.ts", "modules.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "allowJs": true,
     "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "incremental": true
   },
-  "exclude": [
-    "node_modules"
-  ],
+  "exclude": ["node_modules"],
   "references": [
     {
       "path": "../../packages/animation"
