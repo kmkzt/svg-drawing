@@ -21,5 +21,19 @@
   },
   "exclude": [
     "node_modules"
+  ],
+  "references": [
+    {
+      "path": "../../packages/animation"
+    },
+    {
+      "path": "../../packages/core"
+    },
+    {
+      "path": "../../packages/img-trace"
+    },
+    {
+      "path": "../../packages/react"
+    }
   ]
 }
