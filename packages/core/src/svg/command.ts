@@ -702,8 +702,8 @@ export class CreateCommandError extends Error {
 export const createCommand = <T extends CommandType>({
   type,
   values,
-}: CommandObject<T>): CommandClass<T> =>
-  (() => {
+}: CommandObject<T>): CommandClass<T> => {
+  const command: CommandClass<CommandType> = (() => {
     switch (type) {
       case 'M': {
         if (values?.length !== 2) throw new CreateCommandError(type)
@@ -786,7 +786,10 @@ export const createCommand = <T extends CommandType>({
         return new OtherCommand(type, values)
       }
     }
-  })() as CommandClass<typeof type>
+  })()
+
+  return command as any
+}
 
 export const isAbsoluteCommand = (
   command: CommandClass
