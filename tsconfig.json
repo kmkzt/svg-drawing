@@ -6,6 +6,7 @@
     "lib": ["esnext", "es2020", "es2019", "es2018", "es2017", "dom"],
     "jsx": "react",
     "moduleResolution": "node",
+    "composite": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,

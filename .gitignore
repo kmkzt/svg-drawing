@@ -40,3 +40,7 @@ package-lock.json
 .next
 out
 .vercel
+
+# TypeScript
+tsconfig.tsbuildinfo
+tsconfig.*.tsbuildinfo
