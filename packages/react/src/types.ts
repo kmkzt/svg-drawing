@@ -91,7 +91,7 @@ export type UseAnimation = (arg: {
   onChangeAnimation: (obj: AnimateObject[]) => void
 }) => {
   instance: Animation
-  update: (paths: PathClass[]) => void
+  update: (paths: ReadonlyArray<PathClass>) => void
   clear: () => void
   setup: Animation['setup']
   animationProps: AnimationProps
