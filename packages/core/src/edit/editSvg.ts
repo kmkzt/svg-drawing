@@ -1,6 +1,6 @@
 import { AnchorPoints } from './anchorPoint'
 import { BoundingBox } from './boundingBox'
-import { PathSelector } from './pathSelector'
+import { Selector } from './selector'
 import type {
   SvgClass,
   PointObject,
@@ -14,16 +14,16 @@ import type {
 } from '../types'
 
 export class EditSvg {
-  private pathSelector = new PathSelector()
+  private selector = new Selector()
   constructor(public svg: SvgClass) {}
 
   /** Return true when some path selected. */
   get selected() {
-    return this.pathSelector.selected
+    return this.selector.selected
   }
 
   private get paths(): PathClass[] {
-    return this.pathSelector.pathsIndex.flatMap((pathKey) => {
+    return this.selector.elementsIndex.flatMap((pathKey) => {
       const path = this.svg.getElement(pathKey)
 
       return path ? path.clone() : []
@@ -32,17 +32,17 @@ export class EditSvg {
 
   /** Select path index. */
   select(index: SelectIndex | SelectIndex[], combined?: boolean) {
-    this.pathSelector.select(index, combined)
+    this.selector.select(index, combined)
   }
 
   /** Select boundingBox */
   selectBoundingBox() {
-    this.pathSelector.selectBoundingBox()
+    this.selector.selectBoundingBox()
   }
 
   /** Clear selected status. */
   cancel() {
-    this.pathSelector.clear()
+    this.selector.clear()
   }
 
   /** Change attributes of selected path. */
@@ -90,20 +90,20 @@ export class EditSvg {
    * @todo Implements to delete points.
    */
   delete() {
-    this.pathSelector.pathsIndex.forEach((pathKey) => {
-      const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
+    this.selector.elementsIndex.forEach((pathKey) => {
+      const commandsIndex = this.selector.getCommandsIndex(pathKey)
 
       const path = this.svg.getElement(pathKey)
       if (!path) return
 
       if (!commandsIndex) {
-        this.pathSelector.unselect({ path: pathKey })
+        this.selector.unselect({ path: pathKey })
         this.svg.deleteElement(path)
         return
       }
 
       commandsIndex.forEach((command) => {
-        this.pathSelector.unselect({ path: pathKey, command })
+        this.selector.unselect({ path: pathKey, command })
         this.svg.updateElement(path.deleteCommand(command))
       })
     })
@@ -112,24 +112,21 @@ export class EditSvg {
   /** Clone an EditSvg class object for preview. */
   preview(): EditSvg {
     const preview = new EditSvg(this.svg.clone())
-    preview.pathSelector = this.pathSelector
+    preview.selector = this.selector
     return preview
   }
 
   /** Return data in json format. */
   toJson(): EditSvgObject | null {
-    if (!this.pathSelector.selected) return null
+    if (!this.selector.selected) return null
 
     return {
       elements: this.paths.map((path) => ({
         path: path.toJson(),
-        anchorPoints: new AnchorPoints(
-          path.clone(),
-          this.pathSelector
-        ).toJson(),
+        anchorPoints: new AnchorPoints(path.clone(), this.selector).toJson(),
       })),
       boundingBox: new BoundingBox(this.paths).toJson(),
-      selectedOnlyElements: this.pathSelector.selectedOnlyPaths,
+      selectedOnlyElements: this.selector.selectedOnlyPaths,
     }
   }
 
@@ -138,21 +135,18 @@ export class EditSvg {
     commandExec?: (command: CommandClass) => CommandClass,
     pointExec?: (point: PointClass) => PointClass
   ): void {
-    this.pathSelector.pathsIndex.forEach((pathKey) => {
+    this.selector.elementsIndex.forEach((pathKey) => {
       const path = this.svg.getElement(pathKey)
       if (!path) return
 
-      const commandsIndex = this.pathSelector.getCommandsIndex(pathKey)
+      const commandsIndex = this.selector.getCommandsIndex(pathKey)
       if (!commandsIndex || !commandExec) {
         this.svg.updateElement(pathExec(path))
         return
       }
 
       commandsIndex.forEach((commandKey) => {
-        const pointsIndex = this.pathSelector.getPointsIndex(
-          pathKey,
-          commandKey
-        )
+        const pointsIndex = this.selector.getPointsIndex(pathKey, commandKey)
         if (!pointsIndex || !pointExec) {
           this.svg.updateElement(path.updateCommand(commandKey, commandExec))
           return

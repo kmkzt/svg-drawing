@@ -45,7 +45,7 @@ const isSelectPointIndex = (index: SelectIndex): index is SelectPointIndex =>
 const isObjectEmpty = (obj: object): obj is Record<any, never> =>
   Object.keys(obj).length === 0
 
-export class PathSelector {
+export class Selector {
   private selecting: Selecting = {}
 
   get selectedOnlyPaths(): boolean {
@@ -62,7 +62,7 @@ export class PathSelector {
     return !isObjectEmpty(this.selecting)
   }
 
-  get pathsIndex(): string[] {
+  get elementsIndex(): string[] {
     return Object.keys(this.selecting)
   }
 
@@ -102,7 +102,7 @@ export class PathSelector {
   }
 
   selectBoundingBox() {
-    this.select(this.pathsIndex.map((pathKey) => ({ path: pathKey })))
+    this.select(this.elementsIndex.map((pathKey) => ({ path: pathKey })))
   }
 
   unselect(index: SelectIndex) {

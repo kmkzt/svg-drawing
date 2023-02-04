@@ -1,5 +1,5 @@
 import type { PointObject, AnchorPoint, PathClass } from '../types'
-import type { PathSelector } from './pathSelector'
+import type { Selector } from './selector'
 
 const genOutline = (points: PointObject[]) =>
   points.reduce(
@@ -8,7 +8,7 @@ const genOutline = (points: PointObject[]) =>
   )
 
 export class AnchorPoints {
-  constructor(private path: PathClass, private selector: PathSelector) {}
+  constructor(private path: PathClass, private selector: Selector) {}
 
   toJson(): AnchorPoint[] {
     const vertex: AnchorPoint[] = []
