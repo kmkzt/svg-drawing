@@ -108,7 +108,7 @@ const Animation: NextPage<Props> = ({ isSp }) => {
     if (!animationRef.current) return
 
     animationRef.current.animation.setup(
-      new DrawFrame(animationRef.current.svg.paths),
+      new DrawFrame(animationRef.current.svg.elements),
       {
         repeatCount: 1,
       }

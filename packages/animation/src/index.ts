@@ -53,7 +53,7 @@ export class AttributeFrame implements FrameAnimation {
 }
 
 export class DrawFrame implements FrameAnimation {
-  constructor(private paths: PathClass[]) {
+  constructor(private paths: ReadonlyArray<PathClass>) {
     this.animation = this.animation.bind(this)
   }
 
