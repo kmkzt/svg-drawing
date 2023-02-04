@@ -5,7 +5,7 @@ import type {
   SvgClass,
   PointObject,
   PathAttributes,
-  SelectIndex,
+  SelectObject,
   EditSvgObject,
   CommandClass,
   PathClass,
@@ -23,16 +23,17 @@ export class EditSvg {
   }
 
   private get paths(): PathClass[] {
-    return this.selector.elementsIndex.flatMap((pathKey) => {
-      const path = this.svg.getElement(pathKey)
+    const selectObjects = this.selector.toJson()
+    return selectObjects.flatMap(({ key }): PathClass | [] => {
+      const path = this.svg.getElement(key)
 
       return path ? path.clone() : []
     })
   }
 
   /** Select path index. */
-  select(index: SelectIndex | SelectIndex[], combined?: boolean) {
-    this.selector.select(index, combined)
+  select(selectObject: SelectObject | SelectObject[], combined?: boolean) {
+    this.selector.select(selectObject, combined)
   }
 
   /** Select boundingBox */
@@ -90,22 +91,23 @@ export class EditSvg {
    * @todo Implements to delete points.
    */
   delete() {
-    this.selector.elementsIndex.forEach((pathKey) => {
-      const commandsIndex = this.selector.getCommandsIndex(pathKey)
-
-      const path = this.svg.getElement(pathKey)
+    this.selector.toJson().forEach((selectObject) => {
+      this.selector.unselect(selectObject)
+      const path = this.svg.getElement(selectObject.key)
       if (!path) return
 
-      if (!commandsIndex) {
-        this.selector.unselect({ path: pathKey })
-        this.svg.deleteElement(path)
-        return
-      }
+      switch (selectObject.type) {
+        case 'path': {
+          if (path) this.svg.deleteElement(path)
+          break
+        }
 
-      commandsIndex.forEach((command) => {
-        this.selector.unselect({ path: pathKey, command })
-        this.svg.updateElement(path.deleteCommand(command))
-      })
+        case 'path-command':
+        case 'path-point': {
+          this.svg.updateElement(path.deleteCommand(selectObject.index.command))
+          break
+        }
+      }
     })
   }
 
@@ -137,35 +139,43 @@ export class EditSvg {
     commandExec?: (command: CommandClass) => CommandClass,
     pointExec?: (point: PointClass) => PointClass
   ): void {
-    this.selector.elementsIndex.forEach((pathKey) => {
-      const path = this.svg.getElement(pathKey)
+    this.selector.toJson().map((selectObject: SelectObject) => {
+      const path = this.svg.getElement(selectObject.key)
       if (!path) return
 
-      const commandsIndex = this.selector.getCommandsIndex(pathKey)
-      if (!commandsIndex || !commandExec) {
-        this.svg.updateElement(pathExec(path))
-        return
-      }
-
-      commandsIndex.forEach((commandKey) => {
-        const pointsIndex = this.selector.getPointsIndex(pathKey, commandKey)
-        if (!pointsIndex || !pointExec) {
-          this.svg.updateElement(path.updateCommand(commandKey, commandExec))
+      switch (selectObject.type) {
+        case 'path': {
+          this.svg.updateElement(pathExec(path))
           return
         }
+        case 'path-command': {
+          if (!commandExec) return
 
-        this.svg.updateElement(
-          path.updateCommand(commandKey, (com) => {
-            const command = com.clone()
+          this.svg.updateElement(
+            path.updateCommand(selectObject.index.command, commandExec)
+          )
+          return
+        }
+        case 'path-point': {
+          if (!pointExec) return
 
-            pointsIndex.forEach((pointKey: number) => {
-              command.points[pointKey] = pointExec(command.points[pointKey])
+          const { index } = selectObject
+
+          this.svg.updateElement(
+            path.updateCommand(index.command, (com) => {
+              const command = com.clone()
+              command.points[index.point] = pointExec(
+                command.points[index.point]
+              )
+              return command
             })
-
-            return command
-          })
-        )
-      })
+          )
+          return
+        }
+        default: {
+          return
+        }
+      }
     })
   }
 }

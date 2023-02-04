@@ -1,145 +1,219 @@
 import { Selector } from './selector'
+import type { SelectObject } from '../types'
 
 describe('Selector', () => {
-  let selector: Selector
+  const selectedPath: SelectObject = { type: 'path', key: 'path_id_1' }
+  const selectedCommand: SelectObject = {
+    type: 'path-command',
+    key: 'path_id_2',
+    index: { command: 0 },
+  }
+  const selectedPoint: SelectObject = {
+    type: 'path-point',
+    key: 'path_id_3',
+    index: { command: 0, point: 0 },
+  }
 
-  beforeEach(() => {
-    selector = new Selector()
+  describe('Selected status reflect', () => {
+    it('Select path', () => {
+      const selector = new Selector()
+      selector.select(selectedPath)
+
+      expect(selector.toJson()).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "key": "path_id_1",
+            "type": "path",
+          },
+        ]
+      `)
+    })
+    it('Select comamnd', () => {
+      const selector = new Selector()
+      selector.select(selectedCommand)
+
+      expect(selector.toJson()).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "index": Object {
+              "command": 0,
+            },
+            "key": "path_id_2",
+            "type": "path-command",
+          },
+        ]
+      `)
+    })
+    it('Select point', () => {
+      const selector = new Selector()
+      selector.select(selectedPoint)
+
+      expect(selector.toJson()).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "index": Object {
+              "command": 0,
+              "point": 0,
+            },
+            "key": "path_id_3",
+            "type": "path-point",
+          },
+        ]
+      `)
+    })
   })
   describe('Return selected paths only status.', () => {
     it('Return false when paths is not selected', () => {
+      const selector = new Selector()
+
       expect(selector.selectedBoundingBox).toBe(false)
     })
     it('Return true when paths is selected.', () => {
-      selector.select({ path: 'path_id' })
+      const selector = new Selector()
+      selector.select(selectedPath)
 
       expect(selector.selectedBoundingBox).toBe(true)
-    })
-
-    it('Return false when command is selected.', () => {
-      selector.select({ path: 'path_id', command: 0 })
-
-      expect(selector.elementsIndex).toEqual(['path_id'])
     })
 
     it('Return false when point is selected.', () => {
-      selector.select({ path: 'path_id', command: 0, point: 0 })
+      const selector = new Selector()
+      selector.select(selectedPoint)
 
       expect(selector.selectedBoundingBox).toBe(false)
-    })
-  })
-  describe('Return select index information', () => {
-    it('Return paths index array of selected.', () => {
-      selector.select({ path: 'path_id' })
-
-      expect(selector.selectedBoundingBox).toBe(true)
-      expect(selector.elementsIndex).toEqual(['path_id'])
-    })
-
-    it('Return commands index array of selected.', () => {
-      selector.select({ path: 'path_id', command: 0 })
-
-      expect(selector.elementsIndex).toEqual(['path_id'])
-      expect(selector.getCommandsIndex('path_id')).toEqual([0])
-    })
-
-    it('Return points index array of selected.', () => {
-      selector.select({ path: 'path_id', command: 0, point: 0 })
-
-      expect(selector.getCommandsIndex('path_id')).toEqual([0])
-      expect(selector.getPointsIndex('path_id', 0)).toEqual([0])
+      expect(selector.toJson()).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "index": Object {
+              "command": 0,
+              "point": 0,
+            },
+            "key": "path_id_3",
+            "type": "path-point",
+          },
+        ]
+      `)
     })
   })
 
   describe('Return selected status.', () => {
     it('Return false when not selected', () => {
+      const selector = new Selector()
       expect(selector.selected).toBe(false)
     })
 
     it('Return true when path is selected', () => {
-      selector.select({ path: 'path_id' })
+      const selector = new Selector()
+      selector.select(selectedPath)
 
       expect(selector.selected).toBe(true)
     })
     it('Return true when command is selected', () => {
-      selector.select({ path: 'path_id', command: 0 })
+      const selector = new Selector()
+      selector.select(selectedCommand)
 
       expect(selector.selected).toBe(true)
     })
 
     it('select point', () => {
-      selector.select({ path: 'path_id', command: 0, point: 0 })
+      const selector = new Selector()
+      selector.select(selectedPoint)
 
       expect(selector.selected).toBe(true)
     })
   })
 
   it('Clear selected status', () => {
-    selector.select({ path: 'path_id' })
+    const selector = new Selector()
+    selector.select(selectedPath)
     selector.clear()
 
     expect(selector.selected).toBe(false)
-    expect(selector.elementsIndex).toEqual([])
-  })
-
-  it('To select multiple paths by selectMerge method.', () => {
-    selector.select({ path: 'path_id_1' }, true)
-    selector.select({ path: 'path_id_2', command: 0 }, true)
-    selector.select({ path: 'path_id_3', command: 0, point: 0 }, true)
-
-    expect(selector.selectedBoundingBox).toBe(false)
-    expect(selector.selected).toBe(true)
-
-    expect(selector.elementsIndex).toEqual([
-      'path_id_1',
-      'path_id_2',
-      'path_id_3',
-    ])
-    expect(selector.getCommandsIndex('path_id_1')).toEqual(undefined)
-    expect(selector.getCommandsIndex('path_id_2')).toEqual([0])
-    expect(selector.getCommandsIndex('path_id_3')).toEqual([0])
-
-    expect(selector.getPointsIndex('path_id_2', 0)).toEqual(undefined)
-    expect(selector.getPointsIndex('path_id_3', 0)).toEqual([0])
   })
 
   describe('To unselect selected status', () => {
-    const setupSelected = (selector: Selector) => {
-      selector.select({ path: 'path_id_1' }, true)
-      selector.select({ path: 'path_id_2', command: 0 }, true)
-      selector.select({ path: 'path_id_3', command: 0, point: 0 }, true)
+    const setupSelector = (): Selector => {
+      const selector = new Selector()
+      selector.select(selectedPath, true)
+      selector.select(selectedCommand, true)
+      selector.select(selectedPoint, true)
+
+      return selector
     }
 
     it('unselect path', () => {
-      setupSelected(selector)
-      selector.unselect({ path: 'path_id_1' })
+      const selector = setupSelector()
+      selector.unselect(selectedPath)
 
-      expect(selector.elementsIndex).toEqual(['path_id_2', 'path_id_3'])
+      expect(selector.toJson()).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "index": Object {
+              "command": 0,
+            },
+            "key": "path_id_2",
+            "type": "path-command",
+          },
+          Object {
+            "index": Object {
+              "command": 0,
+              "point": 0,
+            },
+            "key": "path_id_3",
+            "type": "path-point",
+          },
+        ]
+      `)
     })
 
     it('unselect command', () => {
-      setupSelected(selector)
-      selector.unselect({ path: 'path_id_2', command: 0 })
+      const selector = setupSelector()
+      selector.unselect(selectedCommand)
 
-      expect(selector.getCommandsIndex('path_id_2')).toEqual(undefined)
-      expect(selector.elementsIndex).toEqual([
-        'path_id_1',
-        'path_id_2',
-        'path_id_3',
-      ])
+      expect(selector.toJson()).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "key": "path_id_1",
+            "type": "path",
+          },
+          Object {
+            "key": "path_id_2",
+            "type": "path",
+          },
+          Object {
+            "index": Object {
+              "command": 0,
+              "point": 0,
+            },
+            "key": "path_id_3",
+            "type": "path-point",
+          },
+        ]
+      `)
     })
 
     it('unselect point', () => {
-      setupSelected(selector)
+      const selector = setupSelector()
+      selector.unselect(selectedPoint)
 
-      selector.unselect({ path: 'path_id_3', command: 0, point: 0 })
-
-      expect(selector.getPointsIndex('path_id_3', 0)).toEqual(undefined)
-      expect(selector.elementsIndex).toEqual([
-        'path_id_1',
-        'path_id_2',
-        'path_id_3',
-      ])
+      expect(selector.toJson()).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "key": "path_id_1",
+            "type": "path",
+          },
+          Object {
+            "index": Object {
+              "command": 0,
+            },
+            "key": "path_id_2",
+            "type": "path-command",
+          },
+          Object {
+            "key": "path_id_3",
+            "type": "path",
+          },
+        ]
+      `)
     })
   })
 })

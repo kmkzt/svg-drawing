@@ -1,89 +1,102 @@
-import type {
-  SelectIndex,
-  SelectPathIndex,
-  SelectCommandIndex,
-  SelectPointIndex,
-  PathObject,
-} from '../types'
+import type { SelectObject, ElementKey } from '../types'
 
-type Selecting = Record<PathObject['key'], SelectingCommands>
-type SelectingCommands = Record<number, SelectingPoints>
-type SelectingPoints = Array<number>
+type SelectPoint =
+  | {
+      type: 'path-point'
+      command: number
+      point: number
+    }
+  | {
+      type: 'path-command'
+      command: number
+    }
 
-const convertSelectingFromIndex = (index: SelectIndex): Selecting => ({
-  [index.path]:
-    typeof index.command === 'number'
-      ? {
-          [index.command]: typeof index.point === 'number' ? [index.point] : [],
-        }
-      : {},
-})
+type SelectData = {
+  type: 'path'
+  key: ElementKey
+  list: Array<SelectPoint>
+}
 
-const isSelectPathIndex = (index: SelectIndex): index is SelectPathIndex =>
-  !!(
-    index.path &&
-    typeof index.command !== 'number' &&
-    typeof index.point !== 'number'
-  )
+const isMatchSelectCommand =
+  ({ command }: { command: number }) =>
+  (selectPoint: SelectPoint) =>
+    selectPoint.type === 'path-command' && selectPoint.command === command
 
-const isSelectCommandIndex = (
-  index: SelectIndex
-): index is SelectCommandIndex =>
-  !!(
-    index.path &&
-    typeof index.command === 'number' &&
-    typeof index.point !== 'number'
-  )
-
-const isSelectPointIndex = (index: SelectIndex): index is SelectPointIndex =>
-  !!(
-    index.path &&
-    typeof index.command === 'number' &&
-    typeof index.point === 'number'
-  )
-
-const isObjectEmpty = (obj: object): obj is Record<any, never> =>
-  Object.keys(obj).length === 0
+const isMatchSelectPoint =
+  ({ point, command }: { point: number; command: number }) =>
+  (selectPoint: SelectPoint) =>
+    selectPoint.type === 'path-point' &&
+    selectPoint.command === command &&
+    selectPoint.point === point
 
 export class Selector {
-  private selecting: Selecting = {}
+  private selectMap: Map<ElementKey, SelectData> = new Map()
+
+  private get selecting(): SelectData[] {
+    return [...this.selectMap.values()]
+  }
 
   get selectedBoundingBox(): boolean {
     return (
       this.selected &&
-      Object.keys(this.selecting).every(
-        (key: string) =>
-          this.selecting && Object.keys(this.selecting[key]).length === 0
-      )
+      this.selecting.every((selectedData) => selectedData.list.length === 0)
     )
   }
 
   get selected(): boolean {
-    return !isObjectEmpty(this.selecting)
+    return this.selecting.length > 0
   }
 
-  get elementsIndex(): string[] {
-    return Object.keys(this.selecting)
+  isSelected(selectObject: SelectObject): boolean {
+    const selectData = this.selectMap.get(selectObject.key)
+    if (!selectData) return false
+
+    switch (selectObject.type) {
+      case 'path': {
+        return true
+      }
+
+      case 'path-command': {
+        return selectData.list.some(
+          isMatchSelectCommand({ command: selectObject.index.command })
+        )
+      }
+      case 'path-point': {
+        return selectData.list.some(
+          isMatchSelectPoint({
+            command: selectObject.index.command,
+            point: selectObject.index.point,
+          })
+        )
+      }
+
+      default: {
+        return false
+      }
+    }
   }
 
-  getCommandsIndex(pathKey: string): number[] | undefined {
-    const selectingCommands = this.selecting[pathKey]
-
-    return selectingCommands && !isObjectEmpty(selectingCommands)
-      ? Object.keys(selectingCommands).map(Number)
-      : undefined
-  }
-
-  getPointsIndex(pathKey: string, commandKey: number): number[] | undefined {
-    const selectingPoints = this.selecting[pathKey]?.[commandKey]
-
-    return selectingPoints && !isObjectEmpty(selectingPoints)
-      ? selectingPoints
-      : undefined
+  toJson(): SelectObject[] {
+    return [...this.selectMap.values()].map(convertSelectObject).flat()
   }
 
   clear() {
-    this.selecting = {}
+    this.selectMap.clear()
+  }
+
+  private updateSelectPath(
+    key: ElementKey,
+    updateList?: (list: ReadonlyArray<SelectPoint>) => SelectPoint[]
+  ): void {
+    const list = updateList
+      ? updateList(this.selectMap.get(key)?.list ?? [])
+      : []
+
+    this.selectMap.set(key, {
+      type: 'path',
+      key,
+      list,
+    })
   }
 
   /**
@@ -91,53 +104,126 @@ export class Selector {
    *
    * @todo Implement so that multiple commands and points can be selected.
    */
-  select(selectIndexes: SelectIndex | SelectIndex[], combined?: boolean) {
-    this.selecting = [selectIndexes].flat().reduce(
-      (acc, index) => ({
-        ...acc,
-        ...convertSelectingFromIndex(index),
-      }),
-      combined ? this.selecting : {}
-    )
+  select(
+    selectObjects: SelectObject | ReadonlyArray<SelectObject>,
+    combined?: boolean
+  ) {
+    if (!combined) {
+      this.selectMap.clear()
+    }
+
+    ;[selectObjects].flat().forEach((selectObject) => {
+      switch (selectObject.type) {
+        case 'path-point': {
+          this.updateSelectPath(selectObject.key, (list) => [
+            ...list,
+            {
+              type: 'path-point',
+              command: selectObject.index.command,
+              point: selectObject.index.point,
+            },
+          ])
+          break
+        }
+        case 'path-command': {
+          this.updateSelectPath(selectObject.key, (list) => [
+            ...list,
+            {
+              type: 'path-command',
+              command: selectObject.index.command,
+            },
+          ])
+          break
+        }
+        case 'path': {
+          this.updateSelectPath(selectObject.key)
+          break
+        }
+      }
+    })
   }
 
   selectBoundingBox() {
-    this.select(this.elementsIndex.map((pathKey) => ({ path: pathKey })))
+    this.select(this.selecting.map(({ key }) => ({ type: 'path', key })))
   }
 
-  unselect(index: SelectIndex) {
-    if (!this.selecting) return
+  unselect(selectObject: SelectObject) {
+    const selectData = this.selectMap.get(selectObject.key)
 
-    const { [index.path]: unselectedPath, ...updateSelecting } = this.selecting
+    if (!selectData) return
+    switch (selectObject.type) {
+      case 'path-command': {
+        const { command } = selectObject.index
+        const ok = this.updateSelectPath(selectObject.key, (list) =>
+          list.filter(
+            (selectPoint: SelectPoint) =>
+              !isMatchSelectCommand({ command })(selectPoint)
+          )
+        )
+        break
+      }
+      case 'path-point': {
+        const { command, point } = selectObject.index
+        this.updateSelectPath(selectObject.key, (list) =>
+          list.filter(
+            (selectPoint: SelectPoint) =>
+              !isMatchSelectPoint({ command, point })(selectPoint)
+          )
+        )
+        break
+      }
+      default: {
+        this.selectMap.delete(selectObject.key)
+        break
+      }
+    }
+  }
+}
 
-    if (!unselectedPath) return
-    if (isSelectPathIndex(index)) {
-      this.selecting = updateSelecting
-      return
+const convertSelectObjectFromSelectPoint =
+  (key: ElementKey) =>
+  (selectPoint: SelectPoint): SelectObject => {
+    switch (selectPoint.type) {
+      case 'path-command': {
+        return {
+          type: 'path-command',
+          key,
+          index: {
+            command: selectPoint.command,
+          },
+        }
+      }
+      case 'path-point': {
+        return {
+          type: 'path-point',
+          key: key,
+          index: {
+            command: selectPoint.command,
+            point: selectPoint.point,
+          },
+        }
+      }
+    }
+  }
+
+const convertSelectObject = (selectData: SelectData): SelectObject[] => {
+  switch (selectData?.type) {
+    case 'path': {
+      if (selectData.list.length === 0) {
+        return [
+          {
+            type: 'path',
+            key: selectData.key,
+          },
+        ]
+      }
+      return selectData.list.map(
+        convertSelectObjectFromSelectPoint(selectData.key)
+      )
     }
 
-    const { [index.command]: unselectedCommand, ...updateCommandSelecting } =
-      unselectedPath
-
-    if (!unselectedCommand) return
-    if (isSelectCommandIndex(index)) {
-      this.selecting = {
-        ...this.selecting,
-        [index.path]: updateCommandSelecting,
-      }
-      return
-    }
-
-    if (isSelectPointIndex(index)) {
-      this.selecting = {
-        ...this.selecting,
-        [index.path]: {
-          ...this.selecting[index.path],
-          [index.command]: unselectedCommand.filter(
-            (pointIndex) => pointIndex !== index.point
-          ),
-        },
-      }
+    default: {
+      return []
     }
   }
 }

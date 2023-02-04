@@ -26,8 +26,6 @@ export class AnchorPoints {
         next?.points[0]?.toJson(),
       ].filter((p): p is PointObject => !!p)
 
-      const pointIndex = this.selector?.getPointsIndex(this.path.key, c)
-
       vertex.push({
         points: curr.points.map((point, pIndex) => ({
           index: {
@@ -36,7 +34,11 @@ export class AnchorPoints {
             point: pIndex,
           },
           value: point.toJson(),
-          selected: pointIndex?.includes(pIndex) ?? false,
+          selected: this.selector.isSelected({
+            type: 'path-point',
+            key: this.path.key,
+            index: { command: c, point: pIndex },
+          }),
         })),
         d: genOutline(outlinePoints),
       })

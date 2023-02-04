@@ -3,7 +3,7 @@ import { ResizePathHandler } from './event/resizePathHandler'
 import { TranslatePathHandler } from './event/translatePathHandler'
 import { getEditDataAttributes } from './renderer/dataAttributes'
 import type { Editing } from './edit/editing'
-import type { SelectIndex } from './types'
+import type { SelectObject } from './types'
 
 export class SvgEditing {
   private resizePathHandler: ResizePathHandler
@@ -30,8 +30,8 @@ export class SvgEditing {
     return this.pressedKeyHandler.pressed
   }
 
-  private selectElements(selectIndex: SelectIndex | SelectIndex[]) {
-    this.editing.select(selectIndex, this.multipleSelect)
+  private selectElements(selectObject: SelectObject | SelectObject[]) {
+    this.editing.select(selectObject, this.multipleSelect)
   }
 
   private editHandler(ev: MouseEvent | TouchEvent) {
@@ -42,16 +42,19 @@ export class SvgEditing {
 
     switch (editData.type) {
       case 'path': {
-        this.selectElements({ path: editData.elementKey })
+        this.selectElements({ type: 'path', key: editData.elementKey })
         this.translatePathHandler.start(ev)
         break
       }
 
       case 'path-anchor-point': {
         this.selectElements({
-          path: editData.elementKey,
-          command: editData.commandIndex,
-          point: editData.pointIndex,
+          type: 'path-point',
+          key: editData.elementKey,
+          index: {
+            command: editData.commandIndex,
+            point: editData.pointIndex,
+          },
         })
         this.translatePathHandler.start(ev)
         break

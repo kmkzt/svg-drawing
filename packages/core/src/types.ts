@@ -262,31 +262,13 @@ export interface DrawEventHandler {
   setElement: (el: HTMLElement) => void
 }
 
-export type SelectPathIndex = {
-  path: ElementKey
-  command?: undefined
-  point?: undefined
-}
-
-export type SelectCommandIndex = {
-  path: ElementKey
-  command: number
-  point?: undefined
-}
-
-export type SelectPointIndex = {
-  path: ElementKey
-  command: number
-  point: number
-}
-
 type SelectPathObject = {
   type: 'path'
   key: ElementKey
 }
 
 type SelectCommandObject = {
-  type: 'command'
+  type: 'path-command'
   key: ElementKey
   index: {
     command: number
@@ -294,7 +276,7 @@ type SelectCommandObject = {
 }
 
 type SelectPointObject = {
-  type: 'command'
+  type: 'path-point'
   key: ElementKey
   index: {
     command: number
@@ -307,14 +289,15 @@ export type SelectObject =
   | SelectCommandObject
   | SelectPointObject
 
-export type SelectIndex =
-  | SelectPathIndex
-  | SelectCommandIndex
-  | SelectPointIndex
+export type SelectObjectType = SelectObject['type']
 
 export type AnchorPoint = {
   points: {
-    index: SelectPointIndex
+    index: {
+      path: ElementKey
+      command: number
+      point: number
+    }
     selected: boolean
     value: PointObject
   }[]
