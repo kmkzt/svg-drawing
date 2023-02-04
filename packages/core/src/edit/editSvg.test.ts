@@ -169,7 +169,6 @@ describe('EditSvg', () => {
 
     const result: EditSvgObject = {
       boundingBox: {
-        elementKeys: ['path_key_0'],
         position: {
           x: 1,
           y: 1,

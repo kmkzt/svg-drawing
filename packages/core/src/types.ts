@@ -322,8 +322,6 @@ export type AnchorPoint = {
 }
 
 export type BoundingBoxObject = {
-  /** Key of paths included bounding box */
-  elementKeys: ElementKey[]
   /** LeftTop vertex is same position. */
   position: {
     x: number

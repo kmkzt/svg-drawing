@@ -21,7 +21,6 @@ describe('BoundingBox', () => {
     const boundingBox = new BoundingBox([exampleData])
 
     const testData: BoundingBoxObject = {
-      elementKeys: ['path_key'],
       position: {
         x: 0,
         y: 0,
