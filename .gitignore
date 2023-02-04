@@ -41,4 +41,6 @@ package-lock.json
 out
 .vercel
 
-.node-version
+# TypeScript
+tsconfig.tsbuildinfo
+tsconfig.*.tsbuildinfo
