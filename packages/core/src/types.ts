@@ -280,6 +280,33 @@ export type SelectPointIndex = {
   point: number
 }
 
+type SelectPathObject = {
+  type: 'path'
+  key: ElementKey
+}
+
+type SelectCommandObject = {
+  type: 'command'
+  key: ElementKey
+  index: {
+    command: number
+  }
+}
+
+type SelectPointObject = {
+  type: 'command'
+  key: ElementKey
+  index: {
+    command: number
+    point: number
+  }
+}
+
+export type SelectObject =
+  | SelectPathObject
+  | SelectCommandObject
+  | SelectPointObject
+
 export type SelectIndex =
   | SelectPathIndex
   | SelectCommandIndex
