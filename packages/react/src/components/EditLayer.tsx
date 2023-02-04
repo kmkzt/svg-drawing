@@ -15,14 +15,16 @@ export const EditLayer = () => {
 
   if (!editProps) return null
 
-  const { boundingBox, selectedOnlyElements, editElements } = editProps
+  const { boundingBox, editElements } = editProps
 
   return (
     <>
       {boundingBox && (
         <BoundingBox
-          selectedOnlyElements={selectedOnlyElements}
-          boundingBox={boundingBox}
+          size={boundingBox.size}
+          vertexes={boundingBox.vertexes}
+          position={boundingBox.position}
+          selected={boundingBox.selected}
         />
       )}
       {editElements &&
@@ -104,8 +106,10 @@ const AnchorPoint = ({
 }
 
 const BoundingBox = ({
-  boundingBox: { position, size, vertexes },
-  selectedOnlyElements: selectedOnlyPaths,
+  position,
+  size,
+  vertexes,
+  selected,
 }: BoundingBoxProps) => (
   <>
     <rect
@@ -116,7 +120,7 @@ const BoundingBox = ({
       height={size.height}
       stroke={EDIT_PATH_STYLE.color.main}
       fill={
-        selectedOnlyPaths
+        selected
           ? EDIT_PATH_STYLE.fill.selected
           : EDIT_PATH_STYLE.fill.boundingBox
       }
@@ -125,7 +129,7 @@ const BoundingBox = ({
       <BoundingBoxVertex
         key={vertex.type}
         vertex={vertex}
-        selectedOnlyPaths={selectedOnlyPaths}
+        selected={selected}
       />
     ))}
   </>
@@ -133,13 +137,10 @@ const BoundingBox = ({
 
 type BoundingBoxVertexProps = {
   vertex: Vertex
-  selectedOnlyPaths: boolean
+  selected: boolean
 }
 
-const BoundingBoxVertex = ({
-  vertex,
-  selectedOnlyPaths,
-}: BoundingBoxVertexProps) => (
+const BoundingBoxVertex = ({ vertex, selected }: BoundingBoxVertexProps) => (
   <circle
     {...dataBoundingBoxVertexAttributes(vertex.type)}
     key={vertex.type}
@@ -148,7 +149,7 @@ const BoundingBoxVertex = ({
     r={EDIT_PATH_STYLE.point}
     stroke={EDIT_PATH_STYLE.color.main}
     fill={
-      selectedOnlyPaths
+      selected
         ? EDIT_PATH_STYLE.fill.selected
         : EDIT_PATH_STYLE.fill.boundingBox
     }

@@ -10,7 +10,7 @@ import type {
 const fallbackPointObject: PointObject = { x: 0, y: 0 }
 
 export class BoundingBox {
-  constructor(private paths: PathClass[]) {}
+  constructor(private paths: PathClass[], private selected: boolean = false) {}
 
   public toJson(): BoundingBoxObject {
     return {
@@ -18,6 +18,7 @@ export class BoundingBox {
       position: this.position,
       size: this.size,
       vertexes: this.vertexes,
+      selected: this.selected,
     }
   }
 

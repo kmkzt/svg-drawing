@@ -208,6 +208,7 @@ describe('EditSvg', () => {
             },
           },
         ],
+        selected: true,
       },
       elements: [
         {
@@ -301,7 +302,6 @@ describe('EditSvg', () => {
           ],
         },
       ],
-      selectedOnlyElements: true,
     }
 
     expect(edit.toJson()).toStrictEqual(result)

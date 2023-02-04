@@ -61,6 +61,7 @@ describe('BoundingBox', () => {
           },
         },
       ],
+      selected: false,
     }
 
     it('boundingBox.toJson()', () => {

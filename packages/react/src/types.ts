@@ -13,6 +13,7 @@ import type {
   AnimateAttribute,
   ElementKey,
   ElementClass,
+  BoundingBoxObject,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
@@ -72,13 +73,9 @@ export type UseEditEventHandler<E extends HTMLElement = HTMLElement> = (
 export type EditProps = {
   editElements: EditSvgObject['elements'] | null
   boundingBox: EditSvgObject['boundingBox'] | null
-  selectedOnlyElements: boolean
 }
 
-export type BoundingBoxProps = {
-  boundingBox: EditSvgObject['boundingBox']
-  selectedOnlyElements: boolean
-}
+export type BoundingBoxProps = BoundingBoxObject
 
 export type AnimationProps = {
   getAnimates: (elementKey: ElementKey) => AnimateAttribute[]

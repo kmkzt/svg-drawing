@@ -85,7 +85,6 @@ export const useEdit: UseEdit = ({
     () => ({
       editElements: editSvgObject?.elements ?? null,
       boundingBox: editSvgObject?.boundingBox ?? null,
-      selectedOnlyElements: editSvgObject?.selectedOnlyElements ?? false,
     }),
     [editSvgObject]
   )

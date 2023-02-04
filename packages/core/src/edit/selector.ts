@@ -48,7 +48,7 @@ const isObjectEmpty = (obj: object): obj is Record<any, never> =>
 export class Selector {
   private selecting: Selecting = {}
 
-  get selectedOnlyPaths(): boolean {
+  get selectedBoundingBox(): boolean {
     return (
       this.selected &&
       Object.keys(this.selecting).every(

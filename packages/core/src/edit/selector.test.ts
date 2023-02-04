@@ -8,12 +8,12 @@ describe('Selector', () => {
   })
   describe('Return selected paths only status.', () => {
     it('Return false when paths is not selected', () => {
-      expect(selector.selectedOnlyPaths).toBe(false)
+      expect(selector.selectedBoundingBox).toBe(false)
     })
     it('Return true when paths is selected.', () => {
       selector.select({ path: 'path_id' })
 
-      expect(selector.selectedOnlyPaths).toBe(true)
+      expect(selector.selectedBoundingBox).toBe(true)
     })
 
     it('Return false when command is selected.', () => {
@@ -25,14 +25,14 @@ describe('Selector', () => {
     it('Return false when point is selected.', () => {
       selector.select({ path: 'path_id', command: 0, point: 0 })
 
-      expect(selector.selectedOnlyPaths).toBe(false)
+      expect(selector.selectedBoundingBox).toBe(false)
     })
   })
   describe('Return select index information', () => {
     it('Return paths index array of selected.', () => {
       selector.select({ path: 'path_id' })
 
-      expect(selector.selectedOnlyPaths).toBe(true)
+      expect(selector.selectedBoundingBox).toBe(true)
       expect(selector.elementsIndex).toEqual(['path_id'])
     })
 
@@ -87,7 +87,7 @@ describe('Selector', () => {
     selector.select({ path: 'path_id_2', command: 0 }, true)
     selector.select({ path: 'path_id_3', command: 0, point: 0 }, true)
 
-    expect(selector.selectedOnlyPaths).toBe(false)
+    expect(selector.selectedBoundingBox).toBe(false)
     expect(selector.selected).toBe(true)
 
     expect(selector.elementsIndex).toEqual([

@@ -334,6 +334,7 @@ export type BoundingBoxObject = {
     height: number
   }
   vertexes: Vertex[]
+  selected: boolean
 }
 
 export type VertexType = 'LeftTop' | 'RightTop' | 'RightBottom' | 'LeftBottom'
@@ -353,7 +354,6 @@ export type EditElementObject = EditPathObject
 export type EditSvgObject = {
   elements: EditElementObject[]
   boundingBox: BoundingBoxObject
-  selectedOnlyElements: boolean
 }
 
 /** Edit event */

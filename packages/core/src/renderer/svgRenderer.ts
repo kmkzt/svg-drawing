@@ -114,13 +114,7 @@ const rectElement = (attrs: {
 
 const animateElement = (attrs: AnimateAttribute) => element('animate', attrs)
 
-const boundingBoxElement = ({
-  boundingBox: { position, size },
-  selectedOnlyPaths,
-}: {
-  boundingBox: BoundingBoxObject
-  selectedOnlyPaths: boolean
-}) =>
+const boundingBoxElement = ({ position, size, selected }: BoundingBoxObject) =>
   rectElement({
     ...dataBoundingBoxAttributes,
     x: position.x,
@@ -128,17 +122,17 @@ const boundingBoxElement = ({
     width: size.width,
     height: size.height,
     stroke: EDIT_PATH_STYLE.color.main,
-    fill: selectedOnlyPaths
+    fill: selected
       ? EDIT_PATH_STYLE.fill.selected
       : EDIT_PATH_STYLE.fill.boundingBox,
   })
 
 const boundingBoxVertexElement = ({
   vertex,
-  selectedOnlyPaths,
+  selected,
 }: {
   vertex: Vertex
-  selectedOnlyPaths: boolean
+  selected: boolean
 }) =>
   element('circle', {
     ...dataBoundingBoxVertexAttributes(vertex.type),
@@ -146,7 +140,7 @@ const boundingBoxVertexElement = ({
     cy: vertex.point.y,
     r: EDIT_PATH_STYLE.point,
     stroke: EDIT_PATH_STYLE.color.main,
-    fill: selectedOnlyPaths
+    fill: selected
       ? EDIT_PATH_STYLE.fill.selected
       : EDIT_PATH_STYLE.fill.boundingBox,
   })
@@ -190,15 +184,14 @@ const segmentElement = ({ path, anchorPoints }: EditPathObject): SVGElement =>
 
 const editLayer = ({
   boundingBox,
-  selectedOnlyElements: selectedOnlyPaths,
   elements: paths,
 }: EditSvgObject): SVGElement[] => {
   return [
-    boundingBoxElement({ boundingBox, selectedOnlyPaths }),
+    boundingBoxElement(boundingBox),
     ...boundingBox.vertexes.map((vertex) =>
       boundingBoxVertexElement({
         vertex,
-        selectedOnlyPaths,
+        selected: boundingBox.selected,
       })
     ),
     ...paths.map((editPath) => segmentElement(editPath)),

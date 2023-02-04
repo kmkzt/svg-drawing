@@ -125,8 +125,10 @@ export class EditSvg {
         path: path.toJson(),
         anchorPoints: new AnchorPoints(path.clone(), this.selector).toJson(),
       })),
-      boundingBox: new BoundingBox(this.paths).toJson(),
-      selectedOnlyElements: this.selector.selectedOnlyPaths,
+      boundingBox: new BoundingBox(
+        this.paths,
+        this.selector.selectedBoundingBox
+      ).toJson(),
     }
   }
 
