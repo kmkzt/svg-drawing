@@ -25,9 +25,10 @@ describe('EditSvg', () => {
   })
   describe('changeAttributes', () => {
     it('Change attributes of selected paths', () => {
-      const editKey = edit.svg.elements[0].key
+      const { key } = edit.svg.elements[0]
       edit.select({
-        path: editKey,
+        type: 'path',
+        key,
       })
       edit.changeAttributes({ fill: '#ff0' })
       expect(edit.svg.elements[0].attrs.fill).toBe('#ff0')
@@ -40,13 +41,14 @@ describe('EditSvg', () => {
   describe('translate', () => {
     const pathIndex = 0
     it('Translate selected path', () => {
-      const editKey = edit.svg.elements[pathIndex].key
+      const { key } = edit.svg.elements[pathIndex]
       expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
         'M1 1 l1 1 c2 2 4 2 6 2 z'
       )
 
       edit.select({
-        path: editKey,
+        type: 'path',
+        key,
       })
       edit.translate({ x: 1, y: -1 })
       expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
@@ -54,14 +56,17 @@ describe('EditSvg', () => {
       )
     })
     it('Translate selected commands', () => {
-      const editKey = edit.svg.elements[pathIndex].key
+      const key = edit.svg.elements[pathIndex].key
       expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
         'M1 1 l1 1 c2 2 4 2 6 2 z'
       )
 
       edit.select({
-        path: editKey,
-        command: 1,
+        type: 'path/command',
+        key,
+        index: {
+          command: 1,
+        },
       })
       edit.translate({ x: 1, y: -1 })
       expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
@@ -75,9 +80,12 @@ describe('EditSvg', () => {
       )
 
       edit.select({
-        path: editKey,
-        command: 2,
-        point: 0,
+        type: 'path/point',
+        key: editKey,
+        index: {
+          command: 2,
+          point: 0,
+        },
       })
       edit.translate({ x: 1, y: -1 })
       expect(edit.svg.elements[pathIndex].getCommandString()).toBe(
@@ -90,7 +98,7 @@ describe('EditSvg', () => {
   describe('scale', () => {
     it('Selecting path', () => {
       const editKey = edit.svg.elements[0].key
-      edit.select({ path: editKey })
+      edit.select({ type: 'path', key: editKey })
       edit.scale(2)
       expect(edit.svg.elements[0].getCommandString()).toBe(
         'M2 2 l2 2 c4 4 8 4 12 4 z'
@@ -102,7 +110,7 @@ describe('EditSvg', () => {
   describe('scaleX', () => {
     it('Selecting path', () => {
       const editKey = edit.svg.elements[0].key
-      edit.select({ path: editKey })
+      edit.select({ type: 'path', key: editKey })
       edit.scaleX(2)
       expect(edit.svg.elements[0].getCommandString()).toBe(
         'M2 1 l2 1 c4 2 8 2 12 2 z'
@@ -114,7 +122,7 @@ describe('EditSvg', () => {
   describe('scaleY', () => {
     it('Selecting path', () => {
       const editKey = edit.svg.elements[0].key
-      edit.select({ path: editKey })
+      edit.select({ type: 'path', key: editKey })
       edit.scaleY(2)
       expect(edit.svg.elements[0].getCommandString()).toBe(
         'M1 2 l1 2 c2 4 4 4 6 4 z'
@@ -134,7 +142,7 @@ describe('EditSvg', () => {
     describe('Delete Selected path.', () => {
       it('Update paths', () => {
         const editKey = edit.svg.elements[0].key
-        edit.select({ path: editKey })
+        edit.select({ type: 'path', key: editKey })
 
         expect(edit.svg.elements.length).toBe(3)
         expect(edit.svg.elements[0].attrs.id).toBe('path_0')
@@ -148,7 +156,7 @@ describe('EditSvg', () => {
       })
       it('Update selected status.', () => {
         const editKey = edit.svg.elements[0].key
-        edit.select({ path: editKey })
+        edit.select({ type: 'path', key: editKey })
 
         expect(edit.selected).toBe(true)
 
@@ -164,8 +172,8 @@ describe('EditSvg', () => {
   it.todo('preview')
 
   it('toJson', () => {
-    const editKey = edit.svg.elements[0].key
-    edit.select({ path: editKey })
+    const { key } = edit.svg.elements[0]
+    edit.select({ type: 'path', key })
 
     const result: EditSvgObject = {
       boundingBox: {

@@ -262,35 +262,6 @@ export interface DrawEventHandler {
   setElement: (el: HTMLElement) => void
 }
 
-type SelectPathObject = {
-  type: 'path'
-  key: ElementKey
-}
-
-type SelectCommandObject = {
-  type: 'path-command'
-  key: ElementKey
-  index: {
-    command: number
-  }
-}
-
-type SelectPointObject = {
-  type: 'path-point'
-  key: ElementKey
-  index: {
-    command: number
-    point: number
-  }
-}
-
-export type SelectObject =
-  | SelectPathObject
-  | SelectCommandObject
-  | SelectPointObject
-
-export type SelectObjectType = SelectObject['type']
-
 export type AnchorPoint = {
   points: {
     index: {
@@ -341,22 +312,35 @@ export type EditSvgObject = {
 export type EditEventObject =
   | {
       type: 'path'
-      elementKey: ElementKey
+      key: ElementKey
     }
   | {
-      type: 'path-anchor-point'
-      elementKey: ElementKey
-      commandIndex: number
-      pointIndex: number
+      type: 'path/point'
+      key: ElementKey
+      index: {
+        command: number
+        point: number
+      }
     }
   | {
-      type: 'bounding-box'
+      type: 'path/command'
+      key: ElementKey
+      index: {
+        command: number
+      }
     }
+  | { type: 'bounding-box' }
   | {
-      type: 'bounding-box-vertex'
+      type: 'bounding-box/vertex'
       vertexType: VertexType
     }
   | { type: 'frame' }
+
+export type EditEventType = EditEventObject['type']
+
+export type SelectEventType = 'path' | 'path/command' | 'path/point'
+
+export type SelectObject = Extract<EditEventObject, { type: SelectEventType }>
 
 export type CreateCommand = (points: EventPoint[]) => CommandClass[]
 

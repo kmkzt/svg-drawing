@@ -102,8 +102,8 @@ export class EditSvg {
           break
         }
 
-        case 'path-command':
-        case 'path-point': {
+        case 'path/command':
+        case 'path/point': {
           this.svg.updateElement(path.deleteCommand(selectObject.index.command))
           break
         }
@@ -148,7 +148,7 @@ export class EditSvg {
           this.svg.updateElement(pathExec(path))
           return
         }
-        case 'path-command': {
+        case 'path/command': {
           if (!commandExec) return
 
           this.svg.updateElement(
@@ -156,7 +156,7 @@ export class EditSvg {
           )
           return
         }
-        case 'path-point': {
+        case 'path/point': {
           if (!pointExec) return
 
           const { index } = selectObject

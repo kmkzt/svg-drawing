@@ -35,7 +35,7 @@ export class AnchorPoints {
           },
           value: point.toJson(),
           selected: this.selector.isSelected({
-            type: 'path-point',
+            type: 'path/point',
             key: this.path.key,
             index: { command: c, point: pIndex },
           }),

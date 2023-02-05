@@ -4,12 +4,12 @@ import type { SelectObject } from '../types'
 describe('Selector', () => {
   const selectedPath: SelectObject = { type: 'path', key: 'path_id_1' }
   const selectedCommand: SelectObject = {
-    type: 'path-command',
+    type: 'path/command',
     key: 'path_id_2',
     index: { command: 0 },
   }
   const selectedPoint: SelectObject = {
-    type: 'path-point',
+    type: 'path/point',
     key: 'path_id_3',
     index: { command: 0, point: 0 },
   }

@@ -1,33 +1,35 @@
 import type { SelectObject, ElementKey } from '../types'
 
-type SelectPoint =
-  | {
-      type: 'path-point'
-      command: number
-      point: number
-    }
-  | {
-      type: 'path-command'
-      command: number
-    }
-
 type SelectData = {
   type: 'path'
   key: ElementKey
-  list: Array<SelectPoint>
+  anchorPoints: ReadonlyArray<SelectAnchorPoint>
 }
+
+type SelectAnchorPoint =
+  | {
+      type: 'path/point'
+      index: {
+        command: number
+        point: number
+      }
+    }
+  | {
+      type: 'path/command'
+      index: {
+        command: number
+      }
+    }
 
 const isMatchSelectCommand =
   ({ command }: { command: number }) =>
-  (selectPoint: SelectPoint) =>
-    selectPoint.type === 'path-command' && selectPoint.command === command
+  ({ type, index }: SelectAnchorPoint) =>
+    type === 'path/command' && index.command === command
 
 const isMatchSelectPoint =
   ({ point, command }: { point: number; command: number }) =>
-  (selectPoint: SelectPoint) =>
-    selectPoint.type === 'path-point' &&
-    selectPoint.command === command &&
-    selectPoint.point === point
+  ({ type, index }: SelectAnchorPoint) =>
+    type === 'path/point' && index.command === command && index.point === point
 
 export class Selector {
   private selectMap: Map<ElementKey, SelectData> = new Map()
@@ -39,7 +41,9 @@ export class Selector {
   get selectedBoundingBox(): boolean {
     return (
       this.selected &&
-      this.selecting.every((selectedData) => selectedData.list.length === 0)
+      this.selecting.every(
+        (selectedData) => selectedData.anchorPoints.length === 0
+      )
     )
   }
 
@@ -56,13 +60,13 @@ export class Selector {
         return true
       }
 
-      case 'path-command': {
-        return selectData.list.some(
+      case 'path/command': {
+        return selectData.anchorPoints.some(
           isMatchSelectCommand({ command: selectObject.index.command })
         )
       }
-      case 'path-point': {
-        return selectData.list.some(
+      case 'path/point': {
+        return selectData.anchorPoints.some(
           isMatchSelectPoint({
             command: selectObject.index.command,
             point: selectObject.index.point,
@@ -84,18 +88,37 @@ export class Selector {
     this.selectMap.clear()
   }
 
-  private updateSelectPath(
-    key: ElementKey,
-    updateList?: (list: ReadonlyArray<SelectPoint>) => SelectPoint[]
+  private selectPath(
+    selectObject: Extract<
+      SelectObject,
+      { type: 'path' | 'path/command' | 'path/point' }
+    >
   ): void {
-    const list = updateList
-      ? updateList(this.selectMap.get(key)?.list ?? [])
-      : []
+    const selectData = this.selectMap.get(selectObject.key)
+    const anchorPoint = selectData?.anchorPoints ?? []
 
-    this.selectMap.set(key, {
+    const anchorPoints = (() => {
+      switch (selectObject.type) {
+        case 'path': {
+          return []
+        }
+        case 'path/point':
+        case 'path/command': {
+          return [
+            ...anchorPoint,
+            {
+              type: selectObject.type,
+              index: selectObject.index,
+            } as SelectAnchorPoint,
+          ]
+        }
+      }
+    })()
+
+    this.selectMap.set(selectObject.key, {
       type: 'path',
-      key,
-      list,
+      key: selectObject.key,
+      anchorPoints,
     })
   }
 
@@ -114,29 +137,10 @@ export class Selector {
 
     ;[selectObjects].flat().forEach((selectObject) => {
       switch (selectObject.type) {
-        case 'path-point': {
-          this.updateSelectPath(selectObject.key, (list) => [
-            ...list,
-            {
-              type: 'path-point',
-              command: selectObject.index.command,
-              point: selectObject.index.point,
-            },
-          ])
-          break
-        }
-        case 'path-command': {
-          this.updateSelectPath(selectObject.key, (list) => [
-            ...list,
-            {
-              type: 'path-command',
-              command: selectObject.index.command,
-            },
-          ])
-          break
-        }
-        case 'path': {
-          this.updateSelectPath(selectObject.key)
+        case 'path':
+        case 'path/command':
+        case 'path/point': {
+          this.selectPath(selectObject)
           break
         }
       }
@@ -147,33 +151,64 @@ export class Selector {
     this.select(this.selecting.map(({ key }) => ({ type: 'path', key })))
   }
 
+  private unselectPath(
+    selectObject: Extract<
+      SelectObject,
+      { type: 'path' | 'path/command' | 'path/point' }
+    >
+  ) {
+    switch (selectObject.type) {
+      case 'path': {
+        this.selectMap.delete(selectObject.key)
+        break
+      }
+      case 'path/command': {
+        const selectData = this.selectMap.get(selectObject.key)
+        if (!selectData) return
+
+        const { command } = selectObject.index
+
+        const anchorPoints = selectData.anchorPoints.filter(
+          (selectPoint: SelectAnchorPoint) =>
+            !isMatchSelectCommand({ command })(selectPoint)
+        )
+
+        this.selectMap.set(selectObject.key, {
+          type: 'path',
+          key: selectObject.key,
+          anchorPoints,
+        })
+        break
+      }
+      case 'path/point': {
+        const selectData = this.selectMap.get(selectObject.key)
+        if (!selectData) return
+
+        const { command, point } = selectObject.index
+        const anchorPoints = selectData.anchorPoints.filter(
+          (selectPoint: SelectAnchorPoint) =>
+            !isMatchSelectPoint({ command, point })(selectPoint)
+        )
+
+        this.selectMap.set(selectObject.key, {
+          type: 'path',
+          key: selectObject.key,
+          anchorPoints,
+        })
+        break
+      }
+    }
+  }
+
   unselect(selectObject: SelectObject) {
     const selectData = this.selectMap.get(selectObject.key)
-
     if (!selectData) return
+
     switch (selectObject.type) {
-      case 'path-command': {
-        const { command } = selectObject.index
-        const ok = this.updateSelectPath(selectObject.key, (list) =>
-          list.filter(
-            (selectPoint: SelectPoint) =>
-              !isMatchSelectCommand({ command })(selectPoint)
-          )
-        )
-        break
-      }
-      case 'path-point': {
-        const { command, point } = selectObject.index
-        this.updateSelectPath(selectObject.key, (list) =>
-          list.filter(
-            (selectPoint: SelectPoint) =>
-              !isMatchSelectPoint({ command, point })(selectPoint)
-          )
-        )
-        break
-      }
-      default: {
-        this.selectMap.delete(selectObject.key)
+      case 'path':
+      case 'path/command':
+      case 'path/point': {
+        this.unselectPath(selectObject)
         break
       }
     }
@@ -182,34 +217,15 @@ export class Selector {
 
 const convertSelectObjectFromSelectPoint =
   (key: ElementKey) =>
-  (selectPoint: SelectPoint): SelectObject => {
-    switch (selectPoint.type) {
-      case 'path-command': {
-        return {
-          type: 'path-command',
-          key,
-          index: {
-            command: selectPoint.command,
-          },
-        }
-      }
-      case 'path-point': {
-        return {
-          type: 'path-point',
-          key: key,
-          index: {
-            command: selectPoint.command,
-            point: selectPoint.point,
-          },
-        }
-      }
-    }
-  }
+  (selectPoint: SelectAnchorPoint): SelectObject => ({
+    key,
+    ...selectPoint,
+  })
 
 const convertSelectObject = (selectData: SelectData): SelectObject[] => {
   switch (selectData?.type) {
     case 'path': {
-      if (selectData.list.length === 0) {
+      if (selectData.anchorPoints.length === 0) {
         return [
           {
             type: 'path',
@@ -217,7 +233,7 @@ const convertSelectObject = (selectData: SelectData): SelectObject[] => {
           },
         ]
       }
-      return selectData.list.map(
+      return selectData.anchorPoints.map(
         convertSelectObjectFromSelectPoint(selectData.key)
       )
     }

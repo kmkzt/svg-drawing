@@ -1,4 +1,9 @@
-import type { EditEventObject, ElementKey, VertexType } from '../types'
+import type {
+  EditEventObject,
+  EditEventType,
+  ElementKey,
+  VertexType,
+} from '../types'
 
 const dataEditType = 'data-edit-type'
 const dataElementKey = 'data-element-key'
@@ -22,7 +27,7 @@ export const dataPathAnchorPointAttributes = ({
   commandIndex: number
 }) =>
   ({
-    [dataEditType]: 'path-anchor-point',
+    [dataEditType]: 'path/point',
     [dataElementKey]: elementKey,
     [dataCommandIndex]: `${commandIndex}`,
     [dataPointIndex]: `${pointIndex}`,
@@ -34,7 +39,7 @@ export const dataBoundingBoxAttributes = {
 
 export const dataBoundingBoxVertexAttributes = (vertexType: VertexType) =>
   ({
-    [dataEditType]: 'bounding-box-vertex',
+    [dataEditType]: 'bounding-box/vertex',
     [dataVertexType]: vertexType,
   } as const)
 
@@ -45,52 +50,53 @@ export const dataFrameAttributes = {
 export const getEditDataAttributes = (
   el: HTMLElement
 ): EditEventObject | null => {
-  const editType = el.getAttribute(dataEditType)
+  const type = el.getAttribute(dataEditType) as EditEventType
 
-  switch (editType) {
+  switch (type) {
     case 'path': {
-      const elementKey = el.getAttribute(dataElementKey)
+      const key = el.getAttribute(dataElementKey)
 
-      return elementKey
+      return key
         ? {
-            type: 'path',
-            elementKey: elementKey,
+            type,
+            key,
           }
         : null
     }
 
-    case 'path-anchor-point': {
-      const elementKey = el.getAttribute(dataElementKey)
+    case 'path/point': {
+      const key = el.getAttribute(dataElementKey)
       const commandIndex = el.getAttribute(dataCommandIndex)
       const pointIndex = el.getAttribute(dataPointIndex)
 
-      return elementKey && commandIndex !== null && pointIndex !== null
+      return key && commandIndex !== null && pointIndex !== null
         ? {
-            type: 'path-anchor-point',
-            elementKey,
-            commandIndex: +commandIndex,
-            pointIndex: +pointIndex,
+            type,
+            key,
+            index: {
+              command: +commandIndex,
+              point: +pointIndex,
+            },
           }
         : null
     }
 
     case 'bounding-box': {
-      return { type: 'bounding-box' }
+      return { type }
     }
-
-    case 'bounding-box-vertex': {
-      const vertexType = el.getAttribute(dataVertexType)
+    case 'bounding-box/vertex': {
+      const vertexType = el.getAttribute(dataVertexType) as VertexType
 
       return vertexType
         ? {
-            type: 'bounding-box-vertex',
-            vertexType: vertexType as VertexType,
+            type,
+            vertexType,
           }
         : null
     }
 
     case 'frame': {
-      return { type: 'frame' }
+      return { type }
     }
 
     default: {

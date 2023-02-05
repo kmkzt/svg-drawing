@@ -41,32 +41,20 @@ export class SvgEditing {
     if (!editData) return
 
     switch (editData.type) {
-      case 'path': {
-        this.selectElements({ type: 'path', key: editData.elementKey })
+      case 'path':
+      case 'path/command':
+      case 'path/point': {
+        this.selectElements(editData)
         this.translatePathHandler.start(ev)
         break
       }
-
-      case 'path-anchor-point': {
-        this.selectElements({
-          type: 'path-point',
-          key: editData.elementKey,
-          index: {
-            command: editData.commandIndex,
-            point: editData.pointIndex,
-          },
-        })
-        this.translatePathHandler.start(ev)
-        break
-      }
-
       case 'bounding-box': {
         this.editing.selectBoundingBox()
         this.translatePathHandler.start(ev)
         break
       }
 
-      case 'bounding-box-vertex': {
+      case 'bounding-box/vertex': {
         this.resizePathHandler.start(ev, editData.vertexType)
         break
       }
