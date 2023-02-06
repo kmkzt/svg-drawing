@@ -32,7 +32,7 @@ export class EditSvg {
   }
 
   /** Select path index. */
-  select(selectObject: SelectObject | SelectObject[], combined?: boolean) {
+  select(selectObject: SelectObject, combined?: boolean) {
     this.selector.select(selectObject, combined)
   }
 

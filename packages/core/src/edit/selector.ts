@@ -127,10 +127,7 @@ export class Selector {
    *
    * @todo Implement so that multiple commands and points can be selected.
    */
-  select(
-    selectObjects: SelectObject | ReadonlyArray<SelectObject>,
-    combined?: boolean
-  ) {
+  select(selectObjects: SelectObject, combined?: boolean) {
     if (!combined) {
       this.selectMap.clear()
     }
@@ -148,7 +145,9 @@ export class Selector {
   }
 
   selectBoundingBox() {
-    this.select(this.selecting.map(({ key }) => ({ type: 'path', key })))
+    this.selecting.forEach(({ key }) =>
+      this.selectMap.set(key, { type: 'path', key, anchorPoints: [] })
+    )
   }
 
   private unselectPath(

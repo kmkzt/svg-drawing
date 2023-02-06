@@ -34,7 +34,7 @@ export class Editing {
   }
 
   /** Select edit path and update screen. */
-  select(index: SelectObject | SelectObject[], combined?: boolean) {
+  select(index: SelectObject, combined?: boolean) {
     this.editSvg.select(index, combined)
     this.update()
   }

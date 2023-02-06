@@ -30,7 +30,7 @@ export class SvgEditing {
     return this.pressedKeyHandler.pressed
   }
 
-  private selectElements(selectObject: SelectObject | SelectObject[]) {
+  private selectElements(selectObject: SelectObject) {
     this.editing.select(selectObject, this.multipleSelect)
   }
 
