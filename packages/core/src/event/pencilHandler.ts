@@ -3,7 +3,7 @@ import {
   SUPPORT_EVENT_LISTENER_PASSIVE_OPTION,
   SUPPORT_ON_TOUCH_START,
   SUPPORT_POINTER_EVENT,
-} from '../event'
+} from './support'
 import { throttle } from '../throttle'
 import type { DrawingClass } from '..'
 import type { DrawListenerType, ClearListener, DrawEventName } from '../types'

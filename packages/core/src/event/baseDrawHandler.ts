@@ -1,5 +1,5 @@
+import { getEventPoint } from './getEventPoint'
 import { OffsetPosition } from './offsetPosition'
-import { getEventPoint } from '../event'
 import type { DrawingClass } from '..'
 import type { DrawEventHandler, ClearListener, EventPoint } from '../types'
 

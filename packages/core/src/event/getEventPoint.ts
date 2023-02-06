@@ -1,4 +1,4 @@
-import type { EventPoint } from './types'
+import type { EventPoint } from '../types'
 
 export const SUPPORT_POINTER_EVENT = typeof PointerEvent !== 'undefined'
 

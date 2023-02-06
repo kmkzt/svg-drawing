@@ -1,4 +1,4 @@
-import { getEventPoint } from '../event'
+import { getEventPoint } from './getEventPoint'
 import type { Editing } from '../edit/editing' // todo: Replace interface
 import type { PointObject } from '../types'
 

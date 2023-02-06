@@ -1,4 +1,4 @@
-import { getEventPoint } from '../event'
+import { getEventPoint } from './getEventPoint'
 import type { Editing } from '../edit/editing' // TODO: Replace interface
 import type { PointObject, Vertex, VertexType } from '../types'
 

@@ -1,5 +1,5 @@
 import { BaseDrawHandler } from './baseDrawHandler'
-import { SUPPORT_ON_TOUCH_START, SUPPORT_POINTER_EVENT } from '../event'
+import { SUPPORT_ON_TOUCH_START, SUPPORT_POINTER_EVENT } from './support'
 import type { DrawingClass } from '..'
 import type { DrawListenerType, ClearListener, DrawEventName } from '../types'
 
