@@ -7,11 +7,10 @@ import type {
   PathAttributes,
   SelectEventObject,
   EditSvgObject,
-  CommandClass,
   PathClass,
-  PointClass,
   VertexType,
 } from '../types'
+import type { SelectAnchorPointObject } from './selector'
 
 export class EditSvg {
   private selector = new Selector()
@@ -54,25 +53,36 @@ export class EditSvg {
   /** Translate position of selected path. */
   translate(move: PointObject) {
     this.exec(
-      (path) => path.translate(move),
-      (command) => command.translate(move),
-      (point) => point.add(move)
+      (path) => this.svg.updateElement(path.translate(move)),
+      (path, index) =>
+        this.svg.updateElement(
+          path.updateCommand(index.command, (command) =>
+            command.translate(move)
+          )
+        ),
+      (path, index) =>
+        this.svg.updateElement(
+          path.updateCommand(index.command, (command) => {
+            command.points[index.point] = command.points[index.point].add(move)
+            return command
+          })
+        )
     )
   }
 
   /** Scale the selected path. */
   scale(r: number) {
-    this.exec((path) => path.scale(r))
+    this.exec((path) => this.svg.updateElement(path.scale(r)))
   }
 
   /** Scale the selected path horizontally. */
   scaleX(r: number) {
-    this.exec((path) => path.scaleX(r))
+    this.exec((path) => this.svg.updateElement(path.scaleX(r)))
   }
 
   /** Scale the selected path vertically. */
   scaleY(r: number) {
-    this.exec((path) => path.scaleY(r))
+    this.exec((path) => this.svg.updateElement(path.scaleY(r)))
   }
 
   /** Resize based on the bounding box vertices */
@@ -82,7 +92,11 @@ export class EditSvg {
       movePoint
     )
 
-    this.exec((path) => path.scaleX(scale.x).scaleY(scale.y).translate(move))
+    this.exec((path) => {
+      this.svg.updateElement(
+        path.scaleX(scale.x).scaleY(scale.y).translate(move)
+      )
+    })
   }
 
   /**
@@ -91,24 +105,12 @@ export class EditSvg {
    * @todo Implements to delete points.
    */
   delete() {
-    this.selector.toJson().forEach((selectObject) => {
-      this.selector.unselect(selectObject)
-      const path = this.svg.getElement(selectObject.key)
-      if (!path) return
-
-      switch (selectObject.type) {
-        case 'path': {
-          if (path) this.svg.deleteElement(path)
-          break
-        }
-
-        case 'path/command':
-        case 'path/point': {
-          this.svg.updateElement(path.deleteCommand(selectObject.index.command))
-          break
-        }
-      }
-    })
+    this.exec(
+      (path) => this.svg.deleteElement(path),
+      (path, index) =>
+        this.svg.updateElement(path.deleteCommand(index.command)),
+      (path, index) => this.svg.updateElement(path.deleteCommand(index.command))
+    )
   }
 
   /** Clone an EditSvg class object for preview. */
@@ -135,45 +137,50 @@ export class EditSvg {
   }
 
   private exec(
-    pathExec: (path: PathClass) => PathClass,
-    commandExec?: (command: CommandClass) => CommandClass,
-    pointExec?: (point: PointClass) => PointClass
+    pathExec: (path: PathClass) => void,
+    commandExec?: (path: PathClass, index: { command: number }) => void,
+    pointExec?: (
+      path: PathClass,
+      index: { command: number; point: number }
+    ) => void
   ): void {
-    this.selector.toJson().map((selectObject: SelectEventObject) => {
-      const path = this.svg.getElement(selectObject.key)
-      if (!path) return
-
-      switch (selectObject.type) {
-        case 'path': {
-          this.svg.updateElement(pathExec(path))
-          return
-        }
+    const pathAnchorPointExec = (
+      path: PathClass,
+      { index, type }: SelectAnchorPointObject
+    ) => {
+      switch (type) {
         case 'path/command': {
           if (!commandExec) return
-
-          this.svg.updateElement(
-            path.updateCommand(selectObject.index.command, commandExec)
-          )
+          commandExec(path, index)
           return
         }
         case 'path/point': {
           if (!pointExec) return
 
-          const { index } = selectObject
+          pointExec(path, index)
+          return
+        }
+      }
+    }
 
-          this.svg.updateElement(
-            path.updateCommand(index.command, (com) => {
-              const command = com.clone()
-              command.points[index.point] = pointExec(
-                command.points[index.point]
-              )
-              return command
-            })
+    this.selector.toJson().map((selectObject) => {
+      const element = this.svg.getElement(selectObject.key)
+      if (!element) return
+
+      switch (selectObject.type) {
+        case 'path': {
+          if (selectObject.anchorPoints.length === 0) {
+            pathExec(element)
+            return
+          }
+
+          selectObject.anchorPoints.forEach((anchorPointObject) =>
+            pathAnchorPointExec(element, anchorPointObject)
           )
           return
         }
         default: {
-          return
+          break
         }
       }
     })

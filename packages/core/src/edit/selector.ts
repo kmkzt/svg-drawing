@@ -1,12 +1,12 @@
 import type { SelectEventObject, ElementKey } from '../types'
 
-type SelectData = {
+export type SelectObject = {
   type: 'path'
   key: ElementKey
-  anchorPoints: ReadonlyArray<SelectAnchorPoint>
+  anchorPoints: ReadonlyArray<SelectAnchorPointObject>
 }
 
-type SelectAnchorPoint =
+export type SelectAnchorPointObject =
   | {
       type: 'path/point'
       index: {
@@ -23,18 +23,18 @@ type SelectAnchorPoint =
 
 const isMatchSelectCommand =
   ({ command }: { command: number }) =>
-  ({ type, index }: SelectAnchorPoint) =>
+  ({ type, index }: SelectAnchorPointObject) =>
     type === 'path/command' && index.command === command
 
 const isMatchSelectPoint =
   ({ point, command }: { point: number; command: number }) =>
-  ({ type, index }: SelectAnchorPoint) =>
+  ({ type, index }: SelectAnchorPointObject) =>
     type === 'path/point' && index.command === command && index.point === point
 
 export class Selector {
-  private selectMap: Map<ElementKey, SelectData> = new Map()
+  private selectMap: Map<ElementKey, SelectObject> = new Map()
 
-  private get selecting(): SelectData[] {
+  private get selecting(): SelectObject[] {
     return [...this.selectMap.values()]
   }
 
@@ -80,8 +80,8 @@ export class Selector {
     }
   }
 
-  toJson(): SelectEventObject[] {
-    return [...this.selectMap.values()].map(convertSelectObject).flat()
+  toJson(): SelectObject[] {
+    return [...this.selectMap.values()]
   }
 
   clear() {
@@ -109,7 +109,7 @@ export class Selector {
             {
               type: selectObject.type,
               index: selectObject.index,
-            } as SelectAnchorPoint,
+            } as SelectAnchorPointObject,
           ]
         }
       }
@@ -168,7 +168,7 @@ export class Selector {
         const { command } = selectObject.index
 
         const anchorPoints = selectData.anchorPoints.filter(
-          (selectPoint: SelectAnchorPoint) =>
+          (selectPoint: SelectAnchorPointObject) =>
             !isMatchSelectCommand({ command })(selectPoint)
         )
 
@@ -185,7 +185,7 @@ export class Selector {
 
         const { command, point } = selectObject.index
         const anchorPoints = selectData.anchorPoints.filter(
-          (selectPoint: SelectAnchorPoint) =>
+          (selectPoint: SelectAnchorPointObject) =>
             !isMatchSelectPoint({ command, point })(selectPoint)
         )
 
@@ -210,35 +210,6 @@ export class Selector {
         this.unselectPath(selectObject)
         break
       }
-    }
-  }
-}
-
-const convertSelectObjectFromSelectPoint =
-  (key: ElementKey) =>
-  (selectPoint: SelectAnchorPoint): SelectEventObject => ({
-    key,
-    ...selectPoint,
-  })
-
-const convertSelectObject = (selectData: SelectData): SelectEventObject[] => {
-  switch (selectData?.type) {
-    case 'path': {
-      if (selectData.anchorPoints.length === 0) {
-        return [
-          {
-            type: 'path',
-            key: selectData.key,
-          },
-        ]
-      }
-      return selectData.anchorPoints.map(
-        convertSelectObjectFromSelectPoint(selectData.key)
-      )
-    }
-
-    default: {
-      return []
     }
   }
 }
