@@ -35,11 +35,6 @@ export class EditSvg {
     this.selector.select(selectObject, combined)
   }
 
-  /** Select boundingBox */
-  selectBoundingBox() {
-    this.selector.selectBoundingBox()
-  }
-
   /** Clear selected status. */
   cancel() {
     this.selector.clear()
@@ -131,7 +126,7 @@ export class EditSvg {
       })),
       boundingBox: new BoundingBox(
         this.paths,
-        this.selector.selectedBoundingBox
+        this.selector.isSelected({ type: 'bounding-box' })
       ).toJson(),
     }
   }

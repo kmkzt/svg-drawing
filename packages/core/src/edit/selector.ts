@@ -38,39 +38,42 @@ export class Selector {
     return [...this.selectMap.values()]
   }
 
-  get selectedBoundingBox(): boolean {
-    return (
-      this.selected &&
-      this.selecting.every(
-        (selectedData) => selectedData.anchorPoints.length === 0
-      )
-    )
-  }
-
   get selected(): boolean {
     return this.selecting.length > 0
   }
 
   isSelected(selectObject: SelectEventObject): boolean {
-    const selectData = this.selectMap.get(selectObject.key)
-    if (!selectData) return false
-
     switch (selectObject.type) {
       case 'path': {
-        return true
+        return this.selectMap.has(selectObject.key)
       }
 
       case 'path/command': {
+        const selectData = this.selectMap.get(selectObject.key)
+        if (!selectData) return false
+
         return selectData.anchorPoints.some(
           isMatchSelectCommand({ command: selectObject.index.command })
         )
       }
       case 'path/point': {
+        const selectData = this.selectMap.get(selectObject.key)
+        if (!selectData) return false
+
         return selectData.anchorPoints.some(
           isMatchSelectPoint({
             command: selectObject.index.command,
             point: selectObject.index.point,
           })
+        )
+      }
+
+      case 'bounding-box': {
+        return (
+          this.selected &&
+          this.selecting.every(
+            (selectedData) => selectedData.anchorPoints.length === 0
+          )
         )
       }
 
@@ -127,27 +130,27 @@ export class Selector {
    *
    * @todo Implement so that multiple commands and points can be selected.
    */
-  select(selectObjects: SelectEventObject, combined?: boolean) {
-    if (!combined) {
-      this.selectMap.clear()
-    }
-
-    ;[selectObjects].flat().forEach((selectObject) => {
-      switch (selectObject.type) {
-        case 'path':
-        case 'path/command':
-        case 'path/point': {
-          this.selectPath(selectObject)
-          break
+  select(selectObject: SelectEventObject, combined?: boolean) {
+    switch (selectObject.type) {
+      case 'path':
+      case 'path/command':
+      case 'path/point': {
+        if (!combined) {
+          this.selectMap.clear()
         }
+        this.selectPath(selectObject)
+        break
       }
-    })
-  }
-
-  selectBoundingBox() {
-    this.selecting.forEach(({ key }) =>
-      this.selectMap.set(key, { type: 'path', key, anchorPoints: [] })
-    )
+      case 'bounding-box': {
+        this.selecting.forEach(({ key }) =>
+          this.selectMap.set(key, { type: 'path', key, anchorPoints: [] })
+        )
+        break
+      }
+      case 'frame': {
+        this.clear()
+      }
+    }
   }
 
   private unselectPath(
@@ -194,20 +197,6 @@ export class Selector {
           key: selectObject.key,
           anchorPoints,
         })
-        break
-      }
-    }
-  }
-
-  unselect(selectObject: SelectEventObject) {
-    const selectData = this.selectMap.get(selectObject.key)
-    if (!selectData) return
-
-    switch (selectObject.type) {
-      case 'path':
-      case 'path/command':
-      case 'path/point': {
-        this.unselectPath(selectObject)
         break
       }
     }
