@@ -3,7 +3,7 @@ import { ResizePathHandler } from './event/resizePathHandler'
 import { TranslatePathHandler } from './event/translatePathHandler'
 import { getEditDataAttributes } from './renderer/dataAttributes'
 import type { Editing } from './edit/editing'
-import type { SelectObject } from './types'
+import type { SelectEventObject } from './types'
 
 export class SvgEditing {
   private resizePathHandler: ResizePathHandler
@@ -30,7 +30,7 @@ export class SvgEditing {
     return this.pressedKeyHandler.pressed
   }
 
-  private selectElements(selectObject: SelectObject) {
+  private selectElements(selectObject: SelectEventObject) {
     this.editing.select(selectObject, this.multipleSelect)
   }
 

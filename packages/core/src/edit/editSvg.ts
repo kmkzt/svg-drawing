@@ -5,7 +5,7 @@ import type {
   SvgClass,
   PointObject,
   PathAttributes,
-  SelectObject,
+  SelectEventObject,
   EditSvgObject,
   CommandClass,
   PathClass,
@@ -32,7 +32,7 @@ export class EditSvg {
   }
 
   /** Select path index. */
-  select(selectObject: SelectObject, combined?: boolean) {
+  select(selectObject: SelectEventObject, combined?: boolean) {
     this.selector.select(selectObject, combined)
   }
 
@@ -139,7 +139,7 @@ export class EditSvg {
     commandExec?: (command: CommandClass) => CommandClass,
     pointExec?: (point: PointClass) => PointClass
   ): void {
-    this.selector.toJson().map((selectObject: SelectObject) => {
+    this.selector.toJson().map((selectObject: SelectEventObject) => {
       const path = this.svg.getElement(selectObject.key)
       if (!path) return
 

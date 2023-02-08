@@ -1,4 +1,4 @@
-import type { SelectObject, ElementKey } from '../types'
+import type { SelectEventObject, ElementKey } from '../types'
 
 type SelectData = {
   type: 'path'
@@ -51,7 +51,7 @@ export class Selector {
     return this.selecting.length > 0
   }
 
-  isSelected(selectObject: SelectObject): boolean {
+  isSelected(selectObject: SelectEventObject): boolean {
     const selectData = this.selectMap.get(selectObject.key)
     if (!selectData) return false
 
@@ -80,7 +80,7 @@ export class Selector {
     }
   }
 
-  toJson(): SelectObject[] {
+  toJson(): SelectEventObject[] {
     return [...this.selectMap.values()].map(convertSelectObject).flat()
   }
 
@@ -90,7 +90,7 @@ export class Selector {
 
   private selectPath(
     selectObject: Extract<
-      SelectObject,
+      SelectEventObject,
       { type: 'path' | 'path/command' | 'path/point' }
     >
   ): void {
@@ -127,7 +127,7 @@ export class Selector {
    *
    * @todo Implement so that multiple commands and points can be selected.
    */
-  select(selectObjects: SelectObject, combined?: boolean) {
+  select(selectObjects: SelectEventObject, combined?: boolean) {
     if (!combined) {
       this.selectMap.clear()
     }
@@ -152,7 +152,7 @@ export class Selector {
 
   private unselectPath(
     selectObject: Extract<
-      SelectObject,
+      SelectEventObject,
       { type: 'path' | 'path/command' | 'path/point' }
     >
   ) {
@@ -199,7 +199,7 @@ export class Selector {
     }
   }
 
-  unselect(selectObject: SelectObject) {
+  unselect(selectObject: SelectEventObject) {
     const selectData = this.selectMap.get(selectObject.key)
     if (!selectData) return
 
@@ -216,12 +216,12 @@ export class Selector {
 
 const convertSelectObjectFromSelectPoint =
   (key: ElementKey) =>
-  (selectPoint: SelectAnchorPoint): SelectObject => ({
+  (selectPoint: SelectAnchorPoint): SelectEventObject => ({
     key,
     ...selectPoint,
   })
 
-const convertSelectObject = (selectData: SelectData): SelectObject[] => {
+const convertSelectObject = (selectData: SelectData): SelectEventObject[] => {
   switch (selectData?.type) {
     case 'path': {
       if (selectData.anchorPoints.length === 0) {

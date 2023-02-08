@@ -340,7 +340,10 @@ export type EditEventType = EditEventObject['type']
 
 export type SelectEventType = 'path' | 'path/command' | 'path/point'
 
-export type SelectObject = Extract<EditEventObject, { type: SelectEventType }>
+export type SelectEventObject = Extract<
+  EditEventObject,
+  { type: SelectEventType }
+>
 
 export type CreateCommand = (points: EventPoint[]) => CommandClass[]
 

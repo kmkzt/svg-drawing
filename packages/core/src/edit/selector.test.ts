@@ -1,14 +1,14 @@
 import { Selector } from './selector'
-import type { SelectObject } from '../types'
+import type { SelectEventObject } from '../types'
 
 describe('Selector', () => {
-  const selectedPath: SelectObject = { type: 'path', key: 'path_id_1' }
-  const selectedCommand: SelectObject = {
+  const selectedPath: SelectEventObject = { type: 'path', key: 'path_id_1' }
+  const selectedCommand: SelectEventObject = {
     type: 'path/command',
     key: 'path_id_2',
     index: { command: 0 },
   }
-  const selectedPoint: SelectObject = {
+  const selectedPoint: SelectEventObject = {
     type: 'path/point',
     key: 'path_id_3',
     index: { command: 0, point: 0 },

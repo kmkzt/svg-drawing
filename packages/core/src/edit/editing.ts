@@ -2,7 +2,7 @@ import { EditSvg } from './editSvg'
 import type {
   PointObject,
   PathAttributes,
-  SelectObject,
+  SelectEventObject,
   VertexType,
   SvgClass,
 } from '../types'
@@ -34,7 +34,7 @@ export class Editing {
   }
 
   /** Select edit path and update screen. */
-  select(index: SelectObject, combined?: boolean) {
+  select(index: SelectEventObject, combined?: boolean) {
     this.editSvg.select(index, combined)
     this.update()
   }
