@@ -9,22 +9,22 @@ export class EditEventHandler {
   private basePoint: PointObject | null = null
   private currentEvent: SelectEventObject | null = null
   private pressedKeyHandler: PressedKeyHandler
+  private multipleSelectBindKey: string
 
   constructor(
     public editing: Editing,
     options: { multipleSelectBindKey?: string }
   ) {
-    this
-    this.pressedKeyHandler = new PressedKeyHandler(
-      options?.multipleSelectBindKey ?? 'Shift'
-    )
+    this.multipleSelectBindKey = options?.multipleSelectBindKey ?? 'Shift'
+    this.pressedKeyHandler = new PressedKeyHandler()
+
     this.handleTransform = this.handleTransform.bind(this)
     this.handleTransformPreview = this.handleTransformPreview.bind(this)
     this.handleSelect = this.handleSelect.bind(this)
   }
 
   private get multipleSelect() {
-    return this.pressedKeyHandler.pressed
+    return this.pressedKeyHandler.key === this.multipleSelectBindKey
   }
 
   private getMovePoint(ev: MouseEvent | TouchEvent): PointObject | null {
@@ -114,13 +114,13 @@ export class EditEventHandler {
     this.el?.addEventListener('mousedown', this.handleSelect)
     this.el?.addEventListener('touchstart', this.handleSelect)
 
-    this.pressedKeyHandler.start()
+    this.pressedKeyHandler.setup()
   }
 
   cleanup() {
     this.el?.removeEventListener('mousedown', this.handleSelect)
     this.el?.removeEventListener('touchstart', this.handleSelect)
 
-    this.pressedKeyHandler.end()
+    this.pressedKeyHandler.cleanup()
   }
 }

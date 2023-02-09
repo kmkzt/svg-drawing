@@ -1,28 +1,28 @@
 export class PressedKeyHandler {
-  pressed: boolean
-  constructor(private key: string) {
-    this.pressed = false
-
+  private _key: string | null = null
+  constructor() {
     this.handleOn = this.handleOn.bind(this)
     this.handleOff = this.handleOff.bind(this)
   }
 
-  handleOn(ev: KeyboardEvent) {
-    if (ev.key !== this.key) return
-    this.pressed = true
+  get key() {
+    return this._key
   }
 
-  handleOff(ev: KeyboardEvent) {
-    if (ev.key !== this.key) return
-    this.pressed = false
+  private handleOn(ev: KeyboardEvent) {
+    this._key = ev.key
   }
 
-  start() {
+  private handleOff() {
+    this._key = null
+  }
+
+  setup() {
     addEventListener('keydown', this.handleOn)
     addEventListener('keyup', this.handleOff)
   }
 
-  end() {
+  cleanup() {
     removeEventListener('keydown', this.handleOn)
     removeEventListener('keyup', this.handleOff)
   }
