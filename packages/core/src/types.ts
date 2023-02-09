@@ -313,7 +313,7 @@ export type EditEventObject =
   | {
       type: 'path'
       key: ElementKey
-      multiple: boolean
+      multiple?: boolean
     }
   | {
       type: 'path/point'
@@ -322,7 +322,7 @@ export type EditEventObject =
         command: number
         point: number
       }
-      multiple: boolean
+      multiple?: boolean
     }
   | {
       type: 'path/command'
@@ -330,7 +330,7 @@ export type EditEventObject =
       index: {
         command: number
       }
-      multiple: boolean
+      multiple?: boolean
     }
   | { type: 'bounding-box' }
   | {
