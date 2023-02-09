@@ -38,10 +38,6 @@ export class Selector {
     return [...this.selectMap.values()]
   }
 
-  get selected(): boolean {
-    return this.selecting.length > 0
-  }
-
   isSelected(selectObject: SelectEventObject): boolean {
     switch (selectObject.type) {
       case 'path': {
@@ -71,7 +67,7 @@ export class Selector {
       case 'bounding-box/vertex':
       case 'bounding-box': {
         return (
-          this.selected &&
+          this.selecting.length > 0 &&
           this.selecting.every(
             (selectedData) => selectedData.anchorPoints.length === 0
           )

@@ -16,11 +16,6 @@ export class EditSvg {
   private selector = new Selector()
   constructor(public svg: SvgClass) {}
 
-  /** Return true when some path selected. */
-  get selected() {
-    return this.selector.selected
-  }
-
   private get elements(): PathClass[] {
     return this.selector
       .toJson()
@@ -121,7 +116,7 @@ export class EditSvg {
 
   /** Return data in json format. */
   toJson(): EditSvgObject | null {
-    if (!this.selector.selected) return null
+    if (!this.elements.length) return null
 
     return {
       elements: this.elements.map((path) => ({
