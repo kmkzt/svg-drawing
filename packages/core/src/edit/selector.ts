@@ -97,26 +97,20 @@ export class Selector {
       { type: 'path' | 'path/command' | 'path/point' }
     >
   ): void {
-    const selectData = this.selectMap.get(selectObject.key)
-    const anchorPoint = selectData?.anchorPoints ?? []
+    if (!selectObject.multiple) {
+      this.selectMap.clear()
+    }
 
-    const anchorPoints = (() => {
-      switch (selectObject.type) {
-        case 'path': {
-          return []
-        }
-        case 'path/point':
-        case 'path/command': {
-          return [
-            ...anchorPoint,
+    const anchorPoints =
+      selectObject.type === 'path'
+        ? []
+        : [
+            ...(this.selectMap.get(selectObject.key)?.anchorPoints ?? []),
             {
               type: selectObject.type,
               index: selectObject.index,
             } as SelectAnchorPointObject,
           ]
-        }
-      }
-    })()
 
     this.selectMap.set(selectObject.key, {
       type: 'path',
@@ -130,14 +124,11 @@ export class Selector {
    *
    * @todo Implement so that multiple commands and points can be selected.
    */
-  select(selectObject: SelectEventObject, combined?: boolean) {
+  select(selectObject: SelectEventObject) {
     switch (selectObject.type) {
       case 'path':
       case 'path/command':
       case 'path/point': {
-        if (!combined) {
-          this.selectMap.clear()
-        }
         this.selectPath(selectObject)
         break
       }

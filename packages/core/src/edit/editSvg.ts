@@ -31,8 +31,8 @@ export class EditSvg {
   }
 
   /** Select path index. */
-  select(selectObject: SelectEventObject, combined?: boolean) {
-    this.selector.select(selectObject, combined)
+  select(event: SelectEventObject) {
+    this.selector.select(event)
   }
 
   /** Clear selected status. */

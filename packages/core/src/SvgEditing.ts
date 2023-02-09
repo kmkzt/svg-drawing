@@ -1,7 +1,7 @@
 import { PressedKeyHandler } from './event/pressedKeyHandler'
 import { ResizePathHandler } from './event/resizePathHandler'
 import { TranslatePathHandler } from './event/translatePathHandler'
-import { getEditDataAttributes } from './renderer/dataAttributes'
+import { getEditEvent } from './renderer/dataAttributes'
 import type { Editing } from './edit/editing'
 import type { SelectEventObject } from './types'
 
@@ -22,7 +22,6 @@ export class SvgEditing {
       options?.multipleSelectBindKey ?? 'Shift'
     )
 
-    this.selectElements = this.selectElements.bind(this)
     this.editHandler = this.editHandler.bind(this)
   }
 
@@ -30,13 +29,9 @@ export class SvgEditing {
     return this.pressedKeyHandler.pressed
   }
 
-  private selectElements(selectObject: SelectEventObject) {
-    this.editing.select(selectObject, this.multipleSelect)
-  }
-
   private editHandler(ev: MouseEvent | TouchEvent) {
     const el = ev.target as HTMLElement
-    const editData = getEditDataAttributes(el)
+    const editData = getEditEvent(el, this.multipleSelect)
 
     if (!editData) return
 
@@ -46,7 +41,7 @@ export class SvgEditing {
       case 'path/point':
       case 'bounding-box':
       case 'frame': {
-        this.selectElements(editData)
+        this.editing.select(editData)
         this.translatePathHandler.start(ev)
         break
       }

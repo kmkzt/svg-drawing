@@ -47,8 +47,9 @@ export const dataFrameAttributes = {
   [dataEditType]: 'frame',
 } as const
 
-export const getEditDataAttributes = (
-  el: HTMLElement
+export const getEditEvent = (
+  el: HTMLElement,
+  multiple = false
 ): EditEventObject | null => {
   const type = el.getAttribute(dataEditType) as EditEventType
 
@@ -60,6 +61,7 @@ export const getEditDataAttributes = (
         ? {
             type,
             key,
+            multiple,
           }
         : null
     }
@@ -77,6 +79,7 @@ export const getEditDataAttributes = (
               command: +commandIndex,
               point: +pointIndex,
             },
+            multiple,
           }
         : null
     }
