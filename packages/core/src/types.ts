@@ -309,7 +309,7 @@ export type EditSvgObject = {
 }
 
 /** Edit event */
-export type EditEventObject =
+export type SelectEventObject =
   | {
       type: 'path'
       key: ElementKey
@@ -339,11 +339,7 @@ export type EditEventObject =
     }
   | { type: 'frame' }
 
-export type EditEventType = EditEventObject['type']
-
-export type SelectEventType = 'path' | 'path/command' | 'path/point'
-
-export type SelectEventObject = EditEventObject
+export type SelectEventType = SelectEventObject['type']
 
 export type CreateCommand = (points: EventPoint[]) => CommandClass[]
 

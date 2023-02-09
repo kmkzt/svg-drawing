@@ -68,6 +68,7 @@ export class Selector {
         )
       }
 
+      case 'bounding-box/vertex':
       case 'bounding-box': {
         return (
           this.selected &&
@@ -132,7 +133,8 @@ export class Selector {
         this.selectPath(selectObject)
         break
       }
-      case 'bounding-box': {
+      case 'bounding-box':
+      case 'bounding-box/vertex': {
         this.selecting.forEach(({ key }) =>
           this.selectMap.set(key, { type: 'path', key, anchorPoints: [] })
         )

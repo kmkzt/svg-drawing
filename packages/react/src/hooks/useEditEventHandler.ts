@@ -1,4 +1,4 @@
-import { SvgEditing } from '@svg-drawing/core'
+import { EditEventHandler } from '@svg-drawing/core'
 import { useEffect, useMemo } from 'react'
 import type { UseEditEventHandler } from '../types'
 
@@ -7,8 +7,8 @@ export const useEditEventHandler: UseEditEventHandler = (
   edit,
   { multipleSelectBindKey } = {}
 ) => {
-  const svgEditing = useMemo(
-    () => new SvgEditing(edit, { multipleSelectBindKey }),
+  const editEventHandler = useMemo(
+    () => new EditEventHandler(edit, { multipleSelectBindKey }),
     [edit, multipleSelectBindKey]
   )
 
@@ -17,10 +17,10 @@ export const useEditEventHandler: UseEditEventHandler = (
     const el = ref.current
     if (!el) return
 
-    svgEditing.start(el)
+    editEventHandler.setup(el)
 
     return () => {
-      svgEditing.end()
+      editEventHandler.cleanup()
     }
-  }, [ref, svgEditing])
+  }, [ref, editEventHandler])
 }

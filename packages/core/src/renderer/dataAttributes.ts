@@ -1,6 +1,6 @@
 import type {
-  EditEventObject,
-  EditEventType,
+  SelectEventObject,
+  SelectEventType,
   ElementKey,
   VertexType,
 } from '../types'
@@ -47,11 +47,11 @@ export const dataFrameAttributes = {
   [dataEditType]: 'frame',
 } as const
 
-export const getEditEvent = (
+export const getSelectEvent = (
   el: HTMLElement,
   multiple = false
-): EditEventObject | null => {
-  const type = el.getAttribute(dataEditType) as EditEventType
+): SelectEventObject | null => {
+  const type = el.getAttribute(dataEditType) as SelectEventType
 
   switch (type) {
     case 'path': {
