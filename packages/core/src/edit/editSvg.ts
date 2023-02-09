@@ -21,13 +21,12 @@ export class EditSvg {
     return this.selector.selected
   }
 
-  private get paths(): PathClass[] {
-    const selectObjects = this.selector.toJson()
-    return selectObjects.flatMap(({ key }): PathClass | [] => {
-      const path = this.svg.getElement(key)
-
-      return path ? path.clone() : []
-    })
+  private get elements(): PathClass[] {
+    return this.selector
+      .toJson()
+      .flatMap(
+        ({ key }): PathClass | [] => this.svg.getElement(key)?.clone() ?? []
+      )
   }
 
   /** Select path index. */
@@ -42,55 +41,59 @@ export class EditSvg {
 
   /** Change attributes of selected path. */
   changeAttributes(attrs: PathAttributes) {
-    this.exec((path) => path.updateAttributes(attrs))
+    this.exec({
+      path: (path) => this.svg.updateElement(path.updateAttributes(attrs)),
+    })
   }
 
   /** Translate position of selected path. */
   translate(move: PointObject) {
-    this.exec(
-      (path) => this.svg.updateElement(path.translate(move)),
-      (path, index) =>
+    this.exec({
+      path: (path) => this.svg.updateElement(path.translate(move)),
+      command: (path, index) =>
         this.svg.updateElement(
           path.updateCommand(index.command, (command) =>
             command.translate(move)
           )
         ),
-      (path, index) =>
+      point: (path, index) =>
         this.svg.updateElement(
           path.updateCommand(index.command, (command) => {
             command.points[index.point] = command.points[index.point].add(move)
             return command
           })
-        )
-    )
+        ),
+    })
   }
 
   /** Scale the selected path. */
   scale(r: number) {
-    this.exec((path) => this.svg.updateElement(path.scale(r)))
+    this.exec({ path: (path) => this.svg.updateElement(path.scale(r)) })
   }
 
   /** Scale the selected path horizontally. */
   scaleX(r: number) {
-    this.exec((path) => this.svg.updateElement(path.scaleX(r)))
+    this.exec({ path: (path) => this.svg.updateElement(path.scaleX(r)) })
   }
 
   /** Scale the selected path vertically. */
   scaleY(r: number) {
-    this.exec((path) => this.svg.updateElement(path.scaleY(r)))
+    this.exec({ path: (path) => this.svg.updateElement(path.scaleY(r)) })
   }
 
   /** Resize based on the bounding box vertices */
   resizeBoundingBox(type: VertexType, movePoint: PointObject) {
-    const { move, scale } = new BoundingBox(this.paths).resizeParams(
+    const { move, scale } = new BoundingBox(this.elements).resizeParams(
       type,
       movePoint
     )
 
-    this.exec((path) => {
-      this.svg.updateElement(
-        path.scaleX(scale.x).scaleY(scale.y).translate(move)
-      )
+    this.exec({
+      path: (path) => {
+        this.svg.updateElement(
+          path.scaleX(scale.x).scaleY(scale.y).translate(move)
+        )
+      },
     })
   }
 
@@ -100,12 +103,13 @@ export class EditSvg {
    * @todo Implements to delete points.
    */
   delete() {
-    this.exec(
-      (path) => this.svg.deleteElement(path),
-      (path, index) =>
+    this.exec({
+      path: (path) => this.svg.deleteElement(path),
+      command: (path, index) =>
         this.svg.updateElement(path.deleteCommand(index.command)),
-      (path, index) => this.svg.updateElement(path.deleteCommand(index.command))
-    )
+      point: (path, index) =>
+        this.svg.updateElement(path.deleteCommand(index.command)),
+    })
   }
 
   /** Clone an EditSvg class object for preview. */
@@ -120,39 +124,33 @@ export class EditSvg {
     if (!this.selector.selected) return null
 
     return {
-      elements: this.paths.map((path) => ({
+      elements: this.elements.map((path) => ({
         path: path.toJson(),
         anchorPoints: new AnchorPoints(path.clone(), this.selector).toJson(),
       })),
       boundingBox: new BoundingBox(
-        this.paths,
+        this.elements,
         this.selector.isSelected({ type: 'bounding-box' })
       ).toJson(),
     }
   }
 
-  private exec(
-    pathExec: (path: PathClass) => void,
-    commandExec?: (path: PathClass, index: { command: number }) => void,
-    pointExec?: (
-      path: PathClass,
-      index: { command: number; point: number }
-    ) => void
-  ): void {
+  private exec(transform: {
+    path: (path: PathClass) => void
+    command?: (path: PathClass, index: { command: number }) => void
+    point?: (path: PathClass, index: { command: number; point: number }) => void
+  }): void {
     const pathAnchorPointExec = (
       path: PathClass,
       { index, type }: SelectAnchorPointObject
     ) => {
       switch (type) {
         case 'path/command': {
-          if (!commandExec) return
-          commandExec(path, index)
+          transform.command?.(path, index)
           return
         }
         case 'path/point': {
-          if (!pointExec) return
-
-          pointExec(path, index)
+          transform.point?.(path, index)
           return
         }
       }
@@ -165,14 +163,14 @@ export class EditSvg {
       switch (selectObject.type) {
         case 'path': {
           if (selectObject.anchorPoints.length === 0) {
-            pathExec(element)
-            return
+            transform.path(element)
+            break
           }
 
           selectObject.anchorPoints.forEach((anchorPointObject) =>
             pathAnchorPointExec(element, anchorPointObject)
           )
-          return
+          break
         }
         default: {
           break

@@ -43,7 +43,10 @@ export class EditEventHandler {
 
     switch (this.currentEvent.type) {
       case 'bounding-box/vertex': {
-        this.editing.resizePreview(this.currentEvent.vertexType, movePoint)
+        this.editing.resizeBoundingBoxPreview(
+          this.currentEvent.vertexType,
+          movePoint
+        )
         break
       }
       default: {
@@ -61,7 +64,7 @@ export class EditEventHandler {
 
     switch (this.currentEvent.type) {
       case 'bounding-box/vertex': {
-        this.editing.resize(this.currentEvent.vertexType, movePoint)
+        this.editing.resizeBoundingBox(this.currentEvent.vertexType, movePoint)
         break
       }
       default: {

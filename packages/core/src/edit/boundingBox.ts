@@ -5,12 +5,16 @@ import type {
   PathClass,
   BoundingBoxObject,
   Vertex,
+  ElementClass,
 } from '../types'
 
 const fallbackPointObject: PointObject = { x: 0, y: 0 }
 
 export class BoundingBox {
-  constructor(private paths: PathClass[], private selected: boolean = false) {}
+  constructor(
+    private elements: ElementClass[],
+    private selected: boolean = false
+  ) {}
 
   public toJson(): BoundingBoxObject {
     return {
@@ -115,7 +119,7 @@ export class BoundingBox {
   }
 
   private get points(): PointObject[] {
-    return this.paths.flatMap((path) => {
+    return this.elements.flatMap((path) => {
       let prev: PointObject | undefined = undefined
 
       return path.absoluteCommands.flatMap((command) => {

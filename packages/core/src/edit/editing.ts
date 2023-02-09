@@ -18,8 +18,8 @@ export class Editing {
     this.translate = this.translate.bind(this)
     this.translatePreview = this.translatePreview.bind(this)
 
-    this.resize = this.resize.bind(this)
-    this.resizePreview = this.resizePreview.bind(this)
+    this.resizeBoundingBox = this.resizeBoundingBox.bind(this)
+    this.resizeBoundingBoxPreview = this.resizeBoundingBoxPreview.bind(this)
   }
 
   /** Clear selected status and update screen. */
@@ -52,27 +52,27 @@ export class Editing {
   }
 
   translatePreview(po: PointObject) {
-    this.translateEditSvg(this.editSvg.preview(), po)
+    this._translate(this.editSvg.preview(), po)
   }
 
   translate(po: PointObject) {
-    this.translateEditSvg(this.editSvg, po)
+    this._translate(this.editSvg, po)
   }
 
-  private translateEditSvg(editSvg: EditSvg, po: PointObject) {
+  private _translate(editSvg: EditSvg, po: PointObject) {
     editSvg.translate(po)
     this._update(editSvg)
   }
 
-  resize(vertexType: VertexType, movePoint: PointObject) {
-    this.resizeEditSvg(this.editSvg, vertexType, movePoint)
+  resizeBoundingBox(vertexType: VertexType, movePoint: PointObject) {
+    this._resizeBoundingBox(this.editSvg, vertexType, movePoint)
   }
 
-  resizePreview(vertexType: VertexType, movePoint: PointObject) {
-    this.resizeEditSvg(this.editSvg.preview(), vertexType, movePoint)
+  resizeBoundingBoxPreview(vertexType: VertexType, movePoint: PointObject) {
+    this._resizeBoundingBox(this.editSvg.preview(), vertexType, movePoint)
   }
 
-  private resizeEditSvg(
+  private _resizeBoundingBox(
     editSvg: EditSvg,
     vertexType: VertexType,
     movePoint: PointObject
