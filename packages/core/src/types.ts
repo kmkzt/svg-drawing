@@ -211,14 +211,6 @@ export type DownloadOption = {
 
 export type ResizeCallback = (arg: { width: number; height: number }) => void
 
-export interface ResizeEventHandler {
-  active: boolean
-  on: () => void
-  off: () => void
-  setElement: (el: HTMLElement) => void
-  setHandler: (callback: ResizeCallback) => void
-}
-
 export type DrawListenerType = 'pointer' | 'touch' | 'mouse'
 
 export type DrawEventName =

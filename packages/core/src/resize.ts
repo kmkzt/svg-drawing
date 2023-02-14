@@ -1,4 +1,4 @@
-import type { ResizeEventHandler, ResizeCallback } from './types'
+import type { ResizeCallback, EventHandler } from './types'
 
 const SUPPORT_RESIZE_OBSERVER = typeof ResizeObserver !== 'undefined'
 
@@ -17,7 +17,7 @@ const SUPPORT_RESIZE_OBSERVER = typeof ResizeObserver !== 'undefined'
  * resizeHandler.on()
  * ```
  */
-export class ResizeHandler implements ResizeEventHandler {
+export class ResizeHandler implements EventHandler {
   /** Remove EventList */
   private _clearEventList: Array<() => void>
   private resizeCallback: ResizeCallback
@@ -34,19 +34,19 @@ export class ResizeHandler implements ResizeEventHandler {
     return this._clearEventList.length > 0
   }
 
-  public off() {
+  public cleanup() {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []
   }
 
-  public on() {
-    this.off()
+  public setup() {
+    this.cleanup()
     this._setupListener()
   }
 
   public setElement(el: HTMLElement) {
     this.el = el
-    if (this.active) this.on()
+    if (this.active) this.setup()
     return this
   }
 

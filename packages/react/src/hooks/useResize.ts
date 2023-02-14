@@ -6,14 +6,14 @@ export const useResize: UseResize = (ref, onResize, active = true) => {
   const resizeListener = useMemo<ResizeHandler>(() => new ResizeHandler(), [])
 
   useEffect(() => {
-    const cleanup = () => resizeListener.off()
+    const cleanup = () => resizeListener.cleanup()
 
     if (!ref.current) return cleanup
 
     const el = ref.current
     resizeListener.setElement(el)
     resizeListener.setHandler(onResize)
-    if (active) resizeListener.on()
+    if (active) resizeListener.setup()
 
     return cleanup
   }, [onResize, resizeListener, ref, active])
