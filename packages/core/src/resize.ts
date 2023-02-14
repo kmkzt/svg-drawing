@@ -17,15 +17,15 @@ const SUPPORT_RESIZE_OBSERVER = typeof ResizeObserver !== 'undefined'
  * resizeHandler.on()
  * ```
  */
-export class ResizeHandler implements EventHandler {
+export class ResizeHandler implements EventHandler<HTMLElement> {
   /** Remove EventList */
   private _clearEventList: Array<() => void>
   private resizeCallback: ResizeCallback
   private width = 0
   private height = 0
   private threshold = 1
-  constructor(private el: HTMLElement | null = null) {
-    this.el = el
+  private el: HTMLElement | null = null
+  constructor() {
     this.resizeCallback = () => void 0
     this._clearEventList = []
   }
@@ -37,16 +37,17 @@ export class ResizeHandler implements EventHandler {
   public cleanup() {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []
+    this.el = null
   }
 
-  public setup() {
+  public setup(el: HTMLElement) {
     this.cleanup()
-    this._setupListener()
+    this._setupListener(el)
   }
 
   public setElement(el: HTMLElement) {
     this.el = el
-    if (this.active) this.setup()
+    if (this.active) this.setup(el)
     return this
   }
 
@@ -74,9 +75,8 @@ export class ResizeHandler implements EventHandler {
     this.resize({ width, height })
   }
 
-  private _setupListener(): void {
-    if (!this.el) return
-
+  private _setupListener(el: HTMLElement): void {
+    this.el = el
     // Initialize size
     this.handleResize()
 

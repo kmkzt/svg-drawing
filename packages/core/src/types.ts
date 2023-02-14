@@ -245,12 +245,11 @@ export interface DrawingClass {
   end: () => void
 }
 
-export interface EventHandler {
+export interface EventHandler<C = undefined> {
   /** Returns true when draw event listener is active. */
   active: boolean
-  setup: () => void
+  setup: (ctx: C) => void
   cleanup: () => void
-  setElement: (el: HTMLElement) => void
 }
 
 export type AnchorPoint = {

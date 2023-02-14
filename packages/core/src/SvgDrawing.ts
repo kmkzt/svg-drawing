@@ -44,7 +44,7 @@ export class SvgDrawing {
   private svg: SvgClass
   private drawing: DrawingClass
   private factory: BasicDrawFactory
-  private handler: EventHandler
+  private handler: EventHandler<HTMLElement>
   private renderer: SvgRenderer
   constructor(
     el: HTMLElement,
@@ -77,10 +77,10 @@ export class SvgDrawing {
 
     this.drawing = new Drawing(this.svg, this.factory, this.update)
 
-    const pencilHandler = new PencilHandler(this.drawing, el)
+    const pencilHandler = new PencilHandler(this.drawing)
     this.handler = pencilHandler
     pencilHandler.changeDelay(delay)
-    this.handler.setup()
+    this.handler.setup(el)
   }
 
   public drawStart(): void {

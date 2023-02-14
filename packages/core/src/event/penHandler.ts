@@ -1,17 +1,52 @@
-import { BaseDrawHandler } from './baseDrawHandler'
+import { getEventPoint } from './getEventPoint'
+import { OffsetPosition } from './offsetPosition'
 import { SUPPORT_ON_TOUCH_START, SUPPORT_POINTER_EVENT } from './support'
 import type { DrawingClass } from '..'
-import type { DrawListenerType, ClearListener, DrawEventName } from '../types'
+import type {
+  DrawListenerType,
+  ClearListener,
+  DrawEventName,
+  EventPoint,
+  EventHandler,
+} from '../types'
 
-export class PenHandler extends BaseDrawHandler {
+export class PenHandler implements EventHandler<HTMLElement> {
   private _editing: boolean
-  constructor(drawing: DrawingClass, el?: HTMLElement) {
-    super(drawing, el)
+  /** Remove EventList */
+  private _clearEventList: Array<ClearListener>
+  /** Offset coordinates */
+  private _offsetPosition: OffsetPosition
+  private el: HTMLElement | null = null
+  constructor(private drawing: DrawingClass) {
+    // Set offset coordinates
+    this._offsetPosition = new OffsetPosition()
+    this._clearEventList = []
+
     this._editing = false
     this._handleProt = this._handleProt.bind(this)
   }
 
-  protected setupListener(): Array<ClearListener> {
+  get active() {
+    return this.el !== null
+  }
+
+  public cleanup() {
+    this._clearEventList.map((fn) => fn())
+    this._clearEventList = []
+
+    this._offsetPosition.cleanup()
+    this.el = null
+  }
+
+  public setup(el: HTMLElement) {
+    this.cleanup()
+    this.el = el
+
+    this._offsetPosition.setup(el)
+    this._clearEventList = this.setupListener()
+  }
+
+  private setupListener(): Array<ClearListener> {
     const clearEvent: ClearListener[] = [...this._setupCancelListener()]
     if (SUPPORT_POINTER_EVENT)
       return [...this._setupDrawListener('pointer'), ...clearEvent]
@@ -72,5 +107,11 @@ export class PenHandler extends BaseDrawHandler {
         removeEventListener(eventMap[type], this._handleProt)
       },
     ]
+  }
+
+  private getPointObjectFromDrawEvent(
+    ev: MouseEvent | TouchEvent | PointerEvent
+  ): EventPoint {
+    return getEventPoint(ev, this._offsetPosition.position || undefined)
   }
 }

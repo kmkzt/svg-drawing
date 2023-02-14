@@ -1,37 +1,46 @@
-import type { ClearListener } from '../types'
+import type { EventHandler, PointObject } from '../types'
 
-export class OffsetPosition {
-  left: number
-  top: number
-  constructor(private el?: HTMLElement) {
-    const { left, top } = el ? el.getBoundingClientRect() : { left: 0, top: 0 }
+export class OffsetPosition implements EventHandler<HTMLElement> {
+  position: PointObject | null = null
+  private el: HTMLElement | null = null
+  private _cleanup: (() => void) | null = null
+  constructor() {
+    this.setOffsetPosition = this.setOffsetPosition.bind(this)
+  }
 
-    this.left = left
-    this.top = top
+  get active() {
+    return this._cleanup !== null
+  }
+
+  private setOffsetPosition() {
+    if (!this.el) {
+      this.position = null
+      return
+    }
+
+    const { left, top } = this.el.getBoundingClientRect()
+    this.position = { x: left, y: top }
   }
 
   setElement(el: HTMLElement) {
     this.el = el
   }
 
-  setup(): Array<ClearListener> {
-    const el = this.el
-    if (!el) return []
+  setup(el: HTMLElement): void {
+    this.el = el
+    this.setOffsetPosition()
 
-    const setOffsetPosition = () => {
-      const { left, top } = el.getBoundingClientRect()
-      this.left = left
-      this.top = top
+    addEventListener('scroll', this.setOffsetPosition)
+    this.el.addEventListener('resize', this.setOffsetPosition)
+
+    this._cleanup = () => {
+      removeEventListener('scroll', this.setOffsetPosition)
+      el.removeEventListener('resize', this.setOffsetPosition)
+      this.el = null
     }
+  }
 
-    setOffsetPosition()
-    addEventListener('scroll', setOffsetPosition)
-    el.addEventListener('resize', setOffsetPosition)
-    return [
-      () => {
-        removeEventListener('scroll', setOffsetPosition)
-        el.removeEventListener('resize', setOffsetPosition)
-      },
-    ]
+  cleanup() {
+    this._cleanup?.()
   }
 }

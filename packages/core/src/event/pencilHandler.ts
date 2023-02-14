@@ -1,4 +1,5 @@
-import { BaseDrawHandler } from './baseDrawHandler'
+import { getEventPoint } from './getEventPoint'
+import { OffsetPosition } from './offsetPosition'
 import {
   SUPPORT_EVENT_LISTENER_PASSIVE_OPTION,
   SUPPORT_ON_TOUCH_START,
@@ -6,15 +7,27 @@ import {
 } from './support'
 import { throttle } from '../throttle'
 import type { DrawingClass } from '..'
-import type { DrawListenerType, ClearListener, DrawEventName } from '../types'
+import type {
+  DrawListenerType,
+  ClearListener,
+  DrawEventName,
+  EventPoint,
+  EventHandler,
+} from '../types'
 
-export class PencilHandler extends BaseDrawHandler {
+export class PencilHandler implements EventHandler<HTMLElement> {
   private _drawMoveThrottle: DrawingClass['dot']
   private delay = 20
   /** AddEventListener Options */
   private listenerOption: { passive: boolean } | false
-  constructor(drawing: DrawingClass, el?: HTMLElement) {
-    super(drawing, el)
+  /** Offset coordinates */
+  private _offsetPosition: OffsetPosition
+  private el: HTMLElement | null = null
+  /** Remove EventList */
+  private _clearEventList: Array<ClearListener>
+  constructor(private drawing: DrawingClass) {
+    this._offsetPosition = new OffsetPosition()
+    this._clearEventList = []
 
     // Bind methods
     this._handleStart = this._handleStart.bind(this)
@@ -31,13 +44,19 @@ export class PencilHandler extends BaseDrawHandler {
     this.delay = delay
     this._drawMoveThrottle = throttle(this.drawing.dot, this.delay)
 
-    if (this.active) this.setup()
+    if (this.el) this.setup(this.el)
   }
 
-  protected setupListener(): Array<ClearListener> {
-    if (SUPPORT_POINTER_EVENT) return this._setupDrawListener('pointer')
+  protected setupListener(): void {
+    if (SUPPORT_POINTER_EVENT) {
+      this._setupDrawListener('pointer')
+      return
+    }
 
-    if (SUPPORT_ON_TOUCH_START) return this._setupDrawListener('touch')
+    if (SUPPORT_ON_TOUCH_START) {
+      this._setupDrawListener('touch')
+      return
+    }
 
     return this._setupDrawListener('mouse')
   }
@@ -57,9 +76,9 @@ export class PencilHandler extends BaseDrawHandler {
     this._drawMoveThrottle(this.getPointObjectFromDrawEvent(ev))
   }
 
-  private _setupDrawListener(type: DrawListenerType): Array<() => void> {
+  private _setupDrawListener(type: DrawListenerType): void {
     const el = this.el
-    if (!el) return []
+    if (!el) return
 
     const eventMap: Record<
       DrawListenerType,
@@ -112,6 +131,38 @@ export class PencilHandler extends BaseDrawHandler {
       return () => removeEventListener(evname, this._handleEnd)
     })
 
-    return [...startClear, ...moveClear, ...endClear, ...flameoutClear]
+    this._clearEventList = [
+      ...startClear,
+      ...moveClear,
+      ...endClear,
+      ...flameoutClear,
+    ]
+  }
+
+  private getPointObjectFromDrawEvent(
+    ev: MouseEvent | TouchEvent | PointerEvent
+  ): EventPoint {
+    return getEventPoint(ev, this._offsetPosition.position || undefined)
+  }
+
+  get active() {
+    return this.el !== null
+  }
+
+  public cleanup() {
+    this._clearEventList.map((fn) => fn())
+    this._clearEventList = []
+
+    this._offsetPosition.cleanup()
+    this.el = null
+  }
+
+  public setup(el: HTMLElement) {
+    this.cleanup()
+
+    this.el = el
+
+    this._offsetPosition.setup(el)
+    this.setupListener()
   }
 }

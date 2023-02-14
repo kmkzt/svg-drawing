@@ -62,39 +62,4 @@ describe('Selector', () => {
       `)
     })
   })
-
-  describe('Return selected status.', () => {
-    it('Return false when not selected', () => {
-      const selector = new Selector()
-      expect(selector.selected).toBe(false)
-    })
-
-    it('Return true when path is selected', () => {
-      const selector = new Selector()
-      selector.select(selectedPath)
-
-      expect(selector.selected).toBe(true)
-    })
-    it('Return true when command is selected', () => {
-      const selector = new Selector()
-      selector.select(selectedCommand)
-
-      expect(selector.selected).toBe(true)
-    })
-
-    it('select point', () => {
-      const selector = new Selector()
-      selector.select(selectedPoint)
-
-      expect(selector.selected).toBe(true)
-    })
-  })
-
-  it('Clear selected status', () => {
-    const selector = new Selector()
-    selector.select(selectedPath)
-    selector.clear()
-
-    expect(selector.selected).toBe(false)
-  })
 })

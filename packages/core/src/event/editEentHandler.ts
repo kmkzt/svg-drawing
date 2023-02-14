@@ -2,9 +2,9 @@ import { getEventPoint } from './getEventPoint'
 import { PressedKeyHandler } from './pressedKeyHandler'
 import { getSelectEvent } from '../renderer/dataAttributes'
 import type { Editing } from '../edit/editing'
-import type { PointObject, SelectEventObject } from '../types'
+import type { EventHandler, PointObject, SelectEventObject } from '../types'
 
-export class EditEventHandler {
+export class EditEventHandler implements EventHandler<HTMLElement> {
   private el: HTMLElement | null = null
   private basePoint: PointObject | null = null
   private currentEvent: SelectEventObject | null = null
@@ -110,10 +110,14 @@ export class EditEventHandler {
     this.transformStart(ev, selectEvent)
   }
 
+  get active() {
+    return this.el !== null
+  }
+
   setup(el: HTMLElement) {
     this.cleanup()
-
     this.el = el
+
     this.el?.addEventListener('mousedown', this.handleSelect)
     this.el?.addEventListener('touchstart', this.handleSelect)
 
@@ -125,5 +129,7 @@ export class EditEventHandler {
     this.el?.removeEventListener('touchstart', this.handleSelect)
 
     this.pressedKeyHandler.cleanup()
+
+    this.el = null
   }
 }

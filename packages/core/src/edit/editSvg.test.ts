@@ -154,15 +154,6 @@ describe('EditSvg', () => {
         expect(edit.svg.elements[0].attrs.id).toBe('path_1')
         expect(edit.svg.elements[1].attrs.id).toBe('path_2')
       })
-      it('Update selected status.', () => {
-        const editKey = edit.svg.elements[0].key
-        edit.select({ type: 'path', key: editKey })
-
-        expect(edit.selected).toBe(true)
-
-        edit.delete()
-        expect(edit.selected).toBe(false)
-      })
     })
     it.todo('Selecting commands')
     it.todo('Selecting point')

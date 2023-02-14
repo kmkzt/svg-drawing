@@ -20,7 +20,7 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
   active = true,
 }: {
   ref: RefObject<E>
-  handler: EventHandler
+  handler: EventHandler<E>
   active?: boolean
 }) => {
   useEffect(() => {
@@ -28,8 +28,7 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
 
     // Setup
     const el = ref.current
-    handler.setElement(el)
-    if (active) handler.setup()
+    if (active) handler.setup(el)
 
     return () => handler.cleanup()
   }, [active, handler, ref])

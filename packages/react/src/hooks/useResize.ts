@@ -11,9 +11,9 @@ export const useResize: UseResize = (ref, onResize, active = true) => {
     if (!ref.current) return cleanup
 
     const el = ref.current
-    resizeListener.setElement(el)
+
     resizeListener.setHandler(onResize)
-    if (active) resizeListener.setup()
+    if (active) resizeListener.setup(el)
 
     return cleanup
   }, [onResize, resizeListener, ref, active])
