@@ -145,10 +145,6 @@ export class PencilHandler implements EventHandler<HTMLElement> {
     return getEventPoint(ev, this._offsetPosition.position || undefined)
   }
 
-  get active() {
-    return this.el !== null
-  }
-
   public cleanup() {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []

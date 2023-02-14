@@ -110,10 +110,6 @@ export class EditEventHandler implements EventHandler<HTMLElement> {
     this.transformStart(ev, selectEvent)
   }
 
-  get active() {
-    return this.el !== null
-  }
-
   setup(el: HTMLElement) {
     this.cleanup()
     this.el = el

@@ -30,10 +30,6 @@ export class ResizeHandler implements EventHandler<HTMLElement> {
     this._clearEventList = []
   }
 
-  public get active(): boolean {
-    return this._clearEventList.length > 0
-  }
-
   public cleanup() {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []

@@ -26,10 +26,6 @@ export class PenHandler implements EventHandler<HTMLElement> {
     this._handleProt = this._handleProt.bind(this)
   }
 
-  get active() {
-    return this.el !== null
-  }
-
   public cleanup() {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []

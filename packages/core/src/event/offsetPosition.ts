@@ -8,10 +8,6 @@ export class OffsetPosition implements EventHandler<HTMLElement> {
     this.setOffsetPosition = this.setOffsetPosition.bind(this)
   }
 
-  get active() {
-    return this._cleanup !== null
-  }
-
   private setOffsetPosition() {
     if (!this.el) {
       this.position = null

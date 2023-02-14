@@ -246,8 +246,6 @@ export interface DrawingClass {
 }
 
 export interface EventHandler<C = undefined> {
-  /** Returns true when draw event listener is active. */
-  active: boolean
   setup: (ctx: C) => void
   cleanup: () => void
 }
