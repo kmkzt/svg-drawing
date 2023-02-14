@@ -17,7 +17,6 @@ export class PencilHandler extends BaseDrawHandler {
     super(drawing, el)
 
     // Bind methods
-    this.setDrawing = this.setDrawing.bind(this)
     this._handleStart = this._handleStart.bind(this)
     this._handleMove = this._handleMove.bind(this)
     this._handleEnd = this._handleEnd.bind(this)
@@ -32,14 +31,7 @@ export class PencilHandler extends BaseDrawHandler {
     this.delay = delay
     this._drawMoveThrottle = throttle(this.drawing.dot, this.delay)
 
-    if (this.active) this.on()
-  }
-
-  public setDrawing(drawing: DrawingClass) {
-    this.drawing = drawing
-    this._drawMoveThrottle = throttle(this.drawing.dot, this.delay)
-
-    if (this.active) this.on()
+    if (this.active) this.setup()
   }
 
   protected setupListener(): Array<ClearListener> {

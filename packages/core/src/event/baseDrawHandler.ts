@@ -14,9 +14,8 @@ export abstract class BaseDrawHandler implements DrawEventHandler {
     protected el?: HTMLElement | undefined
   ) {
     // Bind method
-    this.on = this.on.bind(this)
-    this.off = this.off.bind(this)
-    this.setDrawing = this.setDrawing.bind(this)
+    this.setup = this.setup.bind(this)
+    this.cleanup = this.cleanup.bind(this)
 
     // Set offset coordinates
     this._offsetPosition = new OffsetPosition(el)
@@ -27,13 +26,13 @@ export abstract class BaseDrawHandler implements DrawEventHandler {
     return this._clearEventList.length > 0
   }
 
-  public off() {
+  public cleanup() {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []
   }
 
-  public on() {
-    this.off()
+  public setup() {
+    this.cleanup()
 
     this._clearEventList = [
       ...this._offsetPosition.setup(),
@@ -45,12 +44,7 @@ export abstract class BaseDrawHandler implements DrawEventHandler {
     this.el = el
     this._offsetPosition.setElement(el)
 
-    if (this.active) this.on()
-  }
-
-  public setDrawing(drawing: DrawingClass) {
-    this.drawing = drawing
-    if (this.active) this.on()
+    if (this.active) this.setup()
   }
 
   public getPointObjectFromDrawEvent(

@@ -256,9 +256,8 @@ export interface DrawingClass {
 export interface DrawEventHandler {
   /** Returns true when draw event listener is active. */
   active: boolean
-  on: () => void
-  off: () => void
-  setDrawing: (drawing: DrawingClass) => void
+  setup: () => void
+  cleanup: () => void
   setElement: (el: HTMLElement) => void
 }
 

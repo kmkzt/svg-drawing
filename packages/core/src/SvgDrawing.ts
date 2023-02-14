@@ -80,7 +80,7 @@ export class SvgDrawing {
     const pencilHandler = new PencilHandler(this.drawing, el)
     this.handler = pencilHandler
     pencilHandler.changeDelay(delay)
-    this.handler.on()
+    this.handler.setup()
   }
 
   public drawStart(): void {

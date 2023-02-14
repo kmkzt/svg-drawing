@@ -29,10 +29,9 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
     // Setup
     const el = ref.current
     handler.setElement(el)
-    if (active) handler.on()
+    if (active) handler.setup()
 
-    const cleanup = () => handler.off()
-    return cleanup
+    return () => handler.cleanup()
   }, [active, handler, ref])
 }
 
