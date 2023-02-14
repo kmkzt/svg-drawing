@@ -1,7 +1,7 @@
 import { PencilHandler, PenHandler } from '@svg-drawing/core'
 import { useEffect, useMemo } from 'react'
 import type { UseDrawEventHandler } from '../types'
-import type { DrawEventHandler } from '@svg-drawing/core'
+import type { EventHandler } from '@svg-drawing/core'
 import type { RefObject } from 'react'
 
 /**
@@ -20,7 +20,7 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
   active = true,
 }: {
   ref: RefObject<E>
-  handler: DrawEventHandler
+  handler: EventHandler
   active?: boolean
 }) => {
   useEffect(() => {

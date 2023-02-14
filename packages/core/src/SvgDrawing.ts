@@ -5,7 +5,7 @@ import { SvgRenderer } from './renderer/svgRenderer'
 import { Svg } from './svg/svg'
 import type {
   DrawingOption,
-  DrawEventHandler,
+  EventHandler,
   SvgClass,
   DrawingClass,
   SvgObject,
@@ -44,7 +44,7 @@ export class SvgDrawing {
   private svg: SvgClass
   private drawing: DrawingClass
   private factory: BasicDrawFactory
-  private handler: DrawEventHandler
+  private handler: EventHandler
   private renderer: SvgRenderer
   constructor(
     el: HTMLElement,

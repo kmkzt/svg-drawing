@@ -253,7 +253,7 @@ export interface DrawingClass {
   end: () => void
 }
 
-export interface DrawEventHandler {
+export interface EventHandler {
   /** Returns true when draw event listener is active. */
   active: boolean
   setup: () => void

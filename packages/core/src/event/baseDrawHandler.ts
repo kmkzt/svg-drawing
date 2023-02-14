@@ -1,9 +1,9 @@
 import { getEventPoint } from './getEventPoint'
 import { OffsetPosition } from './offsetPosition'
 import type { DrawingClass } from '..'
-import type { DrawEventHandler, ClearListener, EventPoint } from '../types'
+import type { EventHandler, ClearListener, EventPoint } from '../types'
 
-export abstract class BaseDrawHandler implements DrawEventHandler {
+export abstract class BaseDrawHandler implements EventHandler {
   /** Remove EventList */
   private _clearEventList: Array<ClearListener>
   /** Offset coordinates */
