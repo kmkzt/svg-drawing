@@ -45,12 +45,6 @@ export class ResizeHandler implements EventHandler<HTMLElement> {
     this._setupListener(el)
   }
 
-  public setElement(el: HTMLElement) {
-    this.el = el
-    if (this.active) this.setup(el)
-    return this
-  }
-
   public setHandler(resizeCallback: ResizeCallback) {
     this.resizeCallback = resizeCallback
   }
