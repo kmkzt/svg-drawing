@@ -133,7 +133,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     onChangeSvg,
   })
 
-  useEditEventHandler(targetRef, edit)
+  useEditEventHandler(targetRef, edit, mode === 'edit')
 
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (e: React.MouseEvent<HTMLElement>) => {

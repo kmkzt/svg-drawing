@@ -1,11 +1,8 @@
 export { Svg } from './components/Svg'
 export { Path } from './components/Path'
 export { useDraw } from './hooks/useDraw'
-export {
-  useDrawEventHandler,
-  usePenHandler,
-  usePencilHandler,
-} from './hooks/useDrawEventHandler'
+export { useEventHandler } from './hooks/useEventHandler'
+export { usePenHandler, usePencilHandler } from './hooks/useDrawEventHandler'
 export { useDrawFactory } from './hooks/useDrawFactory'
 export { useEdit } from './hooks/useEdit'
 export { useEditEventHandler } from './hooks/useEditEventHandler'

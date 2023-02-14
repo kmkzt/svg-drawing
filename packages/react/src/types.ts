@@ -65,6 +65,7 @@ export type EditSvgAction = {
 export type UseEditEventHandler<E extends HTMLElement = HTMLElement> = (
   ref: RefObject<E>,
   edit: Editing,
+  active: boolean,
   opts?: {
     multipleSelectBindKey?: string
   }

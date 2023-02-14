@@ -1,38 +1,7 @@
 import { PencilHandler, PenHandler } from '@svg-drawing/core'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
+import { useEventHandler } from './useEventHandler'
 import type { UseDrawEventHandler } from '../types'
-import type { EventHandler } from '@svg-drawing/core'
-import type { RefObject } from 'react'
-
-/**
- * @example <caption>useDrawEventHandler</caption>
- *
- * ```ts
- * const ref = useRef(null)
- * const handler = useSetupHandler(setup, drawing)
- *
- * UseDrawEventHandler({ ref, handler })
- * ```
- */
-export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
-  ref,
-  handler,
-  active = true,
-}: {
-  ref: RefObject<E>
-  handler: EventHandler<E>
-  active?: boolean
-}) => {
-  useEffect(() => {
-    if (!ref.current) return
-
-    // Setup
-    const el = ref.current
-    if (active) handler.setup(el)
-
-    return () => handler.cleanup()
-  }, [active, handler, ref])
-}
 
 /**
  * @example
@@ -59,7 +28,7 @@ export const useDrawEventHandler = <E extends HTMLElement = HTMLElement>({
 export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
   const handler = useMemo(() => new PencilHandler(drawing), [drawing])
 
-  useDrawEventHandler({ ref, handler, active })
+  useEventHandler({ ref, handler, active })
 }
 
 /**
@@ -88,5 +57,5 @@ export const usePencilHandler: UseDrawEventHandler = (ref, drawing, active) => {
 export const usePenHandler: UseDrawEventHandler = (ref, drawing, active) => {
   const handler = useMemo(() => new PenHandler(drawing), [drawing])
 
-  useDrawEventHandler({ ref, handler: handler, active })
+  useEventHandler({ ref, handler: handler, active })
 }
