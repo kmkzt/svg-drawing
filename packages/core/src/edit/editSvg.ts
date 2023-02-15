@@ -119,10 +119,18 @@ export class EditSvg {
     if (!this.elements.length) return null
 
     return {
-      elements: this.elements.map((path) => ({
-        path: path.toJson(),
-        anchorPoints: new AnchorPoints(path.clone(), this.selector).toJson(),
-      })),
+      elements: this.elements.map((element) => {
+        const data = element.toJson()
+        return {
+          key: data.key,
+          attributes: data.attributes,
+          type: data.type,
+          anchorPoints: new AnchorPoints(
+            element.clone(),
+            this.selector
+          ).toJson(),
+        }
+      }),
       boundingBox: new BoundingBox(
         this.elements,
         this.selector.isSelected({ type: 'bounding-box' })

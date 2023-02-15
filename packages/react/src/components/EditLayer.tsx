@@ -29,26 +29,35 @@ export const EditLayer = () => {
       )}
       {editElements &&
         editElements.map((editPath, i) => (
-          <EditPath key={i} editPath={editPath} />
+          <EditPath
+            key={editPath.key}
+            elementKey={editPath.key}
+            attributes={editPath.attributes}
+            anchorPoints={editPath.anchorPoints}
+          />
         ))}
     </>
   )
 }
 
-type EditPathProps = {
-  editPath: EditPathObject
-}
-
-const EditPath = ({ editPath: { path, anchorPoints } }: EditPathProps) => (
-  <g key={path.key}>
+const EditPath = ({
+  elementKey,
+  attributes,
+  anchorPoints,
+}: {
+  elementKey: EditPathObject['key']
+  attributes: EditPathObject['attributes']
+  anchorPoints: EditPathObject['anchorPoints']
+}) => (
+  <g key={elementKey}>
     <Path
-      {...path.attributes}
-      elementKey={path.key}
+      {...attributes}
+      elementKey={elementKey}
       strokeWidth={EDIT_PATH_STYLE.line}
-      stroke={path.attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined}
+      stroke={attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined}
       fill="none"
-      strokeLinecap={path.attributes.strokeLinecap}
-      strokeLinejoin={path.attributes.strokeLinejoin}
+      strokeLinecap={attributes.strokeLinecap}
+      strokeLinejoin={attributes.strokeLinejoin}
     />
     {anchorPoints.map(({ points, d }, commandIndex) => (
       <g key={commandIndex}>

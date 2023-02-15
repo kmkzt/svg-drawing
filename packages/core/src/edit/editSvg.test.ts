@@ -210,17 +210,15 @@ describe('EditSvg', () => {
       },
       elements: [
         {
-          path: {
-            attributes: {
-              d: 'M1 1 l1 1 c2 2 4 2 6 2 z',
-              fill: '#f00',
-              id: 'path_0',
-              stroke: '#00f',
-              strokeWidth: '4',
-            },
-            key: 'path_key_0',
-            type: 'path',
+          attributes: {
+            d: 'M1 1 l1 1 c2 2 4 2 6 2 z',
+            fill: '#f00',
+            id: 'path_0',
+            stroke: '#00f',
+            strokeWidth: '4',
           },
+          key: 'path_key_0',
+          type: 'path',
           anchorPoints: [
             {
               d: 'M 2 2',

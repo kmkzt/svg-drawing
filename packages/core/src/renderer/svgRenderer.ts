@@ -170,14 +170,18 @@ const pathAnchorPointElement = ({ d, points }: AnchorPoint): SVGElement =>
     ),
   ])
 
-const segmentElement = ({ path, anchorPoints }: EditPathObject): SVGElement =>
+const segmentElement = ({
+  key,
+  attributes,
+  anchorPoints,
+}: EditPathObject): SVGElement =>
   element('g', {}, [
-    pathElement(path.key, {
+    pathElement(key, {
       strokeWidth: EDIT_PATH_STYLE.line,
-      stroke: path.attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined,
+      stroke: attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined,
       fill: 'none',
-      strokeLinecap: path.attributes.strokeLinecap,
-      strokeLinejoin: path.attributes.strokeLinejoin,
+      strokeLinecap: attributes.strokeLinecap,
+      strokeLinejoin: attributes.strokeLinejoin,
     }),
     ...anchorPoints.map((anchorPoint) => pathAnchorPointElement(anchorPoint)),
   ])

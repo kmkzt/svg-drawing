@@ -285,9 +285,8 @@ export type Vertex = {
 }
 
 export type EditPathObject = {
-  path: PathObject
   anchorPoints: AnchorPoint[]
-}
+} & PathObject
 
 export type EditElementObject = EditPathObject
 

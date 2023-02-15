@@ -1,4 +1,4 @@
-import type { PointObject, AnchorPoint, PathClass } from '../types'
+import type { PointObject, AnchorPoint, ElementClass } from '../types'
 import type { Selector } from './selector'
 
 const genOutline = (points: PointObject[]) =>
@@ -8,11 +8,11 @@ const genOutline = (points: PointObject[]) =>
   )
 
 export class AnchorPoints {
-  constructor(private path: PathClass, private selector: Selector) {}
+  constructor(private element: ElementClass, private selector: Selector) {}
 
   toJson(): AnchorPoint[] {
     const vertex: AnchorPoint[] = []
-    const commands = this.path.absoluteCommands
+    const commands = this.element.absoluteCommands
 
     for (let c = 0; c < commands.length; c += 1) {
       const curr = commands[c]
@@ -29,14 +29,14 @@ export class AnchorPoints {
       vertex.push({
         points: curr.points.map((point, pIndex) => ({
           index: {
-            path: this.path.key,
+            path: this.element.key,
             command: c,
             point: pIndex,
           },
           value: point.toJson(),
           selected: this.selector.isSelected({
             type: 'path/point',
-            key: this.path.key,
+            key: this.element.key,
             index: { command: c, point: pIndex },
           }),
         })),
