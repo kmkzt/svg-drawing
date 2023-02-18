@@ -4,7 +4,7 @@ import { getSelectEvent } from '../renderer/dataAttributes'
 import type { Editing } from '../edit/editing'
 import type { EventHandler, PointObject, SelectEventObject } from '../types'
 
-export class EditEventHandler implements EventHandler<HTMLElement> {
+export class EditHandler implements EventHandler<HTMLElement> {
   private el: HTMLElement | null = null
   private basePoint: PointObject | null = null
   private currentEvent: SelectEventObject | null = null

@@ -1,4 +1,4 @@
-import type { ResizeCallback, EventHandler } from './types'
+import type { ResizeCallback, EventHandler } from '../types'
 
 const SUPPORT_RESIZE_OBSERVER = typeof ResizeObserver !== 'undefined'
 

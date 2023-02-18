@@ -1,5 +1,5 @@
 import { getEventPoint } from './getEventPoint'
-import { OffsetPosition } from './offsetPosition'
+import { OffsetPositionHandler } from './offsetPositionHandler'
 import { SUPPORT_ON_TOUCH_START, SUPPORT_POINTER_EVENT } from './support'
 import type { DrawingClass } from '..'
 import type {
@@ -15,11 +15,11 @@ export class PenHandler implements EventHandler<HTMLElement> {
   /** Remove EventList */
   private _clearEventList: Array<ClearListener>
   /** Offset coordinates */
-  private _offsetPosition: OffsetPosition
+  private _offsetPositionHandler: OffsetPositionHandler
   private el: HTMLElement | null = null
   constructor(private drawing: DrawingClass) {
     // Set offset coordinates
-    this._offsetPosition = new OffsetPosition()
+    this._offsetPositionHandler = new OffsetPositionHandler()
     this._clearEventList = []
 
     this._editing = false
@@ -30,7 +30,7 @@ export class PenHandler implements EventHandler<HTMLElement> {
     this._clearEventList.map((fn) => fn())
     this._clearEventList = []
 
-    this._offsetPosition.cleanup()
+    this._offsetPositionHandler.cleanup()
     this.el = null
   }
 
@@ -38,7 +38,7 @@ export class PenHandler implements EventHandler<HTMLElement> {
     this.cleanup()
     this.el = el
 
-    this._offsetPosition.setup(el)
+    this._offsetPositionHandler.setup(el)
     this._clearEventList = this.setupListener()
   }
 
@@ -108,6 +108,6 @@ export class PenHandler implements EventHandler<HTMLElement> {
   private getPointObjectFromDrawEvent(
     ev: MouseEvent | TouchEvent | PointerEvent
   ): EventPoint {
-    return getEventPoint(ev, this._offsetPosition.position || undefined)
+    return getEventPoint(ev, this._offsetPositionHandler.position || undefined)
   }
 }

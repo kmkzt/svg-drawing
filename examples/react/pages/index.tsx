@@ -13,7 +13,7 @@ import {
   useAnimation,
   usePencilHandler,
   usePenHandler,
-  useEditEventHandler,
+  useEditHandler,
 } from '@svg-drawing/react'
 import { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
@@ -133,7 +133,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
     onChangeSvg,
   })
 
-  useEditEventHandler(targetRef, edit, mode === 'edit')
+  useEditHandler(targetRef, edit, mode === 'edit')
 
   const clickDownload = useCallback(
     (extension: 'png' | 'jpg' | 'svg') => (e: React.MouseEvent<HTMLElement>) => {

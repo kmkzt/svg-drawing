@@ -1,6 +1,6 @@
 import type { EventHandler, PointObject } from '../types'
 
-export class OffsetPosition implements EventHandler<HTMLElement> {
+export class OffsetPositionHandler implements EventHandler<HTMLElement> {
   position: PointObject | null = null
   private el: HTMLElement | null = null
   private _cleanup: (() => void) | null = null
