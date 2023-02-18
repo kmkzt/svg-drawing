@@ -18,10 +18,6 @@ export class OffsetPosition implements EventHandler<HTMLElement> {
     this.position = { x: left, y: top }
   }
 
-  setElement(el: HTMLElement) {
-    this.el = el
-  }
-
   setup(el: HTMLElement): void {
     this.el = el
     this.setOffsetPosition()
