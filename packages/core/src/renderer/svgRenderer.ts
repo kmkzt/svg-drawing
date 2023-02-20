@@ -8,7 +8,7 @@ import {
 import { EDIT_PATH_STYLE } from './editPathStyle'
 import { camel2kebab } from '../utils'
 import type {
-  AnchorPoint,
+  AnchorPointObject,
   AnimateAttribute,
   BoundingBoxObject,
   EditPathObject,
@@ -145,7 +145,10 @@ const boundingBoxVertexElement = ({
       : EDIT_PATH_STYLE.fill.boundingBox,
   })
 
-const pathAnchorPointElement = ({ d, points }: AnchorPoint): SVGElement =>
+const pathAnchorPointElement = ({
+  d,
+  points,
+}: AnchorPointObject[number]): SVGElement =>
   element('g', {}, [
     element('path', {
       d,

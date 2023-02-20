@@ -250,18 +250,20 @@ export interface EventHandler<C = undefined> {
   cleanup: () => void
 }
 
-export type AnchorPoint = {
-  points: {
-    index: {
-      path: ElementKey
-      command: number
-      point: number
-    }
-    selected: boolean
-    value: PointObject
-  }[]
-  d: string
+type AnchorPoint = {
+  index: {
+    path: ElementKey
+    command: number
+    point: number
+  }
+  selected: boolean
+  value: PointObject
 }
+
+export type AnchorPointObject = Array<{
+  points: AnchorPoint[]
+  d: string
+}>
 
 export type BoundingBoxObject = {
   /** LeftTop vertex is same position. */
@@ -285,7 +287,7 @@ export type Vertex = {
 }
 
 export type EditPathObject = {
-  anchorPoints: AnchorPoint[]
+  anchorPoints: AnchorPointObject
 } & PathObject
 
 export type EditElementObject = EditPathObject

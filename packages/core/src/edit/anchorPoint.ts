@@ -1,4 +1,4 @@
-import type { PointObject, AnchorPoint, ElementClass } from '../types'
+import type { PointObject, AnchorPointObject, ElementClass } from '../types'
 import type { Selector } from './selector'
 
 const genOutline = (points: PointObject[]) =>
@@ -10,8 +10,8 @@ const genOutline = (points: PointObject[]) =>
 export class AnchorPoints {
   constructor(private element: ElementClass, private selector: Selector) {}
 
-  toJson(): AnchorPoint[] {
-    const vertex: AnchorPoint[] = []
+  toJson(): AnchorPointObject {
+    const vertex: AnchorPointObject = []
     const commands = this.element.absoluteCommands
 
     for (let c = 0; c < commands.length; c += 1) {
