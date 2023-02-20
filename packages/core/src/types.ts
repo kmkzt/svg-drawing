@@ -260,10 +260,10 @@ type AnchorPoint = {
   value: PointObject
 }
 
-export type AnchorPointObject = Array<{
+export type AnchorPointObject = {
   points: AnchorPoint[]
-  d: string
-}>
+  outlines: string[]
+}
 
 export type BoundingBoxObject = {
   /** LeftTop vertex is same position. */

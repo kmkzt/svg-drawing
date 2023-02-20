@@ -146,17 +146,14 @@ const boundingBoxVertexElement = ({
   })
 
 const pathAnchorPointElement = ({
-  d,
-  points,
-}: AnchorPointObject[number]): SVGElement =>
-  element('g', {}, [
-    element('path', {
-      d,
-      stroke: EDIT_PATH_STYLE.color.main,
-      strokeWidth: EDIT_PATH_STYLE.line,
-      fill: EDIT_PATH_STYLE.fill.default,
-    }),
-    ...points.map((point) =>
+  anchorPoints,
+}: {
+  anchorPoints: AnchorPointObject['points']
+}): SVGElement =>
+  element(
+    'g',
+    {},
+    anchorPoints.map((point) =>
       element('circle', {
         ...dataPathAnchorPointAttributes({
           elementKey: point.index.path,
@@ -170,13 +167,26 @@ const pathAnchorPointElement = ({
           ? EDIT_PATH_STYLE.color.selected
           : EDIT_PATH_STYLE.color.sub,
       })
-    ),
-  ])
+    )
+  )
 
+const pathOutlineElement = ({ outlines }: { outlines: string[] }): SVGElement =>
+  element(
+    'g',
+    {},
+    outlines.map((d) =>
+      element('path', {
+        d,
+        stroke: EDIT_PATH_STYLE.color.main,
+        strokeWidth: EDIT_PATH_STYLE.line,
+        fill: EDIT_PATH_STYLE.fill.default,
+      })
+    )
+  )
 const segmentElement = ({
   key,
   attributes,
-  anchorPoints,
+  anchorPoints: { points, outlines },
 }: EditPathObject): SVGElement =>
   element('g', {}, [
     pathElement(key, {
@@ -186,7 +196,8 @@ const segmentElement = ({
       strokeLinecap: attributes.strokeLinecap,
       strokeLinejoin: attributes.strokeLinejoin,
     }),
-    ...anchorPoints.map((anchorPoint) => pathAnchorPointElement(anchorPoint)),
+    pathOutlineElement({ outlines }),
+    pathAnchorPointElement({ anchorPoints: points }),
   ])
 
 const editLayer = ({

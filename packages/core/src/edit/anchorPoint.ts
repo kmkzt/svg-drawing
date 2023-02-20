@@ -11,8 +11,24 @@ export class AnchorPoints {
   constructor(private element: ElementClass, private selector: Selector) {}
 
   toJson(): AnchorPointObject {
-    const vertex: AnchorPointObject = []
+    const outlines: string[] = []
     const commands = this.element.absoluteCommands
+
+    const points = commands.flatMap((command, commandIndex) =>
+      command.points.map((point, pointIndex) => ({
+        index: {
+          path: this.element.key,
+          command: commandIndex,
+          point: pointIndex,
+        },
+        value: point.toJson(),
+        selected: this.selector.isSelected({
+          type: 'path/point',
+          key: this.element.key,
+          index: { command: commandIndex, point: pointIndex },
+        }),
+      }))
+    )
 
     for (let c = 0; c < commands.length; c += 1) {
       const curr = commands[c]
@@ -26,24 +42,12 @@ export class AnchorPoints {
         next?.points[0]?.toJson(),
       ].filter((p): p is PointObject => !!p)
 
-      vertex.push({
-        points: curr.points.map((point, pIndex) => ({
-          index: {
-            path: this.element.key,
-            command: c,
-            point: pIndex,
-          },
-          value: point.toJson(),
-          selected: this.selector.isSelected({
-            type: 'path/point',
-            key: this.element.key,
-            index: { command: c, point: pIndex },
-          }),
-        })),
-        d: genOutline(outlinePoints),
-      })
+      outlines.push(genOutline(outlinePoints))
     }
 
-    return vertex
+    return {
+      points,
+      outlines,
+    }
   }
 }
