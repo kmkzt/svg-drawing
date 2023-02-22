@@ -59,25 +59,24 @@ const EditPath = ({
       strokeLinecap={attributes.strokeLinecap}
       strokeLinejoin={attributes.strokeLinejoin}
     />
-    {anchorPoints.map(({ points, d }, commandIndex) => (
-      <g key={commandIndex}>
-        <path
-          d={d}
-          strokeWidth={EDIT_PATH_STYLE.line}
-          stroke={EDIT_PATH_STYLE.color.main}
-          fill={EDIT_PATH_STYLE.fill.default}
-        />
-        {points.map((po, k) => (
-          <AnchorPoint
-            key={k}
-            point={po.value}
-            pathKey={po.index.path}
-            commandIndex={po.index.command}
-            pointIndex={po.index.point}
-            selected={po.selected}
-          />
-        ))}
-      </g>
+    {anchorPoints.outlines.map((d, i) => (
+      <path
+        key={i}
+        d={d}
+        strokeWidth={EDIT_PATH_STYLE.line}
+        stroke={EDIT_PATH_STYLE.color.main}
+        fill={EDIT_PATH_STYLE.fill.default}
+      />
+    ))}
+    {anchorPoints.points.map((po, i) => (
+      <AnchorPoint
+        key={i}
+        point={po.value}
+        pathKey={po.index.path}
+        commandIndex={po.index.command}
+        pointIndex={po.index.point}
+        selected={po.selected}
+      />
     ))}
   </g>
 )
