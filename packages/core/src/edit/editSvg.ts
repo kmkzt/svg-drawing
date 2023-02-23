@@ -1,5 +1,5 @@
-import { AnchorPoints } from './anchorPoint'
 import { BoundingBox } from './boundingBox'
+import { EditCommand } from './editCommand'
 import { Selector } from './selector'
 import type {
   SvgClass,
@@ -125,10 +125,7 @@ export class EditSvg {
           key: data.key,
           attributes: data.attributes,
           type: data.type,
-          anchorPoints: new AnchorPoints(
-            element.clone(),
-            this.selector
-          ).toJson(),
+          commands: new EditCommand(element.clone(), this.selector).toJson(),
         }
       }),
       boundingBox: new BoundingBox(
