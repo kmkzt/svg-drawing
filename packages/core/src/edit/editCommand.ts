@@ -41,6 +41,9 @@ export class EditCommand {
   }
 
   private getAnchorPoints(commandIndex: number): AnchorPoint[] {
+    const command = this.path.absoluteCommands[commandIndex]
+    if (!command || !isCurveCommand(command)) return []
+
     return [
       this.convertAnchorPoint({ command: commandIndex, point: 1 }),
       this.convertAnchorPoint({ command: commandIndex, point: 2 }),
