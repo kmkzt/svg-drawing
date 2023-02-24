@@ -3,7 +3,7 @@ import type {
   EditCommandObject,
   AnchorPoint,
   PathClass,
-  PointClass,
+  PointObject,
 } from '../types'
 import type { Selector } from './selector'
 
@@ -30,11 +30,15 @@ export class EditCommand {
 
   private getPoints(
     commandIndex: number
-  ): [PointClass, PointClass, PointClass] | undefined {
+  ): [PointObject, PointObject, PointObject] | undefined {
     const command = this.path.absoluteCommands[commandIndex]
 
     if (command && isCurveCommand(command)) {
-      return command.points
+      return command.points.map((p) => p.toJson()) as [
+        PointObject,
+        PointObject,
+        PointObject
+      ]
     }
 
     return undefined
@@ -46,23 +50,23 @@ export class EditCommand {
 
     return [
       this.convertAnchorPoint({ command: commandIndex, point: 1 }),
-      this.convertAnchorPoint({ command: commandIndex, point: 2 }),
       this.convertAnchorPoint({ command: commandIndex + 1, point: 0 }),
     ].filter((arg): arg is AnchorPoint => arg !== undefined)
   }
 
   private getOutline(commandIndex: number): string | undefined {
-    const anchorPoints = this.getAnchorPoints(commandIndex)
+    const prev = this.getPoints(commandIndex)
+    const next = this.getPoints(commandIndex + 1)
 
-    if (anchorPoints.length === 0) return undefined
+    if (!prev) return undefined
 
-    const points = anchorPoints.map(({ value }) => value)
-
-    return points.reduce(
-      (str, po, i) =>
-        i === 0 ? `M ${po.x} ${po.y}` : str + `L ${po.x} ${po.y}`,
-      ''
-    )
+    return [prev[1], prev[2], next?.[0]]
+      .filter((p): p is PointObject => p !== undefined)
+      .reduce(
+        (str, po, i) =>
+          i === 0 ? `M ${po.x} ${po.y}` : str + `L ${po.x} ${po.y}`,
+        ''
+      )
   }
 
   private getSelected(commandIndex: number): boolean {
