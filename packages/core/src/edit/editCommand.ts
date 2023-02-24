@@ -80,14 +80,18 @@ export class EditCommand {
   }
 
   toJson(): EditCommandObject[] {
-    return this.path.absoluteCommands.map(
-      (command, index): EditCommandObject => ({
-        index,
-        value: command.point?.toJson(),
-        selected: this.getSelected(index),
-        anchorPoints: this.getAnchorPoints(index),
-        outline: this.getOutline(index),
-      })
-    )
+    return this.path.absoluteCommands
+      .map((command, index): EditCommandObject | undefined =>
+        command.point
+          ? {
+              index,
+              value: command.point.toJson(),
+              selected: this.getSelected(index),
+              anchorPoints: this.getAnchorPoints(index),
+              outline: this.getOutline(index),
+            }
+          : undefined
+      )
+      .filter((c): c is EditCommandObject => c !== undefined)
   }
 }

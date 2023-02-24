@@ -261,7 +261,7 @@ export type AnchorPoint = {
 
 export type EditCommandObject = {
   index: number
-  value: PointObject | undefined
+  value: PointObject
   selected: boolean
   anchorPoints: AnchorPoint[]
   outline: string | undefined

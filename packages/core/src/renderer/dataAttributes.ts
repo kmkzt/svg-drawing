@@ -17,6 +17,19 @@ export const dataPathAttributes = (elementKey: ElementKey) =>
     [dataElementKey]: elementKey,
   } as const)
 
+export const dataPathCommandAttributes = ({
+  elementKey,
+  commandIndex,
+}: {
+  elementKey: ElementKey
+  commandIndex: number
+}) =>
+  ({
+    [dataEditType]: 'path/command',
+    [dataElementKey]: elementKey,
+    [dataCommandIndex]: `${commandIndex}`,
+  } as const)
+
 export const dataPathAnchorPointAttributes = ({
   elementKey,
   commandIndex,
@@ -61,6 +74,22 @@ export const getSelectEvent = (
         ? {
             type,
             key,
+            multiple,
+          }
+        : null
+    }
+
+    case 'path/command': {
+      const key = el.getAttribute(dataElementKey)
+      const commandIndex = el.getAttribute(dataCommandIndex)
+
+      return key && commandIndex !== null
+        ? {
+            type,
+            key,
+            index: {
+              command: +commandIndex,
+            },
             multiple,
           }
         : null

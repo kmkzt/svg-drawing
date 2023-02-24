@@ -4,11 +4,12 @@ import {
   dataFrameAttributes,
   dataPathAnchorPointAttributes,
   dataPathAttributes,
+  dataPathCommandAttributes,
 } from './dataAttributes'
 import { EDIT_PATH_STYLE } from './editPathStyle'
 import { camel2kebab } from '../utils'
 import type {
-  AnchorPointObject,
+  EditCommandObject,
   AnimateAttribute,
   BoundingBoxObject,
   EditPathObject,
@@ -18,6 +19,7 @@ import type {
   RendererClass,
   RendererOption,
   Vertex,
+  AnchorPoint,
 } from '../types'
 
 const VERSION = '1.1'
@@ -145,59 +147,73 @@ const boundingBoxVertexElement = ({
       : EDIT_PATH_STYLE.fill.boundingBox,
   })
 
-const pathAnchorPointElement = ({
-  anchorPoints,
-}: {
-  anchorPoints: AnchorPointObject['points']
-}): SVGElement =>
-  element(
-    'g',
-    {},
-    anchorPoints.map((point) =>
-      element('circle', {
-        ...dataPathAnchorPointAttributes({
-          elementKey: point.index.path,
-          commandIndex: point.index.command,
-          pointIndex: point.index.point,
-        }),
-        cx: point.value.x,
-        cy: point.value.y,
-        r: EDIT_PATH_STYLE.point,
-        fill: point.selected
-          ? EDIT_PATH_STYLE.color.selected
-          : EDIT_PATH_STYLE.color.sub,
-      })
-    )
-  )
+const editCircleAttrs = (selected: boolean) => ({
+  r: EDIT_PATH_STYLE.point,
+  fill: selected ? EDIT_PATH_STYLE.color.selected : EDIT_PATH_STYLE.color.sub,
+})
 
-const pathOutlineElement = ({ outlines }: { outlines: string[] }): SVGElement =>
-  element(
-    'g',
-    {},
-    outlines.map((d) =>
-      element('path', {
-        d,
-        stroke: EDIT_PATH_STYLE.color.main,
-        strokeWidth: EDIT_PATH_STYLE.line,
-        fill: EDIT_PATH_STYLE.fill.default,
-      })
-    )
-  )
-const segmentElement = ({
+const editAnchorPointAttrs = {
+  ['stroke-width']: EDIT_PATH_STYLE.line,
+  ['stroke']: EDIT_PATH_STYLE.color.main,
+  ['fill']: EDIT_PATH_STYLE.fill.default,
+}
+
+const editAnchorPointElement = (
+  elementKey: ElementKey,
+  anchorPoint: AnchorPoint,
+  outline: string | undefined
+): SVGElement =>
+  element('g', {}, [
+    element('circle', {
+      ...dataPathAnchorPointAttributes({
+        elementKey,
+        commandIndex: anchorPoint.index.command,
+        pointIndex: anchorPoint.index.point,
+      }),
+      ...editCircleAttrs(anchorPoint.selected),
+      cx: anchorPoint.value.x,
+      cy: anchorPoint.value.y,
+    }),
+    ...(outline
+      ? [
+          element('path', {
+            ...editAnchorPointAttrs,
+            d: outline,
+          }),
+        ]
+      : []),
+  ])
+
+const editCommandElement = (
+  elementKey: ElementKey,
+  { index, value, selected, anchorPoints, outline }: EditCommandObject
+): SVGElement =>
+  element('g', {}, [
+    element('circle', {
+      ...dataPathCommandAttributes({ elementKey, commandIndex: index }),
+      ...editCircleAttrs(selected),
+      cx: value.x,
+      cy: value.y,
+    }),
+    ...(selected
+      ? anchorPoints.map((anchorPoint) =>
+          editAnchorPointElement(elementKey, anchorPoint, outline)
+        )
+      : []),
+  ])
+
+const editPathElement = ({
   key,
   attributes,
-  anchorPoints: { points, outlines },
+  commands,
 }: EditPathObject): SVGElement =>
   element('g', {}, [
     pathElement(key, {
       strokeWidth: EDIT_PATH_STYLE.line,
       stroke: attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined,
       fill: 'none',
-      strokeLinecap: attributes.strokeLinecap,
-      strokeLinejoin: attributes.strokeLinejoin,
     }),
-    pathOutlineElement({ outlines }),
-    pathAnchorPointElement({ anchorPoints: points }),
+    ...commands.map((command) => editCommandElement(key, command)),
   ])
 
 const editLayer = ({
@@ -212,7 +228,7 @@ const editLayer = ({
         selected: boundingBox.selected,
       })
     ),
-    ...paths.map((editPath) => segmentElement(editPath)),
+    ...paths.map((editPath) => editPathElement(editPath)),
   ]
 }
 
