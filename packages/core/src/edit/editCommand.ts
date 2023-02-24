@@ -33,7 +33,7 @@ export class EditCommand {
   ): [PointClass, PointClass, PointClass] | undefined {
     const command = this.path.absoluteCommands[commandIndex]
 
-    if (isCurveCommand(command)) {
+    if (command && isCurveCommand(command)) {
       return command.points
     }
 

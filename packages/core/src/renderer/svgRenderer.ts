@@ -160,20 +160,22 @@ const editAnchorPointAttrs = {
 
 const editAnchorPointElement = (
   elementKey: ElementKey,
-  anchorPoint: AnchorPoint,
+  anchorPoints: AnchorPoint[],
   outline: string | undefined
 ): SVGElement =>
   element('g', {}, [
-    element('circle', {
-      ...dataPathAnchorPointAttributes({
-        elementKey,
-        commandIndex: anchorPoint.index.command,
-        pointIndex: anchorPoint.index.point,
-      }),
-      ...editCircleAttrs(anchorPoint.selected),
-      cx: anchorPoint.value.x,
-      cy: anchorPoint.value.y,
-    }),
+    ...anchorPoints.map((anchorPoint) =>
+      element('circle', {
+        ...dataPathAnchorPointAttributes({
+          elementKey,
+          commandIndex: anchorPoint.index.command,
+          pointIndex: anchorPoint.index.point,
+        }),
+        ...editCircleAttrs(anchorPoint.selected),
+        cx: anchorPoint.value.x,
+        cy: anchorPoint.value.y,
+      })
+    ),
     ...(outline
       ? [
           element('path', {
@@ -196,9 +198,7 @@ const editCommandElement = (
       cy: value.y,
     }),
     ...(selected
-      ? anchorPoints.map((anchorPoint) =>
-          editAnchorPointElement(elementKey, anchorPoint, outline)
-        )
+      ? [editAnchorPointElement(elementKey, anchorPoints, outline)]
       : []),
   ])
 

@@ -32,6 +32,7 @@ export {
   dataFrameAttributes,
   dataPathAttributes,
   dataPathAnchorPointAttributes,
+  dataPathCommandAttributes,
   dataBoundingBoxAttributes,
   dataBoundingBoxVertexAttributes,
 } from './renderer/dataAttributes'
