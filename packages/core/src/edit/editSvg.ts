@@ -12,6 +12,12 @@ import type {
 } from '../types'
 import type { SelectAnchorPointObject } from './selector'
 
+type Transform = {
+  path: (path: PathClass) => void
+  command: (path: PathClass, index: { command: number }) => void
+  point: (path: PathClass, index: { command: number; point: number }) => void
+}
+
 export class EditSvg {
   private selector = new Selector()
   constructor(public svg: SvgClass) {}
@@ -43,21 +49,38 @@ export class EditSvg {
 
   /** Translate position of selected path. */
   translate(move: PointObject) {
+    const pointTransform: Transform['point'] = (path, index) =>
+      this.svg.updateElement(
+        path.updateCommand(index.command, (command) => {
+          command.points[index.point] = command.points[index.point].add(move)
+          return command
+        })
+      )
+
     this.exec({
       path: (path) => this.svg.updateElement(path.translate(move)),
-      command: (path, index) =>
-        this.svg.updateElement(
-          path.updateCommand(index.command, (command) =>
-            command.translate(move)
+      command: (path, index) => {
+        const anchorPoints = new EditCommand(
+          path,
+          this.selector
+        ).getAnchorPoints(index.command)
+
+        if (!anchorPoints) {
+          this.svg.updateElement(
+            path.updateCommand(index.command, (command) =>
+              command.translate(move)
+            )
           )
-        ),
-      point: (path, index) =>
-        this.svg.updateElement(
-          path.updateCommand(index.command, (command) => {
-            command.points[index.point] = command.points[index.point].add(move)
-            return command
-          })
-        ),
+          return
+        }
+
+        Object.values(anchorPoints).forEach((anchorPoint) => {
+          if (!index) return
+
+          pointTransform(path, anchorPoint.index)
+        })
+      },
+      point: pointTransform,
     })
   }
 
@@ -136,9 +159,9 @@ export class EditSvg {
   }
 
   private exec(transform: {
-    path: (path: PathClass) => void
-    command?: (path: PathClass, index: { command: number }) => void
-    point?: (path: PathClass, index: { command: number; point: number }) => void
+    path: Transform['path']
+    command?: Transform['command']
+    point?: Transform['point']
   }): void {
     const pathAnchorPointExec = (
       path: PathClass,
