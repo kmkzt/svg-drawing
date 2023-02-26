@@ -78,7 +78,7 @@ export class EditSvg {
         }
 
         Object.values(anchorPoints).forEach((anchorPoint) => {
-          if (!index) return
+          if (!anchorPoint) return
 
           anchorPointTransform(path, anchorPoint.index)
         })
