@@ -162,54 +162,56 @@ describe('EditSvg', () => {
 
   it.todo('preview')
 
-  it.skip('toJson', () => {
+  it('toJson', () => {
     const { key } = edit.svg.elements[0]
     edit.select({ type: 'path', key })
 
-    const result: any = {
+    const result: EditSvgObject = {
       boundingBox: {
         position: {
           x: 1,
           y: 1,
         },
+        selected: true,
         size: {
           height: 3,
           width: 7,
         },
         vertexes: [
           {
+            point: {
+              x: 1,
+              y: 1,
+            },
             type: 'LeftTop',
-            point: {
-              x: 1,
-              y: 1,
-            },
           },
           {
+            point: {
+              x: 8,
+              y: 1,
+            },
             type: 'RightTop',
-            point: {
-              x: 8,
-              y: 1,
-            },
           },
           {
-            type: 'RightBottom',
             point: {
               x: 8,
               y: 4,
             },
+            type: 'RightBottom',
           },
           {
-            type: 'LeftBottom',
             point: {
               x: 1,
               y: 4,
             },
+            type: 'LeftBottom',
           },
         ],
-        selected: true,
       },
       elements: [
         {
+          key: 'path_key_0',
+          type: 'path',
           attributes: {
             d: 'M1 1 l1 1 c2 2 4 2 6 2 z',
             fill: '#f00',
@@ -217,62 +219,32 @@ describe('EditSvg', () => {
             stroke: '#00f',
             strokeWidth: '4',
           },
-          key: 'path_key_0',
-          type: 'path',
-          anchorPoints: [
+          commands: [
             {
-              d: 'M 2 2',
-              points: [
-                {
-                  index: {
-                    command: 0,
-                    path: 'path_key_0',
-                    point: 0,
-                  },
-                  selected: false,
-                  value: {
-                    x: 1,
-                    y: 1,
-                  },
-                },
-              ],
+              anchorPoints: [],
+              index: 0,
+              outline: undefined,
+              selected: false,
+              value: {
+                x: 1,
+                y: 1,
+              },
             },
             {
-              d: 'M 4 4',
-              points: [
-                {
-                  index: {
-                    command: 1,
-                    path: 'path_key_0',
-                    point: 0,
-                  },
-                  selected: false,
-                  value: {
-                    x: 2,
-                    y: 2,
-                  },
-                },
-              ],
+              anchorPoints: [],
+              index: 1,
+              outline: undefined,
+              selected: false,
+              value: {
+                x: 2,
+                y: 2,
+              },
             },
             {
-              d: 'M 6 4L 8 4',
-              points: [
+              anchorPoints: [
                 {
                   index: {
                     command: 2,
-                    path: 'path_key_0',
-                    point: 0,
-                  },
-                  selected: false,
-                  value: {
-                    x: 4,
-                    y: 4,
-                  },
-                },
-                {
-                  index: {
-                    command: 2,
-                    path: 'path_key_0',
                     point: 1,
                   },
                   selected: false,
@@ -281,19 +253,14 @@ describe('EditSvg', () => {
                     y: 4,
                   },
                 },
-                {
-                  index: {
-                    command: 2,
-                    path: 'path_key_0',
-                    point: 2,
-                  },
-                  selected: false,
-                  value: {
-                    x: 8,
-                    y: 4,
-                  },
-                },
               ],
+              index: 2,
+              outline: 'M 6 4L 8 4',
+              selected: false,
+              value: {
+                x: 8,
+                y: 4,
+              },
             },
           ],
         },
