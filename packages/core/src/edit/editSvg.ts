@@ -130,8 +130,13 @@ export class EditSvg {
       },
       command: (path, index) =>
         this.svg.updateElement(path.deleteCommand(index.command)),
-      anchorPoint: (path, index) =>
-        this.svg.updateElement(path.deleteCommand(index.command)),
+      anchorPoint: (path, index) => {
+        this.selector.select({
+          type: 'path/command',
+          key: path.key,
+          index: { command: index.command },
+        })
+      },
     })
   }
 
