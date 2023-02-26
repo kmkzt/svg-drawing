@@ -307,7 +307,7 @@ export type SelectEventObject =
       multiple?: boolean
     }
   | {
-      type: 'path/point'
+      type: 'path/anchorPoint'
       key: ElementKey
       index: {
         command: number

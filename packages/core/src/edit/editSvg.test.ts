@@ -80,7 +80,7 @@ describe('EditSvg', () => {
       )
 
       edit.select({
-        type: 'path/point',
+        type: 'path/anchorPoint',
         key: editKey,
         index: {
           command: 2,

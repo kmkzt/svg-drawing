@@ -15,7 +15,10 @@ import type { SelectAnchorPointObject } from './selector'
 type Transform = {
   path: (path: PathClass) => void
   command: (path: PathClass, index: { command: number }) => void
-  point: (path: PathClass, index: { command: number; point: number }) => void
+  anchorPoint: (
+    path: PathClass,
+    index: { command: number; point: number }
+  ) => void
 }
 
 export class EditSvg {
@@ -49,7 +52,7 @@ export class EditSvg {
 
   /** Translate position of selected path. */
   translate(move: PointObject) {
-    const pointTransform: Transform['point'] = (path, index) =>
+    const anchorPointTransform: Transform['anchorPoint'] = (path, index) =>
       this.svg.updateElement(
         path.updateCommand(index.command, (command) => {
           command.points[index.point] = command.points[index.point].add(move)
@@ -77,10 +80,10 @@ export class EditSvg {
         Object.values(anchorPoints).forEach((anchorPoint) => {
           if (!index) return
 
-          pointTransform(path, anchorPoint.index)
+          anchorPointTransform(path, anchorPoint.index)
         })
       },
-      point: pointTransform,
+      anchorPoint: anchorPointTransform,
     })
   }
 
@@ -122,10 +125,12 @@ export class EditSvg {
    */
   delete() {
     this.exec({
-      path: (path) => this.svg.deleteElement(path),
+      path: (path) => {
+        this.svg.deleteElement(path)
+      },
       command: (path, index) =>
         this.svg.updateElement(path.deleteCommand(index.command)),
-      point: (path, index) =>
+      anchorPoint: (path, index) =>
         this.svg.updateElement(path.deleteCommand(index.command)),
     })
   }
@@ -161,7 +166,7 @@ export class EditSvg {
   private exec(transform: {
     path: Transform['path']
     command?: Transform['command']
-    point?: Transform['point']
+    anchorPoint?: Transform['anchorPoint']
   }): void {
     const pathAnchorPointExec = (
       path: PathClass,
@@ -172,8 +177,8 @@ export class EditSvg {
           transform.command?.(path, index)
           return
         }
-        case 'path/point': {
-          transform.point?.(path, index)
+        case 'path/anchorPoint': {
+          transform.anchorPoint?.(path, index)
           return
         }
       }

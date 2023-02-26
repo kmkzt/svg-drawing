@@ -40,7 +40,7 @@ export const dataPathAnchorPointAttributes = ({
   commandIndex: number
 }) =>
   ({
-    [dataEditType]: 'path/point',
+    [dataEditType]: 'path/anchorPoint',
     [dataElementKey]: elementKey,
     [dataCommandIndex]: `${commandIndex}`,
     [dataPointIndex]: `${pointIndex}`,
@@ -95,7 +95,7 @@ export const getSelectEvent = (
         : null
     }
 
-    case 'path/point': {
+    case 'path/anchorPoint': {
       const key = el.getAttribute(dataElementKey)
       const commandIndex = el.getAttribute(dataCommandIndex)
       const pointIndex = el.getAttribute(dataPointIndex)

@@ -9,7 +9,7 @@ describe('Selector', () => {
     index: { command: 0 },
   }
   const selectedPoint: SelectEventObject = {
-    type: 'path/point',
+    type: 'path/anchorPoint',
     key: 'path_id_3',
     index: { command: 0, point: 0 },
   }

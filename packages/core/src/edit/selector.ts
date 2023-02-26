@@ -8,7 +8,7 @@ export type SelectObject = {
 
 export type SelectAnchorPointObject =
   | {
-      type: 'path/point'
+      type: 'path/anchorPoint'
       index: {
         command: number
         point: number
@@ -29,7 +29,9 @@ const isMatchSelectCommand =
 const isMatchSelectPoint =
   ({ point, command }: { point: number; command: number }) =>
   ({ type, index }: SelectAnchorPointObject) =>
-    type === 'path/point' && index.command === command && index.point === point
+    type === 'path/anchorPoint' &&
+    index.command === command &&
+    index.point === point
 
 export class Selector {
   private selectMap: Map<ElementKey, SelectObject> = new Map()
@@ -52,7 +54,7 @@ export class Selector {
           isMatchSelectCommand({ command: selectObject.index.command })
         )
       }
-      case 'path/point': {
+      case 'path/anchorPoint': {
         const selectData = this.selectMap.get(selectObject.key)
         if (!selectData) return false
 
@@ -91,7 +93,7 @@ export class Selector {
   private selectPath(
     selectObject: Extract<
       SelectEventObject,
-      { type: 'path' | 'path/command' | 'path/point' }
+      { type: 'path' | 'path/command' | 'path/anchorPoint' }
     >
   ): void {
     if (!selectObject.multiple) {
@@ -125,7 +127,7 @@ export class Selector {
     switch (selectObject.type) {
       case 'path':
       case 'path/command':
-      case 'path/point': {
+      case 'path/anchorPoint': {
         this.selectPath(selectObject)
         break
       }

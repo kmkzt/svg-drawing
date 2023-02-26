@@ -67,7 +67,7 @@ export class EditCommand {
         index,
         value,
         selected: this.selector.isSelected({
-          type: 'path/point',
+          type: 'path/anchorPoint',
           key: this.path.key,
           index,
         }),
