@@ -20,7 +20,7 @@ export class BasicDrawFactory implements DrawFactory {
     }
   }
 
-  createElement(): PathClass {
+  createElement(): ElementClass {
     return new Path({
       ...this.attrs,
       ...this.curveAttribute,
