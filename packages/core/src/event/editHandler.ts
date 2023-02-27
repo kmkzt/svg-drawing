@@ -18,6 +18,7 @@ export class EditHandler implements EventHandler<HTMLElement> {
     this.multipleSelectBindKey = options?.multipleSelectBindKey ?? 'Shift'
     this.pressedKeyHandler = new PressedKeyHandler()
 
+    this.transform = this.transform.bind(this)
     this.handleTransform = this.handleTransform.bind(this)
     this.handleTransformPreview = this.handleTransformPreview.bind(this)
     this.handleSelect = this.handleSelect.bind(this)
@@ -37,41 +38,34 @@ export class EditHandler implements EventHandler<HTMLElement> {
     }
   }
 
-  private handleTransformPreview(ev: MouseEvent | TouchEvent) {
+  private transform(ev: MouseEvent | TouchEvent, preview: boolean) {
     const movePoint = this.getMovePoint(ev)
     if (!this.currentEvent || !movePoint) return
 
     switch (this.currentEvent.type) {
       case 'bounding-box/vertex': {
-        this.editing.resizeBoundingBoxPreview(
+        this.editing.resizeBoundingBox(
           this.currentEvent.vertexType,
-          movePoint
+          movePoint,
+          preview
         )
         break
       }
       default: {
-        this.editing.translatePreview(movePoint)
+        this.editing.translate(movePoint, preview)
         break
       }
     }
   }
 
+  private handleTransformPreview(ev: MouseEvent | TouchEvent) {
+    this.transform(ev, true)
+  }
+
   private handleTransform(ev: MouseEvent | TouchEvent) {
     this.transformEnd()
 
-    const movePoint = this.getMovePoint(ev)
-    if (!this.currentEvent || !movePoint) return
-
-    switch (this.currentEvent.type) {
-      case 'bounding-box/vertex': {
-        this.editing.resizeBoundingBox(this.currentEvent.vertexType, movePoint)
-        break
-      }
-      default: {
-        this.editing.translate(movePoint)
-        break
-      }
-    }
+    this.transform(ev, false)
 
     this.currentEvent = null
     this.basePoint = null

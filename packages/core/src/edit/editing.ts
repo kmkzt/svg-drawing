@@ -9,20 +9,15 @@ import type {
 } from '../types'
 
 export class Editing {
-  private editSvg: EditSvg
   private selector: Selector
   constructor(
     private svg: SvgClass,
     private _update: (eSvg: EditSvg) => void = () => void 0
   ) {
     this.selector = new Selector()
-    this.editSvg = new EditSvg(svg, this.selector)
 
     this.translate = this.translate.bind(this)
-    this.translatePreview = this.translatePreview.bind(this)
-
     this.resizeBoundingBox = this.resizeBoundingBox.bind(this)
-    this.resizeBoundingBoxPreview = this.resizeBoundingBoxPreview.bind(this)
   }
 
   /** Clear selected status and update screen. */
@@ -33,11 +28,7 @@ export class Editing {
 
   /** Callback function that refreshes the screen. */
   update() {
-    this._update(this.editSvg)
-  }
-
-  preview(): EditSvg {
-    return new EditSvg(this.svg.clone(), this.selector)
+    this._update(this.getEditSvg())
   }
 
   /** Select edit path and update screen. */
@@ -48,43 +39,37 @@ export class Editing {
 
   /** Delete path and update screen. */
   deleteElements() {
-    this.editSvg.delete()
-    this.update()
+    const editSvg = this.getEditSvg()
+    editSvg.delete()
+    this._update(editSvg)
   }
 
   /** Change attributes and update screen. */
   changeAttributes(attrs: PathAttributes) {
-    this.editSvg.changeAttributes(attrs)
+    const editSvg = this.getEditSvg()
+    editSvg.changeAttributes(attrs)
     this.update()
   }
 
-  translatePreview(po: PointObject) {
-    this._translate(this.preview(), po)
-  }
-
-  translate(po: PointObject) {
-    this._translate(this.editSvg, po)
-  }
-
-  private _translate(editSvg: EditSvg, po: PointObject) {
+  translate(po: PointObject, preview?: boolean) {
+    const editSvg = this.getEditSvg(preview)
     editSvg.translate(po)
     this._update(editSvg)
   }
 
-  resizeBoundingBox(vertexType: VertexType, movePoint: PointObject) {
-    this._resizeBoundingBox(this.editSvg, vertexType, movePoint)
-  }
-
-  resizeBoundingBoxPreview(vertexType: VertexType, movePoint: PointObject) {
-    this._resizeBoundingBox(this.preview(), vertexType, movePoint)
-  }
-
-  private _resizeBoundingBox(
-    editSvg: EditSvg,
+  resizeBoundingBox(
     vertexType: VertexType,
-    movePoint: PointObject
+    movePoint: PointObject,
+    preview?: boolean
   ) {
+    const editSvg = this.getEditSvg(preview)
     editSvg.resizeBoundingBox(vertexType, movePoint)
     this._update(editSvg)
+  }
+
+  private getEditSvg(preview?: boolean): EditSvg {
+    const svgClass = preview ? this.svg.clone() : this.svg
+
+    return new EditSvg(svgClass, this.selector)
   }
 }
