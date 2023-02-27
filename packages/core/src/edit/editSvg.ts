@@ -4,7 +4,6 @@ import type {
   SvgClass,
   PointObject,
   PathAttributes,
-  SelectEventObject,
   EditSvgObject,
   PathClass,
   VertexType,
