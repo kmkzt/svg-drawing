@@ -1,4 +1,5 @@
 import { EditSvg } from './editSvg'
+import { Selector } from './selector'
 import type {
   PointObject,
   PathAttributes,
@@ -9,11 +10,13 @@ import type {
 
 export class Editing {
   private editSvg: EditSvg
+  private selector: Selector
   constructor(
-    svg: SvgClass,
+    private svg: SvgClass,
     private _update: (eSvg: EditSvg) => void = () => void 0
   ) {
-    this.editSvg = new EditSvg(svg)
+    this.selector = new Selector()
+    this.editSvg = new EditSvg(svg, this.selector)
 
     this.translate = this.translate.bind(this)
     this.translatePreview = this.translatePreview.bind(this)
@@ -24,7 +27,7 @@ export class Editing {
 
   /** Clear selected status and update screen. */
   cancel() {
-    this.editSvg.cancel()
+    this.selector.clear()
     this.update()
   }
 
@@ -33,9 +36,13 @@ export class Editing {
     this._update(this.editSvg)
   }
 
+  preview(): EditSvg {
+    return new EditSvg(this.svg.clone(), this.selector)
+  }
+
   /** Select edit path and update screen. */
   select(event: SelectEventObject) {
-    this.editSvg.select(event)
+    this.selector.select(event)
     this.update()
   }
 
@@ -52,7 +59,7 @@ export class Editing {
   }
 
   translatePreview(po: PointObject) {
-    this._translate(this.editSvg.preview(), po)
+    this._translate(this.preview(), po)
   }
 
   translate(po: PointObject) {
@@ -69,7 +76,7 @@ export class Editing {
   }
 
   resizeBoundingBoxPreview(vertexType: VertexType, movePoint: PointObject) {
-    this._resizeBoundingBox(this.editSvg.preview(), vertexType, movePoint)
+    this._resizeBoundingBox(this.preview(), vertexType, movePoint)
   }
 
   private _resizeBoundingBox(

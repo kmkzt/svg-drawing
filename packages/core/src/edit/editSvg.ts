@@ -1,6 +1,5 @@
 import { BoundingBox } from './boundingBox'
 import { EditCommand } from './editCommand'
-import { Selector } from './selector'
 import type {
   SvgClass,
   PointObject,
@@ -10,7 +9,7 @@ import type {
   PathClass,
   VertexType,
 } from '../types'
-import type { SelectAnchorPointObject } from './selector'
+import type { Selector, SelectAnchorPointObject } from './selector'
 
 type Transform = {
   path: (path: PathClass) => void
@@ -22,8 +21,7 @@ type Transform = {
 }
 
 export class EditSvg {
-  private selector = new Selector()
-  constructor(public svg: SvgClass) {}
+  constructor(public svg: SvgClass, private selector: Selector) {}
 
   private get elements(): PathClass[] {
     return this.selector
@@ -31,16 +29,6 @@ export class EditSvg {
       .flatMap(
         ({ key }): PathClass | [] => this.svg.getElement(key)?.clone() ?? []
       )
-  }
-
-  /** Select path index. */
-  select(event: SelectEventObject) {
-    this.selector.select(event)
-  }
-
-  /** Clear selected status. */
-  cancel() {
-    this.selector.clear()
   }
 
   /** Change attributes of selected path. */
@@ -138,13 +126,6 @@ export class EditSvg {
         })
       },
     })
-  }
-
-  /** Clone an EditSvg class object for preview. */
-  preview(): EditSvg {
-    const preview = new EditSvg(this.svg.clone())
-    preview.selector = this.selector
-    return preview
   }
 
   /** Return data in json format. */
