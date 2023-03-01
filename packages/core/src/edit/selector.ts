@@ -1,4 +1,4 @@
-import type { SelectEventObject, ElementKey } from '../types'
+import type { SelectEventObject, ElementKey, VertexType } from '../types'
 
 export type SelectObject = {
   type: 'path'
@@ -34,6 +34,7 @@ const isMatchSelectPoint =
     index.point === point
 
 export class Selector {
+  public vertexType: VertexType | null = null
   private selectMap: Map<ElementKey, SelectObject> = new Map()
 
   private get selecting(): SelectObject[] {
@@ -118,12 +119,20 @@ export class Selector {
     })
   }
 
+  private selectBoundingBox() {
+    this.selecting.forEach(({ key }) =>
+      this.selectMap.set(key, { type: 'path', key, anchorPoints: [] })
+    )
+  }
+
   /**
    * Currently only path indices can be combined.
    *
    * @todo Implement so that multiple commands and points can be selected.
    */
   select(selectObject: SelectEventObject) {
+    this.vertexType = null
+
     switch (selectObject.type) {
       case 'path':
       case 'path/command':
@@ -131,11 +140,13 @@ export class Selector {
         this.selectPath(selectObject)
         break
       }
-      case 'bounding-box':
+      case 'bounding-box': {
+        this.selectBoundingBox()
+        break
+      }
       case 'bounding-box/vertex': {
-        this.selecting.forEach(({ key }) =>
-          this.selectMap.set(key, { type: 'path', key, anchorPoints: [] })
-        )
+        this.vertexType = selectObject.vertexType
+        this.selectBoundingBox()
         break
       }
       case 'frame': {

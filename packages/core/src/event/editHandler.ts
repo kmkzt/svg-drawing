@@ -2,12 +2,11 @@ import { getEventPoint } from './getEventPoint'
 import { PressedKeyHandler } from './pressedKeyHandler'
 import { getSelectEvent } from '../renderer/dataAttributes'
 import type { Editing } from '../edit/editing'
-import type { EventHandler, PointObject, SelectEventObject } from '../types'
+import type { EventHandler, PointObject } from '../types'
 
 export class EditHandler implements EventHandler<HTMLElement> {
-  private el: HTMLElement | null = null
+  private parentElement: HTMLElement | null = null
   private basePoint: PointObject | null = null
-  private currentEvent: SelectEventObject | null = null
   private pressedKeyHandler: PressedKeyHandler
   private multipleSelectBindKey: string
 
@@ -31,31 +30,19 @@ export class EditHandler implements EventHandler<HTMLElement> {
   private getMovePoint(ev: MouseEvent | TouchEvent): PointObject | null {
     if (!this.basePoint) return null
 
-    const po = getEventPoint(ev)
+    const point = getEventPoint(ev)
+
     return {
-      x: po.x - this.basePoint.x,
-      y: po.y - this.basePoint.y,
+      x: point.x - this.basePoint.x,
+      y: point.y - this.basePoint.y,
     }
   }
 
   private transform(ev: MouseEvent | TouchEvent, preview: boolean) {
     const movePoint = this.getMovePoint(ev)
-    if (!this.currentEvent || !movePoint) return
+    if (!movePoint) return
 
-    switch (this.currentEvent.type) {
-      case 'bounding-box/vertex': {
-        this.editing.resizeBoundingBox(
-          this.currentEvent.vertexType,
-          movePoint,
-          preview
-        )
-        break
-      }
-      default: {
-        this.editing.translate(movePoint, preview)
-        break
-      }
-    }
+    this.editing.transform(movePoint, preview)
   }
 
   private handleTransformPreview(ev: MouseEvent | TouchEvent) {
@@ -63,21 +50,14 @@ export class EditHandler implements EventHandler<HTMLElement> {
   }
 
   private handleTransform(ev: MouseEvent | TouchEvent) {
-    this.transformEnd()
+    this.cleanupTransformListener()
 
     this.transform(ev, false)
 
-    this.currentEvent = null
     this.basePoint = null
   }
 
-  private transformStart(
-    ev: MouseEvent | TouchEvent,
-    selectEvent: SelectEventObject
-  ) {
-    this.currentEvent = selectEvent
-    this.basePoint = getEventPoint(ev)
-
+  private setupTransformListener() {
     addEventListener('mouseup', this.handleTransform)
     addEventListener('touchend', this.handleTransform)
 
@@ -85,7 +65,7 @@ export class EditHandler implements EventHandler<HTMLElement> {
     addEventListener('touchmove', this.handleTransformPreview)
   }
 
-  private transformEnd() {
+  private cleanupTransformListener() {
     removeEventListener('mouseup', this.handleTransform)
     removeEventListener('touchend', this.handleTransform)
 
@@ -94,32 +74,32 @@ export class EditHandler implements EventHandler<HTMLElement> {
   }
 
   private handleSelect(ev: MouseEvent | TouchEvent) {
-    const el = ev.target as HTMLElement
-    const selectEvent = getSelectEvent(el, this.multipleSelect)
+    const targetElement = ev.target as HTMLElement
+    const selectEvent = getSelectEvent(targetElement, this.multipleSelect)
 
     if (!selectEvent) return
 
     this.editing.select(selectEvent)
-
-    this.transformStart(ev, selectEvent)
+    this.basePoint = getEventPoint(ev)
+    this.setupTransformListener()
   }
 
   setup(el: HTMLElement) {
     this.cleanup()
-    this.el = el
+    this.parentElement = el
 
-    this.el?.addEventListener('mousedown', this.handleSelect)
-    this.el?.addEventListener('touchstart', this.handleSelect)
+    this.parentElement?.addEventListener('mousedown', this.handleSelect)
+    this.parentElement?.addEventListener('touchstart', this.handleSelect)
 
     this.pressedKeyHandler.setup()
   }
 
   cleanup() {
-    this.el?.removeEventListener('mousedown', this.handleSelect)
-    this.el?.removeEventListener('touchstart', this.handleSelect)
+    this.parentElement?.removeEventListener('mousedown', this.handleSelect)
+    this.parentElement?.removeEventListener('touchstart', this.handleSelect)
 
     this.pressedKeyHandler.cleanup()
 
-    this.el = null
+    this.parentElement = null
   }
 }

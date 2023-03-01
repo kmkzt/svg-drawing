@@ -10,6 +10,7 @@ import type {
 
 export class Editing {
   private selector: Selector
+
   constructor(
     private svg: SvgClass,
     private _update: (eSvg: EditSvg) => void = () => void 0
@@ -18,6 +19,7 @@ export class Editing {
 
     this.translate = this.translate.bind(this)
     this.resizeBoundingBox = this.resizeBoundingBox.bind(this)
+    this.transform = this.transform.bind(this)
   }
 
   /** Clear selected status and update screen. */
@@ -34,6 +36,7 @@ export class Editing {
   /** Select edit path and update screen. */
   select(event: SelectEventObject) {
     this.selector.select(event)
+
     this.update()
   }
 
@@ -65,6 +68,15 @@ export class Editing {
     const editSvg = this.getEditSvg(preview)
     editSvg.resizeBoundingBox(vertexType, movePoint)
     this._update(editSvg)
+  }
+
+  transform(movePoint: PointObject, preview?: boolean) {
+    if (this.selector.vertexType) {
+      this.resizeBoundingBox(this.selector.vertexType, movePoint, preview)
+      return
+    }
+
+    this.translate(movePoint, preview)
   }
 
   private getEditSvg(preview?: boolean): EditSvg {
