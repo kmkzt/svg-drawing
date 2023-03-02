@@ -25,15 +25,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Use cached node_modules and libs
+      - name: Use cached node_modules
         uses: actions/cache@v3
         with:
-          path: |
-            node_modules
-            packages/**/lib
+          path: node_modules
           key: nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
           restore-keys: |
-            nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
+            nodeModules-
 
       - name: install
         run: yarn install --frozen-lockfile
@@ -59,12 +57,10 @@ jobs:
       - name: Use cached node_modules
         uses: actions/cache/restore@v3
         with:
-          path: |
-            node_modules
-            packages/**/lib
+          path: node_modules
           key: nodeModules-${{ hashFiles('yarn.lock') }}-18
           restore-keys: |
-            nodeModules-${{ hashFiles('yarn.lock') }}-18
+            nodeModules-
 
       - name: install
         run: yarn install --frozen-lockfile
@@ -88,12 +84,10 @@ jobs:
       - name: Use cached node_modules
         uses: actions/cache/restore@v3
         with:
-          path: |
-            node_modules
-            packages/**/lib
+          path: node_modules
           key: nodeModules-${{ hashFiles('yarn.lock') }}-18
           restore-keys: |
-            nodeModules-${{ hashFiles('yarn.lock') }}-18
+            nodeModules-
 
       - name: install
         run: yarn install --frozen-lockfile
@@ -117,12 +111,10 @@ jobs:
       - name: Use cached node_modules
         uses: actions/cache/restore@v3
         with:
-          path: |
-            node_modules
-            packages/**/lib
+          path: node_modules
           key: nodeModules-${{ hashFiles('yarn.lock') }}-18
           restore-keys: |
-            nodeModules-${{ hashFiles('yarn.lock') }}-18
+            nodeModules-
 
       - name: install
         run: yarn install --frozen-lockfile
@@ -147,12 +139,10 @@ jobs:
       - name: Use cached node_modules
         uses: actions/cache/restore@v3
         with:
-          path: |
-            node_modules
-            packages/**/lib
+          path: node_modules
           key: nodeModules-${{ hashFiles('yarn.lock') }}-18
           restore-keys: |
-            nodeModules-${{ hashFiles('yarn.lock') }}-18
+            nodeModules-
 
       - name: install
         run: yarn install --frozen-lockfile
