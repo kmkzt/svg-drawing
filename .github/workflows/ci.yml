@@ -60,14 +60,6 @@ jobs:
           restore-keys: |
             nodeModules-
 
-      - name: Use cached build
-        uses: actions/cache/save@v3
-        with:
-          path: packages/**/lib
-          key: packages-lib-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
-          restore-keys: |
-            packages-lib-
-
       - name: build
         run: |
           yarn build
@@ -167,15 +159,7 @@ jobs:
           restore-keys: |
             nodeModules-
 
-      - name: Use cached build
-        uses: actions/cache/restore@v3
-        with:
-          path: packages/**/lib
-          key: packages-lib-${{ hashFiles('yarn.lock') }}-18
-          restore-keys: |
-            packages-lib-
-
-      - name: build
+      - name: build for test
         run: yarn build
 
       - name: test
