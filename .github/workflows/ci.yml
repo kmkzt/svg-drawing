@@ -33,6 +33,14 @@ jobs:
           restore-keys: |
             nodeModules-
 
+      - name: Use cached build
+        uses: actions/cache@v3
+        with:
+          path: packages/**/lib
+          key: packages-lib-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
+          restore-keys: |
+            packages-lib-
+
       - name: install
         run: yarn install --frozen-lockfile
 
@@ -143,6 +151,14 @@ jobs:
           key: nodeModules-${{ hashFiles('yarn.lock') }}-18
           restore-keys: |
             nodeModules-
+
+      - name: Use cached build
+        uses: actions/cache/restore@v3
+        with:
+          path: packages/**/lib
+          key: packages-lib-${{ hashFiles('yarn.lock') }}-18
+          restore-keys: |
+            packages-lib-
 
       - name: install
         run: yarn install --frozen-lockfile
