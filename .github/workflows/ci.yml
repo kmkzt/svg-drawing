@@ -1,0 +1,172 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  install:
+    name: install
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 16, 14]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Use cached node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
+          restore-keys: |
+            nodeModules-
+
+      - name: install
+        run: yarn install --frozen-lockfile
+
+  build:
+    name: build
+    needs: install
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 16, 14]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Use cached node_modules
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
+          restore-keys: |
+            nodeModules-
+
+      - name: build
+        run: |
+          yarn build
+          yarn build:gh-page
+
+  lint:
+    name: lint
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Use cached node_modules
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
+          restore-keys: |
+            nodeModules-
+
+      - name: lint
+        run: yarn lint
+
+  type-check:
+    name: Type check
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Use cached node_modules
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
+          restore-keys: |
+            nodeModules-
+
+      - name: typecheck
+        run: yarn typecheck
+
+  generate-docs:
+    name: Generate document
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Use cached node_modules
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
+          restore-keys: |
+            nodeModules-
+
+      - name: generate docs
+        run: yarn generate:docs
+
+  test:
+    name: Test
+    needs: install
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Use cached node_modules
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
+          restore-keys: |
+            nodeModules-
+
+      - name: build for test
+        run: yarn build
+
+      - name: test
+        run: yarn test
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3.1.0
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          file: ./coverage/clover.xml

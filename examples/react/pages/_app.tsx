@@ -19,7 +19,6 @@ export default class MyApp extends App {
               content="width=device-width, initial-scale=1.0, user-scalable=no"
             />
           </Head>
-          {/** @ts-expect-error */}
           <ThemeProvider theme={theme}>
             <Component {...pageProps} />
           </ThemeProvider>
