@@ -3,17 +3,18 @@ on:
   push:
     branches:
       - master
+
   pull_request:
     branches:
       - master
+
 jobs:
   build:
     name: build
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [18.x, 16.x, 14.x]
+        node-version: [18, 16, 14]
 
     steps:
       - name: Checkout
@@ -39,22 +40,18 @@ jobs:
         run: |
           yarn build
           yarn build:gh-page
+
   lint:
     name: lint
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 16.x, 14.x]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Use Node ${{ matrix.node-version }}
+      - name: Use Node 18
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
 
       - name: Use cached node_modules
         uses: actions/cache@v3
@@ -73,19 +70,14 @@ jobs:
   type-check:
     name: Type check
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 16.x, 14.x]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Use Node ${{ matrix.node-version }}
+      - name: Use Node 18
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
 
       - name: Use cached node_modules
         uses: actions/cache@v3
@@ -100,22 +92,18 @@ jobs:
 
       - name: typecheck
         run: yarn typecheck
+
   generate-docs:
     name: Generate document
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 16.x, 14.x]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Use Node ${{ matrix.node-version }}
+      - name: Use Node 18
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
 
       - name: Use cached node_modules
         uses: actions/cache@v3
@@ -135,18 +123,14 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x, 16.x, 14.x]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Use Node ${{ matrix.node-version }}
+      - name: Use Node 18
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
 
       - name: Use cached node_modules
         uses: actions/cache@v3
@@ -163,6 +147,7 @@ jobs:
         run: yarn test
         env:
           CI: true
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3.1.0
         with:
