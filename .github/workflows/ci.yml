@@ -147,7 +147,7 @@ jobs:
 
   test:
     name: Test
-    needs: build
+    needs: install
     runs-on: ubuntu-latest
 
     steps:
@@ -175,10 +175,11 @@ jobs:
           restore-keys: |
             packages-lib-
 
+      - name: build
+        run: yarn build
+
       - name: test
         run: yarn test
-        env:
-          CI: true
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3.1.0
