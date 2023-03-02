@@ -9,8 +9,35 @@ on:
       - master
 
 jobs:
+  install:
+    name: install
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 16, 14]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Use cached node_modules
+        uses: actions/cache/save@v3
+        with:
+          path: node_modules
+          key: nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
+          restore-keys: |
+            nodeModules-
+
+      - name: install
+        run: yarn install --frozen-lockfile
+
   build:
     name: build
+    needs: install
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,7 +53,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Use cached node_modules
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         with:
           path: node_modules
           key: nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
@@ -34,15 +61,12 @@ jobs:
             nodeModules-
 
       - name: Use cached build
-        uses: actions/cache@v3
+        uses: actions/cache/save@v3
         with:
           path: packages/**/lib
           key: packages-lib-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
           restore-keys: |
             packages-lib-
-
-      - name: install
-        run: yarn install --frozen-lockfile
 
       - name: build
         run: |
@@ -70,9 +94,6 @@ jobs:
           restore-keys: |
             nodeModules-
 
-      - name: install
-        run: yarn install --frozen-lockfile
-
       - name: lint
         run: yarn lint
 
@@ -97,9 +118,6 @@ jobs:
           restore-keys: |
             nodeModules-
 
-      - name: install
-        run: yarn install --frozen-lockfile
-
       - name: typecheck
         run: yarn typecheck
 
@@ -123,9 +141,6 @@ jobs:
           key: nodeModules-${{ hashFiles('yarn.lock') }}-18
           restore-keys: |
             nodeModules-
-
-      - name: install
-        run: yarn install --frozen-lockfile
 
       - name: generate docs
         run: yarn generate:docs
@@ -159,9 +174,6 @@ jobs:
           key: packages-lib-${{ hashFiles('yarn.lock') }}-18
           restore-keys: |
             packages-lib-
-
-      - name: install
-        run: yarn install --frozen-lockfile
 
       - name: test
         run: yarn test
