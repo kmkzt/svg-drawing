@@ -73,7 +73,6 @@ const Layout = ({
       <Head>
         <title>{`svg-drawing ${title}`}</title>
       </Head>
-      {/** @ts-expect-error */}
       <GlobalStyle />
       <GlobalHeader />
       <Box py="12px" px={['2vw', '2vw', '5vw']}>
