@@ -6,14 +6,7 @@ import {
   ImgLoader,
 } from '@svg-drawing/img-trace'
 import { useState, useCallback, useRef, useEffect } from 'react'
-import {
-  Box,
-  Flex,
-  Button,
-  Card,
-  Image,
-  Heading,
-} from 'rebass/styled-components'
+import { Box, Flex, Button, Image, Heading } from 'rebass/styled-components'
 import Layout from '../../components/Layout'
 import { basePath } from '../../config/paths'
 import type { Svg } from '@svg-drawing/core'
@@ -259,9 +252,9 @@ export default () => {
         </Box>
         <Flex flexWrap="wrap">
           {list.map((l, i) => (
-            <Card key={i} width="256px">
-              <Image src={l} alt={l} onClick={handleSelect(l)} />
-            </Card>
+            <div key={i} style={{ width: '256px' }} onClick={handleSelect(l)}>
+              <img src={l} alt={l} />
+            </div>
           ))}
         </Flex>
       </Box>
