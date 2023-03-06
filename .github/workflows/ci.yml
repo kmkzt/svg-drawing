@@ -25,15 +25,15 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Use cached node_modules
+        id: use_cached_node_modules
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
 
       - name: install
-        run: yarn install --frozen-lockfile
+        if: steps.use_cached_node_modules.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --prefer-offline
 
   build:
     name: build
@@ -52,13 +52,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
 
       - name: build
         run: |
@@ -78,13 +76,11 @@ jobs:
         with:
           node-version: 18
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-18-${{ hashFiles('yarn.lock') }}
 
       - name: lint
         run: yarn lint
@@ -102,13 +98,11 @@ jobs:
         with:
           node-version: 18
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-18-${{ hashFiles('yarn.lock') }}
 
       - name: typecheck
         run: yarn typecheck
@@ -126,13 +120,11 @@ jobs:
         with:
           node-version: 18
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-18-${{ hashFiles('yarn.lock') }}
 
       - name: generate docs
         run: yarn generate:docs
@@ -151,13 +143,11 @@ jobs:
         with:
           node-version: 18
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-18-${{ hashFiles('yarn.lock') }}
 
       - name: build for test
         run: yarn build
