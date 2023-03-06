@@ -25,14 +25,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Use cached node_modules
+        id: use_cached_node_modules
         uses: actions/cache@v3
         with:
           path: node_modules
           key: nodeModules-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            nodeModules-${{ matrix.node-version }}
 
       - name: install
+        if: steps.use_cached_node_modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile --prefer-offline
 
   build:
@@ -52,7 +52,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
@@ -76,7 +76,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
@@ -98,7 +98,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
@@ -120,7 +120,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
@@ -143,7 +143,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Use cached node_modules
+      - name: Restore cached node_modules
         uses: actions/cache/restore@v3
         with:
           path: node_modules
