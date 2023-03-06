@@ -28,9 +28,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
+          key: nodeModules-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            nodeModules-
+            nodeModules-${{ matrix.node-version }}
 
       - name: install
         run: yarn install --frozen-lockfile --prefer-offline
@@ -56,9 +56,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-${{ matrix.node-version }}
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
 
       - name: build
         run: |
@@ -82,9 +80,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-18-${{ hashFiles('yarn.lock') }}
 
       - name: lint
         run: yarn lint
@@ -106,9 +102,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-18-${{ hashFiles('yarn.lock') }}
 
       - name: typecheck
         run: yarn typecheck
@@ -130,9 +124,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-18-${{ hashFiles('yarn.lock') }}
 
       - name: generate docs
         run: yarn generate:docs
@@ -155,9 +147,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: node_modules
-          key: nodeModules-${{ hashFiles('yarn.lock') }}-18
-          restore-keys: |
-            nodeModules-
+          key: nodeModules-18-${{ hashFiles('yarn.lock') }}
 
       - name: build for test
         run: yarn build
