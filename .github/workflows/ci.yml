@@ -33,7 +33,7 @@ jobs:
             nodeModules-
 
       - name: install
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --prefer-offline
 
   build:
     name: build
