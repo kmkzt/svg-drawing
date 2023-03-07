@@ -20,7 +20,7 @@ type Transform = {
 }
 
 export class EditSvg {
-  constructor(public svg: SvgClass, private selector: Selector) {}
+  constructor(private svg: SvgClass, private selector: Selector) {}
 
   private get elements(): PathClass[] {
     return this.selector
