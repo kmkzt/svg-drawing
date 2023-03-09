@@ -6,6 +6,8 @@ import type {
   SelectEventObject,
   VertexType,
   SvgClass,
+  SvgObject,
+  EditSvgObject,
 } from '../types'
 
 export class Editing {
@@ -13,7 +15,10 @@ export class Editing {
 
   constructor(
     private svg: SvgClass,
-    private _update: (eSvg: EditSvg) => void = () => void 0
+    private _update: (arg: {
+      svg: SvgObject
+      edit: EditSvgObject | null
+    }) => void = () => void 0
   ) {
     this.selector = new Selector()
 
@@ -30,7 +35,8 @@ export class Editing {
 
   /** Callback function that refreshes the screen. */
   update() {
-    this._update(this.getEditSvg())
+    const { svg, editSvg } = this.getEditSvg()
+    this.reflect({ svg, editSvg })
   }
 
   /** Select edit path and update screen. */
@@ -42,22 +48,25 @@ export class Editing {
 
   /** Delete path and update screen. */
   deleteElements() {
-    const editSvg = this.getEditSvg()
+    const { svg, editSvg } = this.getEditSvg()
     editSvg.delete()
-    this._update(editSvg)
+
+    this.reflect({ svg, editSvg })
   }
 
   /** Change attributes and update screen. */
   changeAttributes(attrs: PathAttributes) {
-    const editSvg = this.getEditSvg()
+    const { editSvg, svg } = this.getEditSvg()
     editSvg.changeAttributes(attrs)
-    this.update()
+
+    this.reflect({ svg, editSvg })
   }
 
   translate(po: PointObject, preview?: boolean) {
-    const editSvg = this.getEditSvg(preview)
+    const { editSvg, svg } = this.getEditSvg(preview)
     editSvg.translate(po)
-    this._update(editSvg)
+
+    this.reflect({ svg, editSvg })
   }
 
   resizeBoundingBox(
@@ -65,9 +74,10 @@ export class Editing {
     movePoint: PointObject,
     preview?: boolean
   ) {
-    const editSvg = this.getEditSvg(preview)
+    const { svg, editSvg } = this.getEditSvg(preview)
     editSvg.resizeBoundingBox(vertexType, movePoint)
-    this._update(editSvg)
+
+    this.reflect({ svg, editSvg })
   }
 
   transform(movePoint: PointObject, preview?: boolean) {
@@ -79,9 +89,19 @@ export class Editing {
     this.translate(movePoint, preview)
   }
 
-  private getEditSvg(preview?: boolean): EditSvg {
-    const svgClass = preview ? this.svg.clone() : this.svg
+  private reflect({ svg, editSvg }: { svg: SvgClass; editSvg: EditSvg }) {
+    this._update({
+      svg: svg.toJson(),
+      edit: editSvg.toJson(),
+    })
+  }
 
-    return new EditSvg(svgClass, this.selector)
+  private getEditSvg(preview?: boolean): { svg: SvgClass; editSvg: EditSvg } {
+    const svg = preview ? this.svg.clone() : this.svg
+
+    return {
+      svg,
+      editSvg: new EditSvg(svg, this.selector),
+    }
   }
 }

@@ -60,10 +60,10 @@ export const useEdit: UseEdit = ({
 
   const edit = useMemo(
     () =>
-      new Editing(svg, (eSvg) => {
+      new Editing(svg, ({ svg, edit }) => {
         render(() => {
-          onChangeEdit(eSvg.toJson())
-          onChangeSvg(eSvg.svg.toJson())
+          onChangeEdit(edit)
+          onChangeSvg(svg)
         })
       }),
     [svg, onChangeEdit, onChangeSvg, render]
