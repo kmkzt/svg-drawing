@@ -5,6 +5,7 @@ import type {
   PathClass,
   SvgClass,
   ElementKey,
+  SvgObject,
 } from '../types'
 
 /**
@@ -36,7 +37,7 @@ export class Drawing implements DrawingClass {
   constructor(
     public svg: SvgClass,
     public pathFactory: DrawFactory,
-    private update: (svg: SvgClass) => void
+    private update: (svg: SvgObject) => void
   ) {
     /** Setup property */
     this._drawElementKey = null
@@ -71,7 +72,7 @@ export class Drawing implements DrawingClass {
     this.pathFactory.updateElement(drawElement, this._drawPoints)
     this.svg.updateElement(drawElement)
 
-    this.update(this.svg)
+    this.update(this.svg.toJson())
   }
 
   public end(): void {

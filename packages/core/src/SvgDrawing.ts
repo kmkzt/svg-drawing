@@ -62,8 +62,6 @@ export class SvgDrawing {
 
     this.renderer = new SvgRenderer(el, { background })
 
-    this.update = this.update.bind(this)
-
     this.svg = new Svg({ width, height, background })
 
     this.factory = new BasicDrawFactory(
@@ -75,7 +73,8 @@ export class SvgDrawing {
       { curve, close }
     )
 
-    this.drawing = new Drawing(this.svg, this.factory, this.update)
+    this.updateHandler = this.updateHandler.bind(this)
+    this.drawing = new Drawing(this.svg, this.factory, this.updateHandler)
 
     const pencilHandler = new PencilHandler(this.drawing)
     this.handler = pencilHandler
@@ -95,10 +94,6 @@ export class SvgDrawing {
     this.drawing.end()
   }
 
-  public toJson(): SvgObject {
-    return this.svg.toJson()
-  }
-
   public changeCurve(curve: boolean): void {
     this.factory.changeCurve(curve)
   }
@@ -110,7 +105,7 @@ export class SvgDrawing {
   public clear() {
     const paths = this.svg.elements
     this.svg.setElements([])
-    this.update()
+    this.renderer.update({ svg: this.svg.toJson() })
     return paths
   }
 
@@ -118,11 +113,11 @@ export class SvgDrawing {
     const lastElement = this.svg.elements[this.svg.elements.length - 1].clone()
     this.svg.deleteElement(lastElement)
 
-    this.update()
+    this.renderer.update({ svg: this.svg.toJson() })
     return lastElement
   }
 
-  private update(): void {
-    this.renderer.update({ svg: this.svg.toJson() })
+  private updateHandler(svg: SvgObject): void {
+    this.renderer.update({ svg })
   }
 }

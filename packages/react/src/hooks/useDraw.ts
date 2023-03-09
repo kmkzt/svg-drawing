@@ -2,6 +2,7 @@ import { Drawing } from '@svg-drawing/core'
 import { useCallback, useMemo } from 'react'
 import { useRenderInterval } from './useRenderInterval'
 import type { UseDraw } from '../types'
+import type { SvgObject } from '@svg-drawing/core'
 
 /**
  * @example <caption>Basic usage</caption>
@@ -51,12 +52,19 @@ export const useDraw: UseDraw = ({ factory, svg, onChangeSvg }) => {
   const render = useRenderInterval()
 
   const update = useCallback(() => {
-    render(() => onChangeSvg(svg.toJson()))
-  }, [render, onChangeSvg, svg])
+    onChangeSvg(svg.toJson())
+  }, [onChangeSvg, svg])
+
+  const drawingUpdater = useCallback(
+    (svgObject: SvgObject) => {
+      render(() => onChangeSvg(svgObject))
+    },
+    [render, onChangeSvg]
+  )
 
   const draw = useMemo(
-    () => new Drawing(svg, factory, update),
-    [svg, factory, update]
+    () => new Drawing(svg, factory, drawingUpdater),
+    [svg, factory, drawingUpdater]
   )
 
   const clear = useCallback(() => {
