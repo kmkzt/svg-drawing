@@ -37,8 +37,7 @@ const SvgElement = forwardRef<SVGSVGElement, Omit<SvgProps, 'editProps'>>(
             fill={background}
           />
         )}
-        {children}
-        <EditLayer />
+        <EditLayer>{children}</EditLayer>
       </svg>
     )
   }

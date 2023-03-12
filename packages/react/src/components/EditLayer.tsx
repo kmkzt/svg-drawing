@@ -16,8 +16,9 @@ import type {
   EditCommandObject,
   AnchorPoint,
 } from '@svg-drawing/core'
+import type { ReactNode } from 'react'
 
-export const EditLayer = () => {
+export const EditLayer = ({ children }: { children: ReactNode }) => {
   const { editProps } = useSvgContext()
 
   if (!editProps) return null
@@ -34,6 +35,7 @@ export const EditLayer = () => {
           selected={boundingBox.selected}
         />
       )}
+      {children}
       {editElements &&
         editElements.map((editPath, i) => (
           <EditPath
