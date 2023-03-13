@@ -2,12 +2,13 @@ import { dataFrameAttributes } from '@svg-drawing/core'
 import React, { forwardRef } from 'react'
 import { BoundingBox } from './BoundingBox'
 import { EditElements } from './EditElements'
+import { Path } from './Path'
 import { SvgProvider } from './SvgContext'
 import type { SvgProps } from '../types'
 
 export const Svg = forwardRef<SVGSVGElement, SvgProps>(
   (
-    { children, editProps, width, height, background, animationProps, ...rest },
+    { width, height, background, elements, editProps, animationProps, ...rest },
     ref
   ) => {
     return (
@@ -17,17 +18,16 @@ export const Svg = forwardRef<SVGSVGElement, SvgProps>(
           width={width}
           height={height}
           background={background}
+          elements={elements}
           {...rest}
-        >
-          {children}
-        </SvgElement>
+        />
       </SvgProvider>
     )
   }
 )
 
 const SvgElement = forwardRef<SVGSVGElement, Omit<SvgProps, 'editProps'>>(
-  ({ background, children, ...rest }, ref) => {
+  ({ background, children, elements, ...rest }, ref) => {
     return (
       <svg ref={ref} {...dataFrameAttributes} {...rest}>
         {background && (
@@ -39,7 +39,9 @@ const SvgElement = forwardRef<SVGSVGElement, Omit<SvgProps, 'editProps'>>(
           />
         )}
         <BoundingBox />
-        {children}
+        {elements.map(({ key, attributes }) => (
+          <Path key={key} elementKey={key} {...attributes} />
+        ))}
         <EditElements />
       </svg>
     )

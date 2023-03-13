@@ -526,25 +526,19 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
             width={width}
             height={height}
             background={background}
+            elements={elements}
             editProps={editProps}
-          >
-            {elements.map(({ key, attributes }) => (
-              <Path key={key} elementKey={key} {...attributes} />
-            ))}
-          </Svg>
+          />
         </div>
       </Box>
       <Svg
         width={width}
         height={height}
         background={background}
+        elements={elements}
         editProps={editProps}
         animationProps={animation.animationProps}
-      >
-        {elements.map(({ key, attributes }) => (
-          <Path key={key} elementKey={key} {...attributes} />
-        ))}
-      </Svg>
+      />
       <div>{JSON.stringify(editProps?.boundingBox)}</div>
       <div>{JSON.stringify(animateObj)}</div>
     </Layout>

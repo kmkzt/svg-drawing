@@ -27,8 +27,8 @@ export type SvgProps = HTMLAttributes<SVGSVGElement> &
   SvgContextProps & {
     width: number
     height: number
+    elements: SvgObject['elements']
     background?: SvgObject['background']
-    children?: React.ReactNode
   }
 
 /** UseDraw */
