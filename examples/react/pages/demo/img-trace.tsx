@@ -94,7 +94,7 @@ const ImageTrace = () => {
       const renderer = new SvgRenderer(renderRef.current)
       const { width, height } = renderRef.current.getBoundingClientRect()
       svg.resize({ width, height })
-      renderer.update({ svg: svg.toJson() })
+      renderer.render({ svg: svg.toJson() })
     }
     renderSvg()
     addEventListener('resize', renderSvg)
