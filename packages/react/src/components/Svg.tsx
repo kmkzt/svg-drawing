@@ -1,6 +1,7 @@
 import { dataFrameAttributes } from '@svg-drawing/core'
 import React, { forwardRef } from 'react'
-import { EditLayer } from './EditLayer'
+import { BoundingBox } from './BoundingBox'
+import { EditElements } from './EditElements'
 import { SvgProvider } from './SvgContext'
 import type { SvgProps } from '../types'
 
@@ -37,7 +38,9 @@ const SvgElement = forwardRef<SVGSVGElement, Omit<SvgProps, 'editProps'>>(
             fill={background}
           />
         )}
-        <EditLayer>{children}</EditLayer>
+        <BoundingBox />
+        {children}
+        <EditElements />
       </svg>
     )
   }

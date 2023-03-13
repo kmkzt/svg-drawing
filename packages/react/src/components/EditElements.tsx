@@ -1,6 +1,4 @@
 import {
-  dataBoundingBoxAttributes,
-  dataBoundingBoxVertexAttributes,
   dataPathAnchorPointAttributes,
   dataPathCommandAttributes,
 } from '@svg-drawing/core'
@@ -8,43 +6,28 @@ import React from 'react'
 import { Path } from './Path'
 import { useSvgContext } from './SvgContext'
 import { EDIT_PATH_STYLE } from '../config/editPathStyle'
-import type { BoundingBoxProps } from '../types'
 import type {
-  Vertex,
   EditPathObject,
   ElementKey,
   EditCommandObject,
   AnchorPoint,
 } from '@svg-drawing/core'
-import type { ReactNode } from 'react'
 
-export const EditLayer = ({ children }: { children: ReactNode }) => {
+export const EditElements = () => {
   const { editProps } = useSvgContext()
 
-  if (!editProps) return null
-
-  const { boundingBox, editElements } = editProps
+  if (!editProps?.elements) return null
 
   return (
     <>
-      {boundingBox && (
-        <BoundingBox
-          size={boundingBox.size}
-          vertexes={boundingBox.vertexes}
-          position={boundingBox.position}
-          selected={boundingBox.selected}
+      {editProps.elements.map((editPath, i) => (
+        <EditPath
+          key={editPath.key}
+          elementKey={editPath.key}
+          attributes={editPath.attributes}
+          commands={editPath.commands}
         />
-      )}
-      {children}
-      {editElements &&
-        editElements.map((editPath, i) => (
-          <EditPath
-            key={editPath.key}
-            elementKey={editPath.key}
-            attributes={editPath.attributes}
-            commands={editPath.commands}
-          />
-        ))}
+      ))}
     </>
   )
 }
@@ -142,57 +125,5 @@ const EditPoint = ({
     cy={value.y}
     r={EDIT_PATH_STYLE.point}
     fill={selected ? EDIT_PATH_STYLE.color.selected : EDIT_PATH_STYLE.color.sub}
-  />
-)
-
-const BoundingBox = ({
-  position,
-  size,
-  vertexes,
-  selected,
-}: BoundingBoxProps) => (
-  <>
-    <rect
-      {...dataBoundingBoxAttributes}
-      x={position.x}
-      y={position.y}
-      width={size.width}
-      height={size.height}
-      stroke={EDIT_PATH_STYLE.color.main}
-      fill={
-        selected
-          ? EDIT_PATH_STYLE.fill.selected
-          : EDIT_PATH_STYLE.fill.boundingBox
-      }
-    />
-    {vertexes.map((vertex) => (
-      <BoundingBoxVertex
-        key={vertex.type}
-        vertex={vertex}
-        selected={selected}
-      />
-    ))}
-  </>
-)
-
-const BoundingBoxVertex = ({
-  vertex,
-  selected,
-}: {
-  vertex: Vertex
-  selected: boolean
-}) => (
-  <circle
-    {...dataBoundingBoxVertexAttributes(vertex.type)}
-    key={vertex.type}
-    cx={vertex.point.x}
-    cy={vertex.point.y}
-    r={EDIT_PATH_STYLE.point}
-    stroke={EDIT_PATH_STYLE.color.main}
-    fill={
-      selected
-        ? EDIT_PATH_STYLE.fill.selected
-        : EDIT_PATH_STYLE.fill.boundingBox
-    }
   />
 )

@@ -1,7 +1,7 @@
 import { Editing } from '@svg-drawing/core'
 import { useMemo } from 'react'
 import { useRenderInterval } from './useRenderInterval'
-import type { EditProps, KeyboardMap, UseEdit } from '../types'
+import type { KeyboardMap, UseEdit } from '../types'
 
 /**
  * ### Basic usage.
@@ -81,17 +81,9 @@ export const useEdit: UseEdit = ({
     [edit]
   )
 
-  const editProps = useMemo<EditProps>(
-    () => ({
-      editElements: editSvgObject?.elements ?? null,
-      boundingBox: editSvgObject?.boundingBox ?? null,
-    }),
-    [editSvgObject]
-  )
-
   return {
     edit,
     keyboardMap,
-    editProps,
+    editProps: editSvgObject ?? undefined,
   }
 }
