@@ -90,7 +90,10 @@ export type PathAttributes = {
   [camelCase: string]: string | undefined
 }
 
-/** Identification key. Use for update, delete. Return same key when ElementClass cloned. */
+/**
+ * Identification key. Use for update, delete. Return same key when ElementClass
+ * cloned.
+ */
 export type ElementKey = string
 
 export type PathObject = {
@@ -151,7 +154,10 @@ export interface SvgClass {
   resize: (arg: { width: number; height: number }) => void
   /** Get element */
   getElement: (key: string) => ElementClass | undefined
-  /** Update element. If it exists it will be updated, otherwise it will be newly added */
+  /**
+   * Update element. If it exists it will be updated, otherwise it will be newly
+   * added
+   */
   updateElement: (element: ElementClass) => this
   /** Delete element */
   deleteElement: (element: ElementClass) => this
@@ -185,12 +191,14 @@ export interface BezierCurveOption {
   ratio?: number
 }
 
+export type RenderParams = {
+  svg: SvgObject
+  edit?: EditSvgObject
+  animation?: AnimationObject
+}
+
 export interface RendererClass {
-  render: (arg: {
-    svg: SvgObject
-    edit?: EditSvgObject
-    animation?: AnimationObject
-  }) => void
+  render: (arg: RenderParams) => void
 }
 
 export type RendererOption = Pick<SvgOption, 'background'>
