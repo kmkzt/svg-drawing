@@ -78,7 +78,7 @@ export class SvgAnimation {
     return new SvgAnimation(
       new Svg({ width, height }),
       new Animation({ ms }),
-      (svg) => new SvgRenderer(el, { background }).update({ svg: svg.toJson() })
+      (svg) => new SvgRenderer(el, { background }).render({ svg: svg.toJson() })
     )
   }
 }

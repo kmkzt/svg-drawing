@@ -186,7 +186,7 @@ export interface BezierCurveOption {
 }
 
 export interface RendererClass {
-  update: (arg: {
+  render: (arg: {
     svg: SvgObject
     edit?: EditSvgObject
     animation?: AnimationObject

@@ -105,7 +105,7 @@ export class SvgDrawing {
   public clear() {
     const paths = this.svg.elements
     this.svg.setElements([])
-    this.renderer.update({ svg: this.svg.toJson() })
+    this.renderer.render({ svg: this.svg.toJson() })
     return paths
   }
 
@@ -113,11 +113,11 @@ export class SvgDrawing {
     const lastElement = this.svg.elements[this.svg.elements.length - 1].clone()
     this.svg.deleteElement(lastElement)
 
-    this.renderer.update({ svg: this.svg.toJson() })
+    this.renderer.render({ svg: this.svg.toJson() })
     return lastElement
   }
 
   private updateHandler(svg: SvgObject): void {
-    this.renderer.update({ svg })
+    this.renderer.render({ svg })
   }
 }

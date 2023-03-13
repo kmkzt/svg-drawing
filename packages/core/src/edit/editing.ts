@@ -15,7 +15,7 @@ export class Editing {
 
   constructor(
     private svg: SvgClass,
-    private _update: (arg: {
+    private render: (arg: {
       svg: SvgObject
       edit: EditSvgObject | null
     }) => void = () => void 0
@@ -90,7 +90,7 @@ export class Editing {
   }
 
   private reflect({ svg, editSvg }: { svg: SvgClass; editSvg: EditSvg }) {
-    this._update({
+    this.render({
       svg: svg.toJson(),
       edit: editSvg.toJson(),
     })

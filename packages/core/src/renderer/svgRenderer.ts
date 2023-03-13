@@ -236,7 +236,7 @@ export const toElement = ({
   svg: { width, height, background, elements: paths },
   animation,
   edit,
-}: Parameters<RendererClass['update']>[0]): SVGSVGElement => {
+}: Parameters<RendererClass['render']>[0]): SVGSVGElement => {
   return svgElement({ width, height, background }, [
     ...paths.map(({ key, attributes }) =>
       pathElement(
@@ -257,14 +257,14 @@ export class SvgRenderer implements RendererClass {
       toElement({ svg: { background, width, height, elements: [] } })
     )
 
-    this.update = this.update.bind(this)
+    this.render = this.render.bind(this)
   }
   /** Update render */
-  public update({
+  public render({
     svg,
     edit,
     animation,
-  }: Parameters<RendererClass['update']>[0]): void {
+  }: Parameters<RendererClass['render']>[0]): void {
     this.el.replaceChild(
       toElement({ svg, edit, animation }),
       this.el.childNodes[0]
