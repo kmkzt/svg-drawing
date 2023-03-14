@@ -50,23 +50,17 @@ import type { KeyboardMap, UseEdit } from '../types'
  * }
  * ```
  */
-export const useEdit: UseEdit = ({
-  editSvgObject,
-  svg,
-  onChangeEdit,
-  onChangeSvg,
-}) => {
+export const useEdit: UseEdit = ({ svg, onUpdate }) => {
   const render = useRenderInterval()
 
   const edit = useMemo(
     () =>
       new Editing(svg, ({ svg, edit }) => {
         render(() => {
-          onChangeEdit(edit)
-          onChangeSvg(svg)
+          onUpdate({ svg, edit: edit ?? undefined })
         })
       }),
-    [svg, onChangeEdit, onChangeSvg, render]
+    [svg, onUpdate, render]
   )
 
   const keyboardMap = useMemo<KeyboardMap>(
@@ -84,6 +78,5 @@ export const useEdit: UseEdit = ({
   return {
     edit,
     keyboardMap,
-    editProps: editSvgObject ?? undefined,
   }
 }

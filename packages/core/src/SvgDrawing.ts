@@ -73,8 +73,7 @@ export class SvgDrawing {
       { curve, close }
     )
 
-    this.updateHandler = this.updateHandler.bind(this)
-    this.drawing = new Drawing(this.svg, this.factory, this.updateHandler)
+    this.drawing = new Drawing(this.svg, this.factory, this.renderer.render)
 
     const pencilHandler = new PencilHandler(this.drawing)
     this.handler = pencilHandler
@@ -115,9 +114,5 @@ export class SvgDrawing {
 
     this.renderer.render({ svg: this.svg.toJson() })
     return lastElement
-  }
-
-  private updateHandler(svg: SvgObject): void {
-    this.renderer.render({ svg })
   }
 }

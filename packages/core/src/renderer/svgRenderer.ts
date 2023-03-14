@@ -20,6 +20,7 @@ import type {
   RendererOption,
   Vertex,
   AnchorPoint,
+  RenderParams,
 } from '../types'
 
 const VERSION = '1.1'
@@ -260,11 +261,7 @@ export class SvgRenderer implements RendererClass {
     this.render = this.render.bind(this)
   }
   /** Update render */
-  public render({
-    svg,
-    edit,
-    animation,
-  }: Parameters<RendererClass['render']>[0]): void {
+  public render({ svg, edit, animation }: RenderParams): void {
     this.el.replaceChild(
       toElement({ svg, edit, animation }),
       this.el.childNodes[0]

@@ -13,6 +13,7 @@ import type {
   AnimateAttribute,
   ElementKey,
   ElementClass,
+  RenderParams,
 } from '@svg-drawing/core'
 import type { RefObject, HTMLAttributes } from 'react'
 
@@ -37,7 +38,7 @@ export type UseDraw = (opts: UseDrawOptions) => DrawAction
 export type UseDrawOptions = {
   factory: DrawFactory
   svg: SvgClass
-  onChangeSvg: (obj: SvgObject) => void
+  onUpdate: (params: RenderParams) => void
 }
 export type DrawAction = {
   draw: DrawingClass
@@ -49,15 +50,12 @@ export type DrawAction = {
 /** UseEdit */
 export type UseEdit = (opts: {
   svg: SvgClass
-  editSvgObject: EditSvgObject | null
-  onChangeEdit: (arg: EditSvgObject | null) => void
-  onChangeSvg: (obj: SvgObject) => void
+  onUpdate: (params: RenderParams) => void
 }) => EditSvgAction
 
 export type EditSvgAction = {
   edit: Editing
   keyboardMap: KeyboardMap
-  editProps: EditSvgObject | undefined
 }
 
 /** UseEditEventHandler */

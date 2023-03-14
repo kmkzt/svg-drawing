@@ -21,8 +21,8 @@ import Layout from '../components/Layout'
 import type {
   PathAttributes,
   ResizeCallback,
-  EditSvgObject,
   AnimateObject,
+  RenderParams,
 } from '@svg-drawing/core'
 import type { NextPage } from 'next'
 import type { ChangeEventHandler } from 'react'
@@ -96,9 +96,15 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
 
   /** Setup draw */
   const svg = useSvg({})
-  const [{ elements, width, height, background }, onChangeSvg] = useState(
-    svg.toJson()
-  )
+  const [
+    {
+      svg: { elements, width, height, background },
+      edit: editProps,
+    },
+    onUpdate,
+  ] = useState<RenderParams>({
+    svg: svg.toJson(),
+  })
 
   const {
     update: updateDraw,
@@ -108,7 +114,7 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   } = useDraw({
     factory,
     svg,
-    onChangeSvg,
+    onUpdate,
   })
 
   usePencilHandler(
@@ -124,13 +130,9 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   )
 
   /** Setup edit */
-
-  const [editSvgObject, onChangeEdit] = useState<EditSvgObject | null>(null)
-  const { edit, editProps, keyboardMap } = useEdit({
+  const { edit, keyboardMap } = useEdit({
     svg,
-    editSvgObject,
-    onChangeEdit,
-    onChangeSvg,
+    onUpdate,
   })
 
   useEditHandler(targetRef, edit, mode === 'edit')
