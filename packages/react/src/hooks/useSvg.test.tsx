@@ -12,15 +12,15 @@ describe('useSvg', () => {
     const height = 100
     const { result } = renderHook(() => useSvg({ width, height }))
     expect(result.current).toBeInstanceOf(Svg)
-    expect(result.current.width).toBe(width)
-    expect(result.current.height).toBe(height)
+    expect(result.current.svg.width).toBe(width)
+    expect(result.current.svg.height).toBe(height)
   })
   it('Instance not updated', () => {
     let resultSvg: SvgClass | undefined
     const checkUpdate = jest.fn()
     const TestComponent = () => {
       const [opts, setOpts] = useState({ width: 0, height: 0 })
-      const svg = useSvg(opts)
+      const { svg } = useSvg(opts)
       resultSvg = svg
 
       useEffect(() => {

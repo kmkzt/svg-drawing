@@ -18,7 +18,11 @@ import type {
 import type { RefObject, HTMLAttributes } from 'react'
 
 /** UseSvg */
-export type UseSvg = (opts: Partial<SvgOption>) => SvgClass
+export type UseSvg = (opts: Partial<SvgOption>) => {
+  svg: SvgClass
+  getInitialState: () => RenderParams
+}
+
 export type SvgContextProps = {
   editProps?: EditSvgObject
   animationProps?: AnimationProps

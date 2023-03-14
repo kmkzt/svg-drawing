@@ -95,16 +95,15 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
   const factory = useDrawFactory(pathOptions, { curve, close })
 
   /** Setup draw */
-  const svg = useSvg({})
+  const { svg, getInitialState } = useSvg({})
+
   const [
     {
       svg: { elements, width, height, background },
       edit: editProps,
     },
     onUpdate,
-  ] = useState<RenderParams>({
-    svg: svg.toJson(),
-  })
+  ] = useState<RenderParams>(getInitialState())
 
   const {
     update: updateDraw,
