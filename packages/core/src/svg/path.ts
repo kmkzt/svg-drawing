@@ -15,28 +15,28 @@ import type {
 export class Path implements PathClass {
   private static index = 0
   private static genIndex = () => (Path.index += 1)
-  private commands: CommandClass[] = []
+  private _relativeCommands: CommandClass[] = []
   public key: string
   constructor(public attrs: PathAttributes = {}, _key?: string) {
     this.key = _key || `p${Path.genIndex()}`
   }
 
   get absoluteCommands(): CommandClass[] {
-    return toAbsoluteCommands(this.commands)
+    return toAbsoluteCommands(this._relativeCommands)
   }
 
   get relativeCommands(): CommandClass[] {
-    return toRelativeCommands(this.commands)
+    return this._relativeCommands
   }
 
   setCommands(commands: ReadonlyArray<CommandClass> | Readonly<CommandClass>) {
-    this.commands = toRelativeCommands([commands].flat())
+    this._relativeCommands = toRelativeCommands([commands].flat())
 
     return this
   }
 
   addCommand(command: Readonly<CommandClass>) {
-    this.setCommands([...this.commands, command])
+    this.setCommands([...this._relativeCommands, command])
 
     return this
   }
@@ -58,17 +58,23 @@ export class Path implements PathClass {
   }
 
   scale(r: number) {
-    this.setCommands(this.commands.map((c: CommandClass) => c.scale(r)))
+    this.setCommands(
+      this._relativeCommands.map((c: CommandClass) => c.scale(r))
+    )
     return this
   }
 
   scaleX(r: number) {
-    this.setCommands(this.commands.map((c: CommandClass) => c.scaleX(r)))
+    this.setCommands(
+      this._relativeCommands.map((c: CommandClass) => c.scaleX(r))
+    )
     return this
   }
 
   scaleY(r: number) {
-    this.setCommands(this.commands.map((c: CommandClass) => c.scaleY(r)))
+    this.setCommands(
+      this._relativeCommands.map((c: CommandClass) => c.scaleY(r))
+    )
     return this
   }
 
@@ -108,7 +114,14 @@ export class Path implements PathClass {
   }
 
   translate(po: PointObject) {
-    this.setCommands(this.absoluteCommands.map((com) => com.translate(po)))
+    if (
+      this._relativeCommands.length === 0 &&
+      this._relativeCommands[0].type !== 'M'
+    ) {
+      return this
+    }
+
+    this._relativeCommands[0] = this._relativeCommands[0].translate(po)
 
     return this
   }
@@ -119,6 +132,6 @@ export class Path implements PathClass {
         ...this.attrs,
       },
       this.key
-    ).setCommands(this.commands.map((c) => c.clone()))
+    ).setCommands(this._relativeCommands.map((c) => c.clone()))
   }
 }
