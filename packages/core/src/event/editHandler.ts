@@ -11,7 +11,7 @@ export class EditHandler implements EventHandler<HTMLElement> {
   private multipleSelectBindKey: string
 
   constructor(
-    public editing: Editing,
+    private editing: Editing,
     options: { multipleSelectBindKey?: string }
   ) {
     this.multipleSelectBindKey = options?.multipleSelectBindKey ?? 'Shift'
