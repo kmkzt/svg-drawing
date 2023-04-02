@@ -99,24 +99,27 @@ describe('SvgDrawing', () => {
     `)
   })
 
-  it('clear()', () => {
-    const draw = new SvgDrawing(document.createElement('div'))
-    draw.changeCurve(false)
-    draw.drawStart()
-    draw.drawMove({ x: 0, y: 0 })
-    draw.drawEnd()
-    draw.clear()
-    const el = toElement({ svg: draw.toJson() })
-    expect(el).toMatchInlineSnapshot(`
-      <svg
-        data-edit-type="frame"
-        height="0"
-        version="1.1"
-        width="0"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-      />
-    `)
+  describe('clear', () => {
+    it('path element is clear', () => {
+      const draw = new SvgDrawing(document.createElement('div'))
+      draw.changeCurve(false)
+      draw.drawStart()
+      draw.drawMove({ x: 0, y: 0 })
+      draw.drawEnd()
+      draw.clear()
+
+      const el = toElement({ svg: draw.toJson() })
+      expect(el).toMatchInlineSnapshot(`
+        <svg
+          data-edit-type="frame"
+          height="0"
+          version="1.1"
+          width="0"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        />
+      `)
+    })
   })
 
   it('undo()', () => {

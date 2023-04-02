@@ -81,6 +81,10 @@ export class SvgDrawing {
     this.handler.setup(el)
   }
 
+  public toJson(): SvgObject {
+    return this.svg.toJson()
+  }
+
   public drawStart(): void {
     this.drawing.start()
   }

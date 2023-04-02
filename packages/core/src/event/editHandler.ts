@@ -5,7 +5,7 @@ import type { Editing } from '../edit/editing'
 import type { EventHandler, PointObject } from '../types'
 
 export class EditHandler implements EventHandler<HTMLElement> {
-  private parentElement: HTMLElement | null = null
+  private targetElement: HTMLElement | null = null
   private basePoint: PointObject | null = null
   private pressedKeyHandler: PressedKeyHandler
   private multipleSelectBindKey: string
@@ -86,20 +86,20 @@ export class EditHandler implements EventHandler<HTMLElement> {
 
   setup(el: HTMLElement) {
     this.cleanup()
-    this.parentElement = el
+    this.targetElement = el
 
-    this.parentElement?.addEventListener('mousedown', this.handleSelect)
-    this.parentElement?.addEventListener('touchstart', this.handleSelect)
+    this.targetElement?.addEventListener('mousedown', this.handleSelect)
+    this.targetElement?.addEventListener('touchstart', this.handleSelect)
 
     this.pressedKeyHandler.setup()
   }
 
   cleanup() {
-    this.parentElement?.removeEventListener('mousedown', this.handleSelect)
-    this.parentElement?.removeEventListener('touchstart', this.handleSelect)
+    this.targetElement?.removeEventListener('mousedown', this.handleSelect)
+    this.targetElement?.removeEventListener('touchstart', this.handleSelect)
 
     this.pressedKeyHandler.cleanup()
 
-    this.parentElement = null
+    this.targetElement = null
   }
 }
