@@ -25,7 +25,7 @@ describe('EditSvg', () => {
     })
   })
   describe('changeAttributes', () => {
-    it('Change attributes of selected paths', () => {
+    it('Change attributes of paths', () => {
       const { key } = svg.elements[0]
       selector.select({
         type: 'path',
@@ -37,14 +37,12 @@ describe('EditSvg', () => {
       edit.changeAttributes({ fill: '#ff0' })
       expect(svg.elements[0].attrs.fill).toBe('#ff0')
     })
-    it.todo('Selecting commands')
-    it.todo('Selecting point')
-    it.todo('Selecting Multiple path')
+    it.todo('Change attributes of multiple paths')
   })
 
   describe('translate', () => {
     const pathIndex = 0
-    it('Translate selected path', () => {
+    it('Translate path', () => {
       expect(svg.elements[pathIndex].getCommandString()).toBe(
         'M1 1 l1 1 c2 2 4 2 6 2 z'
       )
@@ -60,7 +58,7 @@ describe('EditSvg', () => {
         'M2 0 l1 1 c2 2 4 2 6 2 z'
       )
     })
-    it('Translate selected commands', () => {
+    it('Translate command', () => {
       expect(svg.elements[pathIndex].getCommandString()).toBe(
         'M1 1 l1 1 c2 2 4 2 6 2 z'
       )
@@ -79,7 +77,7 @@ describe('EditSvg', () => {
         'M1 1 l2 0 c1 3 3 3 5 3 z'
       )
     })
-    it('Translate selected point', () => {
+    it('Translate anchor point', () => {
       selector.select({
         type: 'path/anchorPoint',
         key: svg.elements[pathIndex].key,
@@ -95,11 +93,11 @@ describe('EditSvg', () => {
         'M1 1 l1 1 c3 1 4 2 6 2 z'
       )
     })
-    it.todo('Selecting Multiple path')
+    it.todo('Translate multiple paths')
   })
 
   describe('scale', () => {
-    it('Selecting path', () => {
+    it('Scale path', () => {
       selector.select({ type: 'path', key: svg.elements[0].key })
       const edit = new EditSvg(svg, selector)
       edit.scale(2)
@@ -108,11 +106,11 @@ describe('EditSvg', () => {
         'M2 2 l2 2 c4 4 8 4 12 4 z'
       )
     })
-    it.todo('Selecting Multiple path')
+    it.todo('Scale multiple path')
   })
 
   describe('scaleX', () => {
-    it('Selecting path', () => {
+    it('Scale path on X axis.', () => {
       selector.select({ type: 'path', key: svg.elements[0].key })
       const edit = new EditSvg(svg, selector)
       edit.scaleX(2)
@@ -121,11 +119,11 @@ describe('EditSvg', () => {
         'M2 1 l2 1 c4 2 8 2 12 2 z'
       )
     })
-    it.todo('Selecting Multiple path')
+    it.todo('Scale multiple paths on X axis.')
   })
 
   describe('scaleY', () => {
-    it('Selecting path', () => {
+    it('Scale path on Y axis.', () => {
       selector.select({
         type: 'path',
         key: svg.elements[0].key,
@@ -137,18 +135,16 @@ describe('EditSvg', () => {
         'M1 2 l1 2 c2 4 4 4 6 4 z'
       )
     })
-    it.todo('Selecting Multiple path')
+    it.todo('Scale multiple paths on Y axis.')
   })
 
-  describe('resizeFixedPosition', () => {
-    it.todo('Selecting path')
-    it.todo('Selecting commands')
-    it.todo('Selecting point')
-    it.todo('Selecting Multiple path')
+  describe('resizeBoundingBox', () => {
+    it.todo('Resize bounding box of selected path.')
+    it.todo('Resize bounding box of selected multiple path.')
   })
 
   describe('delete', () => {
-    describe('Delete Selected path.', () => {
+    describe('Delete path.', () => {
       it('Update paths', () => {
         expect(svg.elements.length).toBe(3)
         expect(svg.elements[0].attrs.id).toBe('path_0')
@@ -167,118 +163,117 @@ describe('EditSvg', () => {
         expect(svg.elements[1].attrs.id).toBe('path_2')
       })
     })
-    it.todo('Selecting commands')
-    it.todo('Selecting point')
-    it.todo('Selecting Multiple path')
+    it.todo('Delete commands')
+    it.todo('Delete anchor point')
+    it.todo('Delete multiple path')
   })
 
-  it.todo('preview')
+  describe('toJson', () => {
+    it('Return EditSvgObject when selected path.', () => {
+      selector.select({ type: 'path', key: svg.elements[0].key })
+      const edit = new EditSvg(svg, selector)
 
-  it('toJson', () => {
-    const result: EditSvgObject = {
-      boundingBox: {
-        position: {
-          x: 1,
-          y: 1,
-        },
-        selected: true,
-        size: {
-          height: 3,
-          width: 7,
-        },
-        vertexes: [
-          {
-            point: {
-              x: 1,
-              y: 1,
-            },
-            type: 'LeftTop',
+      const result: EditSvgObject = {
+        boundingBox: {
+          position: {
+            x: 1,
+            y: 1,
           },
-          {
-            point: {
-              x: 8,
-              y: 1,
-            },
-            type: 'RightTop',
+          selected: true,
+          size: {
+            height: 3,
+            width: 7,
           },
-          {
-            point: {
-              x: 8,
-              y: 4,
-            },
-            type: 'RightBottom',
-          },
-          {
-            point: {
-              x: 1,
-              y: 4,
-            },
-            type: 'LeftBottom',
-          },
-        ],
-      },
-      elements: [
-        {
-          key: 'path_key_0',
-          type: 'path',
-          attributes: {
-            d: 'M1 1 l1 1 c2 2 4 2 6 2 z',
-            fill: '#f00',
-            id: 'path_0',
-            stroke: '#00f',
-            strokeWidth: '4',
-          },
-          commands: [
+          vertexes: [
             {
-              anchorPoints: [],
-              index: 0,
-              outline: undefined,
-              selected: false,
-              value: {
+              point: {
                 x: 1,
                 y: 1,
               },
+              type: 'LeftTop',
             },
             {
-              anchorPoints: [],
-              index: 1,
-              outline: undefined,
-              selected: false,
-              value: {
-                x: 2,
-                y: 2,
+              point: {
+                x: 8,
+                y: 1,
               },
+              type: 'RightTop',
             },
             {
-              anchorPoints: [
-                {
-                  index: {
-                    command: 2,
-                    point: 1,
-                  },
-                  selected: false,
-                  value: {
-                    x: 6,
-                    y: 4,
-                  },
-                },
-              ],
-              index: 2,
-              outline: 'M 6 4L 8 4',
-              selected: false,
-              value: {
+              point: {
                 x: 8,
                 y: 4,
               },
+              type: 'RightBottom',
+            },
+            {
+              point: {
+                x: 1,
+                y: 4,
+              },
+              type: 'LeftBottom',
             },
           ],
         },
-      ],
-    }
-
-    selector.select({ type: 'path', key: svg.elements[0].key })
-    const edit = new EditSvg(svg, selector)
-
-    expect(edit.toJson()).toStrictEqual(result)
+        elements: [
+          {
+            key: 'path_key_0',
+            type: 'path',
+            attributes: {
+              d: 'M1 1 l1 1 c2 2 4 2 6 2 z',
+              fill: '#f00',
+              id: 'path_0',
+              stroke: '#00f',
+              strokeWidth: '4',
+            },
+            commands: [
+              {
+                anchorPoints: [],
+                index: 0,
+                outline: undefined,
+                selected: false,
+                value: {
+                  x: 1,
+                  y: 1,
+                },
+              },
+              {
+                anchorPoints: [],
+                index: 1,
+                outline: undefined,
+                selected: false,
+                value: {
+                  x: 2,
+                  y: 2,
+                },
+              },
+              {
+                anchorPoints: [
+                  {
+                    index: {
+                      command: 2,
+                      point: 1,
+                    },
+                    selected: false,
+                    value: {
+                      x: 6,
+                      y: 4,
+                    },
+                  },
+                ],
+                index: 2,
+                outline: 'M 6 4L 8 4',
+                selected: false,
+                value: {
+                  x: 8,
+                  y: 4,
+                },
+              },
+            ],
+          },
+        ],
+      }
+      expect(edit.toJson()).toStrictEqual(result)
+    })
   })
 })
