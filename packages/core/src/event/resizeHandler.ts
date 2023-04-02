@@ -70,10 +70,8 @@ export class ResizeHandler implements EventHandler<HTMLElement> {
     // Initialize size
     this.handleResize()
 
-    // ResizeObserver
-    // Use `getBoundingClientRect` because it is not fit when the size is obtained from `contentRect` of resize observe entry.
     if (SUPPORT_RESIZE_OBSERVER) {
-      const resizeObserver = new ResizeObserver(() => this.handleResize())
+      const resizeObserver = new ResizeObserver(() => this.handleResize()) // Use `getBoundingClientRect` because it is not fit when the size is obtained from `contentRect` of resize observe entry.
       resizeObserver.observe(this.el)
 
       this._clearEventList.push(() => resizeObserver.disconnect())
