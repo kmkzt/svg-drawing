@@ -42,7 +42,7 @@
     "lib:rollup": "NODE_ENV=production rollup -c",
     "lib:tsc": "NODE_ENV=production tsc -p ./tsconfig.lib.json",
     "clear": "rimraf lib/*",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc",
     "lint": "eslint ./src --ext .js,.ts,.tsx",
     "fmt": "yarn lint --fix",
     "prepare": "yarn build"
