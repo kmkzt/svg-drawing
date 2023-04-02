@@ -1,6 +1,5 @@
 import { createCommand } from './command'
 import { Path } from './path'
-import { Point } from './point'
 import { Svg } from './svg'
 
 describe('Svg', () => {
@@ -143,31 +142,29 @@ describe('Svg', () => {
         ]),
       ])
 
-      expect(svg.toJson()).toMatchInlineSnapshot(`
-        Object {
-          "background": undefined,
-          "elements": Array [
-            Object {
-              "attributes": Object {
-                "d": "M0 0 c0.2 0.2 0.6 0.8 1 1 c0.4 0.2 0.6 0.2 1 0 c0.4 -0.2 0.8 -0.8 1 -1",
-              },
-              "key": "p1",
-              "type": "path",
+      expect(svg.toJson()).toStrictEqual({
+        background: undefined,
+        elements: [
+          {
+            attributes: {
+              d: 'M0 0 c0.2 0.2 0.6 0.8 1 1 c0.4 0.2 0.6 0.2 1 0 c0.4 -0.2 0.8 -0.8 1 -1',
             },
-            Object {
-              "attributes": Object {
-                "d": "M4 4 l5 0 l0 4 l-6 -8 z",
-                "strokeLinecap": "square",
-                "strokeLinejoin": "miter",
-              },
-              "key": "p2",
-              "type": "path",
+            key: 'p1',
+            type: 'path',
+          },
+          {
+            attributes: {
+              d: 'M4 4 l5 0 l0 4 l-6 -8 z',
+              strokeLinecap: 'square',
+              strokeLinejoin: 'miter',
             },
-          ],
-          "height": 500,
-          "width": 500,
-        }
-      `)
+            key: 'p2',
+            type: 'path',
+          },
+        ],
+        height: 500,
+        width: 500,
+      })
     })
 
     it('Add path', () => {
@@ -223,31 +220,29 @@ describe('Svg', () => {
           ])
         )
 
-      expect(svg.toJson()).toMatchInlineSnapshot(`
-        Object {
-          "background": undefined,
-          "elements": Array [
-            Object {
-              "attributes": Object {
-                "d": "M0 0 c0.2 0.2 0.6 0.8 1 1 c0.4 0.2 0.6 0.2 1 0 c0.4 -0.2 0.8 -0.8 1 -1",
-              },
-              "key": "p1",
-              "type": "path",
+      expect(svg.toJson()).toStrictEqual({
+        background: undefined,
+        elements: [
+          {
+            attributes: {
+              d: 'M0 0 c0.2 0.2 0.6 0.8 1 1 c0.4 0.2 0.6 0.2 1 0 c0.4 -0.2 0.8 -0.8 1 -1',
             },
-            Object {
-              "attributes": Object {
-                "d": "M4 4 l5 0 l0 4 l-6 -8 z",
-                "strokeLinecap": "square",
-                "strokeLinejoin": "miter",
-              },
-              "key": "p2",
-              "type": "path",
+            key: 'p1',
+            type: 'path',
+          },
+          {
+            attributes: {
+              d: 'M4 4 l5 0 l0 4 l-6 -8 z',
+              strokeLinecap: 'square',
+              strokeLinejoin: 'miter',
             },
-          ],
-          "height": 500,
-          "width": 500,
-        }
-      `)
+            key: 'p2',
+            type: 'path',
+          },
+        ],
+        height: 500,
+        width: 500,
+      })
     })
   })
 
