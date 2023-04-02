@@ -4,10 +4,9 @@
     "rootDir": "./src",
     "outDir": "./lib",
     "declaration": true,
-    "declarationDir": "./lib"
+    "declarationDir": "./lib",
+    "emitDeclarationOnly": true
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "references": []
 }
