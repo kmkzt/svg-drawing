@@ -1,65 +1,67 @@
 import { Selector } from './selector'
-import type { SelectEventObject } from '../types'
 
 describe('Selector', () => {
-  const selectedPath: SelectEventObject = { type: 'path', key: 'path_id_1' }
-  const selectedCommand: SelectEventObject = {
-    type: 'path/command',
-    key: 'path_id_2',
-    index: { command: 0 },
-  }
-  const selectedPoint: SelectEventObject = {
-    type: 'path/anchorPoint',
-    key: 'path_id_3',
-    index: { command: 0, point: 0 },
-  }
-
-  describe('Selected status reflect', () => {
+  describe('toJson', () => {
     it('Select path', () => {
       const selector = new Selector()
-      selector.select(selectedPath)
+      selector.select({ type: 'path', key: 'path_id_1' })
 
-      expect(selector.toJson()).toMatchInlineSnapshot(`
-        Array [
-          Object {
-            "key": "path_id_1",
-            "type": "path",
-          },
-        ]
-      `)
+      expect(selector.toJson()).toStrictEqual([
+        {
+          key: 'path_id_1',
+          type: 'path',
+          anchorPoints: [],
+        },
+      ])
     })
-    it('Select comamnd', () => {
+
+    it('Select command', () => {
       const selector = new Selector()
-      selector.select(selectedCommand)
+      selector.select({
+        type: 'path/command',
+        key: 'path_id_2',
+        index: { command: 0 },
+      })
 
-      expect(selector.toJson()).toMatchInlineSnapshot(`
-        Array [
-          Object {
-            "index": Object {
-              "command": 0,
+      expect(selector.toJson()).toStrictEqual([
+        {
+          type: 'path',
+          key: 'path_id_2',
+          anchorPoints: [
+            {
+              type: 'path/command',
+              index: {
+                command: 0,
+              },
             },
-            "key": "path_id_2",
-            "type": "path-command",
-          },
-        ]
-      `)
+          ],
+        },
+      ])
     })
+
     it('Select point', () => {
       const selector = new Selector()
-      selector.select(selectedPoint)
+      selector.select({
+        type: 'path/anchorPoint',
+        key: 'path_id_3',
+        index: { command: 0, point: 0 },
+      })
 
-      expect(selector.toJson()).toMatchInlineSnapshot(`
-        Array [
-          Object {
-            "index": Object {
-              "command": 0,
-              "point": 0,
+      expect(selector.toJson()).toStrictEqual([
+        {
+          type: 'path',
+          key: 'path_id_3',
+          anchorPoints: [
+            {
+              type: 'path/anchorPoint',
+              index: {
+                command: 0,
+                point: 0,
+              },
             },
-            "key": "path_id_3",
-            "type": "path-point",
-          },
-        ]
-      `)
+          ],
+        },
+      ])
     })
   })
 })
