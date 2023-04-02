@@ -13,7 +13,7 @@ describe('pencilHandler', () => {
     beforeEach(() => {
       jest.resetModules()
     })
-    it('Set mouse event listener when SUPPORT_POINTER_EVENT is false and SUPPORT_ON_TOUCH_START is false', () => {
+    it('Add mouse event listener when SUPPORT_POINTER_EVENT is false and SUPPORT_ON_TOUCH_START is false', () => {
       const el = document.createElement('div')
 
       jest.spyOn(el, 'addEventListener')
@@ -56,7 +56,7 @@ describe('pencilHandler', () => {
         )
       })
     })
-    it('Set pointer event listener when SUPPORT_POINTER_EVENT is true', () => {
+    it('Add pointer event listener when SUPPORT_POINTER_EVENT is true', () => {
       const el = document.createElement('div')
 
       jest.spyOn(el, 'addEventListener')
@@ -99,7 +99,7 @@ describe('pencilHandler', () => {
         )
       })
     })
-    it('Set touche event listener when SUPPORT_POINTER_EVENT is false and SUPPORT_ON_TOUCH_START is true', () => {
+    it('Add touche event listener when SUPPORT_POINTER_EVENT is false and SUPPORT_ON_TOUCH_START is true', () => {
       const el = document.createElement('div')
 
       jest.spyOn(el, 'addEventListener')
