@@ -128,8 +128,8 @@ export class EditSvg {
   }
 
   /** Return data in json format. */
-  toJson(): EditSvgObject | null {
-    if (!this.elements.length) return null
+  toJson(): EditSvgObject | undefined {
+    if (!this.elements.length) return undefined
 
     return {
       elements: this.elements.map((element) => {

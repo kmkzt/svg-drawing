@@ -6,8 +6,7 @@ import type {
   SelectEventObject,
   VertexType,
   SvgClass,
-  SvgObject,
-  EditSvgObject,
+  RenderParams,
 } from '../types'
 
 export class Editing {
@@ -15,10 +14,7 @@ export class Editing {
 
   constructor(
     private svg: SvgClass,
-    private render: (arg: {
-      svg: SvgObject
-      edit: EditSvgObject | null
-    }) => void = () => void 0
+    private render: (arg: RenderParams) => void = () => void 0
   ) {
     this.selector = new Selector()
 
@@ -33,7 +29,7 @@ export class Editing {
     this.update()
   }
 
-  /** Callback function that refreshes the screen. */
+  /** Call render methods to update screen. */
   update() {
     const { svg, editSvg } = this.getEditSvg()
     this.reflect({ svg, editSvg })
@@ -62,6 +58,11 @@ export class Editing {
     this.reflect({ svg, editSvg })
   }
 
+  /**
+   * Translate the selected path and update screen.
+   *
+   * @param preview If true, svg should be the same.
+   */
   translate(po: PointObject, preview?: boolean) {
     const { editSvg, svg } = this.getEditSvg(preview)
     editSvg.translate(po)
@@ -69,6 +70,13 @@ export class Editing {
     this.reflect({ svg, editSvg })
   }
 
+  /**
+   * Resize the bounding box of the selected path and update screen.
+   *
+   * @param vertexType The type of vertex.
+   * @param movePoint The point to move.
+   * @param preview If true, svg should be the same.
+   */
   resizeBoundingBox(
     vertexType: VertexType,
     movePoint: PointObject,
@@ -80,6 +88,11 @@ export class Editing {
     this.reflect({ svg, editSvg })
   }
 
+  /**
+   * @param movePoint
+   * @param preview
+   * @returns
+   */
   transform(movePoint: PointObject, preview?: boolean) {
     if (this.selector.vertexType) {
       this.resizeBoundingBox(this.selector.vertexType, movePoint, preview)
