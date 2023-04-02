@@ -22,11 +22,11 @@ export const useEventHandler = <E extends HTMLElement = HTMLElement>({
   active?: boolean
 }) => {
   useEffect(() => {
-    if (!ref.current) return
+    if (!ref.current || !active) return
 
     // Setup
     const el = ref.current
-    if (active) handler.setup(el)
+    handler.setup(el)
 
     return () => handler.cleanup()
   }, [active, handler, ref])
