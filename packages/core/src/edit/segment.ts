@@ -12,7 +12,8 @@ type BezierCurvePoint = [PointObject, PointObject, PointObject, PointObject]
  * arbitrary number of values of t between 0 and 1. One equation yields values
  * for x, the other yields values for y. As increasing values for t are supplied
  * to the equations, the point defined by x(t),y(t) moves from the origin to the
- * destination. This is how the equations are defined in Adobe's PostScript references.
+ * destination. This is how the equations are defined in Adobe's PostScript
+ * references.
  *
  * X(t) = A(x) * pow(t, 3) + B(x) * pow(t, 2) + C(x) * t + x0
  *
@@ -63,7 +64,7 @@ const { pow } = Math
 /** @todo Compatible for Quadratic and shortcut curve. */
 export const segmentPoint = (
   bezierCurve: BezierCurvePoint,
-  range = 10
+  length = 10
 ): PointObject[] => {
   const { a, b, c } = calculateCoefficient(bezierCurve)
   const p = bezierCurve[0]
@@ -73,9 +74,10 @@ export const segmentPoint = (
     y: a.y * pow(t, 3) + b.y * pow(t, 2) + c.y * t + p.y,
   })
 
-  const step = 1 / range
-  return Array.from({ length: range + 1 }).map((_, i) =>
-    calc(i === 0 ? 0 : i === range ? 1 : i * step)
+  const division = length - 1
+  const step = 1 / division
+  return Array.from({ length }).map((_, i) =>
+    calc(i === 0 ? 0 : i === division ? 1 : i * step)
   )
 }
 
