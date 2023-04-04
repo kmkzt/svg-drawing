@@ -4,17 +4,20 @@ import { Path } from '../svg/path'
 import { Svg } from '../svg/svg'
 import type { DrawFactory, RenderParams } from '../types'
 
-const drawMockFactory: DrawFactory = {
-  createElement: () => new Path({}),
-  updateElement: (element, points) =>
-    element.setCommands(createLineCommands(points)),
+const drawMockFactory = (): DrawFactory => {
+  let i = 0
+  return {
+    createElement: () => new Path({}, `path_key_${i++}`),
+    updateElement: (element, points) =>
+      element.setCommands(createLineCommands(points)),
+  }
 }
 
 describe('Drawing', () => {
   it('Drawing.start', () => {
     const render = jest.fn()
     const svg = new Svg({ width: 100, height: 100 })
-    const drawing = new Drawing(svg, drawMockFactory, render)
+    const drawing = new Drawing(svg, drawMockFactory(), render)
 
     drawing.start()
 
@@ -25,7 +28,7 @@ describe('Drawing', () => {
   it('Drawing.dot', () => {
     const render = jest.fn()
     const svg = new Svg({ width: 100, height: 100 })
-    const drawing = new Drawing(svg, drawMockFactory, render)
+    const drawing = new Drawing(svg, drawMockFactory(), render)
 
     drawing.start()
     drawing.dot({ x: 10, y: 10 })
@@ -38,7 +41,7 @@ describe('Drawing', () => {
             attributes: {
               d: 'M10 10',
             },
-            key: 'p1',
+            key: 'path_key_0',
             type: 'path',
           },
         ],
@@ -56,7 +59,7 @@ describe('Drawing', () => {
   it('Drawing.end', () => {
     const render = jest.fn()
     const svg = new Svg({ width: 100, height: 100 })
-    const drawing = new Drawing(svg, drawMockFactory, render)
+    const drawing = new Drawing(svg, drawMockFactory(), render)
 
     drawing.start()
     drawing.dot({ x: 10, y: 10 })
@@ -76,14 +79,14 @@ describe('Drawing', () => {
             attributes: {
               d: 'M10 10 l10 10',
             },
-            key: 'p1',
+            key: 'path_key_0',
             type: 'path',
           },
           {
             attributes: {
               d: 'M30 30 l10 10',
             },
-            key: 'p2',
+            key: 'path_key_1',
             type: 'path',
           },
         ],
