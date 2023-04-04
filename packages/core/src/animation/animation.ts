@@ -25,13 +25,13 @@ const createAnimateCommandValues = (
 
 export class Animation {
   public ms: number
-  public paths: PathClass[]
+  public originPaths: PathClass[]
   public generator?: Generator<PathClass[], void, unknown>
   private _frame: FrameAnimation | null = null
   private _repeatCount?: number
   constructor({ ms }: AnimationOption = { ms: 60 }) {
     this.ms = ms
-    this.paths = []
+    this.originPaths = []
   }
 
   /**
@@ -53,8 +53,8 @@ export class Animation {
     this.generator = this.setupGenerator()
   }
 
-  public getFramePaths(key: number): PathClass[] {
-    const paths = this.paths.map((p) => p.clone())
+  public getFrame(key: number): PathClass[] {
+    const paths = this.originPaths.map((p) => p.clone())
 
     if (!paths.length || !this._frame) return paths
 
@@ -62,7 +62,7 @@ export class Animation {
   }
 
   public restorePaths() {
-    return this.paths.map((p) => p.clone())
+    return this.originPaths.map((p) => p.clone())
   }
 
   private *setupGenerator() {
@@ -78,12 +78,12 @@ export class Animation {
         loopId += 1
       }
 
-      yield this.getFramePaths(loopId)
+      yield this.getFrame(loopId)
     }
   }
 
   public initialize(paths: ReadonlyArray<ElementClass>) {
-    this.paths = paths.map((p) => p.clone())
+    this.originPaths = paths.map((p) => p.clone())
     this.generator = this.setupGenerator()
     return this
   }
@@ -95,7 +95,7 @@ export class Animation {
     const frameLoop = Array(this._frame.loops).fill(null)
 
     const animPathsList: PathClass[][] = frameLoop.map((_: any, i: number) =>
-      this.getFramePaths(i)
+      this.getFrame(i)
     )
 
     const baseAttrs = {
@@ -107,7 +107,7 @@ export class Animation {
       ),
     }
 
-    return this.paths.map((basePath) => {
+    return this.originPaths.map((basePath) => {
       const { key, attributes } = basePath.toJson()
 
       const animPaths = animPathsList.map((ap) =>

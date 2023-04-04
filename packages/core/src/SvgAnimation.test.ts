@@ -166,7 +166,7 @@ describe('SvgAnimation.ts', () => {
           }
           return update
         },
-        loops: svg.animation.paths.reduce(
+        loops: svg.animation.originPaths.reduce(
           (acc, p) => acc + p.absoluteCommands.length,
           0
         ),
