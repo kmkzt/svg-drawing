@@ -34,7 +34,7 @@ export class Svg implements SvgClass {
     return this.elementsMap.get(elementKey)
   }
 
-  public updateElement(element: ElementClass) {
+  public setElement(element: ElementClass) {
     this.elementsMap.set(element.key, element)
     return this
   }

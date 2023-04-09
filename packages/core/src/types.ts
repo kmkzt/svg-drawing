@@ -154,11 +154,8 @@ export interface SvgClass {
   resize: (arg: { width: number; height: number }) => void
   /** Get element */
   getElement: (key: string) => ElementClass | undefined
-  /**
-   * Update element. If it exists it will be updated, otherwise it will be newly
-   * added
-   */
-  updateElement: (element: ElementClass) => this
+  /** Set element. */
+  setElement: (element: ElementClass) => this
   /** Delete element */
   deleteElement: (element: ElementClass) => this
   /** Replace elements */

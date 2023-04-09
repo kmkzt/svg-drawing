@@ -7,7 +7,7 @@ import { Svg } from '../svg/svg'
 
 describe('svgRenderer.ts', () => {
   const svg = new Svg({ width: 500, height: 500 })
-    .updateElement(
+    .setElement(
       new Path({}, 'p1').setCommands([
         createCommand({ type: 'M', values: [0, 0] }),
         createCommand({ type: 'C', values: [0.2, 0.2, 0.6, 0.8, 1, 1] }),
@@ -15,7 +15,7 @@ describe('svgRenderer.ts', () => {
         createCommand({ type: 'C', values: [2.4, 0.8, 2.8, 0.2, 3, 0] }),
       ])
     )
-    .updateElement(
+    .setElement(
       new Path(
         {
           strokeLinecap: 'square',

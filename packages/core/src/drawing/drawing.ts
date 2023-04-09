@@ -59,7 +59,7 @@ export class Drawing implements DrawingClass {
     const drawElement = this.pathFactory.createElement()
 
     this._drawElementKey = drawElement.key
-    this.svg.updateElement(drawElement)
+    this.svg.setElement(drawElement)
   }
 
   public dot(po: EventPoint): void {
@@ -70,7 +70,7 @@ export class Drawing implements DrawingClass {
     this._drawPoints.push(po)
 
     this.pathFactory.updateElement(drawElement, this._drawPoints)
-    this.svg.updateElement(drawElement)
+    this.svg.setElement(drawElement)
 
     this.render({ svg: this.svg.toJson() })
   }

@@ -21,7 +21,7 @@ describe('EditSvg', () => {
     svg = new Svg({ width: parsedSvg.width, height: parsedSvg.height })
     parsedSvg.elements.forEach((p, i) => {
       p.key = `path_key_${i}`
-      svg.updateElement(p)
+      svg.setElement(p)
     })
   })
   describe('changeAttributes', () => {

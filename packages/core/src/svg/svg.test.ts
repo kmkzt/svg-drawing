@@ -46,7 +46,7 @@ describe('Svg', () => {
         }),
       ])
 
-      svg.updateElement(testPath)
+      svg.setElement(testPath)
 
       const resizeArgs = { width: 200, height: 300 }
       svg.resize(resizeArgs)
@@ -81,7 +81,7 @@ describe('Svg', () => {
       ])
 
       const copiedSvg = new Svg({ width: 200, height: 200 })
-      copiedSvg.updateElement(testPath)
+      copiedSvg.setElement(testPath)
 
       svg.copy(copiedSvg)
 
@@ -169,7 +169,7 @@ describe('Svg', () => {
 
     it('Add path', () => {
       const svg = new Svg({ width: 500, height: 500 })
-        .updateElement(
+        .setElement(
           new Path(undefined, 'p1').setCommands([
             createCommand({
               type: 'M',
@@ -189,7 +189,7 @@ describe('Svg', () => {
             }),
           ])
         )
-        .updateElement(
+        .setElement(
           new Path(
             {
               strokeLinecap: 'square',
@@ -250,7 +250,7 @@ describe('Svg', () => {
     let svg: Svg
     beforeEach(() => {
       svg = new Svg({ width: 500, height: 500 })
-        .updateElement(
+        .setElement(
           new Path(undefined, 'p1').setCommands([
             createCommand({
               type: 'M',
@@ -270,7 +270,7 @@ describe('Svg', () => {
             }),
           ])
         )
-        .updateElement(
+        .setElement(
           new Path(
             {
               strokeLinecap: 'square',
@@ -311,7 +311,7 @@ describe('Svg', () => {
     it('Cloned object changes have no effect the original object.', () => {
       const cloneSvg = svg.clone()
 
-      cloneSvg.updateElement(cloneSvg.elements[0].scale(2))
+      cloneSvg.setElement(cloneSvg.elements[0].scale(2))
 
       expect(cloneSvg.elements[0].toJson()).not.toEqual(
         svg.elements[0].toJson()

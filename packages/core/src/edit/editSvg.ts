@@ -33,14 +33,14 @@ export class EditSvg {
   /** Change attributes of selected path. */
   changeAttributes(attrs: PathAttributes) {
     this.exec({
-      path: (path) => this.svg.updateElement(path.updateAttributes(attrs)),
+      path: (path) => this.svg.setElement(path.updateAttributes(attrs)),
     })
   }
 
   /** Translate position of selected path. */
   translate(move: PointObject) {
     const anchorPointTransform: Transform['anchorPoint'] = (path, index) =>
-      this.svg.updateElement(
+      this.svg.setElement(
         path.updateCommand(index.command, (command) => {
           command.points[index.point] = command.points[index.point].add(move)
           return command
@@ -48,7 +48,7 @@ export class EditSvg {
       )
 
     this.exec({
-      path: (path) => this.svg.updateElement(path.translate(move)),
+      path: (path) => this.svg.setElement(path.translate(move)),
       command: (path, index) => {
         const anchorPoints = new EditCommand(
           path,
@@ -56,7 +56,7 @@ export class EditSvg {
         ).getAnchorPoints(index.command)
 
         if (!anchorPoints) {
-          this.svg.updateElement(
+          this.svg.setElement(
             path.updateCommand(index.command, (command) =>
               command.translate(move)
             )
@@ -76,17 +76,17 @@ export class EditSvg {
 
   /** Scale the selected path. */
   scale(r: number) {
-    this.exec({ path: (path) => this.svg.updateElement(path.scale(r)) })
+    this.exec({ path: (path) => this.svg.setElement(path.scale(r)) })
   }
 
   /** Scale the selected path horizontally. */
   scaleX(r: number) {
-    this.exec({ path: (path) => this.svg.updateElement(path.scaleX(r)) })
+    this.exec({ path: (path) => this.svg.setElement(path.scaleX(r)) })
   }
 
   /** Scale the selected path vertically. */
   scaleY(r: number) {
-    this.exec({ path: (path) => this.svg.updateElement(path.scaleY(r)) })
+    this.exec({ path: (path) => this.svg.setElement(path.scaleY(r)) })
   }
 
   /** Resize based on the bounding box vertices */
@@ -98,7 +98,7 @@ export class EditSvg {
 
     this.exec({
       path: (path) => {
-        this.svg.updateElement(
+        this.svg.setElement(
           path.scaleX(scale.x).scaleY(scale.y).translate(move)
         )
       },
@@ -116,7 +116,7 @@ export class EditSvg {
         this.svg.deleteElement(path)
       },
       command: (path, index) =>
-        this.svg.updateElement(path.deleteCommand(index.command)),
+        this.svg.setElement(path.deleteCommand(index.command)),
       anchorPoint: (path, index) => {
         this.selector.select({
           type: 'path/command',
