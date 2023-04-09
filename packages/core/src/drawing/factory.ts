@@ -44,17 +44,6 @@ export class BasicDrawFactory implements DrawFactory {
     ).setCommands(this.createCommands(params?.eventPoints ?? []))
   }
 
-  setPathAttributes(attrs: PathAttributes) {
-    this.attrs = attrs
-  }
-
-  updatePathAttributes(attrs: PathAttributes) {
-    this.attrs = {
-      ...this.attrs,
-      ...attrs,
-    }
-  }
-
   changeCurve(curve: boolean) {
     this.opts = {
       ...this.opts,
