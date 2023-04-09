@@ -7,9 +7,10 @@ import type { DrawFactory, RenderParams } from '../types'
 const drawMockFactory = (): DrawFactory => {
   let i = 0
   return {
-    createElement: () => new Path({}, `path_key_${i++}`),
-    updateElement: (element, points) =>
-      element.setCommands(createLineCommands(points)),
+    createElement: (params) =>
+      new Path({}, params?.elementKey ?? `path_key_${i++}`).setCommands(
+        createLineCommands(params?.eventPoints ?? [])
+      ),
   }
 }
 

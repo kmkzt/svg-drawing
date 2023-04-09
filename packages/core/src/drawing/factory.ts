@@ -3,9 +3,9 @@ import { Path } from '../svg/path'
 import type {
   DrawFactory,
   ElementClass,
+  ElementKey,
   EventPoint,
   PathAttributes,
-  PathClass,
 } from '../types'
 
 export class BasicDrawFactory implements DrawFactory {
@@ -20,27 +20,28 @@ export class BasicDrawFactory implements DrawFactory {
     }
   }
 
-  createElement(): ElementClass {
-    return new Path({
-      ...this.attrs,
-      ...this.curveAttribute,
-    })
-  }
-
-  updateElement(
-    element: ElementClass,
-    points: ReadonlyArray<EventPoint>
-  ): ElementClass {
+  /** @todo Separate modules */
+  private createCommands(eventPoints: ReadonlyArray<EventPoint>) {
     const createCommands = this.opts.curve
       ? new BezierCurve().create
       : createLineCommands
 
-    const commands = this.opts.close
-      ? closeCommands(createCommands(points))
-      : createCommands(points)
-    element.setCommands(commands)
+    return this.opts.close
+      ? closeCommands(createCommands(eventPoints))
+      : createCommands(eventPoints)
+  }
 
-    return element
+  createElement(params?: {
+    elementKey: ElementKey
+    eventPoints: ReadonlyArray<EventPoint>
+  }): ElementClass {
+    return new Path(
+      {
+        ...this.attrs,
+        ...this.curveAttribute,
+      },
+      params?.elementKey
+    ).setCommands(this.createCommands(params?.eventPoints ?? []))
   }
 
   setPathAttributes(attrs: PathAttributes) {

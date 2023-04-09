@@ -237,11 +237,10 @@ export type DrawEventName =
 export type ClearListener = () => void
 
 export interface DrawFactory {
-  createElement: () => ElementClass
-  updateElement: (
-    element: ElementClass,
-    points: ReadonlyArray<EventPoint>
-  ) => ElementClass
+  createElement: (arg?: {
+    elementKey: ElementKey
+    eventPoints: ReadonlyArray<EventPoint>
+  }) => ElementClass
 }
 
 export interface DrawingClass {

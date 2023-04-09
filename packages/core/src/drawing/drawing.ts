@@ -49,12 +49,6 @@ export class Drawing implements DrawingClass {
     this.end = this.end.bind(this)
   }
 
-  private getDrawElement(): PathClass | undefined {
-    return this._drawElementKey
-      ? this.svg.getElement(this._drawElementKey)
-      : undefined
-  }
-
   public start(): void {
     const drawElement = this.pathFactory.createElement()
 
@@ -63,14 +57,16 @@ export class Drawing implements DrawingClass {
   }
 
   public dot(po: EventPoint): void {
-    const drawElement = this.getDrawElement()
-
-    if (!drawElement) return
+    if (!this._drawElementKey) return
 
     this._drawPoints.push(po)
 
-    this.pathFactory.updateElement(drawElement, this._drawPoints)
-    this.svg.setElement(drawElement)
+    this.svg.setElement(
+      this.pathFactory.createElement({
+        elementKey: this._drawElementKey,
+        eventPoints: this._drawPoints,
+      })
+    )
 
     this.render({ svg: this.svg.toJson() })
   }
