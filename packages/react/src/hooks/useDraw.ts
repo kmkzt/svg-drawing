@@ -69,7 +69,7 @@ export const useDraw: UseDraw = ({ factory, svg, onUpdate }) => {
 
   const clear = useCallback(() => {
     const paths = svg.cloneElements()
-    svg.setElements([])
+    svg.replaceElements([])
 
     update()
     return paths

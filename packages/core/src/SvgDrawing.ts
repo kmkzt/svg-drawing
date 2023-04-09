@@ -107,7 +107,7 @@ export class SvgDrawing {
 
   public clear() {
     const paths = this.svg.elements
-    this.svg.setElements([])
+    this.svg.replaceElements([])
     this.renderer.render({ svg: this.svg.toJson() })
     return paths
   }

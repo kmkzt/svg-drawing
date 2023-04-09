@@ -161,8 +161,8 @@ export interface SvgClass {
   updateElement: (element: ElementClass) => this
   /** Delete element */
   deleteElement: (element: ElementClass) => this
-  /** Set elements */
-  setElements: (elements: ReadonlyArray<ElementClass>) => this
+  /** Replace elements */
+  replaceElements: (elements: ReadonlyArray<ElementClass>) => this
   /** Return cloned paths. */
   cloneElements: () => ReadonlyArray<ElementClass>
   toJson: () => SvgObject

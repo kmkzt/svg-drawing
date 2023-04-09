@@ -93,7 +93,7 @@ describe('Svg', () => {
 
   describe('setElements', () => {
     it('Add an array of paths', () => {
-      const svg = new Svg({ width: 500, height: 500 }).setElements([
+      const svg = new Svg({ width: 500, height: 500 }).replaceElements([
         new Path(undefined, 'p1').setCommands([
           createCommand({
             type: 'M',

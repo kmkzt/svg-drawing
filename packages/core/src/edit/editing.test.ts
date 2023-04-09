@@ -9,7 +9,7 @@ describe('Editing', () => {
   describe('select', () => {
     it('Select edit path and update screen.', () => {
       const svg = new Svg({ width: 100, height: 100 })
-      svg.setElements([
+      svg.replaceElements([
         new Path({}, 'path-1').setCommands(
           parseCommandString('M 0 0 L 100 100')
         ),
@@ -43,7 +43,7 @@ describe('Editing', () => {
   describe('cancel', () => {
     it('Clear selected status and update screen.', () => {
       const svg = new Svg({ width: 100, height: 100 })
-      svg.setElements([
+      svg.replaceElements([
         new Path({}, 'path-1').setCommands(
           parseCommandString('M 0 0 L 100 100')
         ),

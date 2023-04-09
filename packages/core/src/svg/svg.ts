@@ -44,7 +44,7 @@ export class Svg implements SvgClass {
     return this
   }
 
-  public setElements(elements: ReadonlyArray<ElementClass>) {
+  public replaceElements(elements: ReadonlyArray<ElementClass>) {
     this.elementsMap.clear()
 
     elements.forEach((element) => this.elementsMap.set(element.key, element))
@@ -76,7 +76,7 @@ export class Svg implements SvgClass {
    * ```
    */
   public copy(svg: SvgClass) {
-    this.setElements(svg.cloneElements())
+    this.replaceElements(svg.cloneElements())
     if (svg.width && this.width) {
       this.scale(this.width / svg.width)
     }
@@ -89,7 +89,7 @@ export class Svg implements SvgClass {
       height: this.height,
       background: this.background,
     })
-    svg.setElements(this.cloneElements())
+    svg.replaceElements(this.cloneElements())
     return svg
   }
 }
