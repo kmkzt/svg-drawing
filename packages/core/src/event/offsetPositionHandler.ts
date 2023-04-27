@@ -2,33 +2,24 @@ import type { EventHandler, PointObject } from '../types'
 
 export class OffsetPositionHandler implements EventHandler<HTMLElement> {
   position: PointObject | null = null
-  private el: HTMLElement | null = null
   private _cleanup: (() => void) | null = null
-  constructor() {
-    this.setOffsetPosition = this.setOffsetPosition.bind(this)
-  }
-
-  private setOffsetPosition() {
-    if (!this.el) {
-      this.position = null
-      return
-    }
-
-    const { left, top } = this.el.getBoundingClientRect()
-    this.position = { x: left, y: top }
-  }
 
   setup(el: HTMLElement): void {
-    this.el = el
-    this.setOffsetPosition()
+    this._cleanup?.()
 
-    addEventListener('scroll', this.setOffsetPosition)
-    this.el.addEventListener('resize', this.setOffsetPosition)
+    const setOffsetPosition = () => {
+      const { left, top } = el.getBoundingClientRect()
+      this.position = { x: left, y: top }
+    }
+
+    setOffsetPosition()
+
+    addEventListener('scroll', setOffsetPosition)
+    addEventListener('resize', setOffsetPosition)
 
     this._cleanup = () => {
-      removeEventListener('scroll', this.setOffsetPosition)
-      el.removeEventListener('resize', this.setOffsetPosition)
-      this.el = null
+      removeEventListener('scroll', setOffsetPosition)
+      removeEventListener('resize', setOffsetPosition)
     }
   }
 
