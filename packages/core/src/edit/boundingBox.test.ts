@@ -3,71 +3,136 @@ import { createCommand } from '../svg/command'
 import { Path } from '../svg/path'
 import type { BoundingBoxObject } from '../types'
 
-const exampleData = new Path({}, 'path_key').setCommands([
-  createCommand({ type: 'M', values: [0, 0] }),
-  createCommand({ type: 'C', values: [20, 20, 60, 80, 100, 100] }),
-  createCommand({
-    type: 'C',
-    values: [140, 120, 160, 120, 200, 100],
-  }),
-  createCommand({
-    type: 'C',
-    values: [240, 80, 280, 20, 300, 0],
-  }),
-])
-
 describe('BoundingBox', () => {
-  describe('BoundingBox of Curve Path', () => {
-    const boundingBox = new BoundingBox([exampleData])
+  describe.each([
+    {
+      description: 'BoundingBox of Curve Path',
+      path: new Path({}, 'path_key').setCommands([
+        createCommand({ type: 'M', values: [0, 0] }),
+        createCommand({ type: 'C', values: [20, 20, 60, 80, 100, 100] }),
+        createCommand({
+          type: 'C',
+          values: [140, 120, 160, 120, 200, 100],
+        }),
+        createCommand({
+          type: 'C',
+          values: [240, 80, 280, 20, 300, 0],
+        }),
+      ]),
+      boundingBoxObject: {
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          height: 114.81481481481481,
+          width: 300,
+        },
 
-    const testData: BoundingBoxObject = {
-      position: {
-        x: 0,
-        y: 0,
+        vertexes: [
+          {
+            type: 'LeftTop',
+            point: {
+              x: 0,
+              y: 0,
+            },
+          },
+          {
+            type: 'RightTop',
+            point: {
+              x: 300,
+              y: 0,
+            },
+          },
+          {
+            type: 'RightBottom',
+            point: {
+              x: 300,
+              y: 114.81481481481481,
+            },
+          },
+          {
+            type: 'LeftBottom',
+            point: {
+              x: 0,
+              y: 114.81481481481481,
+            },
+          },
+        ],
+        selected: false,
       },
-      size: {
-        height: 115,
-        width: 300,
+    },
+    {
+      description: 'BoundingBox of Line Path',
+      path: new Path({}, 'path_key').setCommands([
+        createCommand({ type: 'M', values: [0, 0] }),
+        createCommand({ type: 'L', values: [100, 100] }),
+        createCommand({
+          type: 'L',
+          values: [200, 100],
+        }),
+        createCommand({
+          type: 'L',
+          values: [300, 0],
+        }),
+      ]),
+      boundingBoxObject: {
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          height: 100,
+          width: 300,
+        },
+
+        vertexes: [
+          {
+            type: 'LeftTop',
+            point: {
+              x: 0,
+              y: 0,
+            },
+          },
+          {
+            type: 'RightTop',
+            point: {
+              x: 300,
+              y: 0,
+            },
+          },
+          {
+            type: 'RightBottom',
+            point: {
+              x: 300,
+              y: 100,
+            },
+          },
+          {
+            type: 'LeftBottom',
+            point: {
+              x: 0,
+              y: 100,
+            },
+          },
+        ],
+        selected: false,
       },
-
-      vertexes: [
-        {
-          type: 'LeftTop',
-          point: {
-            x: 0,
-            y: 0,
-          },
-        },
-        {
-          type: 'RightTop',
-          point: {
-            x: 300,
-            y: 0,
-          },
-        },
-        {
-          type: 'RightBottom',
-          point: {
-            x: 300,
-            y: 115,
-          },
-        },
-        {
-          type: 'LeftBottom',
-          point: {
-            x: 0,
-            y: 115,
-          },
-        },
-      ],
-      selected: false,
-    }
-
-    it('boundingBox.toJson()', () => {
-      expect(boundingBox.toJson()).toStrictEqual(testData)
+    },
+  ] as Array<{
+    description: string
+    path: Path
+    boundingBoxObject: BoundingBoxObject
+  }>)('$description', ({ path, boundingBoxObject }) => {
+    describe('boundingBox.toJson()', () => {
+      it('Return boundingBoxObject', () => {
+        expect(new BoundingBox([path]).toJson()).toStrictEqual(
+          boundingBoxObject
+        )
+      })
     })
-
     describe('boundingBox.resizeParams', () => {
+      const boundingBox = new BoundingBox([path])
       it('Move the vertex and scale double', () => {
         const scale = {
           x: 2,
@@ -76,34 +141,34 @@ describe('BoundingBox', () => {
 
         expect(
           boundingBox.resizeParams('LeftTop', {
-            x: -testData.size.width,
-            y: -testData.size.height,
+            x: -boundingBoxObject.size.width,
+            y: -boundingBoxObject.size.height,
           })
         ).toEqual({
           move: {
-            x: -testData.size.width,
-            y: -testData.size.height,
+            x: -boundingBoxObject.size.width,
+            y: -boundingBoxObject.size.height,
           },
           scale,
         })
 
         expect(
           boundingBox.resizeParams('RightTop', {
-            x: testData.size.width,
-            y: -testData.size.height,
+            x: boundingBoxObject.size.width,
+            y: -boundingBoxObject.size.height,
           })
         ).toEqual({
           move: {
             x: -0,
-            y: -testData.size.height,
+            y: -boundingBoxObject.size.height,
           },
           scale,
         })
 
         expect(
           boundingBox.resizeParams('RightBottom', {
-            x: testData.size.width,
-            y: testData.size.height,
+            x: boundingBoxObject.size.width,
+            y: boundingBoxObject.size.height,
           })
         ).toEqual({
           move: {
@@ -115,12 +180,12 @@ describe('BoundingBox', () => {
 
         expect(
           boundingBox.resizeParams('LeftBottom', {
-            x: -testData.size.width,
-            y: testData.size.height,
+            x: -boundingBoxObject.size.width,
+            y: boundingBoxObject.size.height,
           })
         ).toEqual({
           move: {
-            x: -testData.size.width,
+            x: -boundingBoxObject.size.width,
             y: -0,
           },
           scale,
