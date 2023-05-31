@@ -95,7 +95,7 @@ describe('svgRenderer.ts', () => {
           <rect
             data-edit-type="bounding-box"
             fill="rgba(0,0,0,0.1)"
-            height="1.15"
+            height="1.1481481481481481"
             stroke="#09f"
             width="3"
             x="0"
@@ -121,7 +121,7 @@ describe('svgRenderer.ts', () => {
           />
           <circle
             cx="3"
-            cy="1.15"
+            cy="1.1481481481481481"
             data-edit-type="bounding-box/vertex"
             data-vertex-type="RightBottom"
             fill="rgba(0,0,0,0.1)"
@@ -130,7 +130,7 @@ describe('svgRenderer.ts', () => {
           />
           <circle
             cx="0"
-            cy="1.15"
+            cy="1.1481481481481481"
             data-edit-type="bounding-box/vertex"
             data-vertex-type="LeftBottom"
             fill="rgba(0,0,0,0.1)"
