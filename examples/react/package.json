@@ -3,7 +3,7 @@
   "private": true,
   "version": "5.0.1-beta.0",
   "scripts": {
-    "clear": "rimraf .next out",
+    "clear": "rimraf .next out *.tsbuildinfo",
     "start": "next start",
     "dev": "next",
     "build": "next build; next export",
