@@ -99,8 +99,8 @@ const EditPath = ({
       strokeWidth={EDIT_PATH_STYLE.line}
       stroke={attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined}
       fill="none"
-      strokeLinecap={attributes.strokeLinecap}
-      strokeLinejoin={attributes.strokeLinejoin}
+      strokeLinecap={attributes['stroke-linecap']}
+      strokeLinejoin={attributes['stroke-linejoin']}
     />
     {commands.map((command, i) => (
       <EditCommand key={i} elementKey={elementKey} command={command} />

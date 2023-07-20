@@ -39,9 +39,32 @@ const SvgElement = forwardRef<SVGSVGElement, Omit<SvgProps, 'editProps'>>(
           />
         )}
         <BoundingBox />
-        {elements.map(({ key, attributes }) => (
-          <Path key={key} elementKey={key} {...attributes} />
-        ))}
+        {elements.map(
+          ({
+            key,
+            attributes: {
+              d,
+              fill,
+              stroke,
+              ['stroke-width']: strokeWidth,
+              ['stroke-linecap']: strokeLinecap,
+              ['stroke-linejoin']: strokeLinejoin,
+              ...rest
+            },
+          }) => (
+            <Path
+              key={key}
+              elementKey={key}
+              d={d}
+              fill={fill}
+              stroke={stroke}
+              strokeWidth={strokeWidth}
+              strokeLinejoin={strokeLinejoin}
+              strokeLinecap={strokeLinecap}
+              {...rest}
+            />
+          )
+        )}
         <EditElements />
       </svg>
     )
