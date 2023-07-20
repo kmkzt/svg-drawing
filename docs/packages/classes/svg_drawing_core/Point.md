@@ -2,6 +2,10 @@
 
 [@svg-drawing/core](../../modules/svg_drawing_core.md).Point
 
+## Implements
+
+- [`PointClass`](../../interfaces/svg_drawing_core/PointClass.md)
+
 ## Constructors
 
 ### constructor
@@ -17,27 +21,61 @@
 
 #### Defined in
 
-[core/src/svg.ts:7](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L7)
+[core/src/svg/point.ts:14](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L14)
 
-## Properties
+## Accessors
 
-### x
+### values
 
-• **x**: `number`
+• `get` **values**(): [`number`, `number`]
+
+#### Returns
+
+[`number`, `number`]
+
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[values](../../interfaces/svg_drawing_core/PointClass.md#values)
 
 #### Defined in
 
-[core/src/svg.ts:5](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L5)
+[core/src/svg/point.ts:27](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L27)
+
+___
+
+### x
+
+• `get` **x**(): `number`
+
+#### Returns
+
+`number`
+
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[x](../../interfaces/svg_drawing_core/PointClass.md#x)
+
+#### Defined in
+
+[core/src/svg/point.ts:19](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L19)
 
 ___
 
 ### y
 
-• **y**: `number`
+• `get` **y**(): `number`
+
+#### Returns
+
+`number`
+
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[y](../../interfaces/svg_drawing_core/PointClass.md#y)
 
 #### Defined in
 
-[core/src/svg.ts:6](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L6)
+[core/src/svg/point.ts:23](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L23)
 
 ## Methods
 
@@ -49,15 +87,19 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `p` | [`Point`](Point.md) |
+| `p` | `Readonly`<{ `x`: `number` ; `y`: `number`  }\> |
 
 #### Returns
 
 [`Point`](Point.md)
 
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[add](../../interfaces/svg_drawing_core/PointClass.md#add)
+
 #### Defined in
 
-[core/src/svg.ts:22](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L22)
+[core/src/svg/point.ts:43](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L43)
 
 ___
 
@@ -69,29 +111,13 @@ ___
 
 [`Point`](Point.md)
 
-#### Defined in
+#### Implementation of
 
-[core/src/svg.ts:34](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L34)
-
-___
-
-### eql
-
-▸ **eql**(`p`): `boolean`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `p` | [`Point`](Point.md) |
-
-#### Returns
-
-`boolean`
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[clone](../../interfaces/svg_drawing_core/PointClass.md#clone)
 
 #### Defined in
 
-[core/src/svg.ts:30](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L30)
+[core/src/svg/point.ts:51](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L51)
 
 ___
 
@@ -109,9 +135,61 @@ ___
 
 [`Point`](Point.md)
 
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[scale](../../interfaces/svg_drawing_core/PointClass.md#scale)
+
 #### Defined in
 
-[core/src/svg.ts:18](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L18)
+[core/src/svg/point.ts:31](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L31)
+
+___
+
+### scaleX
+
+▸ **scaleX**(`r`): [`Point`](Point.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `r` | `number` |
+
+#### Returns
+
+[`Point`](Point.md)
+
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[scaleX](../../interfaces/svg_drawing_core/PointClass.md#scalex)
+
+#### Defined in
+
+[core/src/svg/point.ts:35](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L35)
+
+___
+
+### scaleY
+
+▸ **scaleY**(`r`): [`Point`](Point.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `r` | `number` |
+
+#### Returns
+
+[`Point`](Point.md)
+
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[scaleY](../../interfaces/svg_drawing_core/PointClass.md#scaley)
+
+#### Defined in
+
+[core/src/svg/point.ts:39](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L39)
 
 ___
 
@@ -123,7 +201,63 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `p` | [`Point`](Point.md) |
+| `p` | `Readonly`<{ `x`: `number` ; `y`: `number`  }\> |
+
+#### Returns
+
+[`Point`](Point.md)
+
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[sub](../../interfaces/svg_drawing_core/PointClass.md#sub)
+
+#### Defined in
+
+[core/src/svg/point.ts:47](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L47)
+
+___
+
+### toJson
+
+▸ **toJson**(): `Object`
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `x` | `number` |
+| `y` | `number` |
+
+#### Implementation of
+
+[PointClass](../../interfaces/svg_drawing_core/PointClass.md).[toJson](../../interfaces/svg_drawing_core/PointClass.md#tojson)
+
+#### Defined in
+
+[core/src/svg/point.ts:55](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L55)
+
+___
+
+### fromVector
+
+▸ `Static` **fromVector**(`__namedParameters`): [`Point`](Point.md)
+
+### Calculate coordinate from vector.
+
+```ts
+const point = Point.fromVector({ value: 1, 0 })
+
+console.log(point.x) // 0
+console.log(point.y) // 1
+```
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `__namedParameters` | `Readonly`<{ `angle`: `number` ; `value`: `number`  }\> |
 
 #### Returns
 
@@ -131,18 +265,4 @@ ___
 
 #### Defined in
 
-[core/src/svg.ts:26](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L26)
-
-___
-
-### toVector
-
-▸ **toVector**(): [`Vector`](Vector.md)
-
-#### Returns
-
-[`Vector`](Vector.md)
-
-#### Defined in
-
-[core/src/svg.ts:12](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L12)
+[core/src/svg/point.ts:72](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/point.ts#L72)

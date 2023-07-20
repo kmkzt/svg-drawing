@@ -1,6 +1,4 @@
-/**
- * For babel-jest
- */
+/** For babel-jest */
 module.exports = (api) => {
   api.cache(false)
   return {
@@ -12,6 +10,7 @@ module.exports = (api) => {
         },
       ],
       '@babel/preset-typescript',
+      '@babel/preset-react',
     ],
   }
 }

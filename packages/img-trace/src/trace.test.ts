@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs'
 import { resolve } from 'path'
-import { svgObjectToElement } from '@svg-drawing/core'
+import { toElement } from '@svg-drawing/core'
 import { loadPngData } from './__test__/loadPngData'
 import { Palette } from './palette'
 import { ImgTrace } from './trace'
@@ -27,19 +27,54 @@ describe('trace.ts', () => {
   const testimage = resolve(__dirname, '__test__/panda.png')
   it('TestPattern', () => {
     // TestPattern
-    expect(testPattern).toMatchSnapshot()
+    expect(testPattern).toMatchInlineSnapshot(`
+      Object {
+        "commandOmit": Object {
+          "commandOmit": 3,
+        },
+        "curvy": Object {
+          "rightangleenhance": false,
+        },
+        "default": Object {},
+        "ltres": Object {
+          "ltres": 0.01,
+        },
+        "palettes_custom": Object {
+          "palettes": Array [
+            Object {
+              "a": 255,
+              "b": 100,
+              "g": 0,
+              "r": 0,
+            },
+            Object {
+              "a": 255,
+              "b": 255,
+              "g": 255,
+              "r": 255,
+            },
+          ],
+        },
+        "pathomit_20": Object {
+          "pathOmit": 20,
+        },
+        "qtres": Object {
+          "qtres": 0.01,
+        },
+      }
+    `)
   })
   describe('ImgTrace', () => {
     Object.entries(testPattern).map(([testname, testopts]) => {
       it(`${testname}`, (done) => {
-        loadPngData(testimage, (png) => {
+        loadPngData(testimage, (png: any) => {
           const svg = new ImgTrace({
             palettes: Palette.imageData(png as any),
             ...testopts,
           }).load(png as any)
 
-          const data = svgObjectToElement(svg.toJson()).outerHTML
-          /** DEBUG * */
+          const data = toElement({ svg: svg.toJson() }).outerHTML
+          /** DEBUG */
           if (process.env.DEBUG === 'debug') {
             writeFileSync(
               resolve(__dirname, `__debug__/${testname}-${Date.now()}.svg`),
@@ -51,7 +86,7 @@ describe('trace.ts', () => {
 
           // Effect Image
           // TODO: visual regression
-          // expect(imgd).toMatchSnapshot()
+          // expect(imgd).toMatchInlineSnapshot()
 
           // SvgString
           expect(data).toMatchSnapshot()

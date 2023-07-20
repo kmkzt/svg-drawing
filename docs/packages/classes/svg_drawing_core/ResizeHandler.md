@@ -2,46 +2,57 @@
 
 [@svg-drawing/core](../../modules/svg_drawing_core.md).ResizeHandler
 
+### Resize SVG to match element resizing
+
+```ts
+const svg = new Svg()
+const resizeHandler = new ResizeHandler(
+  document.getElementById('draw-area')
+)
+
+resizeHandler.setHandler(({ width, height }) =>
+  svg.resize({ width, height })
+)
+resizeHandler.on()
+```
+
+## Implements
+
+- [`ResizeEventHandler`](../../interfaces/svg_drawing_core/ResizeEventHandler.md)
+
 ## Constructors
 
 ### constructor
 
-• **new ResizeHandler**(`_el`, `__namedParameters`)
+• **new ResizeHandler**(`el?`)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `_el` | `HTMLElement` |
-| `__namedParameters` | [`ResizeHandlerCallback`](../../modules/svg_drawing_core.md#resizehandlercallback) |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `el` | ``null`` \| `HTMLElement` | `null` |
 
 #### Defined in
 
-[core/src/handler.ts:183](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/handler.ts#L183)
+[core/src/resize.ts:27](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L27)
 
-## Properties
+## Accessors
 
-### resize
+### active
 
-• **resize**: (`rect`: `DOMRect` \| { `height`: `number` ; `left`: `number` ; `top`: `number` ; `width`: `number`  }) => `void`
+• `get` **active**(): `boolean`
 
-#### Type declaration
+#### Returns
 
-▸ (`rect`): `void`
+`boolean`
 
-##### Parameters
+#### Implementation of
 
-| Name | Type |
-| :------ | :------ |
-| `rect` | `DOMRect` \| { `height`: `number` ; `left`: `number` ; `top`: `number` ; `width`: `number`  } |
-
-##### Returns
-
-`void`
+[ResizeEventHandler](../../interfaces/svg_drawing_core/ResizeEventHandler.md).[active](../../interfaces/svg_drawing_core/ResizeEventHandler.md#active)
 
 #### Defined in
 
-[core/src/handler.ts:182](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/handler.ts#L182)
+[core/src/resize.ts:33](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L33)
 
 ## Methods
 
@@ -53,9 +64,13 @@
 
 `void`
 
+#### Implementation of
+
+[ResizeEventHandler](../../interfaces/svg_drawing_core/ResizeEventHandler.md).[off](../../interfaces/svg_drawing_core/ResizeEventHandler.md#off)
+
 #### Defined in
 
-[core/src/handler.ts:188](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/handler.ts#L188)
+[core/src/resize.ts:37](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L37)
 
 ___
 
@@ -67,6 +82,58 @@ ___
 
 `void`
 
+#### Implementation of
+
+[ResizeEventHandler](../../interfaces/svg_drawing_core/ResizeEventHandler.md).[on](../../interfaces/svg_drawing_core/ResizeEventHandler.md#on)
+
 #### Defined in
 
-[core/src/handler.ts:192](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/handler.ts#L192)
+[core/src/resize.ts:42](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L42)
+
+___
+
+### setElement
+
+▸ **setElement**(`el`): [`ResizeHandler`](ResizeHandler.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `el` | `HTMLElement` |
+
+#### Returns
+
+[`ResizeHandler`](ResizeHandler.md)
+
+#### Implementation of
+
+[ResizeEventHandler](../../interfaces/svg_drawing_core/ResizeEventHandler.md).[setElement](../../interfaces/svg_drawing_core/ResizeEventHandler.md#setelement)
+
+#### Defined in
+
+[core/src/resize.ts:47](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L47)
+
+___
+
+### setHandler
+
+▸ **setHandler**(`resizeCallback`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `resizeCallback` | [`ResizeCallback`](../../modules/svg_drawing_core.md#resizecallback) |
+
+#### Returns
+
+`void`
+
+#### Implementation of
+
+[ResizeEventHandler](../../interfaces/svg_drawing_core/ResizeEventHandler.md).[setHandler](../../interfaces/svg_drawing_core/ResizeEventHandler.md#sethandler)
+
+#### Defined in
+
+[core/src/resize.ts:53](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/resize.ts#L53)

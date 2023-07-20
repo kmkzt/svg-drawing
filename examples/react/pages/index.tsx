@@ -1,11 +1,32 @@
-import { useSvgDrawing } from '@svg-drawing/react'
-import { useEffect, useCallback, useState } from 'react'
+import { DrawFrame } from '@svg-drawing/animation'
+import { Download, toElement } from '@svg-drawing/core'
+import {
+  useDraw,
+  useEdit,
+  useSvg,
+  Svg,
+  Path,
+  useParseFile,
+  useKeyboardBind,
+  useDrawFactory,
+  useResize,
+  useAnimation,
+  usePencilHandler,
+  usePenHandler,
+  useEditHandler,
+} from '@svg-drawing/react'
+import { useCallback, useState, useRef } from 'react'
 import { Box, Flex, Button, Text } from 'rebass/styled-components'
 import Layout from '../components/Layout'
+import type {
+  PathAttributes,
+  ResizeCallback,
+  AnimateObject,
+  RenderParams,
+} from '@svg-drawing/core'
 import type { NextPage } from 'next'
-import type { ChangeEvent, ChangeEventHandler } from 'react'
+import type { ChangeEventHandler } from 'react'
 
-const size = 30
 const colorList = [
   'none',
   '#F44336',
@@ -30,191 +51,339 @@ const colorList = [
   'black',
 ]
 
-const getRandomInt = (max: number): number =>
-  Math.floor(Math.random() * Math.floor(max))
-const getRandomColor = (): string =>
-  `#${Array.from({ length: 3 }, () =>
-    String(getRandomInt(255).toString(16)).padStart(2, '0')
-  ).join('')}`
-
-const lattice = (s: number) => `
+const bgBoxSize = 30
+const bgStyle = `
   repeating-linear-gradient(
     90deg,
     #ddd ,
     #ddd 1px,
     transparent 1px,
-    transparent ${String(s)}px
+    transparent ${String(bgBoxSize)}px
   ),
   repeating-linear-gradient(
     0deg,
     #ddd ,
     #ddd 1px,
     transparent 1px,
-    transparent ${String(s)}px
-  )
+    transparent ${String(bgBoxSize)}px
+  ), ${String(bgBoxSize)}px ${String(bgBoxSize)}px
 `
 interface Props {
   isSp: boolean
 }
+
+type DrawHandlerType = 'pen' | 'pencil'
+
+type Mode = 'edit' | 'draw'
+
 const DrawingDemo: NextPage<Props> = ({ isSp }) => {
-  const [rainbowPen, switchRainbowpen] = useState(false)
+  const targetRef = useRef<HTMLDivElement>(null)
+
+  const [mode, setMode] = useState<Mode>('draw')
+  const [type, changeType] = useState<DrawHandlerType>('pencil')
+  const [drawActive, setDrawActive] = useState(true)
+  /** PathOptions */
+  const [pathOptions, setPathOptions] = useState<PathAttributes>({
+    fill: 'none',
+    stroke: 'black',
+    strokeWidth: '5',
+  })
+
+  /** CommandConverter */
   const [curve, switchCurve] = useState(true)
   const [close, switchClose] = useState(false)
-  const [fill, setFill] = useState('none')
-  const [penColor, setPenColor] = useState('black')
-  const [delay, setDelay] = useState(20)
-  const [penWidth, setPenWidth] = useState(5)
-  const [divRef, draw] = useSvgDrawing({
-    curve,
-    close,
-    delay,
-    penWidth,
-    fill,
-  })
-  const clickDownload = useCallback(
-    (extension: 'png' | 'jpg' | 'svg') => (e: React.MouseEvent<HTMLElement>) => {
-      draw.download({ extension })
+  const factory = useDrawFactory(pathOptions, { curve, close })
+
+  /** Setup draw */
+  const { svg, getInitialState } = useSvg({})
+
+  const [
+    {
+      svg: { elements, width, height, background },
+      edit: editProps,
     },
-    [draw]
+    onUpdate,
+  ] = useState<RenderParams>(getInitialState())
+
+  const {
+    update: updateDraw,
+    clear,
+    undo,
+    draw,
+  } = useDraw({
+    factory,
+    svg,
+    onUpdate,
+  })
+
+  usePencilHandler(
+    targetRef,
+    draw,
+    drawActive && mode === 'draw' && type === 'pencil'
   )
 
-  const handleChangeRainbowPen = useCallback<
+  usePenHandler(
+    targetRef,
+    draw,
+    drawActive && mode === 'draw' && type === 'pen'
+  )
+
+  /** Setup edit */
+  const { edit, keyboardMap } = useEdit({
+    svg,
+    onUpdate,
+  })
+
+  useEditHandler(targetRef, edit, mode === 'edit')
+
+  const clickDownload = useCallback(
+    (extension: 'png' | 'jpg' | 'svg') => (e: React.MouseEvent<HTMLElement>) => {
+      const download = new Download(toElement({ svg: svg.toJson() }))
+      const filename = `${Date.now()}`
+
+      switch (extension) {
+        case 'png':
+          download.png(filename + '.png')
+          break
+        case 'jpg':
+          download.jpg(filename + '.jpg')
+          break
+        case 'svg':
+        default:
+          download.svg(filename + '.svg')
+          break
+      }
+    },
+    [svg]
+  )
+
+  /** Setup animation */
+  const [animateObj, setAnimateObj] = useState<AnimateObject[]>([])
+  const animation = useAnimation({
+    animation: animateObj,
+    onChangeAnimation: setAnimateObj,
+  })
+
+  const handleClickAnimation = useCallback(() => {
+    const drawFrame = new DrawFrame(svg.elements)
+    animation.setup(drawFrame)
+    animation.update(svg.elements)
+    edit.update()
+  }, [animation, svg.elements, edit])
+
+  /** Setup resize */
+  const handleResize = useCallback<ResizeCallback>(
+    (arg) => {
+      svg.resize(arg)
+
+      updateDraw()
+      edit.update()
+    },
+    [svg, updateDraw, edit]
+  )
+
+  useResize(targetRef, handleResize)
+
+  /** Setup keyboardBind */
+  useKeyboardBind?.(keyboardMap)
+
+  const handleChangeCurve = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => {
+      switchCurve(ev.target.checked)
+    },
+    []
+  )
+
+  const handleChangeClose = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => {
+      switchClose(ev.target.checked)
+    },
+    []
+  )
+
+  const handlePenWidth = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (e) => {
+      const num = e.target.valueAsNumber
+      if (Number.isNaN(num)) return
+
+      setPathOptions((opts) => ({
+        ...opts,
+        strokeWidth: `${num}`,
+      }))
+      edit.changeAttributes({
+        strokeWidth: num + '',
+      })
+    },
+    [edit]
+  )
+
+  const handleChangePenColor = useCallback<
     ChangeEventHandler<HTMLInputElement>
   >(
     (e) => {
-      draw.changeFill('none')
-      draw.changeClose(false)
-      switchRainbowpen(e.target.checked)
+      setPathOptions((opts) => ({
+        ...opts,
+        stroke: e.target.value,
+      }))
+      edit.changeAttributes({
+        stroke: e.target.value,
+      })
     },
-    [draw]
-  )
-
-  // TODO: fix
-  // const handleChangeThinner = useCallback(e => {
-  //   if (!drawingRef.current) return
-  //   switchThinner(e.target.checked)
-  // }, [])
-  const handleChangeCiruler = useCallback(() => {
-    draw.changeCurve(!curve)
-    switchCurve(!curve)
-  }, [curve, draw])
-
-  const handleChangeClose = useCallback(() => {
-    draw.changeClose(!close)
-    switchClose(!close)
-  }, [close, draw])
-
-  const handlePenWidth = useCallback(
-    (e: ChangeEvent<any>) => {
-      const num = Number(e.target.value)
-      if (Number.isNaN(num)) return
-      draw.changePenWidth(num)
-      setPenWidth(num)
-    },
-    [draw]
-  )
-
-  const handleChangeDelay = useCallback(
-    (e: ChangeEvent<any>) => {
-      const num = Number(e.target.value)
-      if (Number.isNaN(num)) return
-      draw.changeDelay(num)
-      setDelay(num)
-    },
-    [draw]
-  )
-
-  const updatePenColor = useCallback(
-    (color: string) => {
-      draw.changePenColor(color)
-      setPenColor(color)
-    },
-    [draw]
-  )
-
-  const handleChangePenColor = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      updatePenColor(e.target.value)
-    },
-    [updatePenColor]
+    [edit]
   )
 
   const handleClickPenColor = useCallback(
     (col: string) => () => {
-      updatePenColor(col)
+      setPathOptions((opts) => ({
+        ...opts,
+        stroke: col,
+      }))
+      edit.changeAttributes({
+        stroke: col,
+      })
     },
-    [updatePenColor]
+    [edit]
   )
 
-  const updateFill = useCallback(
-    (color: string) => {
-      draw.changeFill(color)
-      setFill(color)
+  const handleChangeFill = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (e) => {
+      setPathOptions((opts) => ({
+        ...opts,
+        fill: e.target.value,
+      }))
+      edit.changeAttributes({
+        fill: e.target.value,
+      })
     },
-    [draw]
-  )
-
-  const handleChangeFill = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      updateFill(e.target.value)
-    },
-    [updateFill]
+    [edit]
   )
 
   const handleClickFill = useCallback(
     (col: string) => () => {
-      updateFill(col)
+      setPathOptions((opts) => ({
+        ...opts,
+        fill: col,
+      }))
+      edit.changeAttributes({
+        fill: col,
+      })
     },
-    [updateFill]
+    [edit]
   )
 
-  const clickClear = useCallback(() => {
-    draw.clear()
-  }, [draw])
-  const clickUndo = useCallback(() => {
-    draw.undo()
-  }, [draw])
+  const parseFile = useParseFile({
+    svg,
+  })
 
-  // TODO: improve UI
-  // const clickOff = useCallback(() => {
-  //   if (!draw.instance) return
-  //   draw.instance.off()
-  // }, [draw])
-  // const clickOn = useCallback(() => {
-  //   if (!draw.instance) return
-  //   draw.instance.on()
-  // }, [draw])
-
-  useEffect(() => {
-    const stop = setInterval(() => {
-      if (!rainbowPen) return
-      const color = getRandomColor()
-      draw.changePenColor(color)
-      setPenColor(color)
-    }, delay * 4)
-    return () => clearInterval(stop)
-  }, [delay, rainbowPen, draw])
-
-  const handleFiles = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const reader = new FileReader()
-      reader.onload = (ev: ProgressEvent<FileReader>) => {
-        if (!ev.target || typeof ev.target.result !== 'string') return
-        const [type, data] = ev.target.result.split(',')
-        if (type === 'data:image/svg+xml;base64') {
-          const svgxml = atob(data)
-          if (!draw.ref.current) return
-          draw.ref.current.svg.parseSVGString(svgxml)
-          draw.ref.current.update()
-        }
-      }
+  const handleFiles = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    async (e) => {
       if (!e.target?.files) return
-      reader.readAsDataURL(e.target.files[0])
+      await parseFile(e.target.files[0])
+      updateDraw()
+      edit.update()
     },
-    [draw.ref]
+    [parseFile, updateDraw, edit]
   )
+
+  const handleChangeType = useCallback<ChangeEventHandler<HTMLSelectElement>>(
+    (ev) => {
+      const isDrawMode = (str: any): str is DrawHandlerType =>
+        ['pen', 'pencil'].includes(str)
+      const upd = ev.target.value
+      if (isDrawMode(upd)) {
+        changeType(upd)
+      }
+    },
+    [changeType]
+  )
+
+  const handleChangeMode = useCallback<ChangeEventHandler<HTMLSelectElement>>(
+    (ev) => {
+      const isDrawMode = (str: any): str is Mode =>
+        ['edit', 'draw'].includes(str)
+      const upd = ev.target.value
+      if (isDrawMode(upd)) {
+        updateDraw()
+        edit.update()
+        setMode(upd)
+      }
+    },
+    [edit, updateDraw]
+  )
+
   return (
     <Layout>
+      <Box as="fieldset">
+        <label htmlFor="mode">
+          <Text fontSize={0}>Mode</Text>
+          <select
+            id="mode"
+            value={mode}
+            onBlur={() => undefined}
+            onChange={handleChangeMode}
+          >
+            <option value="draw">draw</option>
+            <option value="edit">edit</option>
+          </select>
+        </label>
+        {mode === 'draw' && (
+          <Flex pt={3} justifyContent="start">
+            <label htmlFor="curve">
+              <input
+                type="checkbox"
+                id="curve"
+                checked={curve}
+                onChange={handleChangeCurve}
+              />
+              Curve
+            </label>
+            <label htmlFor="close">
+              <input
+                type="checkbox"
+                id="close"
+                checked={close}
+                onChange={handleChangeClose}
+              />
+              Close
+            </label>
+            <label htmlFor="type">
+              <select
+                id="type"
+                value={type}
+                onBlur={() => undefined}
+                onChange={handleChangeType}
+              >
+                <option value="pen">Pen</option>
+                <option value="pencil">Pencil</option>
+              </select>
+            </label>
+            <Button mr={1} mb={1} onClick={undo}>
+              Undo
+            </Button>
+            <Button
+              mr={1}
+              mb={1}
+              onClick={() => setDrawActive((active) => !active)}
+            >
+              {drawActive ? 'Off' : 'On'}
+            </Button>
+            <Button mr={1} mb={1} onClick={clear}>
+              Clear
+            </Button>
+          </Flex>
+        )}
+        {mode === 'edit' && (
+          <Flex pt={3} justifyContent="start">
+            <Button mr={1} mb={1} onClick={() => edit.cancel()}>
+              Cancel
+            </Button>
+            <Button mr={1} mb={1} onClick={clear}>
+              Clear
+            </Button>
+          </Flex>
+        )}
+        <Button onClick={handleClickAnimation}>Animation</Button>
+      </Box>
       <Box as="fieldset">
         <Flex flexWrap="wrap">
           <Box width={[1, 1 / 2, 1 / 2]} pr={3}>
@@ -224,7 +393,8 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 min="1"
                 max="20"
                 step="1"
-                value={penWidth}
+                type="range"
+                value={pathOptions.strokeWidth}
                 onChange={handlePenWidth}
               />
               <input
@@ -234,128 +404,73 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
                 min="1"
                 max="20"
                 step="1"
-                value={penWidth}
+                value={pathOptions.strokeWidth}
                 onChange={handlePenWidth}
               />
             </Flex>
-            <Flex alignItems="center">
-              <label htmlFor="throttleDelay">THROTTLE DELAY:</label>
+          </Box>
+          <Box width={[1, 1 / 2, 1 / 2]}>
+            <label htmlFor="fill">
+              FILL:
               <input
-                type="range"
-                min="0"
-                max="300"
-                step="5"
-                value={delay}
-                onChange={handleChangeDelay}
+                id="fill"
+                type="text"
+                placeholder="#000 or black or rgba(0,0,0,1)"
+                value={pathOptions.fill}
+                onChange={handleChangeFill}
               />
-              <input
-                id="throttleDelay"
-                type="number"
-                min="0"
-                max="300"
-                step="5"
-                value={delay}
-                onChange={handleChangeDelay}
-              />
+            </label>
+            <Flex flexWrap="wrap">
+              {colorList.map((col: string) => (
+                <Box
+                  key={col}
+                  width={['24px', '24px', '20px']}
+                  height={['24px', '24px', '20px']}
+                  style={{
+                    display: 'inline-block',
+                    backgroundColor: col,
+                    border:
+                      col === pathOptions.fill
+                        ? '2px solid #000'
+                        : '2px solid #999',
+                  }}
+                  onClick={handleClickFill(col)}
+                />
+              ))}
             </Flex>
-            <Flex pt={3} justifyContent="start">
-              <label htmlFor="curve">
-                <input
-                  type="checkbox"
-                  id="curve"
-                  checked={curve}
-                  onChange={handleChangeCiruler}
+            <label htmlFor="penColor" style={{ whiteSpace: 'nowrap' }}>
+              PEN COLOR:
+              <input
+                id="penColor"
+                type="text"
+                placeholder="#000 or black or rgba(0,0,0,1)"
+                value={pathOptions.stroke}
+                onChange={handleChangePenColor}
+              />
+            </label>
+            <Flex flexWrap="wrap">
+              {colorList.map((col: string) => (
+                <Box
+                  key={col}
+                  width={['24px', '24px', '20px']}
+                  height={['24px', '24px', '20px']}
+                  bg={col}
+                  style={{
+                    border:
+                      col === pathOptions.stroke
+                        ? '2px solid #000'
+                        : '2px solid #999',
+                  }}
+                  onClick={handleClickPenColor(col)}
                 />
-                Curve
-              </label>
-              {!rainbowPen && (
-                <label htmlFor="close">
-                  <input
-                    type="checkbox"
-                    id="close"
-                    checked={close}
-                    onChange={handleChangeClose}
-                  />
-                  Close
-                </label>
-              )}
-              <label htmlFor="rainbow">
-                <input
-                  type="checkbox"
-                  id="rainbow"
-                  checked={rainbowPen}
-                  onChange={handleChangeRainbowPen}
-                />
-                Rainbow pen
-              </label>
+              ))}
             </Flex>
           </Box>
-          {!rainbowPen && (
-            <Box width={[1, 1 / 2, 1 / 2]}>
-              <label htmlFor="fill">
-                FILL:
-                <input
-                  id="fill"
-                  type="text"
-                  placeholder="#000 or black or rgba(0,0,0,1)"
-                  value={fill}
-                  onChange={handleChangeFill}
-                />
-              </label>
-              <Flex flexWrap="wrap">
-                {colorList.map((col: string) => (
-                  <Box
-                    key={col}
-                    width={['24px', '24px', '20px']}
-                    height={['24px', '24px', '20px']}
-                    style={{
-                      display: 'inline-block',
-                      backgroundColor: col,
-                      border:
-                        col === fill ? '2px solid #000' : '2px solid #999',
-                    }}
-                    onClick={handleClickFill(col)}
-                  />
-                ))}
-              </Flex>
-              <label htmlFor="penColor" style={{ whiteSpace: 'nowrap' }}>
-                PEN COLOR:
-                <input
-                  id="penColor"
-                  type="text"
-                  placeholder="#000 or black or rgba(0,0,0,1)"
-                  value={penColor}
-                  onChange={handleChangePenColor}
-                />
-              </label>
-              <Flex flexWrap="wrap">
-                {colorList.map((col: string) => (
-                  <Box
-                    key={col}
-                    width={['24px', '24px', '20px']}
-                    height={['24px', '24px', '20px']}
-                    bg={col}
-                    style={{
-                      border:
-                        col === penColor ? '2px solid #000' : '2px solid #999',
-                    }}
-                    onClick={handleClickPenColor(col)}
-                  />
-                ))}
-              </Flex>
-            </Box>
-          )}
         </Flex>
       </Box>
       <Box as="fieldset">
         <Flex flexWrap="wrap" justifyContent="start">
           <Box mr={2}>
-            <Button mr={1} mb={1} onClick={clickClear}>
-              Clear
-            </Button>
-            <Button mr={1} mb={1} onClick={clickUndo}>
-              Undo
-            </Button>
             <Button
               variant="secondary"
               mr={1}
@@ -382,35 +497,51 @@ const DrawingDemo: NextPage<Props> = ({ isSp }) => {
               Download SVG
             </Button>
           </Box>
-          {!isSp && (
-            <Box width="auto">
-              <Text fontSize={0}>
-                Svg exported by this library can be read.
-              </Text>
-              <input
-                type="file"
-                onChange={handleFiles}
-                multiple
-                accept="image/*"
-              />
-            </Box>
-          )}
         </Flex>
+        {!isSp && (
+          <label>
+            <Text fontSize={0}>Svg exported by this library can be read.</Text>
+            <input
+              type="file"
+              onChange={handleFiles}
+              multiple
+              accept="image/*"
+            />
+          </label>
+        )}
       </Box>
       <Box width={['96vw', '96vw', '40vw']} height={['96vw', '96vw', '40vw']}>
         <div
-          ref={divRef}
+          ref={targetRef}
           style={{
-            backgroundImage: lattice(size),
-            backgroundSize: `${size}px ${size}px`,
+            background: bgStyle,
             border: '1px solid #333',
             margin: '0 auto 0 0',
             width: '100%',
             height: '100%',
             touchAction: 'none',
+            boxSizing: 'border-box',
           }}
-        />
+        >
+          <Svg
+            width={width}
+            height={height}
+            background={background}
+            elements={elements}
+            editProps={editProps}
+          />
+        </div>
       </Box>
+      <Svg
+        width={width}
+        height={height}
+        background={background}
+        elements={elements}
+        editProps={editProps}
+        animationProps={animation.animationProps}
+      />
+      <div>{JSON.stringify(editProps?.boundingBox)}</div>
+      <div>{JSON.stringify(animateObj)}</div>
     </Layout>
   )
 }

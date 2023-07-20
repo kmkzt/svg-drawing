@@ -10,7 +10,7 @@
 
 #### Defined in
 
-[img-trace/src/trace.ts:70](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/trace.ts#L70)
+[img-trace/src/trace.ts:75](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L75)
 
 ___
 
@@ -20,7 +20,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:65](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/trace.ts#L65)
+[img-trace/src/trace.ts:70](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L70)
 
 ___
 
@@ -30,17 +30,17 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:73](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/trace.ts#L73)
+[img-trace/src/trace.ts:78](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L78)
 
 ___
 
 ### pathAttrs
 
-• `Optional` **pathAttrs**: `PathObject`
+• `Optional` **pathAttrs**: `PathAttributes`
 
 #### Defined in
 
-[img-trace/src/trace.ts:72](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/trace.ts#L72)
+[img-trace/src/trace.ts:77](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L77)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:69](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/trace.ts#L69)
+[img-trace/src/trace.ts:74](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L74)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:66](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/trace.ts#L66)
+[img-trace/src/trace.ts:71](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L71)
 
 ___
 
@@ -70,4 +70,4 @@ ___
 
 #### Defined in
 
-[img-trace/src/trace.ts:67](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/trace.ts#L67)
+[img-trace/src/trace.ts:72](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/trace.ts#L72)

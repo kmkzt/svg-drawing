@@ -1,16 +1,115 @@
-import type { download, SvgDrawing, DrawingOption } from '@svg-drawing/core'
-import type { RefObject } from 'react'
+import type {
+  Animation,
+  SvgObject,
+  SvgClass,
+  EditSvgObject,
+  DrawFactory,
+  ResizeCallback,
+  DrawingClass,
+  Editing,
+  SvgOption,
+  PathClass,
+  AnimateObject,
+  AnimateAttribute,
+  ElementKey,
+  ElementClass,
+  RenderParams,
+} from '@svg-drawing/core'
+import type { RefObject, HTMLAttributes } from 'react'
 
-export type UseSvgDrawing = {
-  ref: RefObject<SvgDrawing | null>
-  clear: () => void
-  undo: () => void
-  changePenColor: (penColor: DrawingOption['penColor']) => void
-  changePenWidth: (penwidth: DrawingOption['penWidth']) => void
-  changeFill: (penColor: DrawingOption['fill']) => void
-  changeClose: (penwidth: DrawingOption['close']) => void
-  changeDelay: (penColor: DrawingOption['delay']) => void
-  changeCurve: (penwidth: DrawingOption['curve']) => void
-  getSvgXML: () => string | null
-  download: (opt: Parameters<typeof download>[1]) => void
+/** UseSvg */
+export type UseSvg = (opts: Partial<SvgOption>) => {
+  svg: SvgClass
+  getInitialState: () => RenderParams
 }
+
+export type SvgContextProps = {
+  editProps?: EditSvgObject
+  animationProps?: AnimationProps
+}
+
+export type SvgProps = HTMLAttributes<SVGSVGElement> &
+  SvgContextProps & {
+    width: number
+    height: number
+    elements: SvgObject['elements']
+    background?: SvgObject['background']
+  }
+
+/** UseDraw */
+export type UseDraw = (opts: UseDrawOptions) => DrawAction
+
+export type UseDrawOptions = {
+  factory: DrawFactory
+  svg: SvgClass
+  onUpdate: (params: RenderParams) => void
+}
+export type DrawAction = {
+  draw: DrawingClass
+  update: () => void
+  clear: () => ReadonlyArray<ElementClass>
+  undo: () => ElementClass | undefined
+}
+
+/** UseEdit */
+export type UseEdit = (opts: {
+  svg: SvgClass
+  onUpdate: (params: RenderParams) => void
+}) => EditSvgAction
+
+export type EditSvgAction = {
+  edit: Editing
+  keyboardMap: KeyboardMap
+}
+
+/** UseEditEventHandler */
+export type UseEditEventHandler<E extends HTMLElement = HTMLElement> = (
+  ref: RefObject<E>,
+  edit: Editing,
+  active: boolean,
+  opts?: {
+    multipleSelectBindKey?: string
+  }
+) => void
+
+export type AnimationProps = {
+  getAnimates: (elementKey: ElementKey) => AnimateAttribute[]
+}
+
+export type AnimatesProps = {
+  elementKey?: ElementKey
+}
+
+/** UseAnimation */
+export type UseAnimation = (arg: {
+  animation: AnimateObject[]
+  onChangeAnimation: (obj: AnimateObject[]) => void
+}) => {
+  instance: Animation
+  update: (paths: ReadonlyArray<PathClass>) => void
+  clear: () => void
+  setup: Animation['setup']
+  animationProps: AnimationProps
+}
+
+/** UseDrawEventHandler */
+export type UseDrawEventHandler<E extends HTMLElement = HTMLElement> = (
+  ref: RefObject<E>,
+  drawing: DrawingClass,
+  active?: boolean
+) => void
+
+/** UseResize */
+export type UseResize<T extends HTMLElement = HTMLElement> = (
+  ref: RefObject<T>,
+  onResize: ResizeCallback,
+  active?: boolean
+) => void
+
+export type KeyboardMap = {
+  [key: string]: (() => void) | undefined
+}
+
+export type UseParseFile = (opts: {
+  svg: SvgClass
+}) => (file: File) => Promise<void>

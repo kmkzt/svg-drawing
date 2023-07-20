@@ -1,6 +1,6 @@
 {
   "name": "@svg-drawing/animation",
-  "version": "4.2.5",
+  "version": "5.0.1-beta.0",
   "license": "MIT",
   "description": "svg drawing library.",
   "author": {
@@ -47,7 +47,7 @@
     "prepare": "yarn build"
   },
   "optionalDependencies": {
-    "@svg-drawing/core": "4.2.5"
+    "@svg-drawing/core": "5.0.1-beta.0"
   },
   "publishConfig": {
     "access": "public"

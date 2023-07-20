@@ -2,44 +2,72 @@
 
 [@svg-drawing/core](../../modules/svg_drawing_core.md).Vector
 
+## Implements
+
+- [`VectorClass`](../../interfaces/svg_drawing_core/VectorClass.md)
+
 ## Constructors
 
 ### constructor
 
-• **new Vector**(`v`, `a`)
+• **new Vector**(`value`, `angle`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `v` | `number` |
-| `a` | `number` |
+| `value` | `number` |
+| `angle` | `number` |
 
 #### Defined in
 
-[core/src/svg.ts:129](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L129)
+[core/src/svg/vector.ts:4](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L4)
 
 ## Properties
 
 ### angle
 
-• **angle**: `number`
+• `Readonly` **angle**: `number`
 
-#### Defined in
+#### Implementation of
 
-[core/src/svg.ts:127](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L127)
+[VectorClass](../../interfaces/svg_drawing_core/VectorClass.md).[angle](../../interfaces/svg_drawing_core/VectorClass.md#angle)
 
 ___
 
 ### value
 
-• **value**: `number`
+• `Readonly` **value**: `number`
+
+#### Implementation of
+
+[VectorClass](../../interfaces/svg_drawing_core/VectorClass.md).[value](../../interfaces/svg_drawing_core/VectorClass.md#value)
+
+## Methods
+
+### rotate
+
+▸ **rotate**(`a`): [`Vector`](Vector.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `a` | `number` |
+
+#### Returns
+
+[`Vector`](Vector.md)
+
+#### Implementation of
+
+[VectorClass](../../interfaces/svg_drawing_core/VectorClass.md).[rotate](../../interfaces/svg_drawing_core/VectorClass.md#rotate)
 
 #### Defined in
 
-[core/src/svg.ts:128](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L128)
+[core/src/svg/vector.ts:10](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L10)
 
-## Methods
+___
 
 ### scale
 
@@ -55,20 +83,62 @@ ___
 
 [`Vector`](Vector.md)
 
+#### Implementation of
+
+[VectorClass](../../interfaces/svg_drawing_core/VectorClass.md).[scale](../../interfaces/svg_drawing_core/VectorClass.md#scale)
+
 #### Defined in
 
-[core/src/svg.ts:140](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L140)
+[core/src/svg/vector.ts:6](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L6)
 
 ___
 
-### toPoint
+### toJson
 
-▸ **toPoint**(): [`Point`](Point.md)
+▸ **toJson**(): `Object`
 
 #### Returns
 
-[`Point`](Point.md)
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `angle` | `number` |
+| `value` | `number` |
+
+#### Implementation of
+
+[VectorClass](../../interfaces/svg_drawing_core/VectorClass.md).[toJson](../../interfaces/svg_drawing_core/VectorClass.md#tojson)
 
 #### Defined in
 
-[core/src/svg.ts:134](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/core/src/svg.ts#L134)
+[core/src/svg/vector.ts:14](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L14)
+
+___
+
+### fromPoint
+
+▸ `Static` **fromPoint**(`__namedParameters`): [`Vector`](Vector.md)
+
+### Calculate angle and absolute value from origin of coordinates
+
+```ts
+const vector = Vector.fromPoint({ x: 1, y: 1 })
+
+console.log(vector.angle) // 45
+console.log(vector.value) // 1.4142135623730951
+```
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `__namedParameters` | `Readonly`<{ `x`: `number` ; `y`: `number`  }\> |
+
+#### Returns
+
+[`Vector`](Vector.md)
+
+#### Defined in
+
+[core/src/svg/vector.ts:31](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/core/src/svg/vector.ts#L31)

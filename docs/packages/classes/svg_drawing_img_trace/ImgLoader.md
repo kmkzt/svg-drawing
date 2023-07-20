@@ -16,7 +16,7 @@
 
 #### Defined in
 
-[img-trace/src/imgloader.ts:8](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/imgloader.ts#L8)
+[img-trace/src/imgloader.ts:8](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/imgloader.ts#L8)
 
 ## Properties
 
@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[img-trace/src/imgloader.ts:6](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/imgloader.ts#L6)
+[img-trace/src/imgloader.ts:6](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/imgloader.ts#L6)
 
 ## Methods
 
@@ -47,7 +47,7 @@
 
 #### Defined in
 
-[img-trace/src/imgloader.ts:65](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/imgloader.ts#L65)
+[img-trace/src/imgloader.ts:65](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/imgloader.ts#L65)
 
 ___
 
@@ -68,4 +68,4 @@ ___
 
 #### Defined in
 
-[img-trace/src/imgloader.ts:14](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/imgloader.ts#L14)
+[img-trace/src/imgloader.ts:14](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/imgloader.ts#L14)

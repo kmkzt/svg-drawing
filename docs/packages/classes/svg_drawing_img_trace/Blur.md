@@ -16,7 +16,7 @@
 
 #### Defined in
 
-[img-trace/src/blur.ts:25](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/blur.ts#L25)
+[img-trace/src/blur.ts:25](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/blur.ts#L25)
 
 ## Properties
 
@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[img-trace/src/blur.ts:24](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/blur.ts#L24)
+[img-trace/src/blur.ts:24](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/blur.ts#L24)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-[img-trace/src/blur.ts:23](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/blur.ts#L23)
+[img-trace/src/blur.ts:23](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/blur.ts#L23)
 
 ## Methods
 
@@ -56,4 +56,4 @@ ___
 
 #### Defined in
 
-[img-trace/src/blur.ts:30](https://github.com/kmkzt/svg-drawing/blob/c168ec0/packages/img-trace/src/blur.ts#L30)
+[img-trace/src/blur.ts:30](https://github.com/kmkzt/svg-drawing/blob/ab85f6a/packages/img-trace/src/blur.ts#L30)

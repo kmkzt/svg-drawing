@@ -1,6 +1,6 @@
 {
   "name": "@svg-drawing/react",
-  "version": "4.2.5",
+  "version": "5.0.1-beta.0",
   "description": "React svg drawing library. This library is a React extension of svg-drawing.",
   "author": {
     "name": "Kazuto Kamei",
@@ -48,7 +48,7 @@
     "react": ">= 16.8.0"
   },
   "optionalDependencies": {
-    "@svg-drawing/core": "4.2.5",
-    "@svg-drawing/img-trace": "4.2.5"
+    "@svg-drawing/core": "5.0.1-beta.0",
+    "@svg-drawing/img-trace": "5.0.1-beta.0"
   }
 }

@@ -19,6 +19,7 @@ export interface BlurOption {
   radius?: number
   delta?: number
 }
+
 export class Blur {
   public radius: number
   public delta: number

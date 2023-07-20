@@ -1,4 +1,4 @@
-import { Renderer, download } from '@svg-drawing/core'
+import { SvgRenderer, Download, toElement } from '@svg-drawing/core'
 import {
   ImgTrace,
   Palette,
@@ -29,7 +29,7 @@ const GRAYSCALE_PALETTE = [
   { r: 150, g: 150, b: 150, a: 255 },
   { r: 200, g: 200, b: 200, a: 255 },
 ]
-export default () => {
+const ImageTrace = () => {
   const [list, setList] = useState(IMAGE_LIST)
   const [palettes, setPalettes] = useState<Rgba[]>(GRAYSCALE_PALETTE)
   const [imageData, setImageData] = useState<ImageData>()
@@ -91,14 +91,14 @@ export default () => {
     if (!renderRef.current) return
     const renderSvg = () => {
       if (!renderRef.current || !svg) return
-      const renderer = new Renderer(renderRef.current)
+      const renderer = new SvgRenderer(renderRef.current)
       const { width, height } = renderRef.current.getBoundingClientRect()
       svg.resize({ width, height })
-      renderer.update(svg.toJson())
+      renderer.render({ svg: svg.toJson() })
     }
     renderSvg()
-    window.addEventListener('resize', renderSvg)
-    return () => window.removeEventListener('resize', renderSvg)
+    addEventListener('resize', renderSvg)
+    return () => removeEventListener('resize', renderSvg)
   }, [svg])
 
   // const blurImage = useCallback(async () => {
@@ -143,7 +143,7 @@ export default () => {
 
   const handleDownload = useCallback(() => {
     if (!svg) return
-    download(svg)
+    new Download(toElement({ svg: svg.toJson() })).svg(`${Date.now()}.svg`)
   }, [svg])
 
   useEffect(() => {
@@ -261,3 +261,5 @@ export default () => {
     </Layout>
   )
 }
+
+export default ImageTrace

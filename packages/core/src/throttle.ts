@@ -1,12 +1,16 @@
-interface Options {
-  leading?: boolean
-  trailing?: boolean
-}
-
+/**
+ * ```ts
+ * const handleMouseMove = throttle(
+ *   (ev) => console.log(ev.target.clientX, ev.target.clientY),
+ *   50
+ * )
+ *
+ * window.addEventListener('onmousemove', handleMouseMove)
+ * ```
+ */
 export function throttle<T extends (...args: any) => any>(
   func: T,
-  wait: number,
-  options: Options = {}
+  wait: number
 ): (...args: Parameters<T>) => ReturnType<T> | null {
   let context: any | null
   let args: any | null
@@ -15,7 +19,7 @@ export function throttle<T extends (...args: any) => any>(
   let previous = 0
 
   const later = (): void => {
-    previous = options.leading === false ? 0 : Date.now()
+    previous = Date.now()
     timeout = null
     result = func.apply(context, args)
     if (!timeout) {
@@ -24,31 +28,26 @@ export function throttle<T extends (...args: any) => any>(
     }
   }
 
-  const stop = () => {
-    if (timeout) {
-      clearTimeout(timeout)
-      timeout = null
-    }
-  }
-
   return function wrap(
     this: typeof func,
-    ...wraparg: Parameters<T>
+    ...wrapArg: Parameters<T>
   ): ReturnType<T> | null {
     const now = Date.now()
-    if (!previous && options.leading === false) previous = now
     const remaining = wait - (now - previous)
     context = this
-    args = wraparg
+    args = wrapArg
     if (remaining <= 0 || remaining > wait) {
-      stop()
+      if (timeout) {
+        clearTimeout(timeout)
+        timeout = null
+      }
       previous = now
       result = func.apply(context, args)
       if (!timeout) {
         context = null
         args = null
       }
-    } else if (!timeout && options.trailing !== false) {
+    } else if (!timeout) {
       timeout = setTimeout(later, remaining)
     }
     return result

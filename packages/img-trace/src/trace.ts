@@ -1,7 +1,12 @@
-import { Svg, Path, Command } from '@svg-drawing/core'
+import { Svg, Path, createCommand } from '@svg-drawing/core'
 import { convertRGBAImage } from './utils/convertRGBAImage'
 import type { Rgba } from './palette'
-import type { PathObject } from '@svg-drawing/core'
+import type {
+  CommandClass,
+  PathClass,
+  PathAttributes,
+  CommandObject,
+} from '@svg-drawing/core'
 
 type ColorQuantization = number[][]
 // Edge node types ( ▓: this layer or 1; ░: not this layer or 0 )
@@ -29,13 +34,13 @@ type EdgeType =
 type EdgeLayer = EdgeType[][]
 
 interface PathInfo {
-  commands: Command[]
-  holeCommands: Command[]
+  commands: CommandClass[]
+  holeCommands: CommandClass[]
   holechildren: number[]
   isholepath: boolean
 }
 interface PointInfo {
-  points: Point[]
+  points: DirectionPoint[]
   boundingbox: [number, number, number, number]
   holechildren: number[]
   isholepath: boolean
@@ -54,7 +59,7 @@ const DIRECTION_TYPE = {
   CENTER: 8,
   EMPTY: -1,
 } as const
-interface Point {
+interface DirectionPoint {
   x: number
   y: number
   direction: DirectionValue
@@ -69,7 +74,7 @@ export interface ImgTraceOption {
   pathOmit?: number
   commandOmit?: number
   // override path element attribute
-  pathAttrs?: PathObject
+  pathAttrs?: PathAttributes
   palettes?: Rgba[]
 }
 
@@ -192,7 +197,7 @@ export class ImgTrace {
   public pathOmit: number
   public commandOmit: number
   // Path element attribute
-  public pathAttrs: PathObject
+  public pathAttrs: PathAttributes
   // Palettes
   public palettes: Rgba[]
 
@@ -229,7 +234,7 @@ export class ImgTrace {
     return new Svg({
       width: cq[0].length - 2,
       height: cq.length - 2,
-    }).addPath(paths)
+    }).replaceElements(paths)
   }
 
   private _colorQuantization(imgd: ImageData): ColorQuantization {
@@ -299,7 +304,7 @@ export class ImgTrace {
     return res
   }
 
-  private _pointpoly(p: Point, pa: Point[]): boolean {
+  private _pointpoly(p: DirectionPoint, pa: DirectionPoint[]): boolean {
     let isin = false
 
     for (let i = 0, j = pa.length - 1; i < pa.length; j = i++) {
@@ -552,8 +557,8 @@ export class ImgTrace {
 
   private _tracePath(path: PointInfo): PathInfo {
     let pcnt = 0
-    const comms: Command[] = []
-    const holes: Command[] = []
+    const comms: CommandClass[] = []
+    const holes: CommandClass[] = []
     while (pcnt < path.points.length) {
       // 5.1. Find sequences of points with only 2 segment types
       const segtype1: DirectionValue = path.points[pcnt].direction
@@ -586,15 +591,22 @@ export class ImgTrace {
     }
 
     const commands = [
-      new Command('M', [path.points[0].x, path.points[0].y]),
+      createCommand({
+        type: 'M',
+        values: [path.points[0].x, path.points[0].y],
+      } as CommandObject<'M'>),
       ...comms,
-      new Command('Z'),
+      createCommand({ type: 'Z', values: [] }),
     ]
     holes.reverse()
+    const value = holes[holes.length - 1].values.slice(0, 2)
     const holeCommands = [
-      new Command('M', holes[holes.length - 1].value.slice(0, 2)),
+      createCommand<'M'>({
+        type: 'M',
+        values: [value[0], value[1]],
+      }),
       ...holes,
-      new Command('Z'),
+      createCommand({ type: 'Z', values: [] }),
     ]
     return {
       commands,
@@ -609,7 +621,7 @@ export class ImgTrace {
     seqstart: number,
     seqend: number,
     isHolePath?: boolean
-  ): Command[] {
+  ): CommandClass[] {
     const ltres = this.ltres
     const qtres = this.qtres
     if (seqend > path.points.length || seqend < 0) {
@@ -651,12 +663,12 @@ export class ImgTrace {
 
     if (curvepass) {
       return [
-        new Command(
-          'L',
-          isHolePath
+        createCommand({
+          type: 'L',
+          values: isHolePath
             ? [path.points[seqstart].x, path.points[seqstart].y]
-            : [path.points[seqend].x, path.points[seqend].y]
-        ),
+            : [path.points[seqend].x, path.points[seqend].y],
+        }),
       ]
     }
 
@@ -703,12 +715,10 @@ export class ImgTrace {
     }
     if (curvepass) {
       return [
-        new Command('Q', [
-          cpx,
-          cpy,
-          path.points[seqend].x,
-          path.points[seqend].y,
-        ]),
+        createCommand({
+          type: 'Q',
+          values: [cpx, cpy, path.points[seqend].x, path.points[seqend].y],
+        }),
       ]
     }
     const splitpoint = fitpoint
@@ -718,7 +728,10 @@ export class ImgTrace {
     )
   }
 
-  private _complementCommand(info: PathInfo[], layerIndex: number): Command[] {
+  private _complementCommand(
+    info: PathInfo[],
+    layerIndex: number
+  ): CommandClass[] {
     const p = info[layerIndex]
     const complement = []
     for (let hcnt = 0; hcnt < p.holechildren.length; hcnt++) {
@@ -727,8 +740,8 @@ export class ImgTrace {
     return complement
   }
 
-  private _createPaths(pathLayer: PathInfo[][]): Path[] {
-    const result: Path[] = []
+  private _createPaths(pathLayer: PathInfo[][]): PathClass[] {
+    const result: PathClass[] = []
     for (let lcnt = 0; lcnt < pathLayer.length; lcnt++) {
       for (let pcnt = 0; pcnt < pathLayer[lcnt].length; pcnt++) {
         const layer = pathLayer[lcnt]
@@ -742,7 +755,7 @@ export class ImgTrace {
           fill: color,
           opacity: String(rgba.a / 255.0),
         })
-        path.addCommand([
+        path.setCommands([
           ...smp.commands,
           ...this._complementCommand(layer, pcnt),
         ])
