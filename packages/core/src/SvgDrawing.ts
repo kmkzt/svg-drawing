@@ -67,7 +67,7 @@ export class SvgDrawing {
     this.factory = new BasicDrawFactory(
       {
         stroke: penColor ?? '#000',
-        strokeWidth: penWidth || penWidth === 0 ? String(penWidth) : '1',
+        'stroke-width': penWidth || penWidth === 0 ? String(penWidth) : '1',
         fill: fill ?? 'none',
       },
       { curve, close }

@@ -4,7 +4,7 @@ import { Path } from './path'
 describe('Path', () => {
   describe('getCommandString', () => {
     it('Return relative path commands string.', () => {
-      const path = new Path({ strokeWidth: '1' }).setCommands([
+      const path = new Path({ ['stroke-width']: '1' }).setCommands([
         createCommand({ type: 'M', values: [1, 1] }),
         createCommand({ type: 'L', values: [2, 2] }),
       ])
@@ -18,7 +18,7 @@ describe('Path', () => {
 
   describe('scale', () => {
     it('scale up double', () => {
-      const path = new Path({ strokeWidth: '1' }).setCommands([
+      const path = new Path({ ['stroke-width']: '1' }).setCommands([
         createCommand({ type: 'M', values: [1, 1] }),
         createCommand({ type: 'L', values: [2, 2] }),
       ])
@@ -37,7 +37,7 @@ describe('Path', () => {
     })
 
     it('Origin path do not changed when clone path changed.', () => {
-      const origin = new Path({ strokeWidth: '1' }).setCommands([
+      const origin = new Path({ ['stroke-width']: '1' }).setCommands([
         createCommand({
           type: 'M',
           values: [1, 1],

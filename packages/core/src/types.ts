@@ -84,10 +84,10 @@ export type PathAttributes = {
   d?: string
   fill?: string
   stroke?: string
-  strokeWidth?: string
-  strokeLinecap?: 'inherit' | 'butt' | 'round' | 'square'
-  strokeLinejoin?: 'round' | 'inherit' | 'miter' | 'bevel'
-  [camelCase: string]: string | undefined
+  ['stroke-width']?: string
+  ['stroke-linecap']?: 'inherit' | 'butt' | 'round' | 'square'
+  ['stroke-linejoin']?: 'round' | 'inherit' | 'miter' | 'bevel'
+  [pathAttributeKey: string]: string | undefined
 }
 
 /**

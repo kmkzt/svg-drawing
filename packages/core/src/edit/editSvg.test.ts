@@ -224,7 +224,7 @@ describe('EditSvg', () => {
               fill: '#f00',
               id: 'path_0',
               stroke: '#00f',
-              strokeWidth: '4',
+              'stroke-width': '4',
             },
             commands: [
               {

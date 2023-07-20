@@ -7,7 +7,6 @@ import {
   dataPathCommandAttributes,
 } from './dataAttributes'
 import { EDIT_PATH_STYLE } from './editPathStyle'
-import { camel2kebab } from '../utils'
 import type {
   EditCommandObject,
   AnimateAttribute,
@@ -90,7 +89,7 @@ const pathElement = (
       val
         ? {
             ...acc,
-            [camel2kebab(key)]: val,
+            [key]: val,
           }
         : acc,
     {}
@@ -210,7 +209,7 @@ const editPathElement = ({
 }: EditPathObject): SVGElement =>
   element('g', {}, [
     pathElement(key, {
-      strokeWidth: EDIT_PATH_STYLE.line,
+      'stroke-width': EDIT_PATH_STYLE.line,
       stroke: attributes?.stroke ? EDIT_PATH_STYLE.color.main : undefined,
       fill: 'none',
     }),

@@ -1,7 +1,6 @@
 import { createCommand } from './svg/command'
 import { Path } from './svg/path'
 import { Svg } from './svg/svg'
-import { kebab2camel } from './utils'
 import type { PathClass, CommandClass, CommandType, SvgClass } from './types'
 
 export const parseSVGString = (svgStr: string): SvgClass => {
@@ -35,7 +34,7 @@ export const parsePathElement = (pathEl: SVGPathElement): PathClass => {
     }
 
     path.updateAttributes({
-      [kebab2camel(attr.name)]: attr.value,
+      [attr.name]: attr.value,
     })
   }
 

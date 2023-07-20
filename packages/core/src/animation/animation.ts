@@ -1,4 +1,4 @@
-import { roundUp, camel2kebab } from '../utils'
+import { roundUp } from '../utils'
 import type {
   PathClass,
   AnimationOption,
@@ -135,7 +135,7 @@ export class Animation {
             ...animateAttrs,
             {
               ...baseAttrs,
-              attributeName: camel2kebab(attributeName),
+              attributeName,
               values: [...values, defaultValue].join(';'),
             },
           ]
