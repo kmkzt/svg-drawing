@@ -40,7 +40,7 @@
     "build": "npm-run-all -p lib:*",
     "lib:rollup": "NODE_ENV=production rollup -c",
     "lib:tsc": "NODE_ENV=production tsc -p ./tsconfig.lib.json",
-    "clear": "rimraf lib/*",
+    "clear": "rimraf lib/* *.tsbuildinfo",
     "typecheck": "tsc",
     "lint": "eslint ./src --ext .js,.ts,.tsx",
     "fmt": "yarn lint --fix",
