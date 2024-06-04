@@ -71,7 +71,7 @@
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-sourcemaps": "0.6.3",
     "rollup-plugin-terser": "7.0.2",
-    "turbo": "1.8.3",
+    "turbo": "1.13.4",
     "typescript": "4.7.4",
     "verdaccio": "5.21.2"
   },
