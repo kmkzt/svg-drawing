@@ -73,7 +73,7 @@
     "rollup-plugin-terser": "7.0.2",
     "turbo": "1.8.3",
     "typescript": "4.7.4",
-    "verdaccio": "5.21.2"
+    "verdaccio": "5.32.2"
   },
   "changelog": {
     "repo": "kmkzt/svg-drawing",
