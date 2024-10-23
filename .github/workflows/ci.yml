@@ -17,16 +17,16 @@ jobs:
         node-version: [18, 16, 14]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Use cached node_modules
         id: use_cached_node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: nodeModules-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
@@ -45,15 +45,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Restore cached node_modules
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: nodeModules-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}
@@ -69,15 +69,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Node 18
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Restore cached node_modules
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: nodeModules-18-${{ hashFiles('yarn.lock') }}
@@ -91,15 +91,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Node 18
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Restore cached node_modules
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: nodeModules-18-${{ hashFiles('yarn.lock') }}
@@ -113,15 +113,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Node 18
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Restore cached node_modules
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: nodeModules-18-${{ hashFiles('yarn.lock') }}
@@ -136,15 +136,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Node 18
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Restore cached node_modules
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: nodeModules-18-${{ hashFiles('yarn.lock') }}
@@ -156,7 +156,7 @@ jobs:
         run: yarn test
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3.1.0
+        uses: codecov/codecov-action@v4.6.0
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           file: ./coverage/clover.xml
